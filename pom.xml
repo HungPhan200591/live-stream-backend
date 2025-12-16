@@ -88,11 +88,19 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+	
+	<!-- P6Spy for SQL logging with actual parameter values -->
+	<dependency>
+		<groupId>p6spy</groupId>
+		<artifactId>p6spy</artifactId>
+		<version>3.9.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<optional>true</optional>
+	</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

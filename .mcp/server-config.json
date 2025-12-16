@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "livestream-postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://admin:password@localhost:15432/livestream"
+      ],
+      "env": {
+        "PGHOST": "localhost",
+        "PGPORT": "15432",
+        "PGDATABASE": "livestream",
+        "PGUSER": "admin",
+        "PGPASSWORD": "password"
+      }
+    }
+  }
+}
