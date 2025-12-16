@@ -2,6 +2,7 @@ package com.stream.demo.controller;
 
 import com.stream.demo.model.entity.User;
 import com.stream.demo.repository.UserRepository;
+import com.stream.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TestController {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Test endpoint to trigger SQL query and verify P6Spy logging
@@ -31,11 +33,13 @@ public class TestController {
         log.info(">>> Testing P6Spy SQL logging...");
 
         // Trigger a simple SELECT query
-        List<User> users = userRepository.findAll();
+//        List<User> users = userRepository.findAll();
 
-        log.info(">>> Found {} users in database", users.size());
-        log.info(">>> Check console logs above - you should see P6Spy SQL logs!");
+//        log.info(">>> Found {} users in database", users.size());
 
-        return "P6Spy Test: Found " + users.size() + " users. Check console logs!";
+        User user = userService.getUserById(1L);
+        return user.toString();
+
+//        return "P6Spy Test: Found " + users.size() + " users. Check console logs!";
     }
 }
