@@ -63,5 +63,7 @@ app:
     # Secret key for JWT signing (Base64 encoded, minimum 256 bits for HS256)
     # IMPORTANT: In production, use environment variable instead!
     secret: YXBwbGljYXRpb25fc2VjcmV0X2tleV9mb3JfbGl2ZXN0cmVhbV9iYWNrZW5kX2RldmVsb3BtZW50X29ubHlfMjU2Yml0cw==
-    # Token expiration time in milliseconds (24 hours = 86400000 ms)
-    expiration-ms: 86400000
+    # Access token expiration time in milliseconds (1 hour = 3600000 ms)
+    expiration-ms: 3600000
+    # Refresh token expiration time in milliseconds (7 days = 604800000 ms)
+    refresh-expiration-ms: 604800000

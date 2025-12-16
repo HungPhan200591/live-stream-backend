@@ -33,6 +33,7 @@ public class AuthService {
         private final PasswordEncoder passwordEncoder;
         private final AuthenticationManager authenticationManager;
         private final JwtTokenProvider jwtTokenProvider;
+        private final JwtBlacklistService jwtBlacklistService;
 
         @Transactional
         public AuthResponse register(RegisterRequest request) {
@@ -71,14 +72,18 @@ public class AuthService {
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-                String token = jwtTokenProvider.generateToken(authentication);
+                String accessToken = jwtTokenProvider.generateToken(authentication);
+                String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
                 Set<String> roleNames = authentication.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toSet());
 
                 return AuthResponse.builder()
-                                .accessToken(token)
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .tokenType("Bearer")
+                                .expiresIn(jwtTokenProvider.getExpirationTime())
                                 .username(user.getUsername())
                                 .roles(roleNames)
                                 .build();
@@ -88,16 +93,96 @@ public class AuthService {
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-                String token = jwtTokenProvider.generateToken(authentication);
+                String accessToken = jwtTokenProvider.generateToken(authentication);
+                String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
                 Set<String> roleNames = authentication.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toSet());
 
                 return AuthResponse.builder()
-                                .accessToken(token)
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .tokenType("Bearer")
+                                .expiresIn(jwtTokenProvider.getExpirationTime())
                                 .username(request.getUsername())
                                 .roles(roleNames)
                                 .build();
+        }
+
+        /**
+         * Refresh access token using refresh token
+         * Làm mới access token bằng refresh token
+         */
+        public AuthResponse refreshAccessToken(String refreshToken) {
+                // Validate refresh token
+                if (!jwtTokenProvider.validateToken(refreshToken)) {
+                        throw new IllegalArgumentException("Invalid refresh token");
+                }
+
+                // Check if refresh token is blacklisted
+                if (jwtBlacklistService.isBlacklisted(refreshToken)) {
+                        throw new IllegalArgumentException("Refresh token has been revoked");
+                }
+
+                // Extract username and load user
+                String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+                // Load user roles
+                List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+                Set<String> roleNames = userRoles.stream()
+                                .map(ur -> {
+                                        Role role = roleRepository.findById(ur.getRoleId())
+                                                        .orElseThrow(() -> new IllegalStateException("Role not found"));
+                                        return role.getName();
+                                })
+                                .collect(Collectors.toSet());
+
+                // Create Authentication object for generating new access token
+                List<GrantedAuthority> authorities = roleNames.stream()
+                                .map(roleName -> (GrantedAuthority) () -> roleName)
+                                .collect(Collectors.toList());
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                username, null, authorities);
+
+                String newAccessToken = jwtTokenProvider.generateToken(authentication);
+
+                return AuthResponse.builder()
+                                .accessToken(newAccessToken)
+                                .refreshToken(refreshToken) // Keep same refresh token
+                                .tokenType("Bearer")
+                                .expiresIn(jwtTokenProvider.getExpirationTime())
+                                .username(username)
+                                .roles(roleNames)
+                                .build();
+        }
+
+        /**
+         * Logout user by adding token to blacklist
+         * Đăng xuất bằng cách thêm token vào blacklist trong Redis
+         */
+        public void logout(String token) {
+                // Calculate remaining time to live for the token
+                long remainingTime = getRemainingExpirationTime(token);
+
+                // Add to blacklist with TTL
+                jwtBlacklistService.addToBlacklist(token, remainingTime);
+        }
+
+        /**
+         * Calculate remaining expiration time of a token in seconds
+         * Tính thời gian còn lại trước khi token hết hạn (đơn vị: giây)
+         */
+        private long getRemainingExpirationTime(String token) {
+                try {
+                        java.util.Date expiration = jwtTokenProvider.getExpirationFromToken(token);
+                        long remainingMs = expiration.getTime() - System.currentTimeMillis();
+                        return Math.max(remainingMs / 1000, 0); // Convert to seconds
+                } catch (Exception e) {
+                        return 0;
+                }
         }
 }
