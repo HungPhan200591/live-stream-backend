@@ -18,7 +18,7 @@ services:
     image: redis:alpine
     container_name: livestream-redis
     ports:
-      - "6379:6379"
+      - "16379:6379"
     restart: always
 
   rabbitmq:
