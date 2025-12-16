@@ -4,7 +4,7 @@ spring:
 
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/livestream
+    url: jdbc:postgresql://localhost:15432/livestream
     username: admin
     password: password
     driver-class-name: org.postgresql.Driver
@@ -40,3 +40,12 @@ springdoc:
 # Server Port
 server:
   port: 8080
+
+# Application-specific Configuration
+app:
+  jwt:
+    # Secret key for JWT signing (Base64 encoded, minimum 256 bits for HS256)
+    # IMPORTANT: In production, use environment variable instead!
+    secret: YXBwbGljYXRpb25fc2VjcmV0X2tleV9mb3JfbGl2ZXN0cmVhbV9iYWNrZW5kX2RldmVsb3BtZW50X29ubHlfMjU2Yml0cw==
+    # Token expiration time in milliseconds (24 hours = 86400000 ms)
+    expiration-ms: 86400000

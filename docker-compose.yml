@@ -5,7 +5,7 @@ services:
     image: postgres:15-alpine
     container_name: livestream-postgres
     ports:
-      - "5432:5432"
+      - "15432:5432"
     environment:
       POSTGRES_DB: livestream
       POSTGRES_USER: admin
