@@ -34,6 +34,15 @@ public class User {
     @Column(nullable = false, name = "password_hash")
     private String passwordHash;
 
+    @Column(name = "display_name", length = 50)
+    private String displayName;
+
+    @Column(length = 500)
+    private String bio;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false, name = "created_at")
     private LocalDateTime createdAt;

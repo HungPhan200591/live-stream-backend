@@ -49,6 +49,42 @@ public class UserService {
     }
 
     /**
+     * Get user profile by ID
+     */
+    public UserDTO getUserProfile(Long userId) {
+        User user = getUserById(userId);
+        return convertToDTO(user);
+    }
+
+    /**
+     * Update user profile
+     */
+    public UserDTO updateUser(Long userId, com.stream.demo.model.dto.request.UpdateUserRequest request) {
+        User user = getUserById(userId);
+
+        // Update fields if provided
+        if (request.getDisplayName() != null) {
+            user.setDisplayName(request.getDisplayName());
+        }
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+
+        // Note: Email update might require verification logic, for now simple update
+        // if (request.getEmail() != null &&
+        // !request.getEmail().equals(user.getEmail())) {
+        // // check existing email...
+        // user.setEmail(request.getEmail());
+        // }
+
+        User updatedUser = userRepository.save(user);
+        return convertToDTO(updatedUser);
+    }
+
+    /**
      * Convert User entity to UserDTO
      */
     public UserDTO convertToDTO(User user) {
@@ -67,6 +103,9 @@ public class UserService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .displayName(user.getDisplayName())
+                .bio(user.getBio())
+                .avatarUrl(user.getAvatarUrl())
                 .roles(roleNames)
                 .createdAt(user.getCreatedAt())
                 .build();

@@ -41,7 +41,7 @@ public class AuthController {
     @Operation(summary = "Get current user", description = "Get authenticated user information")
     public ApiResponse<UserDTO> getCurrentUser() {
         UserDTO userDTO = userService.convertToDTO(userService.getCurrentUser());
-        return ApiResponse.success(userDTO, null);
+        return ApiResponse.success(userDTO, "Get current user info successfully");
     }
 
     @PostMapping("/refresh")

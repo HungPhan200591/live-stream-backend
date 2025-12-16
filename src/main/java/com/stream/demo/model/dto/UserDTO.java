@@ -20,6 +20,10 @@ public class UserDTO {
 
     private String email;
 
+    private String displayName;
+    private String bio;
+    private String avatarUrl;
+
     private Set<String> roles;
 
     private LocalDateTime createdAt;
