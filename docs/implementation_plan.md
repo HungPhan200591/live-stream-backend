@@ -33,14 +33,109 @@ _Mục đích: Có API giả lập để test ngay logic luồng stream và ti�
 
 ## Phase 3: Authentication & User Management
 
-- [ ] **Entity Design**: `User`, `Role`.
-- [ ] **Security Config**:
-  - Stateless Session.
-  - Config `SecurityFilterChain`.
-- [ ] **JWT Implementation**:
-  - `JwtTokenProvider`: Generate/Validate token.
-  - `JwtAuthenticationFilter`: Verify request header.
-- [ ] **Auth API**: Login, Register.
+### 3.1. Entity Layer (JPA Entities)
+
+- [ ] **User Entity**: `User.java`
+  - Fields: `id`, `username`, `email`, `passwordHash`, `createdAt`, `updatedAt`.
+  - **KHÔNG dùng `@ManyToMany`** với Role (theo rule anti-JPA-relationship).
+- [ ] **Role Entity**: `Role.java`
+  - Fields: `id`, `name` (ROLE_USER, ROLE_STREAMER, ROLE_ADMIN).
+- [ ] **UserRole Join Table**: `UserRole.java`
+  - Fields: `id`, `userId`, `roleId`, `assignedAt`.
+  - Explicit join entity thay vì `@ManyToMany`.
+
+### 3.2. Repository Layer
+
+- [ ] **UserRepository**: `findByUsername()`, `findByEmail()`, `existsByUsername()`, `existsByEmail()`.
+- [ ] **RoleRepository**: `findByName()`.
+- [ ] **UserRoleRepository**: `findByUserId()`, `deleteByUserIdAndRoleId()`.
+
+### 3.3. DTOs (Input/Output)
+
+- [ ] **Request DTOs**:
+  - `RegisterRequest`: `username`, `email`, `password`.
+  - `LoginRequest`: `username`, `password`.
+  - `RefreshTokenRequest`: `refreshToken`.
+- [ ] **Response DTOs**:
+  - `AuthResponse`: `accessToken`, `refreshToken`, `tokenType`, `expiresIn`.
+  - `UserDTO`: `id`, `username`, `email`, `roles[]`, `createdAt`.
+
+### 3.4. Security Configuration
+
+- [ ] **SecurityConfig** (`@EnableWebSecurity`, `@EnableMethodSecurity`):
+  - Stateless Session (`SessionCreationPolicy.STATELESS`).
+  - **URL-Level Authorization** (Two-Tier Strategy):
+    - Public: `/api/auth/**`, `/api/dev/**`, `/swagger-ui/**`.
+    - Admin Only: `/api/admin/**`.
+    - Others: `.authenticated()`.
+  - Add `JwtAuthenticationFilter` before `UsernamePasswordAuthenticationFilter`.
+  - `PasswordEncoder` bean (BCrypt).
+  - `AuthenticationManager` bean.
+
+### 3.5. JWT Implementation
+
+- [ ] **JwtTokenProvider**:
+  - `generateAccessToken(UserDetails)`: Tạo JWT với expiry 1h.
+  - `generateRefreshToken(UserDetails)`: Tạo JWT với expiry 7 days.
+  - `validateToken(String token)`: Verify signature + expiration.
+  - `getUsernameFromToken(String token)`: Extract username.
+- [ ] **JwtAuthenticationFilter** (`OncePerRequestFilter`):
+  - Extract JWT từ `Authorization: Bearer` header.
+  - Validate token → Load UserDetails → Set Authentication vào SecurityContext.
+  - Skip filter cho public endpoints.
+- [ ] **Redis JWT Blacklist** (Force Logout):
+  - `RedisTemplate<String, String>` bean config.
+  - `addToBlacklist(String token, long expirySeconds)`: Store token vào Redis với TTL.
+  - `isBlacklisted(String token)`: Check trước khi validate.
+
+### 3.6. UserDetailsService
+
+- [ ] **CustomUserDetailsService** implements `UserDetailsService`:
+  - `loadUserByUsername(String username)`:
+    - Query User từ DB.
+    - Load Roles qua UserRole join table.
+    - Return `org.springframework.security.core.userdetails.User` với authorities.
+
+### 3.7. Auth API Controllers
+
+- [ ] **AuthController** (`/api/auth/**`):
+  - `POST /api/auth/register`: Đăng ký user mới, tự động gán `ROLE_USER`.
+  - `POST /api/auth/login`: Authenticate → Return `AuthResponse` (access + refresh token).
+  - `POST /api/auth/refresh`: Input `refreshToken` → Validate → Return new `accessToken`.
+  - `POST /api/auth/logout`: Add current token vào Redis blacklist.
+  - `GET /api/auth/me`: Return `UserDTO` của user hiện tại (authenticated).
+
+### 3.8. Service Layer
+
+- [ ] **AuthService**:
+  - `register(RegisterRequest)`: Validate → Hash password → Save User → Assign ROLE_USER.
+  - `login(LoginRequest)`: Authenticate → Generate tokens → Return AuthResponse.
+  - `refreshAccessToken(String refreshToken)`: Validate refresh token → Generate new access token.
+  - `logout(String token)`: Add token to blacklist.
+- [ ] **UserService**:
+  - `getUserById(Long id)`: Return UserDTO.
+  - `getCurrentUser()`: Get from SecurityContext.
+  - `assignRole(Long userId, String roleName)`: Create UserRole entry.
+
+### 3.9. Exception Handling
+
+- [ ] **GlobalExceptionHandler** (`@RestControllerAdvice`):
+  - `@ExceptionHandler(AuthenticationException)`: Return 401 Unauthorized.
+  - `@ExceptionHandler(AccessDeniedException)`: Return 403 Forbidden.
+  - `@ExceptionHandler(JwtException)`: Return 401 Invalid Token.
+
+### 3.10. Swagger/OpenAPI Config
+
+- [ ] **OpenApiConfig**:
+  - `@SecurityScheme` với `BearerAuth` (JWT).
+  - `@Tag` cho AuthController: "Authentication APIs".
+  - Endpoints có `@Operation` descriptions.
+
+### 3.11. Testing Utilities (Development)
+
+- [ ] **Data Seeding** (Optional):
+  - `DataInitializer` tạo users mẫu (admin, streamer, user) khi dev mode.
+  - Pre-populate roles: ROLE_USER, ROLE_STREAMER, ROLE_ADMIN.
 
 ## Phase 4: Economy & Transaction System (Core Logic)
 
