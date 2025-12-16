@@ -57,7 +57,7 @@ app:
   # Data Initialization (default: false to improve startup performance)
   # Set to true only when you want to initialize/reset default data (roles and users)
   data:
-    init-default-data: true
+    init-default-data: false
 
   jwt:
     # Secret key for JWT signing (Base64 encoded, minimum 256 bits for HS256)
