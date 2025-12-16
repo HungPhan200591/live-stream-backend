@@ -1,5 +1,121 @@
 # Coding Rules - Spring Boot Livestream Backend
 
+## 📖 Required Reading Before Implementation
+
+### API Endpoints Specification
+
+**BẮT BUỘC** đọc `docs/api_endpoints_specification.md` trước khi implement bất kỳ feature nào liên quan đến API.
+
+**File này là SSOT (Single Source of Truth) về**:
+- ✅ API endpoint patterns cho tất cả domains
+- ✅ Authorization rules (Public/Authenticated/Role-based)
+- ✅ HTTP methods và expected request/response DTOs
+- ✅ SecurityConfig URL-level patterns
+- ✅ @PreAuthorize method-level patterns
+- ✅ Implementation best practices
+
+**Khi nào cần check**:
+1. Trước khi tạo Controller class mới
+2. Trước khi implement endpoint mới
+3. Khi thiết lập authorization (@PreAuthorize hoặc SecurityConfig)
+4. Khi có thắc mắc về endpoint nào cần role gì
+
+---
+
+## API Implementation Rules
+
+### 1. Controller Implementation
+
+**LUÔN LUÔN** follow pattern trong `docs/api_endpoints_specification.md`:
+
+✅ **ĐÚNG:**
+``java
+@RestController
+@RequestMapping("/api/streams")
+@RequiredArgsConstructor
+@Tag(name = "Streams", description = "Livestream management APIs")
+public class StreamController {
+    
+    // Public GET - theo spec
+    @GetMapping
+    @Operation(summary = "Get all live streams")
+    public ApiResponse<List<StreamDTO>> getAllStreams() {
+        // Implementation
+    }
+    
+    // STREAMER + ADMIN - theo spec
+    @PreAuthorize("hasAnyRole('STREAMER', 'ADMIN')")
+    @PostMapping
+    @Operation(summary = "Create new stream")
+    public ApiResponse<StreamDTO> createStream(@Valid @RequestBody CreateStreamRequest request) {
+        // Implementation
+    }
+}
+``
+
+❌ **SAI:**
+- Tự tạo endpoint pattern không theo spec
+- Thiếu Swagger annotations (@Tag, @Operation)
+- Expose Entity thay vì DTO
+- Không có authorization phù hợp
+- Không dùng ApiResponse wrapper
+
+### 2. Authorization Rules
+
+**Two-Tier Strategy** (theo specification):
+
+**Tier 1: URL-Level (SecurityConfig)**
+- Dùng cho pattern-based authorization
+- Ví dụ: `/api/admin/**` → `hasRole("ADMIN")`
+
+**Tier 2: Method-Level (@PreAuthorize)**
+- Dùng cho fine-grained control
+- Ví dụ: Chỉ owner hoặc admin mới được update
+
+``java
+// Check owner hoặc admin
+@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")
+@PutMapping("/streams/{streamId}")
+public ApiResponse<StreamDTO> updateStream(@PathVariable Long streamId, ...) { }
+``
+
+### 3. DTO Usage
+
+**LUÔN LUÔN** dùng DTO cho API Input/Output:
+
+✅ **ĐÚNG:**
+``java
+public ApiResponse<UserDTO> getUser(Long id) {
+    User user = userService.getUserById(id);
+    UserDTO dto = userService.convertToDTO(user);
+    return ApiResponse.success(dto, null);
+}
+``
+
+❌ **SAI:**
+``java
+public ApiResponse<User> getUser(Long id) {
+    User user = userService.getUserById(id);
+    return ApiResponse.success(user, null); // Exposing Entity!
+}
+``
+
+### 4. Swagger Documentation
+
+**LUÔN LUÔN** thêm Swagger annotations:
+
+``java
+@Tag(name = "Domain Name", description = "Domain description")
+public class YourController {
+    
+    @Operation(summary = "Short summary", description = "Detailed description")
+    @GetMapping("/endpoint")
+    public ApiResponse<DTO> method() { }
+}
+``
+
+---
+
 ## Database Design Rules
 
 ### ❌ CẤM SỬ DỤNG JPA Relationships Annotations

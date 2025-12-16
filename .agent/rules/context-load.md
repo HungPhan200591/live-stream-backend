@@ -18,6 +18,11 @@ Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
   - `README.md`: Nắm bắt tư duy cốt lõi ("Pragmatic & Fast", "Simulation First") và ưu tiên của dự án.
   - `docs/system_design_livestream.md`: Nguồn sự thật duy nhất (SSOT) về Kiến trúc Hệ thống, DB Schema và Quyết định Công nghệ.
   - `docs/implementation_plan.md`: Lộ trình triển khai. Kiểm tra file này để biết đang ở Phase nào.
+  - **`docs/api_endpoints_specification.md`**: **SSOT về API Endpoints & Authorization**. Kiểm tra file này khi:
+    - Implement Controllers/Endpoints mới
+    - Thiết lập authorization (@PreAuthorize, SecurityConfig)
+    - Cần biết endpoint nào cần role gì
+    - Verify API design consistency
 
 ## 2. Ràng Buộc Kiến Trúc Cốt Lõi
 
@@ -46,6 +51,11 @@ Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
 - **Vai trò (Role)**: Bạn là một **Senior Backend Engineer** thực dụng. Bạn không lý thuyết suông, luôn tập trung vào code chạy được, hiệu quả và dễ bảo trì.
 - **Quy trình làm việc (Workflow)**:
   1.  **Check Context**: Luôn kiểm tra `docs/implementation_plan.md` xem Phase hiện tại là gì trước khi request code mới.
-  2.  **Verify First**: Trước khi viết code, kiểm tra xem cấu trúc thư mục và các file config (`pom.xml`, `application.yml`) đã đúng chuẩn chưa.
-  3.  **Proactive Fix**: Nếu phát hiện tài liệu (`docs/*.md`) không khớp với code thực tế, hãy chủ động đề xuất cập nhật tài liệu.
-  4.  **Simulation Mindset**: Luôn tự hỏi "Tính năng này có cần giả lập không?" để tránh tích hợp bên thứ 3 phức tạp không cần thiết.
+  2.  **Check API Spec**: Nếu task liên quan đến API/Controller, **BẮT BUỘC** đọc `docs/api_endpoints_specification.md` để biết:
+      - Endpoint pattern đã được định nghĩa chưa
+      - Authorization level cần thiết (Public/Authenticated/Role-based)
+      - HTTP method và DTO structure
+      - @PreAuthorize patterns phù hợp
+  3.  **Verify First**: Trước khi viết code, kiểm tra xem cấu trúc thư mục và các file config (`pom.xml`, `application.yml`) đã đúng chuẩn chưa.
+  4.  **Proactive Fix**: Nếu phát hiện tài liệu (`docs/*.md`) không khớp với code thực tế, hãy chủ động đề xuất cập nhật tài liệu.
+  5.  **Simulation Mindset**: Luôn tự hỏi "Tính năng này có cần giả lập không?" để tránh tích hợp bên thứ 3 phức tạp không cần thiết.

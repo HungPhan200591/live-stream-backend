@@ -31,3 +31,7 @@
 
 - [System Design](docs/system_design_livestream.md): Thiết kế hệ thống & Kiến trúc.
 - [Implementation Plan](docs/implementation_plan.md): Kế hoạch code chi tiết từng bước.
+- **[API Endpoints Specification](docs/api_endpoints_specification.md)**: **Danh sách đầy đủ API endpoints & Authorization rules**. 
+  - **QUAN TRỌNG**: Đọc file này trước khi implement bất kỳ Controller/Endpoint nào.
+  - Bao gồm: Endpoint patterns, HTTP methods, Authorization levels, @PreAuthorize examples, SecurityConfig template.
+

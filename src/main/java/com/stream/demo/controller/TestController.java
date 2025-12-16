@@ -2,7 +2,6 @@ package com.stream.demo.controller;
 
 import com.stream.demo.model.entity.User;
 import com.stream.demo.repository.UserRepository;
-import com.stream.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
