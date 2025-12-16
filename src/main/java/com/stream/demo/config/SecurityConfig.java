@@ -38,7 +38,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/dev/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll() // Test endpoints (development only)
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Swagger/OpenAPI endpoints
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**")
+                        .permitAll()
                         // All other endpoints require authentication
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
