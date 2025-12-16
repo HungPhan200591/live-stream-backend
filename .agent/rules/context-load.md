@@ -23,6 +23,11 @@ Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
     - Thiết lập authorization (@PreAuthorize, SecurityConfig)
     - Cần biết endpoint nào cần role gì
     - Verify API design consistency
+  - `docs/authorization_flow.md`: **Luồng phân quyền chi tiết với Mermaid diagrams**. Tham khảo khi:
+    - Cần hiểu rõ flow từ request đến response
+    - Implement WebSocket authorization
+    - Debug authorization issues
+    - Thiết kế authorization cho feature mới
 
 ## 2. Ràng Buộc Kiến Trúc Cốt Lõi
 

@@ -20,6 +20,20 @@
 3. Khi thiết lập authorization (@PreAuthorize hoặc SecurityConfig)
 4. Khi có thắc mắc về endpoint nào cần role gì
 
+### Authorization Flow (Mermaid Diagrams)
+
+**Tham khảo** `docs/authorization_flow.md` để hiểu luồng phân quyền:
+
+- ✅ REST API authorization flow (Request → JWT → URL-level → Method-level)
+- ✅ WebSocket authorization (Handshake → Subscribe → Message)
+- ✅ Two-tier strategy (Khi nào dùng URL-level vs Method-level)
+- ✅ Common scenarios với code examples
+
+**Đặc biệt quan trọng**:
+- WebSocket khác REST API - cần 3 layers authorization
+- Always check mute/ban trong Redis trước khi process message
+- Handshake authentication ≠ Message authorization
+
 ---
 
 ## API Implementation Rules

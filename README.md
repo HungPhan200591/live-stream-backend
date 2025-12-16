@@ -34,4 +34,9 @@
 - **[API Endpoints Specification](docs/api_endpoints_specification.md)**: **Danh sách đầy đủ API endpoints & Authorization rules**. 
   - **QUAN TRỌNG**: Đọc file này trước khi implement bất kỳ Controller/Endpoint nào.
   - Bao gồm: Endpoint patterns, HTTP methods, Authorization levels, @PreAuthorize examples, SecurityConfig template.
+- **[Authorization Flow](docs/authorization_flow.md)**: **Luồng phân quyền chi tiết với Mermaid diagrams**.
+  - REST API authorization (URL-level + Method-level)
+  - WebSocket authorization (Handshake + Channel + Message)
+  - Common scenarios & best practices
+
 
