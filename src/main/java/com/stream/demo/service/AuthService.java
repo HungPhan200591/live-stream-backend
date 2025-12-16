@@ -37,12 +37,12 @@ public class AuthService {
         @Transactional
         public AuthResponse register(RegisterRequest request) {
                 // Validate: username not exists
-                if (userRepository.existsByUsername(request.getUsername())) {
+                if (Boolean.TRUE.equals(userRepository.existsByUsername(request.getUsername()))) {
                         throw new IllegalArgumentException("Username already exists");
                 }
 
                 // Validate: email not exists
-                if (userRepository.existsByEmail(request.getEmail())) {
+                if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
                         throw new IllegalArgumentException("Email already exists");
                 }
 
