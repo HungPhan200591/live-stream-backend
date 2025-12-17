@@ -33,6 +33,34 @@
 - WebSocket khác REST API - cần 3 layers authorization
 - Always check mute/ban trong Redis trước khi process message
 - Handshake authentication ≠ Message authorization
+### Redis Implementation
+
+**BẮT BUỘC** đọc `docs/redis_usage_guide.md` trước khi implement bất kỳ Redis caching nào.
+
+**File này là SSOT về**:
+- ✅ Type-safe RedisTemplate configuration pattern
+- ✅ Cache DTO creation rules
+- ✅ Cache Service implementation templates
+- ✅ Cache key naming conventions & versioning
+- ✅ TTL guidelines cho các use cases
+- ✅ Common pitfalls & solutions
+- ✅ Testing & monitoring strategies
+
+**Khi nào cần check**:
+1. Trước khi tạo Cache DTO mới
+2. Trước khi register RedisTemplate bean mới
+3. Khi implement Cache Service
+4. Khi gặp serialization errors
+5. Khi quyết định TTL phù hợp
+6. Khi debug cache hit/miss issues
+
+**Checklist bắt buộc**:
+- [ ] Cache DTO trong package `model/dto/cache/*`
+- [ ] Bean name constant trong `RedisConfig.RedisTemplateBeanNames`
+- [ ] Explicit `@Bean` method trong `RedisConfig`
+- [ ] Service với `@Qualifier` annotation
+- [ ] Cache key có version prefix (e.g., `entity:v1:id`)
+- [ ] TTL được set explicitly (no eternal keys)
 
 ---
 
