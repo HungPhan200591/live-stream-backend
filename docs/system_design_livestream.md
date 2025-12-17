@@ -1,5 +1,55 @@
 # Tài Liệu Thiết Kế Hệ Thống: Spring Boot Livestream Backend
 
+## 0. Business Context
+
+> **Đọc trước**: [Business Flows & Use Cases](business_flows.md) để hiểu nghiệp vụ trước khi đọc technical design.
+
+### Core Use Cases Supported
+
+Hệ thống được thiết kế để support 7 use cases chính:
+
+1. **UC-01: User Registration & Authentication** - Quản lý identity và access control
+2. **UC-02: Streamer Creates Livestream** - Content creators phát sóng
+3. **UC-03: Viewer Watches Stream** - Audience xem và tương tác
+4. **UC-04: Real-time Chat Interaction** - Community engagement
+5. **UC-05: Gift Sending & Wallet Management** - Monetization
+6. **UC-06: Analytics & Leaderboard** - Data insights và gamification
+7. **UC-07: Admin Moderation** - Platform governance
+
+### Business Requirements → Technical Decisions
+
+| Business Requirement | Technical Solution | Rationale |
+|---------------------|-------------------|-----------|
+| **Real-time chat** với thousands concurrent users | Redis Pub/Sub + WebSocket | In-memory speed, horizontal scaling |
+| **Unique viewer tracking** không duplicate | Redis HyperLogLog | Memory-efficient probabilistic counting |
+| **Gift transactions** phải atomic | PostgreSQL Transactions + Optimistic Locking | Data integrity, prevent double-spend |
+| **Async gift processing** không block user | RabbitMQ Message Queue | Decouple heavy operations, retry logic |
+| **Session-backed auth** để revoke tokens | PostgreSQL user_sessions table | Centralized session management |
+| **Leaderboard** update real-time | Redis Sorted Sets | O(log N) updates, fast ranking |
+
+### User Flows → System Components
+
+```mermaid
+graph LR
+    UF1[Streamer Lifecycle] --> Auth[Authentication]
+    UF1 --> Stream[Stream Management]
+    UF1 --> Redis[Redis Cache]
+    
+    UF2[Viewer Journey] --> Stream
+    UF2 --> WS[WebSocket Chat]
+    UF2 --> Redis
+    
+    UF3[Gift Transaction] --> Wallet[Wallet Service]
+    UF3 --> RMQ[RabbitMQ]
+    UF3 --> WS
+    
+    style UF1 fill:#E1F5FF
+    style UF2 fill:#E1F5FF
+    style UF3 fill:#E1F5FF
+```
+
+---
+
 ## 1. Bối Cảnh & Mục Tiêu
 
 - **Mục tiêu**: Xây dựng Backend hiệu năng cao cho nền tảng Livestream.
