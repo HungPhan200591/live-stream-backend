@@ -437,6 +437,6 @@ rate:donate:{userId}     → count (TTL 3600s, max 10/hour)
 
 ---
 
-> 📌 **Xem thêm**: [security_best_practices.md](./security_best_practices.md)
+> 📌 **Xem thêm**: [security_best_practices.md](usage/security_best_practices.md)
 
 **End of Document**

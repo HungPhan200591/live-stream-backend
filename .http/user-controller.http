@@ -1,5 +1,5 @@
 ### Get User Profile (Public)
-GET {{host}}/api/users/1
+GET {{host}}/api/users/16
 Authorization: Bearer {{token}}
 
 ### Update User Profile (Self/Admin)
