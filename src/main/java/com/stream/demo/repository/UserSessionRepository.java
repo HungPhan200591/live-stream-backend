@@ -48,4 +48,23 @@ public interface UserSessionRepository extends JpaRepository<UserSession, UUID> 
     @Modifying
     @Query("UPDATE UserSession s SET s.status = :status WHERE s.sessionId = :sessionId")
     int updateStatusBySessionId(@Param("sessionId") UUID sessionId, @Param("status") UserSession.SessionStatus status);
+
+    /**
+     * Đếm số sessions active của user
+     * Dùng để check max sessions limit
+     */
+    long countByUserIdAndStatus(Long userId, UserSession.SessionStatus status);
+
+    /**
+     * Tìm session cũ nhất (oldest lastUsedAt) của user
+     * Dùng để revoke khi vượt max sessions limit
+     */
+    Optional<UserSession> findTopByUserIdAndStatusOrderByLastUsedAtAsc(Long userId, UserSession.SessionStatus status);
+
+    /**
+     * Tìm sessions đã hết hạn
+     * Dùng cho scheduled cleanup job
+     */
+    List<UserSession> findByStatusAndExpiresAtBefore(UserSession.SessionStatus status,
+            java.time.LocalDateTime expiresAt);
 }

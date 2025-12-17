@@ -23,6 +23,8 @@ import java.util.UUID;
 @Transactional
 public class SessionService {
 
+    private static final int MAX_SESSIONS_PER_USER = 5;
+
     private final UserSessionRepository sessionRepository;
     private final SessionCacheService sessionCacheService;
 
@@ -31,6 +33,9 @@ public class SessionService {
 
     /**
      * Tạo session mới khi user login
+     * <p>
+     * Nếu user đã có >= MAX_SESSIONS_PER_USER active sessions,
+     * tự động revoke session cũ nhất (theo lastUsedAt).
      *
      * @param userId     User ID
      * @param deviceId   Device identifier (browser fingerprint, mobile device ID,
@@ -40,6 +45,9 @@ public class SessionService {
      * @return UserSession đã được lưu trong DB
      */
     public UserSession createSession(Long userId, String deviceId, String deviceName, String ipAddress) {
+        // Check max sessions limit - revoke oldest if exceeded
+        enforceMaxSessionsLimit(userId);
+
         LocalDateTime expiresAt = LocalDateTime.now()
                 .plusNanos(refreshExpirationMs * 1_000_000); // Convert ms to nanos
 
@@ -58,6 +66,22 @@ public class SessionService {
         sessionCacheService.cacheSession(savedSession);
 
         return savedSession;
+    }
+
+    /**
+     * Enforce max sessions limit per user.
+     * Nếu user đã có >= MAX_SESSIONS thì revoke session cũ nhất.
+     */
+    private void enforceMaxSessionsLimit(Long userId) {
+        long activeSessionCount = sessionRepository.countByUserIdAndStatus(
+                userId, UserSession.SessionStatus.ACTIVE);
+
+        if (activeSessionCount >= MAX_SESSIONS_PER_USER) {
+            // Revoke oldest session (theo lastUsedAt)
+            sessionRepository.findTopByUserIdAndStatusOrderByLastUsedAtAsc(
+                    userId, UserSession.SessionStatus.ACTIVE)
+                    .ifPresent(oldestSession -> revokeSession(oldestSession.getSessionId()));
+        }
     }
 
     /**
