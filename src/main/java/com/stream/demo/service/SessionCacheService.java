@@ -1,8 +1,10 @@
 package com.stream.demo.service;
 
+import com.stream.demo.config.RedisConfig;
 import com.stream.demo.model.dto.cache.SessionCacheDTO;
 import com.stream.demo.model.entity.UserSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ import java.util.UUID;
  * Session Cache Service
  * <p>
  * Service để cache UserSession trong Redis nhằm tăng performance.
- * Dùng SessionCacheDTO thay vì Entity để tránh JPA/Jackson conflicts.
+ * Inject RedisTemplate theo bean name từ CacheableDto enum.
  * Cache hit: Lấy từ Redis (nhanh)
  * Cache miss: Query từ DB, populate cache
  */
@@ -24,7 +26,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionCacheService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    // Type-safe bean name constant - centralized in RedisConfig
+    @Qualifier(RedisConfig.RedisTemplateBeanNames.SESSION_CACHE)
+    private final RedisTemplate<String, SessionCacheDTO> sessionCacheRedisTemplate;
 
     private static final String CACHE_VERSION = "v1";
     private static final String SESSION_CACHE_PREFIX = "session:" + CACHE_VERSION + ":";
@@ -42,41 +46,21 @@ public class SessionCacheService {
         if (ttlSeconds > 0) {
             // Convert Entity to DTO before caching
             SessionCacheDTO dto = SessionCacheDTO.fromEntity(session);
-            redisTemplate.opsForValue().set(key, dto, Duration.ofSeconds(ttlSeconds));
+            sessionCacheRedisTemplate.opsForValue().set(key, dto, Duration.ofSeconds(ttlSeconds));
         }
     }
 
     /**
      * Get session từ Redis cache
+     * Type-safe deserialization - no casting needed!
      *
      * @param sessionId Session UUID
      * @return Optional<SessionCacheDTO>
      */
     public Optional<SessionCacheDTO> getSessionFromCache(UUID sessionId) {
         String key = SESSION_CACHE_PREFIX + sessionId.toString();
-        Object value = redisTemplate.opsForValue().get(key);
-
-        if (value == null) {
-            return Optional.empty();
-        }
-
-        // Type Alias deserialization returns LinkedHashMap, need to convert
-        if (value instanceof SessionCacheDTO dto) {
-            return Optional.of(dto);
-        } else if (value instanceof java.util.Map) {
-            // Convert Map to SessionCacheDTO using ObjectMapper
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-                SessionCacheDTO dto = mapper.convertValue(value, SessionCacheDTO.class);
-                return Optional.of(dto);
-            } catch (Exception e) {
-                // Invalid cache data, return empty
-                return Optional.empty();
-            }
-        }
-
-        return Optional.empty();
+        SessionCacheDTO dto = sessionCacheRedisTemplate.opsForValue().get(key);
+        return Optional.ofNullable(dto);
     }
 
     /**
@@ -86,7 +70,7 @@ public class SessionCacheService {
      */
     public void invalidateSession(UUID sessionId) {
         String key = SESSION_CACHE_PREFIX + sessionId.toString();
-        redisTemplate.delete(key);
+        sessionCacheRedisTemplate.delete(key);
     }
 
     /**
