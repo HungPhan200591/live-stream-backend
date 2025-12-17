@@ -22,7 +22,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6379
+      port: 16379
 
   # RabbitMQ Configuration
   rabbitmq:
@@ -64,6 +64,6 @@ app:
     # IMPORTANT: In production, use environment variable instead!
     secret: YXBwbGljYXRpb25fc2VjcmV0X2tleV9mb3JfbGl2ZXN0cmVhbV9iYWNrZW5kX2RldmVsb3BtZW50X29ubHlfMjU2Yml0cw==
     # Access token expiration time in milliseconds (1 hour = 3600000 ms)
-    expiration-ms: 3600000
+    expiration-ms: 360000000 # dummy 100 hours for lazy login
     # Refresh token expiration time in milliseconds (7 days = 604800000 ms)
     refresh-expiration-ms: 604800000
