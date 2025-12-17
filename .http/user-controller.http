@@ -2,10 +2,8 @@
 GET {{host}}/api/users/1
 Authorization: Bearer {{token}}
 
-###
-
 ### Update User Profile (Self/Admin)
-PUT {{host}}/api/users/1
+PUT {{host}}/api/users/16
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
