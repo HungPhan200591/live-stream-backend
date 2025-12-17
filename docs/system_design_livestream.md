@@ -43,14 +43,20 @@ graph TD
 
 ### 4.1. Xác Thực & Phân Quyền (RBAC)
 
-- **Cơ chế**: JWT (Access Token + Refresh Token).
+- **Cơ chế**: JWT + Session-backed Refresh Token.
+  - Access Token: 15 phút, stateless.
+  - Refresh Token: 30 ngày, chứa session_id, check DB mỗi lần refresh.
 - **Vai trò**:
   - `ROLE_USER`: Xem, chat, tặng quà.
   - `ROLE_STREAMER`: Có thể bắt đầu stream.
   - `ROLE_ADMIN`: Quản lý user, xem báo cáo.
 - **Luồng**:
-  1.  Đăng nhập -> Trả về JWT.
-  2.  Lưu JWT vào Redis (White-list hoặc Black-list) để hỗ trợ "Force Logout".
+  1. Đăng nhập → Tạo session trong DB (user_sessions) → Trả JWT.
+  2. Refresh → Check session status trong DB → Cấp AT mới.
+  3. Logout → Revoke session (status = REVOKED) → RT tự chết.
+- **Tiền tệ (Donate/Withdraw)**:
+  - Action Token: Redis, 60s TTL, one-time.
+  - Step-up auth cho số tiền lớn (OTP, 2FA).
 
 ### 4.2. Quản Lý Stream (Webhook Giả Lập)
 

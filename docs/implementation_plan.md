@@ -32,6 +32,7 @@
 **Goal**: Thiết lập project structure và infrastructure services
 
 ### Checklist
+
 - [x] Init Spring Boot project với dependencies
 - [x] Docker Compose: PostgreSQL, Redis, RabbitMQ
 - [x] Package structure (Layered Architecture)
@@ -46,6 +47,7 @@
 **Goal**: Tạo simulation endpoints để test logic mà không cần external dependencies
 
 ### Checklist
+
 - [x] `POST /api/dev/simulate/stream/start` - Giả lập OBS stream start
 - [x] `POST /api/dev/simulate/stream/end` - Giả lập OBS stream end
 - [x] `POST /api/dev/simulate/payment/deposit` - Giả lập nạp tiền
@@ -59,30 +61,36 @@
 **Goal**: JWT-based authentication với RBAC (Role-Based Access Control)
 
 ### 3.1. Entity Layer
+
 - [x] `User` entity (NO `@ManyToMany`)
 - [x] `Role` entity (ROLE_USER, ROLE_STREAMER, ROLE_ADMIN)
 - [x] `UserRole` explicit join table entity
 
 ### 3.2. Repository Layer
+
 - [x] `UserRepository`: `findByUsername()`, `findByEmail()`, `existsByUsername()`, `existsByEmail()`
 - [x] `RoleRepository`: `findByName()`
 - [x] `UserRoleRepository`: `findByUserId()`, `deleteByUserIdAndRoleId()`
 
 ### 3.3. DTOs
+
 - [x] Request: `RegisterRequest`, `LoginRequest`, `RefreshTokenRequest`
 - [x] Response: `AuthResponse`, `UserDTO`
 
 ### 3.4. Security Configuration
+
 - [x] `SecurityConfig`: Two-Tier Authorization Strategy
 - [x] `JwtAuthenticationFilter`: Extract & validate JWT
-- [x] Redis JWT Blacklist (Force Logout)
+- [x] Session-based Authentication (user_sessions table)
 - [x] `CustomUserDetailsService`: Load user with roles
 
 ### 3.5. JWT Implementation
+
 - [x] `JwtTokenProvider`: Generate access/refresh tokens, validate
-- [x] Redis integration for blacklist
+- [x] Session verification for refresh token
 
 ### 3.6. Auth API Controllers
+
 - [x] `POST /api/auth/register`
 - [x] `POST /api/auth/login`
 - [x] `POST /api/auth/refresh`
@@ -90,26 +98,31 @@
 - [x] `GET /api/auth/me`
 
 ### 3.7. Service Layer
+
 - [x] `AuthService`: register, login, refresh, logout
 - [x] `UserService`: getUserById, getCurrentUser, assignRole
 
 ### 3.8. Exception Handling
+
 - [x] `GlobalExceptionHandler`: 401 Unauthorized, 403 Forbidden, JWT exceptions
 
 ### 3.9. Swagger/OpenAPI
+
 - [x] `@SecurityScheme` với BearerAuth
 - [x] `@Tag` và `@Operation` annotations
 
 ### 3.10. Data Seeding
+
 - [x] `DataInitializer`: Pre-populate roles và seed users (admin, streamer, user)
 
 ### 3.11. User Management API Controllers
 
 - [ ] **UserController** (`/api/users/**`)
-  
+
   - `GET /api/users/{userId}`: Lấy thông tin user (Public profile)
+
     - Return: `UserDTO` (public fields only: id, username, display name, avatar)
-  
+
   - `PUT /api/users/{userId}`: Cập nhật thông tin user
     - `@PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")`
     - Body: `UpdateUserRequest` (displayName, bio, avatarUrl, email)
@@ -124,6 +137,7 @@
 ### 4.1. Entity Layer
 
 - [ ] **Stream Entity** (`Stream.java`)
+
   - Fields: `id`, `creatorId`, `streamKey`, `title`, `description`, `isLive`, `startedAt`, `endedAt`, `createdAt`, `updatedAt`
   - **NO** `@ManyToOne` với User (chỉ lưu `creatorId`)
   - Index: `streamKey` (unique), `creatorId`, `isLive`
@@ -144,6 +158,7 @@
 ### 4.3. DTOs
 
 - [ ] **Request DTOs**
+
   - `CreateStreamRequest`: `title`, `description`
   - `UpdateStreamRequest`: `title`, `description`
   - `StartStreamRequest`: `streamKey`
@@ -156,36 +171,42 @@
 ### 4.4. Service Layer
 
 - [ ] **StreamService**
+
   - `createStream(CreateStreamRequest, User currentUser)`: Tạo stream mới
+
     - Generate unique `streamKey` (UUID hoặc custom algorithm)
     - Set `creatorId` = current user
     - Set `isLive` = false
     - Validate: Chỉ STREAMER/ADMIN mới được tạo
-  
+
   - `updateStream(Long streamId, UpdateStreamRequest, User currentUser)`: Update metadata
+
     - Validate ownership: `stream.creatorId == currentUser.id` hoặc ADMIN
-  
+
   - `deleteStream(Long streamId, User currentUser)`: Soft delete hoặc hard delete
+
     - Chỉ ADMIN
-  
+
   - `startStream(String streamKey)`: Bắt đầu stream
+
     - Set `isLive` = true
     - Set `startedAt` = now
     - Redis: `stream:{streamId}:live` = "true" (TTL 24h)
     - Trigger notification event (RabbitMQ)
-  
+
   - `endStream(String streamKey)`: Kết thúc stream
+
     - Set `isLive` = false
     - Set `endedAt` = now
     - Cleanup Redis keys
     - Save stats to DB
-  
+
   - `getStreamById(Long streamId)`: Public viewing
-  
+
   - `getAllLiveStreams()`: Query `isLive = true` + Redis cache
-  
+
   - `getStreamsByCreator(Long creatorId)`: Streamer's dashboard
-  
+
   - **Owner Verification Helper**:
     - `isStreamOwner(Long streamId, String username)`: For `@PreAuthorize`
 
@@ -208,28 +229,34 @@
 ### 4.6. Controller Layer
 
 - [ ] **StreamController** (`/api/streams/**`)
-  
+
   **Public Endpoints**:
+
   - `GET /api/streams`: Danh sách stream đang live
     - Query params: `?liveOnly=true`, pagination
   - `GET /api/streams/{streamId}`: Chi tiết stream
     - Include viewer count từ Redis
   - `GET /api/streams/{streamId}/viewers`: Realtime viewer count
-  
+
   **Authenticated Endpoints** (STREAMER + ADMIN):
+
   - `POST /api/streams`: Tạo stream mới
+
     - `@PreAuthorize("hasAnyRole('STREAMER', 'ADMIN')")`
-  
+
   - `PUT /api/streams/{streamId}`: Cập nhật stream
+
     - `@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")`
-  
+
   - `POST /api/streams/{streamId}/start`: Bắt đầu stream
+
     - `@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")`
-  
+
   - `POST /api/streams/{streamId}/end`: Kết thúc stream
     - `@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")`
-  
+
   **Admin Only**:
+
   - `DELETE /api/streams/{streamId}`: Xóa stream
     - `@PreAuthorize("hasRole('ADMIN')")`
 
@@ -259,6 +286,7 @@
 ### 5.1. Entity Layer
 
 - [ ] **Wallet Entity** (`Wallet.java`)
+
   - Fields: `id`, `userId`, `balance` (BigDecimal), `currency` (default "COINS"), `version` (Optimistic Locking), `updatedAt`
   - Unique constraint: `userId`
   - **NO** `@OneToOne` với User
@@ -270,6 +298,7 @@
 ### 5.2. Repository Layer
 
 - [ ] **WalletRepository**
+
   - `findByUserId(Long userId)`: Get user's wallet
   - `existsByUserId(Long userId)`: Check wallet existence
   - Custom query: `@Lock(LockModeType.OPTIMISTIC)` for concurrent updates
@@ -283,6 +312,7 @@
 ### 5.3. DTOs
 
 - [ ] **Request DTOs**
+
   - `DepositRequest`: `userId`, `amount` (Admin hoặc Simulation only)
   - `TransferRequest`: `toUserId`, `amount` (Internal use)
 
@@ -294,64 +324,72 @@
 ### 5.4. Service Layer
 
 - [ ] **WalletService**
-  
+
   - `createWallet(Long userId)`: Auto-create khi user đăng ký
+
     - Initial balance = 0
-  
+
   - `getWallet(Long userId)`: Get user's wallet
+
     - Throw exception nếu không tồn tại
-  
+
   - `deposit(Long userId, BigDecimal amount, String metadata)`: Nạp tiền
+
     - Validate: amount > 0
-    - **Transactional**: 
+    - **Transactional**:
       1. Lock wallet (Optimistic Locking)
       2. Update balance: `balance = balance + amount`
       3. Create Transaction record (type=DEPOSIT, status=COMPLETED)
     - Return: WalletDTO
-  
+
   - `deduct(Long userId, BigDecimal amount, String reason)`: Trừ tiền
+
     - Validate: amount > 0
     - Check balance: `balance >= amount`
-    - **Transactional**: 
+    - **Transactional**:
       1. Lock wallet
       2. Update balance: `balance = balance - amount`
       3. Create Transaction record (type=GIFT/WITHDRAWAL)
     - Throw `InsufficientBalanceException` nếu không đủ tiền
-  
+
   - `transfer(Long fromUserId, Long toUserId, BigDecimal amount)`: Chuyển tiền
-    - **Transactional**: 
+
+    - **Transactional**:
       1. Deduct from sender
       2. Deposit to receiver
       3. Create Transaction record (type=GIFT, fromUserId, toUserId)
-  
+
   - `getBalance(Long userId)`: Quick balance check
     - Cache trong Redis: `wallet:{userId}:balance` (TTL 60s)
 
 - [ ] **TransactionService**
-  
+
   - `getTransactionHistory(Long userId, Pageable pageable)`: Lịch sử giao dịch
+
     - Query: `fromUserId = userId OR toUserId = userId`
     - Sort by `createdAt DESC`
-  
+
   - `getTransactionById(Long transactionId, User currentUser)`: Chi tiết giao dịch
+
     - Validate: User phải là sender hoặc receiver hoặc ADMIN
-  
+
   - `getTotalRevenue(Long userId)`: Tổng tiền nhận được
     - Sum amount where `toUserId = userId AND type = GIFT`
 
 ### 5.5. Controller Layer
 
 - [ ] **WalletController** (`/api/users/{userId}/wallet`)
-  
+
   - `GET /api/users/{userId}/wallet`: Xem số dư
+
     - `@PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")`
-  
+
   - `GET /api/users/{userId}/transactions`: Lịch sử giao dịch
     - `@PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")`
     - Pagination support
 
 - [ ] **TransactionController** (`/api/transactions/**`)
-  
+
   - `GET /api/transactions/{transactionId}`: Chi tiết giao dịch
     - `@PreAuthorize("@transactionService.canViewTransaction(#transactionId, authentication.principal.id)")`
 
@@ -393,6 +431,7 @@
 ### 6.3. DTOs
 
 - [ ] **Request DTOs**
+
   - `ChatMessageRequest`: `streamId`, `content`
   - `MuteUserRequest`: `streamId`, `userId`, `duration` (seconds)
 
@@ -403,6 +442,7 @@
 ### 6.4. WebSocket Configuration
 
 - [ ] **WebSocketConfig** (`@EnableWebSocketMessageBroker`)
+
   - Enable STOMP over WebSocket: `/ws`
   - Message broker: `/topic`, `/queue`
   - Application destination prefix: `/app`
@@ -415,6 +455,7 @@
 ### 6.5. Redis Pub/Sub Integration
 
 - [ ] **RedisChatPublisher**
+
   - `publishMessage(Long streamId, ChatMessageDTO message)`:
     ```redis
     PUBLISH chat:room:{streamId} {messageJson}
@@ -436,11 +477,13 @@
 ### 6.6. RabbitMQ Chat Persistence
 
 - [ ] **ChatLogQueue Configuration**
+
   - Queue: `chat.log.queue`
   - Durable: true
   - Batch processing: Consume 100 messages mỗi lần
 
 - [ ] **ChatLogPublisher**
+
   - `publishForPersistence(ChatMessageDTO message)`: Send to RabbitMQ
 
 - [ ] **ChatLogConsumer** (`@RabbitListener`)
@@ -451,28 +494,32 @@
 ### 6.7. Service Layer
 
 - [ ] **ChatService**
-  
+
   - `sendMessage(Long streamId, Long userId, String content)`:
+
     1. Validate: User không bị mute trong stream
     2. Create `ChatMessageDTO`
     3. Publish to Redis Pub/Sub (realtime broadcast)
     4. Publish to RabbitMQ (async persistence)
-  
+
   - `getChatHistory(Long streamId, Pageable pageable)`: Load recent messages
+
     - Query từ DB (100 messages gần nhất)
-  
+
   - `muteUser(Long streamId, Long userId, int durationSeconds)`:
+
     - Redis Set: `muted:{streamId}`
       ```redis
       SADD muted:{streamId} {userId}
       EXPIRE muted:{streamId} {durationSeconds}
       ```
-  
+
   - `unmuteUser(Long streamId, Long userId)`:
+
     ```redis
     SREM muted:{streamId} {userId}
     ```
-  
+
   - `isMuted(Long streamId, Long userId)`:
     ```redis
     SISMEMBER muted:{streamId} {userId}
@@ -481,22 +528,25 @@
 ### 6.8. Controller Layer
 
 - [ ] **ChatController** (`/api/chat/**`)
-  
+
   - `GET /api/chat/{streamId}/history`: Lịch sử chat
+
     - Public (cho guests xem)
-  
+
   - `POST /api/chat/{streamId}/mute`: Mute user
+
     - `@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")`
-  
+
   - `POST /api/chat/{streamId}/unmute`: Unmute user
     - Same authorization as mute
 
 - [ ] **WebSocketChatController** (STOMP Endpoints)
-  
+
   - `@MessageMapping("/chat.send")`: Client gửi message
+
     - Extract user từ Principal
     - Call `chatService.sendMessage()`
-  
+
   - `@SubscribeMapping("/topic/chat.{streamId}")`: Client subscribe room
     - Validate: User đã authenticated
     - Increment viewer count (Redis HyperLogLog)
@@ -519,6 +569,7 @@
 ### 7.1. Entity Layer
 
 - [ ] **Gift Entity** (`Gift.java`)
+
   - Fields: `id`, `name`, `imageUrl`, `price` (BigDecimal), `isActive`, `createdAt`
   - Gift catalog (pre-defined items)
 
@@ -535,6 +586,7 @@
 ### 7.3. DTOs
 
 - [ ] **Request DTOs**
+
   - `SendGiftRequest`: `streamId`, `giftId`, `quantity` (default 1)
 
 - [ ] **Response DTOs**
@@ -544,13 +596,16 @@
 ### 7.4. RabbitMQ Gift Processing
 
 - [ ] **GiftEvent** (Message Model)
+
   - Fields: `giftId`, `fromUserId`, `toStreamerId`, `streamId`, `amount`, `timestamp`
 
 - [ ] **GiftQueue Configuration**
+
   - Queue: `gift.transaction.queue`
   - Dead Letter Queue: `gift.transaction.dlq` (for failed processing)
 
 - [ ] **GiftEventPublisher**
+
   - `publishGiftEvent(GiftEvent event)`: Send to RabbitMQ
 
 - [ ] **GiftEventConsumer** (`@RabbitListener`)
@@ -565,9 +620,9 @@
 ### 7.5. Service Layer
 
 - [ ] **GiftService**
-  
+
   - `getAllGifts()`: Danh sách gift catalog (cache trong Redis)
-  
+
   - `sendGift(SendGiftRequest request, User currentUser)`:
     1. **Validate**:
        - Gift exists và active
@@ -584,9 +639,9 @@
 ### 7.6. Controller Layer
 
 - [ ] **GiftController** (`/api/gifts/**`)
-  
+
   - `GET /api/gifts`: Danh sách quà (Public)
-  
+
   - `POST /api/gifts/send`: Tặng quà (Authenticated)
     - `@PreAuthorize("hasRole('USER')")`
 
@@ -622,10 +677,12 @@
 ### 8.1. Redis Data Structures
 
 - [ ] **Viewer Tracking** (HyperLogLog)
+
   - Key: `stream:{streamId}:viewers`
   - Usage: `PFADD`, `PFCOUNT`
 
 - [ ] **Leaderboard** (Sorted Sets)
+
   - Daily: `leaderboard:daily:{YYYY-MM-DD}`
     - Score = total gift amount sent
     - Member = userId
@@ -639,33 +696,37 @@
 ### 8.2. Service Layer
 
 - [ ] **AnalyticsService**
-  
+
   - `trackStreamView(Long streamId, Long userId)`:
+
     ```redis
     PFADD stream:{streamId}:viewers {userId}
     ```
-  
+
   - `getStreamViewerCount(Long streamId)`:
+
     ```redis
     PFCOUNT stream:{streamId}:viewers
     ```
-  
+
   - `updateLeaderboard(Long userId, BigDecimal amount)`:
+
     ```redis
     ZINCRBY leaderboard:daily:{date} {amount} {userId}
     ZINCRBY leaderboard:weekly:{week} {amount} {userId}
     ZINCRBY leaderboard:alltime {amount} {userId}
     ```
-  
+
   - `getDailyLeaderboard(int limit)`: Top N gifters
+
     ```redis
     ZREVRANGE leaderboard:daily:{date} 0 {limit-1} WITHSCORES
     ```
-  
+
   - `getWeeklyLeaderboard(int limit)`: Top N weekly
-  
+
   - `getAllTimeLeaderboard(int limit)`: Top N all-time
-  
+
   - `getSystemDashboard()`: ADMIN only
     - Total users (DB count)
     - Active streams (Redis count + DB verification)
@@ -673,24 +734,27 @@
     - Cache result in Redis với TTL 5 phút
 
 - [ ] **StreamAnalyticsService**
-  
+
   - `getStreamReport(Long streamId, User currentUser)`:
+
     - Validate: Owner hoặc ADMIN
     - Return: Peak viewers, total views, total gifts, revenue breakdown
-  
+
   - `calculateStreamRevenue(Long streamId)`:
     - Sum transactions where `toUserId = stream.creatorId` AND related to streamId
 
 ### 8.3. Controller Layer
 
 - [ ] **AnalyticsController** (`/api/analytics/**`)
-  
+
   - `GET /api/analytics/leaderboard`: Bảng xếp hạng (Public)
+
     - Query params: `?period=daily|weekly|alltime`, `?limit=10`
-  
+
   - `GET /api/analytics/dashboard`: System dashboard (ADMIN)
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `GET /api/analytics/streams/{streamId}/report`: Stream report (Owner + ADMIN)
     - `@PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")`
 
@@ -717,42 +781,48 @@
 ### 9.1. Service Layer
 
 - [ ] **AdminUserService**
-  
+
   - `getAllUsers(Pageable pageable)`: Danh sách tất cả users
+
     - Pagination + filters (role, status)
-  
+
   - `banUser(Long userId, String reason)`:
+
     - Update User: `status = BANNED`
     - Add to Redis blacklist: `banned:users`
     - Revoke all active sessions (JWT blacklist)
-  
+
   - `unbanUser(Long userId)`:
+
     - Update User: `status = ACTIVE`
     - Remove from Redis blacklist
-  
+
   - `changeUserRole(Long userId, String newRole)`:
+
     - Validate: newRole in [USER, STREAMER, ADMIN]
     - Delete old UserRole entries
     - Create new UserRole entry
-  
+
   - `deleteUser(Long userId)`:
     - Soft delete: `deletedAt = now`
     - Optionally: Cleanup related data (streams, transactions)
 
 - [ ] **AdminStreamService**
-  
+
   - `getAllStreams(Pageable pageable)`: Tất cả streams (include inactive)
-  
+
   - `forceEndStream(Long streamId)`: Emergency stop
+
     - Call `streamService.endStream()`
-  
+
   - `deleteStream(Long streamId)`: Hard delete
 
 - [ ] **AdminTransactionService**
-  
+
   - `getAllTransactions(Pageable pageable)`: Audit trail
+
     - Filters: type, dateRange, userId
-  
+
   - `refundTransaction(Long transactionId)`:
     - Create reverse transaction (type=REFUND)
     - Restore sender's balance
@@ -760,36 +830,42 @@
 ### 9.2. Controller Layer
 
 - [ ] **AdminUserController** (`/api/admin/users/**`)
-  
+
   - `GET /api/admin/users`: Danh sách users
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `POST /api/admin/users/{userId}/ban`: Ban user
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `POST /api/admin/users/{userId}/unban`: Unban user
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `PUT /api/admin/users/{userId}/roles`: Thay đổi roles
+
     - `@PreAuthorize("hasRole('ADMIN')")`
     - Body: `{ "role": "STREAMER" }`
-  
+
   - `DELETE /api/admin/users/{userId}`: Xóa user
     - `@PreAuthorize("hasRole('ADMIN')")`
 
 - [ ] **AdminStreamController** (`/api/admin/streams/**`)
-  
+
   - `GET /api/admin/streams`: Tất cả streams
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `DELETE /api/admin/streams/{streamId}`: Xóa stream
     - `@PreAuthorize("hasRole('ADMIN')")`
 
 - [ ] **AdminTransactionController** (`/api/admin/transactions/**`)
-  
+
   - `GET /api/admin/transactions`: Tất cả giao dịch
+
     - `@PreAuthorize("hasRole('ADMIN')")`
-  
+
   - `POST /api/admin/transactions/{transactionId}/refund`: Refund
     - `@PreAuthorize("hasRole('ADMIN')")`
 
@@ -808,10 +884,12 @@
 ### 10.1. Security Hardening
 
 - [ ] **Environment-Based Config**
+
   - Disable `/api/dev/**` và `/api/test/**` trong production
   - IP whitelist cho admin endpoints (optional)
 
 - [ ] **Rate Limiting** (Redis-based)
+
   - `@RateLimiter` annotation cho sensitive endpoints
   - Limit: 10 requests/minute cho send gift
 
@@ -821,10 +899,12 @@
 ### 10.2. Performance Optimization
 
 - [ ] **Database Indexes Review**
+
   - Verify all foreign keys có index
   - Add composite indexes cho slow queries
 
 - [ ] **Redis Cache Strategy**
+
   - Cache hot data: Live streams, gift catalog
   - TTL configuration best practices
 
@@ -834,10 +914,12 @@
 ### 10.3. Monitoring & Logging
 
 - [ ] **Structured Logging**
+
   - Logback config cho production
   - Log levels: ERROR (production), DEBUG (development)
 
 - [ ] **Health Checks**
+
   - `/actuator/health`: DB, Redis, RabbitMQ connectivity
   - Custom health indicators
 
@@ -848,10 +930,12 @@
 ### 10.4. Documentation
 
 - [ ] **API Documentation**
+
   - Verify Swagger UI completeness (`/swagger-ui.html`)
   - Add example requests/responses
 
 - [ ] **README Update**
+
   - Deployment instructions
   - Environment variables reference
   - Architecture diagram
@@ -863,6 +947,7 @@
 ### 10.5. Testing & Quality
 
 - [ ] **Load Testing**
+
   - Script giả lập 1000 concurrent chat messages
   - Verify Redis Pub/Sub performance
 
@@ -873,6 +958,7 @@
 ### 10.6. Deployment Preparation
 
 - [ ] **Docker Production Config**
+
   - Multi-stage Dockerfile (build + runtime)
   - Docker Compose production profile
 
@@ -899,6 +985,7 @@
 ### 11.1. Entity Layer
 
 - [ ] **UserFollow Entity** (`UserFollow.java`)
+
   - Fields: `id`, `followerId`, `followingId`, `createdAt`
   - Composite index: `(followerId, followingId)` (unique)
   - Index: `followerId`, `followingId`
@@ -909,22 +996,27 @@
 ### 11.2. Service Layer
 
 - [ ] **SocialService**
+
   - `followUser(Long followerId, Long followingId)`:
+
     - Validate: Không follow chính mình
     - Create `UserFollow` record
     - Increment stats (followerCount, followingCount)
     - Trigger `NewFollowerEvent` (RabbitMQ)
-  
+
   - `unfollowUser(Long followerId, Long followingId)`:
+
     - Delete `UserFollow` record
     - Decrement stats
-  
+
   - `getFollowers(Long userId, Pageable pageable)`:
+
     - Query `UserFollow` join `User`
-  
+
   - `getFollowing(Long userId, Pageable pageable)`:
+
     - Query `UserFollow` join `User`
-  
+
   - `isFollowing(Long followerId, Long followingId)`:
     - Check existence in DB or Redis Cache
 
@@ -957,15 +1049,18 @@
 ### 12.2. Service Layer
 
 - [ ] **NotificationService**
+
   - `createNotification(NotificationRequest)`:
+
     - Save to DB
     - Push to WebSocket via `SimpMessagingTemplate`
     - Increment unread count in Redis
-  
+
   - `markAsRead(Long notificationId, Long userId)`:
+
     - Update `isRead = true`
     - Decrement unread count
-  
+
   - `getNotifications(Long userId, Pageable pageable)`:
     - Get from DB
 
@@ -979,6 +1074,7 @@
 ### 12.4. WebSocket & Controller
 
 - [ ] **WebSocket Topic**
+
   - `/topic/notifications.{userId}`: Private channel for notifications
 
 - [ ] **NotificationController** (`/api/notifications`)
@@ -992,11 +1088,13 @@
 ### Automated Tests
 
 **Run all tests**:
+
 ```bash
 mvn test
 ```
 
 **Integration Tests** (với Docker containers):
+
 ```bash
 docker-compose -f docker-compose.test.yml up -d
 mvn verify
@@ -1006,6 +1104,7 @@ docker-compose -f docker-compose.test.yml down
 ### Manual Verification Scenarios
 
 #### Scenario 1: End-to-End User Flow
+
 1. Register new user → Login → Get access token
 2. Create stream (upgrade to STREAMER first)
 3. Start stream → Verify `isLive=true`
@@ -1015,11 +1114,13 @@ docker-compose -f docker-compose.test.yml down
 7. End stream → Verify analytics saved
 
 #### Scenario 2: Concurrency Test
+
 1. Create 2 users with balance 100 each
 2. Simultaneously send gifts (same timestamp)
 3. Verify: No race condition, all transactions atomic
 
 #### Scenario 3: Authorization Test
+
 1. Login as USER → Try to access `/api/admin/users` → Expect 403 Forbidden
 2. Login as ADMIN → Try to access `/api/admin/users` → Expect 200 OK
 3. Login as STREAMER → Try to update another user's stream → Expect 403 Forbidden
@@ -1031,6 +1132,7 @@ docker-compose -f docker-compose.test.yml down
 - **Gift Transaction Latency**: < 500ms (deduct + publish)
 
 ### Tools
+
 - **API Testing**: Postman / Thunder Client
 - **Load Testing**: Apache JMeter / k6
 - **Redis Monitoring**: `redis-cli MONITOR`
@@ -1041,6 +1143,7 @@ docker-compose -f docker-compose.test.yml down
 ## Dependencies Summary
 
 ### Required Spring Boot Starters
+
 - `spring-boot-starter-web`
 - `spring-boot-starter-security`
 - `spring-boot-starter-data-jpa`
@@ -1051,6 +1154,7 @@ docker-compose -f docker-compose.test.yml down
 - `spring-boot-starter-actuator`
 
 ### Additional Libraries
+
 - `jjwt-api`, `jjwt-impl`, `jjwt-jackson` (JWT)
 - `lombok`
 - `postgresql` (JDBC Driver)
@@ -1058,6 +1162,7 @@ docker-compose -f docker-compose.test.yml down
 - `p6spy` (SQL Logging, development only)
 
 ### Infrastructure (Docker)
+
 - PostgreSQL 16
 - Redis 7
 - RabbitMQ 3 (with management plugin)
@@ -1067,6 +1172,7 @@ docker-compose -f docker-compose.test.yml down
 ## Conclusion
 
 Implementation Plan này cover **toàn bộ** các module được định nghĩa trong:
+
 - ✅ `docs/system_design_livestream.md`
 - ✅ `docs/api_endpoints_specification.md`
 
