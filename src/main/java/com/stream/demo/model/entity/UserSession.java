@@ -1,7 +1,5 @@
 package com.stream.demo.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,7 +73,6 @@ public class UserSession {
      * Check if session is valid
      * Session hợp lệ khi: status = ACTIVE và chưa hết hạn
      */
-    @JsonIgnore
     public boolean isValid() {
         return status == SessionStatus.ACTIVE
                 && expiresAt.isAfter(LocalDateTime.now());

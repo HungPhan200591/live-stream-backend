@@ -1,10 +1,10 @@
 package com.stream.demo.controller;
 
 import com.stream.demo.common.ApiResponse;
-import com.stream.demo.model.dto.AuthResponse;
-import com.stream.demo.model.dto.LoginRequest;
-import com.stream.demo.model.dto.RegisterRequest;
-import com.stream.demo.model.dto.RefreshTokenRequest;
+import com.stream.demo.model.dto.response.AuthResponse;
+import com.stream.demo.model.dto.request.LoginRequest;
+import com.stream.demo.model.dto.request.RegisterRequest;
+import com.stream.demo.model.dto.request.RefreshTokenRequest;
 import com.stream.demo.model.dto.UserDTO;
 import com.stream.demo.service.AuthService;
 import com.stream.demo.service.UserService;

@@ -1,4 +1,4 @@
-package com.stream.demo.model.dto;
+package com.stream.demo.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

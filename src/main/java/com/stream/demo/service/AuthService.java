@@ -1,8 +1,8 @@
 package com.stream.demo.service;
 
-import com.stream.demo.model.dto.AuthResponse;
-import com.stream.demo.model.dto.LoginRequest;
-import com.stream.demo.model.dto.RegisterRequest;
+import com.stream.demo.model.dto.response.AuthResponse;
+import com.stream.demo.model.dto.request.LoginRequest;
+import com.stream.demo.model.dto.request.RegisterRequest;
 import com.stream.demo.model.entity.Role;
 import com.stream.demo.model.entity.User;
 import com.stream.demo.model.entity.UserRole;

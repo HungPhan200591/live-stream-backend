@@ -1,5 +1,6 @@
 package com.stream.demo.service;
 
+import com.stream.demo.model.dto.cache.SessionCacheDTO;
 import com.stream.demo.model.entity.UserSession;
 import com.stream.demo.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -96,12 +97,15 @@ public class SessionService {
      */
     public UserSession validateSession(UUID sessionId) {
         // Try cache first (fast path)
-        Optional<UserSession> cachedSession = sessionCacheService.getSessionFromCache(sessionId);
+        Optional<SessionCacheDTO> cachedDto = sessionCacheService.getSessionFromCache(sessionId);
 
-        if (cachedSession.isPresent()) {
-            UserSession session = cachedSession.get();
-            if (session.isValid()) {
-                // Update last_used_at và re-cache
+        if (cachedDto.isPresent()) {
+            if (cachedDto.get().isValid()) {
+                // Cache hit và valid - query DB để update lastUsedAt
+                UserSession session = sessionRepository.findBySessionId(sessionId)
+                        .orElseThrow(() -> new IllegalArgumentException("Session not found in DB"));
+
+                // Update last_used_at
                 session.setLastUsedAt(LocalDateTime.now());
                 sessionRepository.save(session);
                 sessionCacheService.cacheSession(session); // Update cache

@@ -25,8 +25,6 @@ Content-Type: application/json
     client.log("Refresh Token: " + response.body.data.refreshToken);
 %}
 
-###
-
 ### User Login - Streamer
 POST {{host}}/api/auth/login
 Content-Type: application/json
@@ -41,8 +39,6 @@ Content-Type: application/json
     client.global.set("refreshToken", response.body.data.refreshToken);
     client.log("Access Token: " + response.body.data.accessToken);
 %}
-
-###
 
 ### User Login - Regular User
 POST {{host}}/api/auth/login
@@ -59,13 +55,9 @@ Content-Type: application/json
     client.log("Access Token: " + response.body.data.accessToken);
 %}
 
-###
-
 ### Get Current User Info
 GET {{host}}/api/auth/me
 Authorization: Bearer {{token}}
-
-###
 
 ### Refresh Token
 POST {{host}}/api/auth/refresh
@@ -75,8 +67,6 @@ Content-Type: application/json
   "refreshToken": "{{refreshToken}}"
 }
 
-###
-
 ### Logout
 POST {{host}}/api/auth/logout
 Content-Type: application/json
@@ -85,8 +75,6 @@ Authorization: Bearer {{token}}
 {
   "refreshToken": "{{refreshToken}}"
 }
-
-###
 
 ### Logout from All Devices
 POST {{host}}/api/auth/logout-all

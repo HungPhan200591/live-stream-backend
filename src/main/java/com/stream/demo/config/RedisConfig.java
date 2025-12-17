@@ -14,18 +14,17 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 /**
  * Redis Configuration
  * <p>
- * Add RedisTemplate<String, Object> bean để cache Java objects (UserSession).
- * Spring Boot đã auto-config RedisTemplate<String, String>
- * (stringRedisTemplate).
+ * Custom ObjectMapper để support Type Alias pattern (@JsonTypeName).
+ * Không dùng activateDefaultTyping → cho phép DTO tự define type info.
  */
 @Configuration
 public class RedisConfig {
 
     /**
      * RedisTemplate for caching Java objects
-     * Dùng GenericJackson2JsonRedisSerializer với ObjectMapper có JavaTimeModule
-     * để serialize objects thành JSON (hỗ trợ LocalDateTime, etc.)
-     * Use case: Cache UserSession objects
+     * ObjectMapper KHÔNG dùng activateDefaultTyping để cho phép
+     * 
+     * @JsonTypeInfo trên DTO hoạt động (Type Alias pattern)
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -41,10 +40,8 @@ public class RedisConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        // Cần activateDefaultTyping để GenericJackson2JsonRedisSerializer lưu type info
-        objectMapper.activateDefaultTyping(
-                objectMapper.getPolymorphicTypeValidator(),
-                ObjectMapper.DefaultTyping.NON_FINAL);
+        // KHÔNG dùng activateDefaultTyping → cho phép @JsonTypeInfo trên DTO hoạt động
+        // Format: {"@type": "SessionCache_v1", ...} thay vì ["class.name", {...}]
 
         GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         template.setValueSerializer(jsonSerializer);

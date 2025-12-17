@@ -1,4 +1,4 @@
-package com.stream.demo.model.dto;
+package com.stream.demo.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
