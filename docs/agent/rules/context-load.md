@@ -1,4 +1,4 @@
----
+﻿---
 trigger: always_on
 ---
 
@@ -45,11 +45,25 @@ Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
   - Stream Start/End: Trigger qua REST API (`/api/dev/simulate/...`), không phải sự kiện RTMP thật.
   - Payments: Trigger qua API "Deposit" chung để giả lập biến động số dư.
 
-## 4. Tiêu Chuẩn Coding
+## 4. API Documentation Standards
 
-- **DTOs**: Luôn dùng DTO cho Input/Output của API. Không bao giờ expose Entity class trực tiếp ra Controller.
-- **Lombok**: Tận dụng Lombok để giảm boilerplate (`@Data`, `@Builder`, `@RequiredArgsConstructor`).
-- **Cấu hình**: Giữ config hạ tầng (Docker) trong `docker-compose.yml` và config ứng dụng trong `application.yml`.
+Khi implement Controller/Endpoint mới, **BẮT BUỘC** tuân thủ:
+
+### Swagger Annotations
+- **Controller level**: `@Tag(name, description)` để nhóm endpoints
+- **Method level**: `@Operation(summary, description)` cho mỗi endpoint
+- **DTO level**: `@Schema(description, example)` trong tất cả Request/Response DTOs
+
+### HTTP Request Files
+- **Location**: `.http/<controller-name>.http` (ví dụ: `.http/stream-controller.http`)
+- **Content**: 
+  - Tất cả endpoints của controller với example requests
+  - Variables cho reusable values (tokens, IDs, base URL)
+  - Realistic test data matching @Schema examples
+
+**Workflow bắt buộc**: Controller Implementation → Swagger Annotations → HTTP Request File → Manual Test
+
+Chi tiết xem: `docs/agent/rules/coding-rule.md` và `docs/coding_standards.md`
 
 ## 5. Quy Tắc Hành Xử của Agent (Agent Behavior)
 

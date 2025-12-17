@@ -1,4 +1,25 @@
-# Coding Rules - Spring Boot Livestream Backend
+﻿# Coding Rules - Spring Boot Livestream Backend
+
+## 0. Core Coding Standards
+
+### DTOs (Data Transfer Objects)
+- **LUÔN LUÔN** dùng DTO cho Input/Output của API
+- **KHÔNG BAO GIỜ** expose Entity class trực tiếp ra Controller
+- Pattern: `Request` suffix cho input, `Response`/`DTO` suffix cho output
+
+### Lombok
+- Tận dụng Lombok để giảm boilerplate:
+  - `@Data`: getter/setter/toString/equals/hashCode
+  - `@Builder`: builder pattern
+  - `@RequiredArgsConstructor`: constructor cho final fields
+  - `@Slf4j`: logger instance
+
+### Configuration
+- **Infrastructure config**: `docker-compose.yml` (PostgreSQL, Redis, RabbitMQ)
+- **Application config**: `application.yml` (Spring Boot settings)
+- **Bean config**: Dedicated `@Configuration` classes trong package `config`
+
+---
 
 ## 📖 Required Reading Before Implementation
 
@@ -33,6 +54,7 @@
 - WebSocket khác REST API - cần 3 layers authorization
 - Always check mute/ban trong Redis trước khi process message
 - Handshake authentication ≠ Message authorization
+
 ### Redis Implementation
 
 **BẮT BUỘC** đọc `docs/redis_usage_guide.md` trước khi implement bất kỳ Redis caching nào.
@@ -71,7 +93,7 @@
 **LUÔN LUÔN** follow pattern trong `docs/api_endpoints_specification.md`:
 
 ✅ **ĐÚNG:**
-``java
+```java
 @RestController
 @RequestMapping("/api/streams")
 @RequiredArgsConstructor
@@ -93,7 +115,7 @@ public class StreamController {
         // Implementation
     }
 }
-``
+```
 
 ❌ **SAI:**
 - Tự tạo endpoint pattern không theo spec
@@ -114,39 +136,39 @@ public class StreamController {
 - Dùng cho fine-grained control
 - Ví dụ: Chỉ owner hoặc admin mới được update
 
-``java
+```java
 // Check owner hoặc admin
 @PreAuthorize("hasRole('ADMIN') or @streamService.isStreamOwner(#streamId, authentication.principal.username)")
 @PutMapping("/streams/{streamId}")
 public ApiResponse<StreamDTO> updateStream(@PathVariable Long streamId, ...) { }
-``
+```
 
 ### 3. DTO Usage
 
 **LUÔN LUÔN** dùng DTO cho API Input/Output:
 
 ✅ **ĐÚNG:**
-``java
+```java
 public ApiResponse<UserDTO> getUser(Long id) {
     User user = userService.getUserById(id);
     UserDTO dto = userService.convertToDTO(user);
     return ApiResponse.success(dto, null);
 }
-``
+```
 
 ❌ **SAI:**
-``java
+```java
 public ApiResponse<User> getUser(Long id) {
     User user = userService.getUserById(id);
     return ApiResponse.success(user, null); // Exposing Entity!
 }
-``
+```
 
 ### 4. Swagger Documentation
 
 **LUÔN LUÔN** thêm Swagger annotations:
 
-``java
+```java
 @Tag(name = "Domain Name", description = "Domain description")
 public class YourController {
     
@@ -154,7 +176,82 @@ public class YourController {
     @GetMapping("/endpoint")
     public ApiResponse<DTO> method() { }
 }
-``
+```
+
+### 5. API Documentation Requirements
+
+**CHECKLIST bắt buộc khi implement Controller mới**:
+
+#### Swagger Annotations
+- [ ] `@Tag(name = "Domain Name", description = "...")` ở controller class
+- [ ] `@Operation(summary = "...")` ở mỗi endpoint method
+- [ ] `@Schema(description = "...", example = "...")` trong tất cả Request DTOs
+- [ ] Example values phải realistic và match với test data
+
+#### HTTP Request File
+- [ ] Tạo file `.http/<controller-name>.http` (ví dụ: `.http/auth-controller.http`)
+- [ ] Chứa **TẤT CẢ** endpoints của controller
+- [ ] Có variables cho reusable values:
+  ```
+  @host = http://localhost:8080
+  @token = {{token}}
+  @refreshToken = {{refreshToken}}
+  ```
+- [ ] Example requests với realistic data matching @Schema examples
+- [ ] Script để auto-save tokens từ response (nếu cần)
+
+**Workflow bắt buộc**:
+```
+1. Implement Controller + DTOs
+2. Add Swagger annotations (@Tag, @Operation, @Schema)
+3. Create .http file với all endpoints
+4. Manual test qua .http file
+5. Verify Swagger UI hiển thị đúng
+6. Commit code
+```
+
+**Example Pattern**:
+```java
+@RestController
+@RequestMapping("/api/streams")
+@Tag(name = "Streams", description = "Livestream management APIs")
+public class StreamController {
+    
+    @Operation(summary = "Create new stream")
+    @PostMapping
+    public ApiResponse<StreamDTO> createStream(
+        @Valid @RequestBody CreateStreamRequest request) {
+        // Implementation
+    }
+}
+
+// CreateStreamRequest.java
+public class CreateStreamRequest {
+    @Schema(description = "Stream title", example = "My Gaming Stream")
+    private String title;
+    
+    @Schema(description = "Stream description", example = "Playing Valorant ranked")
+    private String description;
+}
+```
+
+**Corresponding .http file** (`.http/stream-controller.http`):
+```http
+@host = http://localhost:8080
+@token = {{token}}
+
+### Create Stream
+POST {{host}}/api/streams
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "My Gaming Stream",
+  "description": "Playing Valorant ranked"
+}
+```
+
+Chi tiết examples xem: `docs/coding_standards.md`
 
 ---
 
@@ -218,6 +315,8 @@ public class UserRole {
     private Long roleId;
 }
 ```
+
+---
 
 ## Development Workflow Rules
 
