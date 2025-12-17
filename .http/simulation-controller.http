@@ -1,0 +1,17 @@
+### Simulate Start Stream
+POST {{host}}/api/dev/stream/start?streamKey=user001_stream_key
+Content-Type: application/json
+# Authorization: Bearer {{token}}
+# NOTE: Simulation endpoints are Public in dev, but listed here for testing convenience
+
+###
+
+### Simulate End Stream
+POST {{host}}/api/dev/stream/end?streamKey=user001_stream_key
+Content-Type: application/json
+
+###
+
+### Simulate Payment Deposit
+POST {{host}}/api/dev/payment/deposit?userId=1&amount=100.00
+Content-Type: application/json

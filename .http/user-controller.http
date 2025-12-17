@@ -1,0 +1,16 @@
+### Get User Profile (Public)
+GET {{host}}/api/users/1
+Authorization: Bearer {{token}}
+
+###
+
+### Update User Profile (Self/Admin)
+PUT {{host}}/api/users/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "displayName": "Updated Name",
+  "bio": "Updated bio information",
+  "avatarUrl": "https://example.com/new-avatar.jpg"
+}

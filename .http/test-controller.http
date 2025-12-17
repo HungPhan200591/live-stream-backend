@@ -1,0 +1,2 @@
+### P6Spy SQL Logging Test
+GET {{host}}/api/test/sql

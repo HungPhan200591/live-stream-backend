@@ -1,0 +1,79 @@
+### User Registration
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "Password123!"
+}
+
+###
+
+### User Login - Admin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Password123!"
+}
+
+> {%
+    client.global.set("token", response.body.data.accessToken);
+    client.global.set("refreshToken", response.body.data.refreshToken);
+%}
+
+###
+
+### User Login - Streamer
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "streamer001",
+  "password": "Password123!"
+}
+
+> {%
+    client.global.set("token", response.body.data.accessToken);
+    client.global.set("refreshToken", response.body.data.refreshToken);
+%}
+
+###
+
+### User Login - Regular User
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user001",
+  "password": "Password123!"
+}
+
+> {%
+    client.global.set("token", response.body.data.accessToken);
+    client.global.set("refreshToken", response.body.data.refreshToken);
+%}
+
+###
+
+### Get Current User Info
+GET http://localhost:8080/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+
+### Refresh Token
+POST http://localhost:8080/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+### Logout
+POST http://localhost:8080/api/auth/logout
+Authorization: Bearer {{token}}

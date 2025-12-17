@@ -1,75 +1,12 @@
-### P6Spy SQL Logging Test
-# Test endpoint to verify P6Spy is logging SQL queries
-# Expected: Should see SQL query with actual values in console logs
-GET http://localhost:8080/api/test/sql
+### Main API Test Entry Point
+# See individual controller files for specific tests:
+# - auth-controller.http
+# - user-controller.http
+# - simulation-controller.http
+# - test-controller.http
 
-###
+### Check Swagger UI
+GET {{host}}/swagger-ui.html
 
-### User Registration
-# Register a new user
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-
-{
-  "username": "testuser",
-  "email": "testuser@example.com",
-  "password": "Password123!"
-}
-
-###
-
-### User Login - Admin
-# Login with default admin account
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "admin",
-  "password": "Password123!"
-}
-
-###
-
-### User Login - Streamer
-# Login with default streamer account
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "streamer001",
-  "password": "Password123!"
-}
-
-###
-
-### User Login - Regular User
-# Login with default regular user account
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "user001",
-  "password": "Password123!"
-}
-
-###
-
-### Get Current User Info
-# Get authenticated user information
-# Replace {{token}} with actual JWT token from login response
-GET http://localhost:8080/api/auth/me
-Authorization: Bearer {{token}}
-
-###
-
-### Swagger UI
-# Open API documentation
-GET http://localhost:8080/swagger-ui.html
-
-###
-
-### API Docs JSON
-# Get OpenAPI specification
-GET http://localhost:8080/v3/api-docs
-
-###
+### Check API Docs
+GET {{host}}/v3/api-docs
