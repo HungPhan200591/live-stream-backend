@@ -79,4 +79,15 @@ Content-Type: application/json
 
 ### Logout
 POST {{host}}/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+### Logout from All Devices
+POST {{host}}/api/auth/logout-all
 Authorization: Bearer {{token}}

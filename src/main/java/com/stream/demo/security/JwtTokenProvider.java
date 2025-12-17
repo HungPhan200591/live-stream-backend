@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
@@ -77,10 +78,15 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Generate Refresh Token (longer expiry than access token)
-     * Tạo refresh token với thời gian sống 7 ngày
+     * Generate Refresh Token with session_id and device_id
+     * Refresh token chứa session_id để validate session từ DB
+     *
+     * @param authentication Spring Security Authentication object
+     * @param sessionId      UUID của session trong DB
+     * @param deviceId       Device identifier
+     * @return JWT refresh token
      */
-    public String generateRefreshToken(Authentication authentication) {
+    public String generateRefreshToken(Authentication authentication, UUID sessionId, String deviceId) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         Date now = new Date();
@@ -90,6 +96,8 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claim("session_id", sessionId.toString()) // Session ID cho validation
+                .claim("device_id", deviceId) // Device tracking
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(key)
@@ -106,7 +114,7 @@ public class JwtTokenProvider {
 
     /**
      * Extract expiration date from JWT token
-     * Lấy expiration date từ token để tính TTL cho Redis blacklist
+     * Lấy expiration date từ token
      */
     public Date getExpirationFromToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -118,5 +126,47 @@ public class JwtTokenProvider {
                 .getPayload();
 
         return claims.getExpiration();
+    }
+
+    /**
+     * Extract session_id from refresh token
+     * Lấy session_id từ refresh token để validate session
+     *
+     * @param token Refresh token JWT
+     * @return Session UUID
+     */
+    public UUID getSessionIdFromToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        String sessionIdStr = claims.get("session_id", String.class);
+        if (sessionIdStr == null) {
+            throw new IllegalArgumentException("Refresh token does not contain session_id");
+        }
+        return UUID.fromString(sessionIdStr);
+    }
+
+    /**
+     * Extract device_id from refresh token
+     * Lấy device_id từ refresh token
+     *
+     * @param token Refresh token JWT
+     * @return Device ID string
+     */
+    public String getDeviceIdFromToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.get("device_id", String.class);
     }
 }

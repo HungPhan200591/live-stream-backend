@@ -49,6 +49,14 @@ public class UserService {
     }
 
     /**
+     * Get user by username
+     */
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+    /**
      * Get user profile by ID
      */
     public UserDTO getUserProfile(Long userId) {

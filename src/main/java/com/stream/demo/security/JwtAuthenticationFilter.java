@@ -1,6 +1,5 @@
 package com.stream.demo.security;
 
-import com.stream.demo.service.JwtBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,13 +16,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * JWT Authentication Filter
+ * <p>
+ * Filter để extract và validate Access Token từ Authorization header.
+ * Access Token là stateless, không check session ở đây.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService userDetailsService;
-    private final JwtBlacklistService jwtBlacklistService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -33,12 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = extractTokenFromRequest(request);
 
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-                // Check if token is blacklisted (logout)
-                if (jwtBlacklistService.isBlacklisted(token)) {
-                    System.err.println("Token is blacklisted (user logged out)");
-                    filterChain.doFilter(request, response);
-                    return;
-                }
+                // Access Token là stateless, KHÔNG check session
+                // Session chỉ được validate khi refresh token
 
                 String username = jwtTokenProvider.getUsernameFromToken(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

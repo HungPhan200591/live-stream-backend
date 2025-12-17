@@ -6,6 +6,7 @@ import com.stream.demo.model.dto.RegisterRequest;
 import com.stream.demo.model.entity.Role;
 import com.stream.demo.model.entity.User;
 import com.stream.demo.model.entity.UserRole;
+import com.stream.demo.model.entity.UserSession;
 import com.stream.demo.repository.RoleRepository;
 import com.stream.demo.repository.UserRepository;
 import com.stream.demo.repository.UserRoleRepository;
@@ -21,8 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Authentication Service
+ * <p>
+ * Service xử lý authentication với Session-backed JWT.
+ * Session là source of truth, JWT chỉ là carrier.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -33,11 +41,14 @@ public class AuthService {
         private final PasswordEncoder passwordEncoder;
         private final AuthenticationManager authenticationManager;
         private final JwtTokenProvider jwtTokenProvider;
-        private final JwtBlacklistService jwtBlacklistService;
+        private final SessionService sessionService;
         private final CustomUserDetailsService customUserDetailsService;
 
+        /**
+         * Register new user và auto-login
+         */
         @Transactional
-        public AuthResponse register(RegisterRequest request) {
+        public AuthResponse register(RegisterRequest request, String deviceId, String deviceName, String ipAddress) {
                 // Validate: username not exists
                 if (Boolean.TRUE.equals(userRepository.existsByUsername(request.getUsername()))) {
                         throw new IllegalArgumentException("Username already exists");
@@ -73,8 +84,13 @@ public class AuthService {
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
+                // NEW: Create session for this user
+                UserSession session = sessionService.createSession(
+                                user.getId(), deviceId, deviceName, ipAddress);
+
                 String accessToken = jwtTokenProvider.generateToken(authentication);
-                String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+                String refreshToken = jwtTokenProvider.generateRefreshToken(
+                                authentication, session.getSessionId(), deviceId);
 
                 Set<String> roleNames = authentication.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
@@ -90,12 +106,24 @@ public class AuthService {
                                 .build();
         }
 
-        public AuthResponse login(LoginRequest request) {
+        /**
+         * User login
+         */
+        public AuthResponse login(LoginRequest request, String deviceId, String deviceName, String ipAddress) {
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
+                // NEW: Get user and create session
+                User currentUser = userRepository.findByUsername(request.getUsername())
+                                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+                UserSession session = sessionService.createSession(
+                                currentUser.getId(), deviceId, deviceName, ipAddress);
+
                 String accessToken = jwtTokenProvider.generateToken(authentication);
-                String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+                // NEW: Refresh token chứa session_id
+                String refreshToken = jwtTokenProvider.generateRefreshToken(
+                                authentication, session.getSessionId(), deviceId);
 
                 Set<String> roleNames = authentication.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
@@ -113,18 +141,17 @@ public class AuthService {
 
         /**
          * Refresh access token using refresh token
-         * Làm mới access token bằng refresh token
+         * Validate session từ DB trước khi issue new access token
          */
         public AuthResponse refreshAccessToken(String refreshToken) {
-                // Validate refresh token
+                // Validate refresh token signature + expiry
                 if (!jwtTokenProvider.validateToken(refreshToken)) {
                         throw new IllegalArgumentException("Invalid refresh token");
                 }
 
-                // Check if refresh token is blacklisted
-                if (jwtBlacklistService.isBlacklisted(refreshToken)) {
-                        throw new IllegalArgumentException("Refresh token has been revoked");
-                }
+                // NEW: Extract session_id và validate session từ DB
+                UUID sessionId = jwtTokenProvider.getSessionIdFromToken(refreshToken);
+                sessionService.validateSession(sessionId); // Throws exception if invalid
 
                 // Extract username
                 String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
@@ -145,7 +172,7 @@ public class AuthService {
 
                 return AuthResponse.builder()
                                 .accessToken(newAccessToken)
-                                .refreshToken(refreshToken) // Keep same refresh token
+                                .refreshToken(refreshToken) // KHÔNG rotate refresh token
                                 .tokenType("Bearer")
                                 .expiresIn(jwtTokenProvider.getExpirationTime())
                                 .username(username)
@@ -154,28 +181,19 @@ public class AuthService {
         }
 
         /**
-         * Logout user by adding token to blacklist
-         * Đăng xuất bằng cách thêm token vào blacklist trong Redis
+         * Logout user by revoking session
+         * Revoke session trong DB, refresh token sẽ invalid ngay lập tức
          */
-        public void logout(String token) {
-                // Calculate remaining time to live for the token
-                long remainingTime = getRemainingExpirationTime(token);
-
-                // Add to blacklist with TTL
-                jwtBlacklistService.addToBlacklist(token, remainingTime);
+        public void logout(String refreshToken) {
+                UUID sessionId = jwtTokenProvider.getSessionIdFromToken(refreshToken);
+                sessionService.revokeSession(sessionId);
         }
 
         /**
-         * Calculate remaining expiration time of a token in seconds
-         * Tính thời gian còn lại trước khi token hết hạn (đơn vị: giây)
+         * Logout from all devices
+         * Revoke tất cả sessions của user
          */
-        private long getRemainingExpirationTime(String token) {
-                try {
-                        java.util.Date expiration = jwtTokenProvider.getExpirationFromToken(token);
-                        long remainingMs = expiration.getTime() - System.currentTimeMillis();
-                        return Math.max(remainingMs / 1000, 0); // Convert to seconds
-                } catch (Exception e) {
-                        return 0;
-                }
+        public void logoutAll(Long userId) {
+                sessionService.revokeAllUserSessions(userId);
         }
 }
