@@ -9,6 +9,7 @@ import com.stream.demo.model.entity.UserRole;
 import com.stream.demo.repository.RoleRepository;
 import com.stream.demo.repository.UserRepository;
 import com.stream.demo.repository.UserRoleRepository;
+import com.stream.demo.security.CustomUserDetailsService;
 import com.stream.demo.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +34,7 @@ public class AuthService {
         private final AuthenticationManager authenticationManager;
         private final JwtTokenProvider jwtTokenProvider;
         private final JwtBlacklistService jwtBlacklistService;
+        private final CustomUserDetailsService customUserDetailsService;
 
         @Transactional
         public AuthResponse register(RegisterRequest request) {
@@ -125,30 +126,22 @@ public class AuthService {
                         throw new IllegalArgumentException("Refresh token has been revoked");
                 }
 
-                // Extract username and load user
+                // Extract username
                 String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
-                User user = userRepository.findByUsername(username)
-                                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-                // Load user roles
-                List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
-                Set<String> roleNames = userRoles.stream()
-                                .map(ur -> {
-                                        Role role = roleRepository.findById(ur.getRoleId())
-                                                        .orElseThrow(() -> new IllegalStateException("Role not found"));
-                                        return role.getName();
-                                })
-                                .collect(Collectors.toSet());
+                // Load UserDetails correctly using CustomUserDetailsService
+                org.springframework.security.core.userdetails.UserDetails userDetails = customUserDetailsService
+                                .loadUserByUsername(username);
 
-                // Create Authentication object for generating new access token
-                List<GrantedAuthority> authorities = roleNames.stream()
-                                .map(roleName -> (GrantedAuthority) () -> roleName)
-                                .collect(Collectors.toList());
-
+                // Create Authentication object with UserDetails principal
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                                username, null, authorities);
+                                userDetails, null, userDetails.getAuthorities());
 
                 String newAccessToken = jwtTokenProvider.generateToken(authentication);
+
+                Set<String> roleNames = userDetails.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toSet());
 
                 return AuthResponse.builder()
                                 .accessToken(newAccessToken)
