@@ -1,0 +1,45 @@
+### Stream Controller API Tests
+### Xem doc: docs/api_endpoints_specification.md#stream-management
+### ============================================================
+### PUBLIC ENDPOINTS
+### ============================================================
+
+### Get all live streams (Public)
+GET {{host}}/api/streams
+Content-Type: application/json
+
+### Get all streams (including ended) (Public)
+GET {{host}}/api/streams?liveOnly=false
+Content-Type: application/json
+
+### Get stream by ID (Public)
+GET {{host}}/api/streams/1
+Content-Type: application/json
+
+### ============================================================
+### AUTHENTICATED ENDPOINTS (Requires Login)
+### ============================================================
+
+### Create new stream (STREAMER/ADMIN only)
+# @name createStream
+POST {{host}}/api/streams
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "My Gaming Stream",
+  "description": "Playing Valorant ranked - Road to Diamond!"
+}
+
+### Get my streams (current user's streams)
+GET {{host}}/api/streams/my
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### ============================================================
+### USAGE NOTES
+### ============================================================
+# 1. Trước tiên, đăng nhập qua auth-controller.http để lấy token
+# 2. Copy token vào biến @token ở trên
+# 3. User phải có ROLE_STREAMER hoặc ROLE_ADMIN để tạo stream
+# 4. Nếu chỉ có ROLE_USER, sẽ nhận được 403 Forbidden

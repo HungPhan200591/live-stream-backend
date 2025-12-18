@@ -33,7 +33,7 @@ public class TestController {
     /**
      * Test PostgreSQL connection
      */
-    @GetMapping("/sql")
+    @GetMapping("/postgres")
     @Operation(summary = "Test PostgreSQL connection")
     public ApiResponse<String> testSQL() {
         String version = jdbcTemplate.queryForObject("SELECT version()", String.class);
