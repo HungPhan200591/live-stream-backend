@@ -3,7 +3,7 @@ POST {{host}}/api/dev/simulate/stream/start
 Content-Type: application/json
 
 {
-  "streamKey": "test-stream-key-123"
+  "streamKey": "{{stream_key}}"
 }
 
 ### Simulate Stream End
@@ -11,7 +11,7 @@ POST {{host}}/api/dev/simulate/stream/end
 Content-Type: application/json
 
 {
-  "streamKey": "test-stream-key-123"
+  "streamKey": "{{stream_key}}"
 }
 
 ### Simulate Payment Deposit
