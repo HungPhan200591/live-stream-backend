@@ -1,2 +1,10 @@
-### P6Spy SQL Logging Test
+@host = http://localhost:8080
+
+### Test Infrastructure (SQL)
 GET {{host}}/api/test/sql
+
+### Test Infrastructure (Redis)
+GET {{host}}/api/test/redis
+
+### Test Infrastructure (RabbitMQ)
+GET {{host}}/api/test/rabbitmq

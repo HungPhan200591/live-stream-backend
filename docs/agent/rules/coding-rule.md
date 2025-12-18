@@ -3,11 +3,13 @@
 ## 0. Core Coding Standards
 
 ### DTOs (Data Transfer Objects)
+
 - **LUÔN LUÔN** dùng DTO cho Input/Output của API
 - **KHÔNG BAO GIỜ** expose Entity class trực tiếp ra Controller
 - Pattern: `Request` suffix cho input, `Response`/`DTO` suffix cho output
 
 ### Lombok
+
 - Tận dụng Lombok để giảm boilerplate:
   - `@Data`: getter/setter/toString/equals/hashCode
   - `@Builder`: builder pattern
@@ -15,6 +17,7 @@
   - `@Slf4j`: logger instance
 
 ### Configuration
+
 - **Infrastructure config**: `docker-compose.yml` (PostgreSQL, Redis, RabbitMQ)
 - **Application config**: `application.yml` (Spring Boot settings)
 - **Bean config**: Dedicated `@Configuration` classes trong package `config`
@@ -28,6 +31,7 @@
 **BẮT BUỘC** đọc `docs/api_endpoints_specification.md` trước khi implement bất kỳ feature nào liên quan đến API.
 
 **File này là SSOT (Single Source of Truth) về**:
+
 - ✅ API endpoint patterns cho tất cả domains
 - ✅ Authorization rules (Public/Authenticated/Role-based)
 - ✅ HTTP methods và expected request/response DTOs
@@ -36,6 +40,7 @@
 - ✅ Implementation best practices
 
 **Khi nào cần check**:
+
 1. Trước khi tạo Controller class mới
 2. Trước khi implement endpoint mới
 3. Khi thiết lập authorization (@PreAuthorize hoặc SecurityConfig)
@@ -51,6 +56,7 @@
 - ✅ Common scenarios với code examples
 
 **Đặc biệt quan trọng**:
+
 - WebSocket khác REST API - cần 3 layers authorization
 - Always check mute/ban trong Redis trước khi process message
 - Handshake authentication ≠ Message authorization
@@ -60,6 +66,7 @@
 **BẮT BUỘC** đọc `docs/redis_usage_guide.md` trước khi implement bất kỳ Redis caching nào.
 
 **File này là SSOT về**:
+
 - ✅ Type-safe RedisTemplate configuration pattern
 - ✅ Cache DTO creation rules
 - ✅ Cache Service implementation templates
@@ -69,6 +76,7 @@
 - ✅ Testing & monitoring strategies
 
 **Khi nào cần check**:
+
 1. Trước khi tạo Cache DTO mới
 2. Trước khi register RedisTemplate bean mới
 3. Khi implement Cache Service
@@ -77,6 +85,7 @@
 6. Khi debug cache hit/miss issues
 
 **Checklist bắt buộc**:
+
 - [ ] Cache DTO trong package `model/dto/cache/*`
 - [ ] Bean name constant trong `RedisConfig.RedisTemplateBeanNames`
 - [ ] Explicit `@Bean` method trong `RedisConfig`
@@ -93,20 +102,21 @@
 **LUÔN LUÔN** follow pattern trong `docs/api_endpoints_specification.md`:
 
 ✅ **ĐÚNG:**
+
 ```java
 @RestController
 @RequestMapping("/api/streams")
 @RequiredArgsConstructor
 @Tag(name = "Streams", description = "Livestream management APIs")
 public class StreamController {
-    
+
     // Public GET - theo spec
     @GetMapping
     @Operation(summary = "Get all live streams")
     public ApiResponse<List<StreamDTO>> getAllStreams() {
         // Implementation
     }
-    
+
     // STREAMER + ADMIN - theo spec
     @PreAuthorize("hasAnyRole('STREAMER', 'ADMIN')")
     @PostMapping
@@ -118,6 +128,7 @@ public class StreamController {
 ```
 
 ❌ **SAI:**
+
 - Tự tạo endpoint pattern không theo spec
 - Thiếu Swagger annotations (@Tag, @Operation)
 - Expose Entity thay vì DTO
@@ -129,10 +140,12 @@ public class StreamController {
 **Two-Tier Strategy** (theo specification):
 
 **Tier 1: URL-Level (SecurityConfig)**
+
 - Dùng cho pattern-based authorization
 - Ví dụ: `/api/admin/**` → `hasRole("ADMIN")`
 
 **Tier 2: Method-Level (@PreAuthorize)**
+
 - Dùng cho fine-grained control
 - Ví dụ: Chỉ owner hoặc admin mới được update
 
@@ -148,6 +161,7 @@ public ApiResponse<StreamDTO> updateStream(@PathVariable Long streamId, ...) { }
 **LUÔN LUÔN** dùng DTO cho API Input/Output:
 
 ✅ **ĐÚNG:**
+
 ```java
 public ApiResponse<UserDTO> getUser(Long id) {
     User user = userService.getUserById(id);
@@ -157,6 +171,7 @@ public ApiResponse<UserDTO> getUser(Long id) {
 ```
 
 ❌ **SAI:**
+
 ```java
 public ApiResponse<User> getUser(Long id) {
     User user = userService.getUserById(id);
@@ -171,7 +186,7 @@ public ApiResponse<User> getUser(Long id) {
 ```java
 @Tag(name = "Domain Name", description = "Domain description")
 public class YourController {
-    
+
     @Operation(summary = "Short summary", description = "Detailed description")
     @GetMapping("/endpoint")
     public ApiResponse<DTO> method() { }
@@ -183,14 +198,16 @@ public class YourController {
 **CHECKLIST bắt buộc khi implement Controller mới**:
 
 #### Swagger Annotations
+
 - [ ] `@Tag(name = "Domain Name", description = "...")` ở controller class
 - [ ] `@Operation(summary = "...")` ở mỗi endpoint method
 - [ ] `@Schema(description = "...", example = "...")` trong tất cả Request DTOs
 - [ ] Example values phải realistic và match với test data
 
 #### HTTP Request File
-- [ ] Tạo file `.http/<controller-name>.http` (ví dụ: `.http/auth-controller.http`)
-- [ ] Chứa **TẤT CẢ** endpoints của controller
+
+- [ ] Tạo file `.http/<controller-name>.http` (ví dụ: `.http/auth-controller.http`). **BẮT BUỘC** tên file .http phải tương ứng với tên file Controller của endpoint (lowercase, hyphen-separated).
+- [ ] Chứa **TẤT CẢ** endpoints của controller. **KHÔNG** gộp nhiều controller vào một file .http duy nhất.
 - [ ] Có variables cho reusable values:
   ```
   @host = http://localhost:8080
@@ -201,6 +218,7 @@ public class YourController {
 - [ ] Script để auto-save tokens từ response (nếu cần)
 
 **Workflow bắt buộc**:
+
 ```
 1. Implement Controller + DTOs
 2. Add Swagger annotations (@Tag, @Operation, @Schema)
@@ -211,12 +229,13 @@ public class YourController {
 ```
 
 **Example Pattern**:
+
 ```java
 @RestController
 @RequestMapping("/api/streams")
 @Tag(name = "Streams", description = "Livestream management APIs")
 public class StreamController {
-    
+
     @Operation(summary = "Create new stream")
     @PostMapping
     public ApiResponse<StreamDTO> createStream(
@@ -229,13 +248,14 @@ public class StreamController {
 public class CreateStreamRequest {
     @Schema(description = "Stream title", example = "My Gaming Stream")
     private String title;
-    
+
     @Schema(description = "Stream description", example = "Playing Valorant ranked")
     private String description;
 }
 ```
 
 **Corresponding .http file** (`.http/stream-controller.http`):
+
 ```http
 @host = http://localhost:8080
 @token = {{token}}
@@ -260,12 +280,14 @@ Chi tiết examples xem: `docs/coding_standards.md`
 ### ❌ CẤM SỬ DỤNG JPA Relationships Annotations
 
 **KHÔNG được sử dụng:**
+
 - `@ManyToMany`
 - `@ManyToOne`
 - `@OneToMany`
 - `@OneToOne`
 
 **LÝ DO:**
+
 - Giảm coupling giữa entities
 - Tránh N+1 query problem
 - Dễ control performance
@@ -273,6 +295,7 @@ Chi tiết examples xem: `docs/coding_standards.md`
 - Tránh lazy loading issues
 
 **THAY VÀO ĐÓ:**
+
 - Sử dụng **explicit join table entities**
 - Query manually qua Repository khi cần
 - Sử dụng DTO để compose data
@@ -280,6 +303,7 @@ Chi tiết examples xem: `docs/coding_standards.md`
 **VÍ DỤ:**
 
 ❌ **SAI - Dùng @ManyToMany:**
+
 ```java
 @Entity
 public class User {
@@ -289,6 +313,7 @@ public class User {
 ```
 
 ✅ **ĐÚNG - Dùng Join Table Entity:**
+
 ```java
 @Entity
 public class User {
@@ -307,10 +332,10 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
-    
+
     @Column(name = "role_id", nullable = false)
     private Long roleId;
 }
@@ -321,17 +346,20 @@ public class UserRole {
 ## Development Workflow Rules
 
 ### 1. Plan Approval
+
 - **LUÔN LUÔN** phải đợi user approve implementation plan trước khi EXECUTION
 - Không được tự ý chuyển sang EXECUTION mode
 - Sử dụng `notify_user` với `BlockedOnUser: true` để request approval
 
 ### 2. Build & Test
+
 - **KHÔNG** được tự ý run `mvn compile`, `mvn test`, `mvn package`
 - **KHÔNG** được tự ý run Docker commands
 - **CHỈ** implement code thuần
 - User sẽ tự run build/test khi cần
 
 ### 3. Code Implementation
+
 - Focus vào code implementation
 - Để user tự verify và test
 - Chỉ fix compilation errors nếu được yêu cầu

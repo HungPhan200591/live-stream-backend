@@ -1,57 +1,66 @@
 package com.stream.demo.controller;
 
 import com.stream.demo.common.ApiResponse;
+import com.stream.demo.model.dto.StreamDTO;
+import com.stream.demo.model.dto.WalletDTO;
+import com.stream.demo.model.dto.request.SimulateDepositRequest;
+import com.stream.demo.model.dto.request.SimulateStreamEndRequest;
+import com.stream.demo.model.dto.request.SimulateStreamStartRequest;
+import com.stream.demo.service.StreamService;
+import com.stream.demo.service.WalletService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
+//@Profile("dev")
 @RestController
-@RequestMapping("/api/dev")
+@RequestMapping("/api/dev/simulate")
+@RequiredArgsConstructor
+@Tag(name = "Development Simulation", description = "Simulate external events for testing")
 public class SimulationController {
 
-    // Mock Database (In-Memory for Simulation Phase)
-    // TODO: Phase 4 will use Real DB Service
+    private final StreamService streamService;
+    private final WalletService walletService;
 
+    /**
+     * Giả lập OBS stream start
+     */
     @PostMapping("/stream/start")
-    public ApiResponse<Map<String, Object>> simulateStartStream(@RequestParam String streamKey) {
-        // Logic:
-        // 1. Validate streamKey
-        // 2. Update Stream Status to LIVE
-        // 3. Notify Followers (Async)
-
-        System.out.println(">>> SIMULATION: Stream " + streamKey + " STARTED.");
-
-        return ApiResponse.success(Map.of(
-                "streamKey", streamKey,
-                "status", "LIVE",
-                "viewers", 0), "Stream started successfully (Simulated)");
+    @Operation(summary = "Simulate stream start event")
+    public ApiResponse<StreamDTO> simulateStreamStart(
+            @RequestBody @Valid SimulateStreamStartRequest request) {
+        StreamDTO stream = streamService.startStream(request.getStreamKey());
+        return ApiResponse.success(stream, "Stream started (simulated)");
     }
 
+    /**
+     * Giả lập OBS stream end
+     */
     @PostMapping("/stream/end")
-    public ApiResponse<String> simulateEndStream(@RequestParam String streamKey) {
-        System.out.println(">>> SIMULATION: Stream " + streamKey + " ENDED.");
-        return ApiResponse.success("Stream ended", "Stream stopped successfully (Simulated)");
+    @Operation(summary = "Simulate stream end event")
+    public ApiResponse<StreamDTO> simulateStreamEnd(
+            @RequestBody @Valid SimulateStreamEndRequest request) {
+        StreamDTO stream = streamService.endStream(request.getStreamKey());
+        return ApiResponse.success(stream, "Stream ended (simulated)");
     }
 
+    /**
+     * Giả lập payment deposit
+     */
     @PostMapping("/payment/deposit")
-    public ApiResponse<Map<String, Object>> simulateDeposit(
-            @RequestParam Long userId,
-            @RequestParam BigDecimal amount) {
-
-        // Logic:
-        // 1. Get Wallet by userId
-        // 2. Wallet.balance += amount
-        // 3. Save Transaction
-
-        System.out.println(">>> SIMULATION: Deposit " + amount + " to User " + userId);
-
-        return ApiResponse.success(Map.of(
-                "userId", userId,
-                "amount", amount,
-                "newBalance", "1000.00 (Mock)"), "Deposit successful (Simulated)");
+    @Operation(summary = "Simulate payment deposit")
+    public ApiResponse<WalletDTO> simulateDeposit(
+            @RequestBody @Valid SimulateDepositRequest request) {
+        WalletDTO wallet = walletService.deposit(
+                request.getUserId(),
+                request.getAmount(),
+                "Simulated deposit");
+        return ApiResponse.success(wallet, "Deposit successful (simulated)");
     }
 }
