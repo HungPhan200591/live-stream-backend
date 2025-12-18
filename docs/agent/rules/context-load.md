@@ -5,6 +5,8 @@ trigger: always_on
 # Quy Tắc Dự Án & Ngữ Cảnh (Context Awareness)
 
 Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
+Trước khi làm bất cứ việc gì, mở `docs/agent/AGENT_PLAYBOOK.md` để nắm checklist nhanh rồi dùng tài liệu dưới đây như phần mở rộng chi tiết.
+
 Để đảm bảo nhất quán và không mất context, bạn **BẮT BUỘC** tuân thủ các quy tắc sau:
 
 ## 0. Ngôn Ngữ Giao Tiếp
@@ -15,19 +17,15 @@ Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
 ## 1. Tài Liệu Thẩm Quyền (Documentation Authority)
 
 - **Nguồn Chính (Primary Sources)**: Luôn tham chiếu các file sau trước khi đưa ra quyết định kiến trúc hoặc thay đổi code lớn:
-  - `README.md`: Nắm bắt tư duy cốt lõi ("Pragmatic & Fast", "Simulation First") và ưu tiên của dự án.
-  - `docs/system_design_livestream.md`: Nguồn sự thật duy nhất (SSOT) về Kiến trúc Hệ thống, DB Schema và Quyết định Công nghệ.
-  - `docs/implementation_plan.md`: Lộ trình triển khai. Kiểm tra file này để biết đang ở Phase nào.
-  - **`docs/api_endpoints_specification.md`**: **SSOT về API Endpoints & Authorization**. Kiểm tra file này khi:
-    - Implement Controllers/Endpoints mới
+  - `README.md`: Nắm tư duy cốt lõi ("Pragmatic & Fast", "Simulation First") và tình trạng tiến độ.
+  - `docs/system_design_livestream.md`: SSOT về Kiến trúc hệ thống, DB schema, quyết định công nghệ.
+  - `docs/implementation/000_ROADMAP.md`: Lộ trình triển khai. Kiểm tra file này để biết đang ở Phase nào rồi đọc `phase-{N}-*.md` tương ứng.
+  - **`docs/api_endpoints_specification.md`**: **SSOT về API & Authorization**. Luôn đọc trước khi:
+    - Implement Controller/Endpoint mới
     - Thiết lập authorization (@PreAuthorize, SecurityConfig)
-    - Cần biết endpoint nào cần role gì
-    - Verify API design consistency
-  - `docs/authorization_flow.md`: **Luồng phân quyền chi tiết với Mermaid diagrams**. Tham khảo khi:
-    - Cần hiểu rõ flow từ request đến response
-    - Implement WebSocket authorization
-    - Debug authorization issues
-    - Thiết kế authorization cho feature mới
+    - Kiểm tra endpoint cần role nào hoặc pattern nào đã định nghĩa
+  - `docs/authorization_flow.md`: Luồng phân quyền chi tiết (REST + WebSocket). Tham khảo khi debug hoặc thiết kế rule mới.
+  - `docs/agent/AGENT_PLAYBOOK.md`: Checklist 1 trang để giảm thời gian load context (ưu tiên đọc đầu tiên).
 
 ## 2. Ràng Buộc Kiến Trúc Cốt Lõi
 
@@ -69,7 +67,7 @@ Chi tiết xem: `docs/agent/rules/coding-rule.md` và `docs/coding_standards.md`
 
 - **Vai trò (Role)**: Bạn là một **Senior Backend Engineer** thực dụng. Bạn không lý thuyết suông, luôn tập trung vào code chạy được, hiệu quả và dễ bảo trì.
 - **Quy trình làm việc (Workflow)**:
-  1.  **Check Context**: Luôn kiểm tra `docs/implementation_plan.md` xem Phase hiện tại là gì trước khi request code mới.
+  1.  **Check Context**: Luôn kiểm tra `docs/implementation/000_ROADMAP.md` xem phase hiện tại là gì trước khi request code mới.
   2.  **Check API Spec**: Nếu task liên quan đến API/Controller, **BẮT BUỘC** đọc `docs/api_endpoints_specification.md` để biết:
       - Endpoint pattern đã được định nghĩa chưa
       - Authorization level cần thiết (Public/Authenticated/Role-based)

@@ -5,7 +5,7 @@
 
 ---
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ```
 docs/
@@ -21,15 +21,16 @@ docs/
 │   ├── phase-3-authentication.md (✅ DONE)
 │   ├── phase-4-streaming.md (🔄 NEXT)
 │   └── ... (phases 5-12)
+├── agent/AGENT_PLAYBOOK.md       # Agent quick-start
 └── agent/rules/                     # Development standards
     └── coding-rule.md
 ```
 
 ---
 
-## 🎯 For Different Audiences
+## For Different Audiences
 
-### 👔 For Product Owners / Stakeholders
+### For Product Owners / Stakeholders
 
 **Start here**:
 1. [Business Flows](business_flows.md) - Hiểu use cases và user journeys
@@ -39,13 +40,15 @@ docs/
 - ❓ Platform có những tính năng gì? → [Core Use Cases](business_flows.md#core-use-cases)
 - ❓ User journey như thế nào? → [User Flows](business_flows.md#user-flows)
 - ❓ Business rules là gì? → [Business Rules](business_flows.md#business-rules)
-- ❓ Đã implement được bao nhiêu? → [Current Status](implementation/README.md#-current-status)
+- ❓ Đã implement được bao nhiêu? → [Current Status](implementation/000_ROADMAP.md#-current-status)
 
 ---
 
-### 👨‍💻 For Developers (New to Project)
+### For Developers (New to Project)
 
 **Onboarding Path**:
+
+- Bắt đầu bằng [Agent Playbook](agent/AGENT_PLAYBOOK.md) để nắm checklist tổng quan.
 
 #### Step 1: Understand Business (30 mins)
 1. Read [Business Flows](business_flows.md)
@@ -65,7 +68,7 @@ docs/
    - Bookmark for reference when implementing
 
 #### Step 4: Check Current Phase (10 mins)
-4. Check [Implementation Roadmap](implementation/README.md)
+4. Check [Implementation Roadmap](implementation/000_ROADMAP.md)
    - See what's completed
    - Find current phase
    - Read relevant phase document
@@ -80,7 +83,7 @@ docs/
 
 ---
 
-### 🛠️ For Developers (Implementing New Feature)
+### For Developers (Implementing New Feature)
 
 **Workflow**:
 
@@ -117,7 +120,7 @@ graph TD
 
 ---
 
-### 🔧 For DevOps / Infrastructure
+### For DevOps / Infrastructure
 
 **Key Documents**:
 - [System Design - Infrastructure](system_design_livestream.md#2-kiến-trúc-tổng-quan)
@@ -131,7 +134,7 @@ graph TD
 
 ---
 
-## 🗺️ Document Relationships
+## Document Relationships
 
 ```mermaid
 graph TD
@@ -155,7 +158,7 @@ graph TD
 
 ---
 
-## 📖 Quick Reference
+## Quick Reference
 
 ### Common Questions
 
@@ -164,7 +167,7 @@ graph TD
 | Streamer tạo stream như thế nào? | [Business Flows](business_flows.md) | UC-02, Flow 1 |
 | Gift transaction flow ra sao? | [Business Flows](business_flows.md) | Flow 3 |
 | API nào cần role gì? | [API Specification](api_endpoints_specification.md) | Section 2 |
-| Phase nào đang làm? | [Implementation Roadmap](implementation/README.md) | Current Status |
+| Phase nào đang làm? | [Implementation Roadmap](implementation/000_ROADMAP.md) | Current Status |
 | Tại sao dùng Redis Pub/Sub? | [System Design](system_design_livestream.md) | Section 4.3 |
 | Làm sao test authentication? | [Phase 3](implementation/phase-3-authentication.md) | Verification Plan |
 
@@ -178,13 +181,13 @@ graph TD
 
 ---
 
-## 🔄 Keeping Documentation Updated
+## Keeping Documentation Updated
 
 ### When to Update
 
 | Event | Update Document |
 |-------|----------------|
-| Complete một phase | `implementation/README.md` (status), phase file (checklist) |
+| Complete một phase | `implementation/000_ROADMAP.md` (status), phase file (checklist) |
 | Add new API endpoint | `api_endpoints_specification.md`, `api_roadmap.md` |
 | Change business rule | `business_flows.md` (Business Rules section) |
 | Modify architecture | `system_design_livestream.md` |
@@ -200,12 +203,12 @@ git commit -m "feat: implement stream management (Phase 4)
 
 - Implemented StreamService, StreamController
 - Updated docs/implementation/phase-4-streaming.md checklist
-- Updated docs/implementation/README.md status"
+- Updated docs/implementation/000_ROADMAP.md status"
 ```
 
 ---
 
-## 🎓 Learning Path by Role
+## Learning Path by Role
 
 ### Backend Developer (Junior)
 1. Business Flows (focus on 1-2 use cases)
@@ -227,12 +230,12 @@ git commit -m "feat: implement stream management (Phase 4)
 
 ---
 
-## 📞 Need Help?
+## Need Help?
 
 - **Business questions**: Check [Business Flows](business_flows.md)
 - **Technical questions**: Check [System Design](system_design_livestream.md)
 - **API questions**: Check [API Specification](api_endpoints_specification.md)
-- **Implementation questions**: Check relevant [Phase Document](implementation/README.md)
+- **Implementation questions**: Check relevant [Phase Document](implementation/000_ROADMAP.md)
 - **Coding standards**: Check [Coding Rules](agent/rules/coding-rule.md)
 
 ---

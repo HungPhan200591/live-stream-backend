@@ -5,7 +5,7 @@
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 ### Mục Tiêu
 - Xây dựng backend livestream platform với focus vào **performance** và **scalability**
@@ -24,7 +24,7 @@
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Java 17+
@@ -57,34 +57,31 @@ open http://localhost:8080/swagger-ui.html
 
 ---
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ### Core Documents (Đọc theo thứ tự)
 
-1. **[Business Flows](docs/business_flows.md)** ⭐ START HERE
+1. **[Agent Playbook](docs/agent/AGENT_PLAYBOOK.md)** - Checklist 1 trang cho AI Agent/dev mới, link tới toàn bộ tài liệu chi tiết.
+2. **[Business Flows](docs/business_flows.md)** **START HERE**
    - 7 core use cases (User Auth, Streaming, Chat, Gifts, Analytics, Admin)
    - Sequence diagrams cho user journeys
    - Business rules và state machines
    - **Đọc trước để hiểu "WHY" trước "HOW"**
-
-2. **[System Design](docs/system_design_livestream.md)**
+3. **[System Design](docs/system_design_livestream.md)**
    - Architecture overview với business context
    - Technology choices (tại sao dùng Redis, RabbitMQ)
    - Component interactions
    - Database schema
-
-3. **[Implementation Roadmap](docs/implementation/000_ROADMAP.md)**
+4. **[Implementation Roadmap](docs/implementation/000_ROADMAP.md)**
    - 12 phases implementation plan
    - Phase dependencies diagram
    - Current progress: 3/12 phases (25%)
    - **Next**: Phase 4 - Stream Management
-
-4. **[API Specification](docs/api_endpoints_specification.md)**
+5. **[API Specification](docs/api_endpoints_specification.md)**
    - Complete API reference
    - Authorization rules (Two-Tier strategy)
    - Endpoint patterns và examples
    - **Đọc trước khi implement Controller**
-
 ### Implementation Phases (docs/implementation/)
 
 | Phase | Status | Description |
@@ -106,7 +103,7 @@ open http://localhost:8080/swagger-ui.html
 
 ---
 
-## 🏗️ Architecture Highlights
+## Architecture Highlights
 
 ### Layered Architecture
 ```
@@ -145,7 +142,7 @@ Controller → Service → Repository
 
 ---
 
-## 🔑 Key Features
+## Key Features
 
 ### Implemented (Phases 1-3)
 - ✅ JWT Authentication với RBAC (USER, STREAMER, ADMIN)
@@ -171,7 +168,7 @@ Controller → Service → Repository
 
 ---
 
-## 📖 Development Guidelines
+## Development Guidelines
 
 ### Coding Standards
 - **Required Reading**: `docs/agent/rules/coding-rule.md`
@@ -198,7 +195,7 @@ Controller → Service → Repository
 
 ---
 
-## 🛠️ Useful Commands
+## Useful Commands
 
 ```bash
 # Build
@@ -218,7 +215,7 @@ docker-compose logs -f redis  # View logs
 
 ---
 
-## 📊 Project Status
+## Project Status
 
 **Current Phase**: 3/12 (25% complete)  
 **Next Milestone**: Phase 4 - Stream Management  
@@ -232,14 +229,14 @@ docker-compose logs -f redis  # View logs
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 ### For New Developers
 1. **Onboarding** (~2 hours):
    - Read `docs/business_flows.md` (30 mins)
    - Skim `docs/system_design_livestream.md` (45 mins)
    - Review `docs/agent/rules/coding-rule.md` (20 mins)
-   - Check current phase in `docs/implementation/ROADMAP.md` (10 mins)
+   - Check current phase in `docs/implementation/000_ROADMAP.md` (10 mins)
 
 2. **Start Coding**:
    - Pick a task from current phase
@@ -249,7 +246,7 @@ docker-compose logs -f redis  # View logs
 
 ---
 
-## 📝 Notes
+## Notes
 
 ### Philosophy: Pragmatic & Fast
 - **Simulation First**: Không cần OBS, Payment Gateway thật
@@ -265,11 +262,11 @@ docker-compose logs -f redis  # View logs
 
 ---
 
-## 📞 Support
+## Support
 
-- **Documentation**: Start with `docs/business_flows.md`
+- **Documentation**: Start with `docs/agent/AGENT_PLAYBOOK.md`
 - **API Reference**: `docs/api_endpoints_specification.md`
-- **Implementation Guide**: `docs/implementation/ROADMAP.md`
+- **Implementation Guide**: `docs/implementation/000_ROADMAP.md`
 - **Coding Standards**: `docs/agent/rules/coding-rule.md`
 
 ---

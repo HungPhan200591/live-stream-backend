@@ -1,4 +1,6 @@
-﻿# Coding Rules - Spring Boot Livestream Backend
+# Coding Rules - Spring Boot Livestream Backend
+
+> Checklist nhanh nằm trong `docs/agent/AGENT_PLAYBOOK.md`. File này mô tả chi tiết và ví dụ cho từng quy tắc.
 
 ## 0. Core Coding Standards
 
@@ -24,7 +26,7 @@
 
 ---
 
-## 📖 Required Reading Before Implementation
+## Required Reading Before Implementation
 
 ### API Endpoints Specification
 

@@ -6,7 +6,7 @@
 
 ---
 
-## 📋 **Table of Contents**
+## **Table of Contents**
 
 1. [Authorization Rules & Best Practices](#1-authorization-rules--best-practices)
 2. [API Endpoints Specification](#2-api-endpoints-specification)

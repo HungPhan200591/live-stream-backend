@@ -564,5 +564,5 @@ stateDiagram-v2
 
 **Next Steps**: 
 - Đọc [System Design](system_design_livestream.md) để hiểu technical architecture
-- Xem [Implementation Roadmap](implementation/README.md) để theo dõi progress
+- Xem [Implementation Roadmap](implementation/000_ROADMAP.md) để theo dõi progress
 - Check [API Specification](api_endpoints_specification.md) cho endpoint details
