@@ -9,22 +9,25 @@
 
 ```
 docs/
-├── DOCS_GUIDE.md (this file)        # How to navigate documentation
-├── business_flows.md                # ⭐ Use cases & user flows
-├── system_design_livestream.md      # Technical architecture
-├── api_endpoints_specification.md   # API reference
-├── api_roadmap.md                   # API implementation order
-├── implementation/                  # Phase-by-phase implementation
-│   ├── ROADMAP.md                   # Implementation overview
-│   ├── phase-1-foundation.md
-│   ├── phase-2-simulation.md
-│   ├── phase-3-authentication.md (✅ DONE)
-│   ├── phase-4-streaming.md (🔄 NEXT)
-│   └── ... (phases 5-12)
-├── agent/AGENT_PLAYBOOK.md       # Agent quick-start
-└── agent/rules/                     # Development standards
-    └── coding-rule.md
+|-- 000_DOCS_GUIDE.md (this file)        # How to navigate documentation
+|-- business_flows.md                    # Use cases & user flows
+|-- system_design_livestream.md          # Technical architecture
+|-- api_endpoints_specification.md       # API reference
+|-- api_roadmap.md                       # API implementation order
+|-- implementation/                      # Phase-by-phase implementation
+|   |-- 000_ROADMAP.md                   # Implementation overview
+|   |-- phase-1-foundation.md
+|   |-- phase-2-simulation.md
+|   |-- phase-3-authentication.md (DONE)
+|   |-- phase-4-streaming.md (NEXT)
+|   \-- ... (phases 5-12)
+\-- agent/
+    \-- rules/
+        |-- context-load.md              # Agent entry (quick-start)
+        \-- coding-rule.md               # Development standards
 ```
+
+
 
 ---
 
@@ -40,7 +43,7 @@ docs/
 - ❓ Platform có những tính năng gì? → [Core Use Cases](business_flows.md#core-use-cases)
 - ❓ User journey như thế nào? → [User Flows](business_flows.md#user-flows)
 - ❓ Business rules là gì? → [Business Rules](business_flows.md#business-rules)
-- ❓ Đã implement được bao nhiêu? → [Current Status](implementation/000_ROADMAP.md#-current-status)
+- ❓ Đã implement được bao nhiêu? → [Current Status](implementation/000_ROADMAP.md#current-status)
 
 ---
 
@@ -48,7 +51,7 @@ docs/
 
 **Onboarding Path**:
 
-- Bắt đầu bằng [Agent Playbook](agent/AGENT_PLAYBOOK.md) để nắm checklist tổng quan.
+- Bắt đầu bằng [Agent Entry Context](agent/rules/context-load.md) để nắm checklist tổng quan.
 
 #### Step 1: Understand Business (30 mins)
 1. Read [Business Flows](business_flows.md)

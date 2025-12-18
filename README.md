@@ -1,26 +1,24 @@
-# Spring Boot Livestream Backend
+﻿# Spring Boot Livestream Backend
 
-> **Backend hiệu năng cao cho nền tảng Livestream**  
+> Backend hiệu năng cao cho nền tảng Livestream
 > Java 17 | Spring Boot 3.x | PostgreSQL | Redis | RabbitMQ | WebSocket
 
 ---
 
-## Project Overview
+## Overview
+- Xây dựng backend tập trung vào performance và scalability.
+- Simulation-first: phát triển và test qua API mô phỏng, không phụ thuộc dịch vụ ngoài.
+- Mục tiêu học tập và thực hành Redis, RabbitMQ, WebSocket, concurrency.
 
-### Mục Tiêu
-- Xây dựng backend livestream platform với focus vào **performance** và **scalability**
-- Học tập và thực hành các công nghệ: Redis, RabbitMQ, WebSocket, Concurrency
-- Simulation-first approach: Dev độc lập không cần external services
-
-### Tech Stack
+## Tech Stack
 | Component | Technology | Purpose |
 |-----------|------------|---------|
-| **Backend** | Java 17, Spring Boot 3.x | Core application |
-| **Database** | PostgreSQL 16 | Primary data store |
-| **Cache** | Redis 7 | Caching, Pub/Sub, HyperLogLog, Sorted Sets |
-| **Message Queue** | RabbitMQ 3 | Async processing, Event-driven |
-| **Real-time** | WebSocket (STOMP) | Chat, Notifications |
-| **API Docs** | Swagger/OpenAPI | Auto-generated documentation |
+| Backend | Java 17, Spring Boot 3.x | Core application |
+| Database | PostgreSQL 16 | Primary data store |
+| Cache | Redis 7 | Caching, Pub/Sub, HyperLogLog, Sorted Sets |
+| Message Queue | RabbitMQ 3 | Async processing, event-driven |
+| Real-time | WebSocket (STOMP) | Chat, notifications |
+| API Docs | Swagger/OpenAPI | Auto-generated documentation |
 
 ---
 
@@ -57,141 +55,27 @@ open http://localhost:8080/swagger-ui.html
 
 ---
 
-## Documentation Structure
-
-### Core Documents (Đọc theo thứ tự)
-
-1. **[Agent Playbook](docs/agent/AGENT_PLAYBOOK.md)** - Checklist 1 trang cho AI Agent/dev mới, link tới toàn bộ tài liệu chi tiết.
-2. **[Business Flows](docs/business_flows.md)** **START HERE**
-   - 7 core use cases (User Auth, Streaming, Chat, Gifts, Analytics, Admin)
-   - Sequence diagrams cho user journeys
-   - Business rules và state machines
-   - **Đọc trước để hiểu "WHY" trước "HOW"**
-3. **[System Design](docs/system_design_livestream.md)**
-   - Architecture overview với business context
-   - Technology choices (tại sao dùng Redis, RabbitMQ)
-   - Component interactions
-   - Database schema
-4. **[Implementation Roadmap](docs/implementation/000_ROADMAP.md)**
-   - 12 phases implementation plan
-   - Phase dependencies diagram
-   - Current progress: 3/12 phases (25%)
-   - **Next**: Phase 4 - Stream Management
-5. **[API Specification](docs/api_endpoints_specification.md)**
-   - Complete API reference
-   - Authorization rules (Two-Tier strategy)
-   - Endpoint patterns và examples
-   - **Đọc trước khi implement Controller**
-### Implementation Phases (docs/implementation/)
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Phase 1 | ✅ DONE | Foundation & Infrastructure |
-| Phase 2 | ✅ DONE | Development Simulation APIs |
-| Phase 3 | ✅ DONE | Authentication & User Management |
-| **Phase 4** | **🔄 NEXT** | **Stream Management Module** |
-| Phase 5 | 🔄 TODO | Economy & Transaction System |
-| Phase 6 | 🔄 TODO | Real-time Chat System |
-| Phase 7 | 🔄 TODO | Gift System & Async Processing |
-| Phase 8 | 🔄 TODO | Analytics & Leaderboard |
-| Phase 9 | 🔄 TODO | Admin Management Module |
-| Phase 10 | 🔄 TODO | Production Readiness |
-| Phase 11 | 🔮 OPTIONAL | Social Features |
-| Phase 12 | 🔮 OPTIONAL | Notification System |
-
-**Chi tiết từng phase**: Xem `docs/implementation/phase-{N}-*.md`
+## Documentation
+- Entry cho developer: `docs/000_DOCS_GUIDE.md`
+- Entry cho AI agent: `docs/agent/rules/context-load.md`
+- Roadmap & phase: `docs/implementation/000_ROADMAP.md`
+- API & authorization: `docs/api_endpoints_specification.md`
 
 ---
 
 ## Architecture Highlights
-
-### Layered Architecture
-```
-Controller → Service → Repository
-     ↓          ↓          ↓
-   DTOs    Business    Entities
-           Logic
-```
-
-### Key Design Decisions
-
-**1. No JPA Relationships**
-- ❌ Không dùng `@ManyToMany`, `@OneToMany`, `@ManyToOne`, `@OneToOne`
-- ✅ Dùng explicit join table entities
-- **Why**: Giảm coupling, tránh N+1, dễ control performance
-
-**2. DTO-First API**
-- ❌ Không expose Entity trực tiếp
-- ✅ Luôn dùng Request/Response DTOs
-- **Why**: Separation of concerns, API stability
-
-**3. Session-Backed JWT**
-- Access Token: 15 phút (stateless)
-- Refresh Token: 30 ngày (session-backed, check DB)
-- **Why**: Revoke capability, security
-
-**4. Redis Pub/Sub for Chat**
-- Real-time broadcast qua Redis
-- Async persistence qua RabbitMQ
-- **Why**: Horizontal scaling, decouple concerns
-
-**5. Atomic Wallet + Async Rewards**
-- Deduct wallet: Synchronous (atomic)
-- Credit streamer: Asynchronous (RabbitMQ)
-- **Why**: User experience + data integrity
-
----
-
-## Key Features
-
-### Implemented (Phases 1-3)
-- ✅ JWT Authentication với RBAC (USER, STREAMER, ADMIN)
-- ✅ Session management (logout, refresh tokens)
-- ✅ User registration & profile management
-- ✅ Swagger API documentation
-- ✅ Development simulation APIs
-- ✅ Docker Compose infrastructure
-
-### Next Up (Phase 4)
-- 🔄 Stream CRUD operations
-- 🔄 Live status tracking (Redis)
-- 🔄 Viewer count (HyperLogLog)
-- 🔄 Stream lifecycle management
-
-### Planned (Phases 5-12)
-- 📋 Virtual wallet & transactions
-- 📋 Real-time chat (WebSocket + Redis Pub/Sub)
-- 📋 Gift system với async processing
-- 📋 Analytics & leaderboards
-- 📋 Admin moderation tools
-- 📋 Production hardening
+- No JPA relationships: dùng entity trung gian để tránh N+1 và giảm coupling.
+- DTO-first API: không expose Entity lên controller.
+- Session-backed JWT: access token 15 phút, refresh token kiểm tra DB để revoke được.
+- Redis Pub/Sub cho chat realtime, RabbitMQ cho lưu trữ async.
+- Wallet xử lý atomic, reward streamer async để cân bằng UX và integrity.
 
 ---
 
 ## Development Guidelines
-
-### Coding Standards
-- **Required Reading**: `docs/agent/rules/coding-rule.md`
-- **Key Rules**:
-  - No JPA relationship annotations
-  - Always use DTOs for API
-  - Follow Two-Tier authorization (URL + Method level)
-  - Redis cache DTOs trong `model/dto/cache/`
-  - Swagger annotations cho all endpoints
-
-### API Development Workflow
-1. Read business flows → Understand use case
-2. Read phase document → Get implementation details
-3. Check API specification → Follow endpoint patterns
-4. Implement: Entity → Repository → Service → Controller
-5. Create `.http` file for testing
-6. Verify via Swagger UI
-
-### Testing Strategy
-- **Unit Tests**: Business logic trong Services
-- **Integration Tests**: API endpoints với authorization
-- **Manual Tests**: HTTP files + Swagger UI
-- **No auto-run**: User tự run build/test khi cần
+- Coding standards: `docs/agent/rules/coding-rule.md`.
+- Workflow: Business Flows -> Phase doc -> API spec -> implement -> tạo `.http` -> verify.
+- Testing: unit, integration, manual; người dùng chủ động chạy khi cần.
 
 ---
 
@@ -216,59 +100,38 @@ docker-compose logs -f redis  # View logs
 ---
 
 ## Project Status
-
-**Current Phase**: 3/12 (25% complete)  
-**Next Milestone**: Phase 4 - Stream Management  
+**Current Phase**: 3/12 (25% complete)
+**Next Milestone**: Phase 4 - Stream Management
 **Last Updated**: 2025-12-18
-
-### Recent Updates
-- ✅ Completed Phase 3: Authentication & User Management
-- ✅ Implemented session-backed JWT refresh tokens
-- ✅ Created comprehensive documentation structure
-- ✅ Extracted all 12 implementation phases
 
 ---
 
 ## Contributing
-
-### For New Developers
-1. **Onboarding** (~2 hours):
-   - Read `docs/business_flows.md` (30 mins)
-   - Skim `docs/system_design_livestream.md` (45 mins)
-   - Review `docs/agent/rules/coding-rule.md` (20 mins)
-   - Check current phase in `docs/implementation/000_ROADMAP.md` (10 mins)
-
-2. **Start Coding**:
-   - Pick a task from current phase
-   - Follow phase document checklist
-   - Create HTTP test file
+1. Onboarding (~2 hours)
+   - Read `docs/business_flows.md`
+   - Skim `docs/system_design_livestream.md`
+   - Review `docs/agent/rules/coding-rule.md`
+   - Check current phase in `docs/implementation/000_ROADMAP.md`
+2. Start coding
+   - Pick task from current phase
+   - Follow phase checklist
+   - Create `.http` file
    - Submit for review
 
 ---
 
 ## Notes
-
-### Philosophy: Pragmatic & Fast
-- **Simulation First**: Không cần OBS, Payment Gateway thật
-- **KISS Principle**: Layered Architecture, không over-engineer
-- **Performance Focus**: Redis, RabbitMQ, Concurrency handling
-- **Learning Goal**: Hands-on với modern backend stack
-
-### Production Disclaimer
-⚠️ **Development/Learning Project**
-- Simulation APIs (`/api/dev/**`) phải disable trong production
-- Security hardening cần thiết trước deploy
-- Load testing required cho production readiness
+- Simulation APIs (`/api/dev/**`) phải disable trong production.
+- Security hardening và load testing cần thiết trước khi deploy.
 
 ---
 
 ## Support
-
-- **Documentation**: Start with `docs/agent/AGENT_PLAYBOOK.md`
-- **API Reference**: `docs/api_endpoints_specification.md`
-- **Implementation Guide**: `docs/implementation/000_ROADMAP.md`
-- **Coding Standards**: `docs/agent/rules/coding-rule.md`
+- Documentation entry: `docs/000_DOCS_GUIDE.md`
+- API reference: `docs/api_endpoints_specification.md`
+- Implementation guide: `docs/implementation/000_ROADMAP.md`
+- Coding standards: `docs/agent/rules/coding-rule.md`
 
 ---
 
-**Built with ❤️ for learning and performance optimization**
+Built for learning and performance optimization.

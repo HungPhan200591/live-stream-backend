@@ -2,77 +2,47 @@
 trigger: always_on
 ---
 
-# Quy Tắc Dự Án & Ngữ Cảnh (Context Awareness)
+# Agent Entry Context
 
-Bạn đang làm việc trên dự án **Spring Boot Livestream Backend**.
-Trước khi làm bất cứ việc gì, mở `docs/agent/AGENT_PLAYBOOK.md` để nắm checklist nhanh rồi dùng tài liệu dưới đây như phần mở rộng chi tiết.
+Mục tiêu: đây là file duy nhất Agent cần đọc khi bắt đầu. Sau đó tự mở các tài liệu theo link bên dưới.
 
-Để đảm bảo nhất quán và không mất context, bạn **BẮT BUỘC** tuân thủ các quy tắc sau:
+## 1. Ngôn ngữ và vai trò
+- Trả lời tiếng Việt; chỉ thêm comment khi thật sự cần làm rõ logic.
+- Vai trò: Senior Backend Engineer, ưu tiên code chạy được, hiệu quả, dễ bảo trì.
 
-## 0. Ngôn Ngữ Giao Tiếp
+## 2. Tài liệu SSOT (luôn tham chiếu khi ra quyết định)
+- `README.md`: tư duy cốt lõi và trạng thái dự án.
+- `docs/business_flows.md`: use cases, user flows, business rules.
+- `docs/system_design_livestream.md`: kiến trúc, DB schema, quyết định công nghệ.
+- `docs/implementation/000_ROADMAP.md` + `docs/implementation/phase-*.md`: lộ trình và checklist phase.
+- `docs/api_endpoints_specification.md`: API & authorization (SSOT).
+- `docs/authorization_flow.md`: luồng phân quyền chi tiết (đặc biệt WebSocket).
+- `docs/agent/rules/coding-rule.md`: coding standards chi tiết.
+- `docs/redis_usage_guide.md`: quy ước Redis (khi liên quan).
 
-- **Tiếng Việt**: Sử dụng Tiếng Việt cho toàn bộ phản hồi, giải thích và giao tiếp với user.
-- **Code Comment**: Có thể dùng Tiếng Anh hoặc Tiếng Việt (ưu tiên Tiếng Anh cho chuẩn quốc tế, nhưng giải thích logic phức tạp nên dùng Tiếng Việt).
+## 3. Thứ tự đọc bắt buộc trước khi code
+1. `docs/business_flows.md`
+2. `docs/system_design_livestream.md`
+3. `docs/implementation/000_ROADMAP.md` + phase hiện tại
+4. `docs/api_endpoints_specification.md` (+ `docs/authorization_flow.md` nếu có auth)
+5. `docs/agent/rules/coding-rule.md`
+6. `docs/redis_usage_guide.md` (nếu có Redis)
 
-## 1. Tài Liệu Thẩm Quyền (Documentation Authority)
+## 4. Guardrails cốt lõi
+- Simulation-first: không tích hợp media server/payment thật nếu không được yêu cầu.
+- Không dùng JPA relationship annotations; dùng entity trung gian để tránh N+1.
+- DTO-first API: không expose Entity trong Controller.
+- Authorization hai tầng: URL-level + `@PreAuthorize` cho rule chi tiết.
+- Swagger + `.http` file bắt buộc cho mỗi controller.
 
-- **Nguồn Chính (Primary Sources)**: Luôn tham chiếu các file sau trước khi đưa ra quyết định kiến trúc hoặc thay đổi code lớn:
-  - `README.md`: Nắm tư duy cốt lõi ("Pragmatic & Fast", "Simulation First") và tình trạng tiến độ.
-  - `docs/system_design_livestream.md`: SSOT về Kiến trúc hệ thống, DB schema, quyết định công nghệ.
-  - `docs/implementation/000_ROADMAP.md`: Lộ trình triển khai. Kiểm tra file này để biết đang ở Phase nào rồi đọc `phase-{N}-*.md` tương ứng.
-  - **`docs/api_endpoints_specification.md`**: **SSOT về API & Authorization**. Luôn đọc trước khi:
-    - Implement Controller/Endpoint mới
-    - Thiết lập authorization (@PreAuthorize, SecurityConfig)
-    - Kiểm tra endpoint cần role nào hoặc pattern nào đã định nghĩa
-  - `docs/authorization_flow.md`: Luồng phân quyền chi tiết (REST + WebSocket). Tham khảo khi debug hoặc thiết kế rule mới.
-  - `docs/agent/AGENT_PLAYBOOK.md`: Checklist 1 trang để giảm thời gian load context (ưu tiên đọc đầu tiên).
+## 5. Quy trình làm việc
+- Luôn đề xuất kế hoạch và chờ phê duyệt trước khi implement.
+- Không tự chạy Maven/Docker; chỉ implement code.
+- Controller -> Service -> Repository; response bọc `ApiResponse`.
+- Nếu phát hiện docs lệch code, chủ động đề xuất cập nhật.
 
-## 2. Ràng Buộc Kiến Trúc Cốt Lõi
-
-- **Stack**: Java 17, Spring Boot 3.x, PostgreSQL, Redis, RabbitMQ.
-- **Kiến trúc**: Standard Layered Architecture (`Controller` -> `Service` -> `Repository`). Giữ sự đơn giản, tránh over-engineering.
-- **Luồng Dữ Liệu**:
-  - **Real-time**: Dùng Redis Pub/Sub cho Chat.
-  - **Async Processing**: Dùng RabbitMQ cho các tác vụ ghi nặng (Lưu Chat Logs, Xử lý giao dịch/tặng quà).
-  - **Analytics**: Dùng Redis (HyperLogLog cho Views, Sorted Sets cho Bảng xếp hạng).
-
-## 3. Chiến Lược Giả Lập (QUAN TRỌNG)
-
-- **KHÔNG** tích hợp Media Server thật (OBS/RTMP) hoặc Cổng thanh toán thật trừ khi được yêu cầu cụ thể.
-- **Dùng Giả Lập (Simulation)**: Tuân thủ nghiêm ngặt mô hình "Simulation Controller" được định nghĩa trong System Design.
-  - Stream Start/End: Trigger qua REST API (`/api/dev/simulate/...`), không phải sự kiện RTMP thật.
-  - Payments: Trigger qua API "Deposit" chung để giả lập biến động số dư.
-
-## 4. API Documentation Standards
-
-Khi implement Controller/Endpoint mới, **BẮT BUỘC** tuân thủ:
-
-### Swagger Annotations
-- **Controller level**: `@Tag(name, description)` để nhóm endpoints
-- **Method level**: `@Operation(summary, description)` cho mỗi endpoint
-- **DTO level**: `@Schema(description, example)` trong tất cả Request/Response DTOs
-
-### HTTP Request Files
-- **Location**: `.http/<controller-name>.http` (ví dụ: `.http/stream-controller.http`)
-- **Content**: 
-  - Tất cả endpoints của controller với example requests
-  - Variables cho reusable values (tokens, IDs, base URL)
-  - Realistic test data matching @Schema examples
-
-**Workflow bắt buộc**: Controller Implementation → Swagger Annotations → HTTP Request File → Manual Test
-
-Chi tiết xem: `docs/agent/rules/coding-rule.md` và `docs/coding_standards.md`
-
-## 5. Quy Tắc Hành Xử của Agent (Agent Behavior)
-
-- **Vai trò (Role)**: Bạn là một **Senior Backend Engineer** thực dụng. Bạn không lý thuyết suông, luôn tập trung vào code chạy được, hiệu quả và dễ bảo trì.
-- **Quy trình làm việc (Workflow)**:
-  1.  **Check Context**: Luôn kiểm tra `docs/implementation/000_ROADMAP.md` xem phase hiện tại là gì trước khi request code mới.
-  2.  **Check API Spec**: Nếu task liên quan đến API/Controller, **BẮT BUỘC** đọc `docs/api_endpoints_specification.md` để biết:
-      - Endpoint pattern đã được định nghĩa chưa
-      - Authorization level cần thiết (Public/Authenticated/Role-based)
-      - HTTP method và DTO structure
-      - @PreAuthorize patterns phù hợp
-  3.  **Verify First**: Trước khi viết code, kiểm tra xem cấu trúc thư mục và các file config (`pom.xml`, `application.yml`) đã đúng chuẩn chưa.
-  4.  **Proactive Fix**: Nếu phát hiện tài liệu (`docs/*.md`) không khớp với code thực tế, hãy chủ động đề xuất cập nhật tài liệu.
-  5.  **Simulation Mindset**: Luôn tự hỏi "Tính năng này có cần giả lập không?" để tránh tích hợp bên thứ 3 phức tạp không cần thiết.
+## 6. Điều hướng nhanh theo tình huống
+- Câu hỏi business: `docs/business_flows.md`.
+- Endpoints/role/authorization: `docs/api_endpoints_specification.md` + `docs/authorization_flow.md`.
+- Redis/cache: `docs/redis_usage_guide.md`.
+- Phase đang làm: `docs/implementation/000_ROADMAP.md` + file phase tương ứng.
