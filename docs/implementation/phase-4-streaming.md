@@ -19,10 +19,10 @@
 - ✅ Theo dõi số lượng người xem thực tế (Redis HyperLogLog)
 - ✅ Quản lý vòng đời stream (Tạo → Live → Kết thúc)
 
-### Luồng người dùng (User Flows)
+### User Flows
 
-- [Hành trình vòng đời Streamer](../business_flows.md#flow-1-streamer-lifecycle-journey)
-- [Hành trình Viewer](../business_flows.md#flow-2-viewer-journey)
+- [Streamer Lifecycle Journey](../business_flows.md#flow-1-streamer-lifecycle-journey)
+- [Viewer Journey](../business_flows.md#flow-2-viewer-journey)
 
 ---
 

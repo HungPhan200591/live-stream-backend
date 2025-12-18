@@ -17,6 +17,23 @@ GET {{host}}/api/streams/1
 Content-Type: application/json
 
 ### ============================================================
+### VIEWER TRACKING (Public - Redis HyperLogLog)
+### ============================================================
+
+### Track viewer - Anonymous user (gọi định kỳ 30s làm heartbeat)
+POST {{host}}/api/streams/1/view
+Content-Type: application/json
+
+### Get realtime viewer count
+GET {{host}}/api/streams/1/viewers
+Content-Type: application/json
+
+### Track viewer - Authenticated user
+POST {{host}}/api/streams/1/view
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### ============================================================
 ### AUTHENTICATED ENDPOINTS (Requires Login)
 ### ============================================================
 
@@ -43,3 +60,11 @@ Content-Type: application/json
 # 2. Copy token vào biến @token ở trên
 # 3. User phải có ROLE_STREAMER hoặc ROLE_ADMIN để tạo stream
 # 4. Nếu chỉ có ROLE_USER, sẽ nhận được 403 Forbidden
+
+### ============================================================
+### VIEWER TRACKING TEST FLOW
+### ============================================================
+# 1. Gọi POST /api/streams/1/view nhiều lần (simulate nhiều viewers)
+# 2. Gọi GET /api/streams/1/viewers để xem unique count
+# 3. Redis HyperLogLog chỉ đếm unique viewers với ~0.81% error
+# 4. Kiểm tra trong Redis: docker exec -it redis redis-cli PFCOUNT stream:1:viewers
