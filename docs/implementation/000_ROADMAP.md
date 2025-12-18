@@ -9,20 +9,20 @@
 
 Mỗi phase được document riêng biệt để dễ theo dõi và implement:
 
-| Phase | Status | Business Goals | Document |
-|-------|--------|----------------|----------|
-| **Phase 1** | ✅ DONE | Infrastructure setup | [phase-1-foundation.md](phase-1-foundation.md) |
-| **Phase 2** | ✅ DONE | Development simulation & testing | [phase-2-simulation.md](phase-2-simulation.md) |
-| **Phase 3** | ✅ DONE | User identity & authentication | [phase-3-authentication.md](phase-3-authentication.md) |
-| **Phase 4** | 🔄 TODO | Core livestream functionality | [phase-4-streaming.md](phase-4-streaming.md) |
-| **Phase 5** | 🔄 TODO | Virtual economy foundation | [phase-5-economy.md](phase-5-economy.md) |
-| **Phase 6** | 🔄 TODO | Real-time community interaction | [phase-6-realtime-chat.md](phase-6-realtime-chat.md) |
-| **Phase 7** | 🔄 TODO | Monetization mechanism | [phase-7-gifts.md](phase-7-gifts.md) |
-| **Phase 8** | 🔄 TODO | Data insights & gamification | [phase-8-analytics.md](phase-8-analytics.md) |
-| **Phase 9** | 🔄 TODO | Platform governance | [phase-9-admin.md](phase-9-admin.md) |
-| **Phase 10** | 🔄 TODO | Production deployment readiness | [phase-10-production.md](phase-10-production.md) |
-| **Phase 11** | 🔄 OPTIONAL | Social networking features | [phase-11-social.md](phase-11-social.md) |
-| **Phase 12** | 🔄 OPTIONAL | Notification system | [phase-12-notifications.md](phase-12-notifications.md) |
+| Phase        | Status      | Business Goals                   | Document                                               |
+| ------------ | ----------- | -------------------------------- | ------------------------------------------------------ |
+| **Phase 1**  | ✅ DONE     | Infrastructure setup             | [phase-1-foundation.md](phase-1-foundation.md)         |
+| **Phase 2**  | ✅ DONE     | Development simulation & testing | [phase-2-simulation.md](phase-2-simulation.md)         |
+| **Phase 3**  | ✅ DONE     | User identity & authentication   | [phase-3-authentication.md](phase-3-authentication.md) |
+| **Phase 4**  | 🔄 TODO     | Core livestream functionality    | [phase-4-streaming.md](phase-4-streaming.md)           |
+| **Phase 5**  | 🔄 TODO     | Virtual economy foundation       | [phase-5-economy.md](phase-5-economy.md)               |
+| **Phase 6**  | 🔄 TODO     | Real-time community interaction  | [phase-6-realtime-chat.md](phase-6-realtime-chat.md)   |
+| **Phase 7**  | 🔄 TODO     | Monetization mechanism           | [phase-7-gifts.md](phase-7-gifts.md)                   |
+| **Phase 8**  | 🔄 TODO     | Data insights & gamification     | [phase-8-analytics.md](phase-8-analytics.md)           |
+| **Phase 9**  | 🔄 TODO     | Platform governance              | [phase-9-admin.md](phase-9-admin.md)                   |
+| **Phase 10** | 🔄 TODO     | Production deployment readiness  | [phase-10-production.md](phase-10-production.md)       |
+| **Phase 11** | 🔄 OPTIONAL | Social networking features       | [phase-11-social.md](phase-11-social.md)               |
+| **Phase 12** | 🔄 OPTIONAL | Notification system              | [phase-12-notifications.md](phase-12-notifications.md) |
 
 ---
 
@@ -52,25 +52,7 @@ graph TD
     P9 --> P10
     P4 --> P11[Phase 11: Social]
     P11 --> P12[Phase 12: Notifications]
-    
-    style P1 fill:#90EE90
-    style P2 fill:#90EE90
-    style P3 fill:#90EE90
-    style P4 fill:#FFE4B5
-    style P5 fill:#FFE4B5
-    style P6 fill:#FFE4B5
-    style P7 fill:#FFE4B5
-    style P8 fill:#FFE4B5
-    style P9 fill:#FFE4B5
-    style P10 fill:#FFE4B5
-    style P11 fill:#E0E0E0
-    style P12 fill:#E0E0E0
 ```
-
-**Legend**:
-- 🟢 Green: Completed
-- 🟡 Orange: In Progress / Next
-- ⚪ Gray: Optional
 
 ---
 
@@ -79,14 +61,17 @@ graph TD
 ### For New Developers
 
 1. **Understand Business Context**
+
    - Read [Business Flows](../business_flows.md) để hiểu use cases
    - Xem sequence diagrams để nắm user journeys
 
 2. **Review System Design**
+
    - Đọc [System Design](../system_design_livestream.md) để hiểu architecture
    - Nắm rõ lý do chọn công nghệ (Redis, RabbitMQ, PostgreSQL)
 
 3. **Check Current Phase**
+
    - Xem table ở trên để biết phase nào đang active
    - Đọc phase document tương ứng
 
@@ -107,16 +92,19 @@ graph TD
 ### ✅ Completed Phases
 
 #### Phase 1: Foundation & Infrastructure
+
 - **Business Value**: Platform infrastructure ready
 - **Deliverables**: Docker Compose, Spring Boot setup, common utilities
 - **Use Cases Enabled**: None (foundation only)
 
 #### Phase 2: Development Simulation APIs
+
 - **Business Value**: Fast development & testing without external dependencies
 - **Deliverables**: Simulation endpoints for stream start/end, payment deposit
 - **Use Cases Enabled**: Testing infrastructure
 
 #### Phase 3: Authentication & User Management
+
 - **Business Value**: User identity & access control
 - **Deliverables**: JWT auth, RBAC, user profile management
 - **Use Cases Enabled**: UC-01 (User Registration & Authentication)
@@ -126,42 +114,49 @@ graph TD
 ### 🔄 Upcoming Phases
 
 #### Phase 4: Stream Management Module (NEXT)
+
 - **Business Value**: Core livestream functionality
 - **Deliverables**: Stream CRUD, live status tracking, viewer count
 - **Use Cases Enabled**: UC-02 (Streamer Creates Livestream), UC-03 (Viewer Watches Stream)
 - **Dependencies**: Phase 3 (Authentication)
 
 #### Phase 5: Economy & Transaction System
+
 - **Business Value**: Virtual currency foundation for monetization
 - **Deliverables**: Wallet management, transaction history, atomic operations
 - **Use Cases Enabled**: UC-05 (Wallet Management)
 - **Dependencies**: Phase 3 (Authentication)
 
 #### Phase 6: Real-time Chat System
+
 - **Business Value**: Community engagement through real-time interaction
 - **Deliverables**: WebSocket chat, Redis Pub/Sub, message persistence
 - **Use Cases Enabled**: UC-04 (Real-time Chat Interaction)
 - **Dependencies**: Phase 4 (Streaming)
 
 #### Phase 7: Gift System & Async Processing
+
 - **Business Value**: Monetization mechanism for streamers
 - **Deliverables**: Gift catalog, send gift flow, RabbitMQ async processing
 - **Use Cases Enabled**: UC-05 (Gift Sending)
 - **Dependencies**: Phase 5 (Economy), Phase 6 (Chat for alerts)
 
 #### Phase 8: Analytics & Leaderboard
+
 - **Business Value**: Data insights & gamification
 - **Deliverables**: Viewer tracking, leaderboard, stream reports
 - **Use Cases Enabled**: UC-06 (Analytics & Leaderboard)
 - **Dependencies**: Phase 7 (Gifts for leaderboard data)
 
 #### Phase 9: Admin Management Module
+
 - **Business Value**: Platform governance & user safety
 - **Deliverables**: User management, moderation tools, audit trail
 - **Use Cases Enabled**: UC-07 (Admin Moderation)
 - **Dependencies**: Phase 4 (Streams), Phase 5 (Transactions)
 
 #### Phase 10: Production Readiness & Polish
+
 - **Business Value**: Deployment-ready platform
 - **Deliverables**: Security hardening, performance optimization, monitoring
 - **Use Cases Enabled**: Production deployment
@@ -172,12 +167,14 @@ graph TD
 ### 🔮 Optional Phases
 
 #### Phase 11: Social Features
+
 - **Business Value**: Social networking & user engagement
 - **Deliverables**: Follow/unfollow, followers list, social graph
 - **Use Cases Enabled**: Social interactions
 - **Dependencies**: Phase 4 (Streaming)
 
 #### Phase 12: Notification System
+
 - **Business Value**: User engagement through timely notifications
 - **Deliverables**: Real-time notifications, notification history
 - **Use Cases Enabled**: Event notifications
@@ -188,17 +185,20 @@ graph TD
 ## 🎯 Implementation Strategy
 
 ### Philosophy
+
 - **Business-First**: Mỗi phase bắt đầu với business goals
 - **Incremental**: Mỗi phase có thể test độc lập
 - **Pragmatic**: Simulation APIs cho phép test mà không cần external services
 
 ### Best Practices
+
 1. **Read Phase Document First**: Hiểu business context trước khi code
 2. **Follow Checklist**: Mỗi phase có checklist chi tiết
 3. **Verify Early**: Test sau mỗi component, không đợi đến cuối phase
 4. **Document As You Go**: Update docs khi có thay đổi
 
 ### Testing Approach
+
 - **Unit Tests**: Test business logic trong Services
 - **Integration Tests**: Test API endpoints với authorization
 - **Manual Testing**: Follow user scenarios trong verification plan
@@ -218,12 +218,13 @@ graph TD
 ## 🔄 How to Update This Document
 
 Khi complete một phase:
+
 1. Update status từ 🔄 TODO → ✅ DONE
 2. Update "Current Status" section
 3. Update progress percentage
-4. Update dependency diagram colors
 
 Khi bắt đầu phase mới:
+
 1. Mark phase as 🔄 IN PROGRESS
 2. Update "Next Up" trong Current Status
 3. Create detailed phase document nếu chưa có
