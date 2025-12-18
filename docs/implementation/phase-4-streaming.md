@@ -1,7 +1,8 @@
 # Phase 4: Module Quản lý Livestream (Streaming)
 
-> **Trạng thái**: 🔄 TODO (Phase tiếp theo)  
-> **Phụ thuộc**: Phase 3 (Authentication & User Management)
+> **Trạng thái**: ✅ DONE  
+> **Phụ thuộc**: Phase 3 (Authentication & User Management)  
+> **Cập nhật**: 2025-12-18
 
 ---
 
@@ -50,7 +51,76 @@
 
 - **Công khai (Public)**: Xem danh sách stream và số người xem.
 - **Phân quyền Role (RBAC)**: Chỉ `STREAMER` hoặc `ADMIN` mới được phép tạo stream.
-- **Quyền sở hữu (Ownership)**: Các thao tác Bắt đầu/Kết thúc/Cập nhật yêu cầu người dùng đang đăng nhập phải là `creatorId` (kiểm tra qua `@streamService.isOwner`).
+- **Quyền sở hữu (Ownership)**: Cập nhật metadata yêu cầu người dùng là `creatorId`.
+
+#### 🔴 Stream Lifecycle: Webhook Architecture
+
+> [!IMPORTANT]
+> **Stream start/end được quản lý qua RTMP Webhooks, không phải user-facing API endpoints.**
+> Xem chi tiết: [Webhook Documentation](../concepts/webhooks.md)
+
+**Flow thực tế:**
+
+```mermaid
+sequenceDiagram
+    participant User as 👤 Streamer
+    participant WebApp as 🌐 Web App
+    participant Backend as ⚙️ Backend API
+    participant OBS as 📹 OBS Studio
+    participant RTMP as 📡 RTMP Server
+    participant DB as 💾 PostgreSQL
+    participant Redis as 🔴 Redis
+
+    Note over User,Redis: Phase 1: Setup Stream
+    User->>WebApp: 1. Nhấn "Create Stream"
+    WebApp->>Backend: POST /api/streams
+    Backend->>DB: Save stream (isLive=false)
+    Backend-->>WebApp: Return streamKey: "abc123xyz"
+    WebApp-->>User: Hiển thị streamKey
+
+    Note over User,Redis: Phase 2: Configure OBS
+    User->>OBS: 2. Paste streamKey vào OBS
+    User->>OBS: 3. Nhấn "Start Streaming" trong OBS
+    
+    Note over User,Redis: Phase 3: OBS Connects to RTMP
+    OBS->>RTMP: 4. Connect với streamKey "abc123xyz"
+    RTMP->>RTMP: Detect stream đang live
+    RTMP->>Backend: 5. 🔔 Webhook: POST /api/webhooks/rtmp/stream-started
+    
+    Note over User,Redis: Phase 4: Backend Updates State
+    Backend->>DB: UPDATE streams SET isLive=true
+    Backend->>Redis: SET stream:1:live
+    Backend-->>RTMP: 200 OK
+    
+    Note over User,Redis: Viewers can now watch
+    
+    Note over User,Redis: Phase 5: Stop Streaming
+    User->>OBS: 6. Nhấn "Stop Streaming"
+    OBS->>RTMP: Disconnect
+    RTMP->>Backend: 7. 🔔 Webhook: POST /api/webhooks/rtmp/stream-ended
+    Backend->>DB: UPDATE streams SET isLive=false
+    Backend->>Redis: DELETE stream:1:live
+```
+
+**Endpoints:**
+
+| Controller           | Endpoint                              | Purpose                          | Auth                 |
+| -------------------- | ------------------------------------- | -------------------------------- | -------------------- |
+| **StreamController** | `POST /api/streams`                   | Tạo stream mới                   | STREAMER + ADMIN     |
+| **StreamController** | `GET /api/streams`                    | Danh sách stream live            | Public               |
+| **StreamController** | `GET /api/streams/{id}`               | Chi tiết stream                  | Public               |
+| **StreamController** | `POST /api/streams/{id}/view`         | Track viewer (HyperLogLog)       | Public               |
+| **StreamController** | `GET /api/streams/{id}/viewers`       | Số người xem hiện tại            | Public               |
+| **WebhookController**| `POST /api/webhooks/rtmp/stream-started` | RTMP callback khi OBS start   | X-Webhook-Secret     |
+| **WebhookController**| `POST /api/webhooks/rtmp/stream-ended`   | RTMP callback khi OBS stop    | X-Webhook-Secret     |
+
+**Dev Testing:**
+Dev có thể test webhook bằng cách gọi trực tiếp endpoint với secret key:
+```http
+POST /api/webhooks/rtmp/stream-started
+X-Webhook-Secret: dev-secret-key
+{"streamKey": "abc123xyz"}
+```
 
 ### 4.3. Logic Nghiệp vụ (Pseudo-code)
 
@@ -66,23 +136,25 @@
 #### B. Bắt đầu Stream (Go Live)
 
 ```
-1. Xác thực quyền sở hữu (Owner) hoặc quyền ADMIN
-2. Cập nhật status = LIVE, started_at = HIỆN TẠI
-3. Đồng bộ Cache (Redis):
-   - Set "stream:{id}:status" = "LIVE" (TTL 24h)
-4. Sự kiện (Eventing):
-   - Publish thông báo tới RabbitMQ: "notifications.stream.started"
+1. RTMP server gọi POST /api/webhooks/rtmp/stream-started
+2. Verify X-Webhook-Secret header
+3. Tìm stream bằng streamKey
+4. Cập nhật DB: isLive = true, startedAt = NOW
+5. Đồng bộ Cache (Redis):
+   - Set "stream:{id}:live" = "true" (TTL 24h)
+6. TODO (Phase 6): Publish tới RabbitMQ: "stream.started"
 ```
 
-#### C. Kết thúc Stream
+#### C. Webhook: Kết thúc Stream (từ RTMP Server)
 
 ```
-1. Cập nhật status = ENDED, ended_at = HIỆN TẠI
-2. Đồng bộ Cache (Redis):
-   - Xóa "stream:{id}:status"
-   - Lấy tổng số viewer cuối cùng từ HyperLogLog: "stream:{id}:viewers"
-3. Sự kiện (Eventing):
-   - Publish tới RabbitMQ: "notifications.stream.ended" (để xử lý dọn dẹp/lưu trữ)
+1. RTMP server gọi POST /api/webhooks/rtmp/stream-ended
+2. Verify X-Webhook-Secret header
+3. Tìm stream bằng streamKey
+4. Lấy finalViewerCount từ HyperLogLog: PFCOUNT "stream:{id}:viewers"
+5. Cập nhật DB: isLive = false, endedAt = NOW
+6. Clear Redis: DELETE "stream:{id}:live"
+7. TODO (Phase 6): Publish tới RabbitMQ: "stream.ended"
 ```
 
 #### D. Theo dõi người xem thời gian thực (Redis)

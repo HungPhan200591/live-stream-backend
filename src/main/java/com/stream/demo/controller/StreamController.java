@@ -106,4 +106,10 @@ public class StreamController {
         List<StreamDTO> streams = streamService.getStreamsByCreatorId(currentUser.getId());
         return ApiResponse.success(streams, null);
     }
+
+    // ============================================================
+    // NOTE: Stream lifecycle (start/end) moved to WebhookController
+    // RTMP server calls webhooks when OBS starts/stops streaming
+    // See: docs/concepts/webhooks.md
+    // ============================================================
 }

@@ -25,6 +25,7 @@ public class StreamService {
 
     private final StreamRepository streamRepository;
     private final UserService userService;
+    private final LiveStreamCacheService liveStreamCache;
 
     /**
      * Tạo stream mới
@@ -145,21 +146,96 @@ public class StreamService {
                 .build();
     }
 
-    public StreamDTO startStream(String streamKey) {
-        log.info("Starting stream with key: {}", streamKey);
-        return StreamDTO.builder()
-                .streamKey(streamKey)
-                .isLive(true)
-                .startedAt(LocalDateTime.now())
-                .build();
+    /**
+     * Bắt đầu stream (Go Live)
+     * Business Logic theo Phase 4 spec:
+     * 1. Update DB: isLive=true, startedAt=NOW
+     * 2. Sync Redis cache
+     * 3. TODO: Publish RabbitMQ event (Phase 6)
+     */
+    @Transactional
+    public StreamDTO startStream(Long streamId) {
+        log.info("Starting stream with ID: {}", streamId);
+
+        // 1. Load stream entity
+        Stream stream = getStreamEntityById(streamId);
+
+        // 2. Update DB
+        stream.setIsLive(true);
+        stream.setStartedAt(LocalDateTime.now());
+        streamRepository.save(stream);
+
+        log.info("Stream {} set to LIVE in DB", streamId);
+
+        // 3. Sync Redis cache
+        liveStreamCache.setLiveStatus(streamId, true);
+
+        // 4. TODO: Publish RabbitMQ event (Phase 6)
+        // eventPublisher.publish("stream.started", streamId);
+
+        // 5. Return DTO with current viewer count
+        return convertToDTO(stream);
     }
 
-    public StreamDTO endStream(String streamKey) {
-        log.info("Ending stream with key: {}", streamKey);
-        return StreamDTO.builder()
-                .streamKey(streamKey)
-                .isLive(false)
-                .endedAt(LocalDateTime.now())
-                .build();
+    /**
+     * Wrapper method for SimulationController (backward compatibility)
+     * Accepts streamKey instead of streamId
+     */
+    public StreamDTO startStreamByKey(String streamKey) {
+        log.info("Starting stream by key: {}", streamKey);
+        Stream stream = streamRepository.findByStreamKey(streamKey)
+                .orElseThrow(() -> new ResourceNotFoundException("Stream", "streamKey", streamKey));
+        return startStream(stream.getId());
+    }
+
+    /**
+     * Kết thúc stream
+     * Business Logic theo Phase 4 spec:
+     * 1. Update DB: isLive=false, endedAt=NOW
+     * 2. Clear Redis cache
+     * 3. Get final viewer count (optional persist)
+     * 4. TODO: Publish RabbitMQ event (Phase 6)
+     */
+    @Transactional
+    public StreamDTO endStream(Long streamId) {
+        log.info("Ending stream with ID: {}", streamId);
+
+        // 1. Load stream entity
+        Stream stream = getStreamEntityById(streamId);
+
+        // 2. Update DB
+        stream.setIsLive(false);
+        stream.setEndedAt(LocalDateTime.now());
+        streamRepository.save(stream);
+
+        log.info("Stream {} set to ENDED in DB", streamId);
+
+        // 3. Get final viewer count before clearing cache
+        Long finalViewerCount = liveStreamCache.getViewerCount(streamId);
+        log.info("Stream {} ended with {} unique viewers", streamId, finalViewerCount);
+
+        // 4. Clear Redis cache
+        liveStreamCache.setLiveStatus(streamId, false);
+        // Optional: Reset viewer count (keep for historical query)
+        // liveStreamCache.resetViewerCount(streamId);
+
+        // 5. TODO: Publish RabbitMQ event (Phase 6)
+        // eventPublisher.publish("stream.ended", streamId, finalViewerCount);
+
+        // 6. Return DTO
+        StreamDTO dto = convertToDTO(stream);
+        dto.setViewerCount(finalViewerCount); // Include final count in response
+        return dto;
+    }
+
+    /**
+     * Wrapper method for SimulationController (backward compatibility)
+     * Accepts streamKey instead of streamId
+     */
+    public StreamDTO endStreamByKey(String streamKey) {
+        log.info("Ending stream by key: {}", streamKey);
+        Stream stream = streamRepository.findByStreamKey(streamKey)
+                .orElseThrow(() -> new ResourceNotFoundException("Stream", "streamKey", streamKey));
+        return endStream(stream.getId());
     }
 }

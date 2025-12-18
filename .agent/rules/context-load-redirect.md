@@ -4,10 +4,10 @@ trigger: always_on
 
 # Quy Tắc Dự Án & Ngữ Cảnh - Redirect
 
-> **⚠️ IMPORTANT**: Nội dung thực tế của project context và agent rules nằm ở file bên dưới.  
+> **IMPORTANT**: Nội dung thực tế của project context và agent rules nằm ở file bên dưới.  
 > File này chỉ là redirect để bypass gitignore restrictions.
 
-**📖 Đọc file chính tại**: [docs/agent/rules/context-load.md](/docs/agent/rules/context-load.md)
+**Đọc file chính tại**: [docs/agent/rules/context-load.md](/docs/agent/rules/context-load.md)
 
 ---
 

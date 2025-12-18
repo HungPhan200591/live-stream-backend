@@ -52,19 +52,25 @@
 **Main Flow**:
 1. Streamer tạo stream mới với title và description
 2. Hệ thống generate unique `streamKey`
-3. Streamer cấu hình OBS với streamKey (hoặc dùng simulation API)
-4. Streamer bắt đầu stream → Status chuyển sang `LIVE`
-5. Hệ thống notify followers về stream mới
-6. Streamer kết thúc stream → Status chuyển sang `ENDED`
-7. Hệ thống lưu analytics (peak viewers, revenue, duration)
+3. Streamer cấu hình OBS với streamKey và RTMP server URL
+4. Streamer nhấn "Start Streaming" **trong OBS**
+5. OBS connect tới RTMP server → RTMP gọi **webhook** `/api/webhooks/rtmp/stream-started`
+6. Backend update: `isLive=true`, sync Redis cache
+7. Hệ thống notify followers về stream mới
+8. Streamer nhấn "Stop Streaming" trong OBS → RTMP gọi **webhook** `/api/webhooks/rtmp/stream-ended`
+9. Backend update: `isLive=false`, lưu analytics (peak viewers, duration)
+
+> [!IMPORTANT]
+> Stream lifecycle được quản lý qua **RTMP Webhooks**, không phải user-facing API endpoints.
+> Xem chi tiết: [Webhook Documentation](concepts/webhooks.md)
 
 **Business Value**: Cho phép content creators phát sóng và tương tác với audience
 
 **Related APIs**:
-- `POST /api/streams` - Tạo stream
-- `POST /api/streams/{id}/start` - Bắt đầu live
-- `POST /api/streams/{id}/end` - Kết thúc live
+- `POST /api/streams` - Tạo stream (lấy streamKey)
 - `PUT /api/streams/{id}` - Cập nhật metadata
+- **Webhook** `POST /api/webhooks/rtmp/stream-started` - RTMP callback khi OBS start
+- **Webhook** `POST /api/webhooks/rtmp/stream-ended` - RTMP callback khi OBS stop
 
 ---
 
@@ -224,40 +230,44 @@
 
 ```mermaid
 sequenceDiagram
-    actor S as Streamer
-    participant Auth as Auth Service
-    participant Stream as Stream Service
-    participant Redis as Redis Cache
-    participant RMQ as RabbitMQ
-    participant DB as PostgreSQL
+    actor S as 👤 Streamer
+    participant Web as 🌐 Web App
+    participant API as ⚙️ Backend API
+    participant OBS as 📹 OBS Studio
+    participant RTMP as 📡 RTMP Server
+    participant Redis as 🔴 Redis
+    participant DB as 💾 PostgreSQL
 
-    S->>Auth: POST /api/auth/register
-    Auth->>DB: Create User (ROLE_USER)
-    Auth-->>S: Registration Success
+    Note over S,DB: Phase 1: Setup Stream
+    S->>Web: 1. Nhấn "Create Stream"
+    Web->>API: POST /api/streams
+    API->>DB: Create Stream (isLive=false)
+    API-->>Web: Return streamKey: "abc123xyz"
+    Web-->>S: Hiển thị streamKey
 
-    Note over S: Request role upgrade
-    S->>Auth: Contact Admin
-    Auth->>DB: Update UserRole (ROLE_STREAMER)
+    Note over S,DB: Phase 2: Configure OBS
+    S->>OBS: 2. Paste streamKey vào OBS
+    S->>OBS: 3. Nhấn "Start Streaming"
     
-    S->>Stream: POST /api/streams
-    Stream->>DB: Create Stream (isLive=false)
-    Stream->>Stream: Generate streamKey
-    Stream-->>S: Stream Created (streamKey)
-
-    Note over S: Configure OBS with streamKey
-    S->>Stream: POST /api/streams/{id}/start
-    Stream->>DB: Update isLive=true
-    Stream->>Redis: SET stream:{id}:live true
-    Stream->>RMQ: Publish StreamStartedEvent
-    Stream-->>S: Stream is LIVE
-
-    Note over S: Streaming...
+    Note over S,DB: Phase 3: OBS Connects to RTMP
+    OBS->>RTMP: 4. Connect với streamKey "abc123xyz"
+    RTMP->>RTMP: Detect stream đang live
+    RTMP->>API: 5. 🔔 Webhook: POST /api/webhooks/rtmp/stream-started
     
-    S->>Stream: POST /api/streams/{id}/end
-    Stream->>DB: Update isLive=false, endedAt
-    Stream->>Redis: DEL stream:{id}:live
-    Stream->>DB: Save StreamStats
-    Stream-->>S: Stream Ended
+    Note over S,DB: Phase 4: Backend Updates State
+    API->>DB: UPDATE streams SET isLive=true
+    API->>Redis: SET stream:1:live (TTL 24h)
+    API-->>RTMP: 200 OK
+    
+    Note over S,DB: Viewers can now watch...
+    
+    Note over S,DB: Phase 5: Stop Streaming
+    S->>OBS: 6. Nhấn "Stop Streaming"
+    OBS->>RTMP: Disconnect
+    RTMP->>API: 7. 🔔 Webhook: POST /api/webhooks/rtmp/stream-ended
+    API->>DB: UPDATE streams SET isLive=false, endedAt=NOW
+    API->>Redis: DELETE stream:1:live
+    API->>DB: Save StreamStats (finalViewerCount)
 ```
 
 ---
@@ -404,10 +414,10 @@ sequenceDiagram
 | Rule ID | Description | Enforcement |
 |---------|-------------|-------------|
 | BR-06 | Chỉ STREAMER/ADMIN mới được tạo stream | `@PreAuthorize("hasAnyRole('STREAMER', 'ADMIN')")` |
-| BR-07 | Chỉ owner hoặc ADMIN mới được update/end stream | `@streamService.isStreamOwner()` |
+| BR-07 | Chỉ owner hoặc ADMIN mới được update stream metadata | `@streamService.isStreamOwner()` |
 | BR-08 | Stream key phải unique trong hệ thống | `StreamRepository.existsByStreamKey()` |
-| BR-09 | Một stream chỉ có thể ở 1 trong 3 states: CREATED, LIVE, ENDED | State machine enforcement |
-| BR-10 | Khi stream end, phải lưu analytics vào DB | `StreamService.endStream()` |
+| BR-09 | Stream lifecycle (start/end) được manage qua **RTMP Webhooks** | `WebhookController` với secret verification |
+| BR-10 | Khi stream end, phải lưu analytics vào DB | `StreamService.endStreamByKey()` |
 
 ### Chat & Moderation
 
@@ -447,25 +457,28 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> CREATED: POST /api/streams
-    CREATED --> LIVE: POST /api/streams/{id}/start
-    LIVE --> ENDED: POST /api/streams/{id}/end
+    CREATED --> LIVE: webhook stream-started
+    LIVE --> ENDED: webhook stream-ended
     ENDED --> [*]
     
     note right of CREATED
         isLive = false
         streamKey generated
+        Waiting for OBS connection
     end note
     
     note right of LIVE
         isLive = true
         startedAt set
         Redis tracking active
+        RTMP webhook triggered
     end note
     
     note right of ENDED
         isLive = false
         endedAt set
         Analytics saved
+        RTMP webhook triggered
     end note
 ```
 

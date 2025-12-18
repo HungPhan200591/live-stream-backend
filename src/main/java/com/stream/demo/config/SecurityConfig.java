@@ -42,6 +42,10 @@ public class SecurityConfig {
                         // Authentication
                         .requestMatchers("/api/auth/**").permitAll()
 
+                        // Webhooks (use secret key verification, not JWT)
+                        // See: docs/concepts/webhooks.md
+                        .requestMatchers("/api/webhooks/**").permitAll()
+
                         // Development/Testing endpoints
                         .requestMatchers("/api/dev/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()

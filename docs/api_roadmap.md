@@ -4,18 +4,21 @@
 
 ---
 
-## 🚀 Phase 2: Development Simulation APIs (✅ DONE)
+## 🚀 Phase 2: Development Testing & Webhooks (✅ DONE)
 
-Giả lập các sự kiện và test hạ tầng mà không cần client thật.
+Test hạ tầng và endpoints cho external service callbacks.
 
-| Endpoint                            | Method | Mô tả                      |
-| ----------------------------------- | ------ | -------------------------- |
-| `/api/dev/simulate/stream/start`    | POST   | Giả lập OBS stream start   |
-| `/api/dev/simulate/stream/end`      | POST   | Giả lập OBS stream end     |
-| `/api/dev/simulate/payment/deposit` | POST   | Giả lập nạp tiền vào ví    |
-| `/api/test/sql`                     | GET    | Test PostgreSQL connection |
-| `/api/test/redis`                   | GET    | Test Redis connection      |
-| `/api/test/rabbitmq`                | GET    | Test RabbitMQ connection   |
+| Endpoint                              | Method | Mô tả                       |
+| ------------------------------------- | ------ | --------------------------- |
+| `/api/webhooks/rtmp/stream-started`   | POST   | RTMP callback: stream live  |
+| `/api/webhooks/rtmp/stream-ended`     | POST   | RTMP callback: stream ended |
+| `/api/dev/simulate/payment/deposit`   | POST   | Giả lập nạp tiền vào ví     |
+| `/api/test/sql`                       | GET    | Test PostgreSQL connection  |
+| `/api/test/redis`                     | GET    | Test Redis connection       |
+| `/api/test/rabbitmq`                  | GET    | Test RabbitMQ connection    |
+
+> **Note**: Stream start/end được quản lý qua **Webhooks** từ RTMP server.
+> Xem chi tiết: [Webhook Documentation](concepts/webhooks.md)
 
 ---
 
@@ -35,20 +38,24 @@ Core identity và user profile system.
 
 ---
 
-## 📹 Phase 4: Stream Management Module (TODO)
+## 📹 Phase 4: Stream Management Module (✅ DONE)
 
 Quản lý luồng livestream, metadata và trạng thái.
 
-| Endpoint                          | Method | Mô tả                            |
-| --------------------------------- | ------ | -------------------------------- |
-| `/api/streams`                    | GET    | Danh sách stream đang live       |
-| `/api/streams/{streamId}`         | GET    | Chi tiết stream (kèm status)     |
-| `/api/streams`                    | POST   | Tạo stream mới (Streamer only)   |
-| `/api/streams/{streamId}`         | PUT    | Cập nhật thông tin stream        |
-| `/api/streams/{streamId}`         | DELETE | Xóa stream (Admin only)          |
-| `/api/streams/{streamId}/start`   | POST   | Bắt đầu live (set isLive=true)   |
-| `/api/streams/{streamId}/end`     | POST   | Kết thúc live (set isLive=false) |
-| `/api/streams/{streamId}/viewers` | GET    | Số người xem hiện tại (Redis)    |
+| Endpoint                          | Method | Mô tả                                   |
+| --------------------------------- | ------ | --------------------------------------- |
+| `/api/streams`                    | GET    | Danh sách stream đang live              |
+| `/api/streams/{streamId}`         | GET    | Chi tiết stream (kèm status)            |
+| `/api/streams`                    | POST   | Tạo stream mới (Streamer only)          |
+| `/api/streams/{streamId}`         | PUT    | Cập nhật thông tin stream               |
+| `/api/streams/{streamId}`         | DELETE | Xóa stream (Admin only)                 |
+| `/api/streams/{streamId}/viewers` | GET    | Số người xem hiện tại (Redis)           |
+| `/api/streams/{streamId}/view`    | POST   | Track viewer (HyperLogLog)              |
+| `/api/streams/my`                 | GET    | Stream của current user                 |
+
+> [!IMPORTANT]
+> Stream lifecycle (start/end) được quản lý qua **RTMP Webhooks**, không có user-facing endpoints.
+> Xem Phase 2 cho webhook endpoints.
 
 ---
 

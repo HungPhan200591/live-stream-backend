@@ -108,15 +108,18 @@ graph TD
   - Action Token: Redis, 60s TTL, one-time.
   - Step-up auth cho số tiền lớn (OTP, 2FA).
 
-### 4.2. Quản Lý Stream (Webhook Giả Lập)
+### 4.2. Quản Lý Stream (RTMP Webhooks)
 
-Vì không sử dụng Media Server thật (như SRS), chúng ta tạo **Simulation Controller** để giả lập hành vi.
+RTMP Server (như SRS, nginx-rtmp) sẽ gọi **webhooks** khi phát hiện stream start/end.
 
-- **Logic Thực Tế**: OBS -(RTMP)-> Media Server -(Webhook)-> Spring Boot.
-- **Logic Giả Lập**: Developer tools gọi API -> Spring Boot.
+- **Logic Thực Tế**: OBS -(RTMP)-> RTMP Server -(Webhook)-> Spring Boot.
 - **Endpoints**:
-  - `POST /api/dev/simulate/stream/start`: Input `{streamKey}`. Logic: Kiểm tra Key -> Set `isLive=true` -> Thông báo cho Followers (Async).
-  - `POST /api/dev/simulate/stream/end`: Input `{streamKey}`. Logic: Set `isLive=false`.
+  - `POST /api/webhooks/rtmp/stream-started`: RTMP gọi khi OBS connect. Logic: Tìm stream bằng `streamKey` -> Set `isLive=true` -> Sync Redis cache.
+  - `POST /api/webhooks/rtmp/stream-ended`: RTMP gọi khi OBS disconnect. Logic: Set `isLive=false` -> Clear Redis -> Save analytics.
+- **Security**: Verify `X-Webhook-Secret` header để đảm bảo request từ RTMP server thật.
+- **Dev Testing**: Gọi trực tiếp webhook endpoint với secret key (thay thế SimulationController cũ).
+
+> **Xem thêm**: [Webhook Documentation](concepts/webhooks.md)
 
 ### 4.3. Hệ Thống Chat Real-time
 

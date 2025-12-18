@@ -233,8 +233,6 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 
 ---
 
-<a id="stream-management"></a>
-
 ### 2.3. Stream Management (`/api/streams/**`)
 
 **Authorization**: Mixed (Public view + Role-based management)
@@ -244,17 +242,93 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 | `/api/streams`                    | GET    | Danh sách stream đang live | Public        | -                | Query: `is_live=true`                              |
 | `/api/streams/{streamId}`         | GET    | Chi tiết stream            | Public        | -                | Include viewer count                               |
 | `/api/streams`                    | POST   | Tạo stream mới             | Authenticated | STREAMER + ADMIN | `@PreAuthorize("hasAnyRole('STREAMER', 'ADMIN')")` |
-| `/api/streams/{streamId}`         | PUT    | Cập nhật stream            | Authenticated | Owner + ADMIN    | `@PreAuthorize("@streamService.isOwner(...)")`     |
+| `/api/streams/{streamId}`         | PUT    | Cập nhật stream            | Authenticated | Owner + ADMIN    | `@PreAuthorize("@streamService.isOwner(...)") `    |
 | `/api/streams/{streamId}`         | DELETE | Xóa stream                 | Authenticated | ADMIN            | `@PreAuthorize("hasRole('ADMIN')")`                |
-| `/api/streams/{streamId}/start`   | POST   | Bắt đầu stream             | Authenticated | Owner + ADMIN    | Set `is_live=true`                                 |
-| `/api/streams/{streamId}/end`     | POST   | Kết thúc stream            | Authenticated | Owner + ADMIN    | Set `is_live=false`                                |
 | `/api/streams/{streamId}/viewers` | GET    | Realtime viewer count      | Public        | -                | Redis HyperLogLog                                  |
+| `/api/streams/{streamId}/view`    | POST   | Track viewer               | Public        | -                | HyperLogLog PFADD                                  |
+| `/api/streams/my`                 | GET    | Stream của current user    | Authenticated | All              | Filter by creatorId                                |
+
+> [!IMPORTANT]
+> **Stream lifecycle (start/end)** được quản lý qua **Webhooks** từ RTMP server, không phải user-facing endpoints.
+> Xem [2.10. Webhooks](#webhooks-api) để biết chi tiết.
 
 **SecurityConfig**:
 
 ```java
 .requestMatchers(HttpMethod.GET, "/api/streams/**").permitAll() // Public viewing
+.requestMatchers(HttpMethod.POST, "/api/streams/*/view").permitAll() // Viewer tracking
 .requestMatchers("/api/streams/**").authenticated() // Management requires auth
+```
+
+---
+
+<a id="webhooks-api"></a>
+
+### 2.10. Webhooks (`/api/webhooks/**`)
+
+> [!NOTE]
+> **Xem thêm**: [docs/concepts/webhooks.md](../concepts/webhooks.md) - Kiến thức chi tiết về webhook
+
+**Purpose**: Nhận callbacks từ external services (RTMP server, Payment gateway, etc.)
+
+**Authorization**: Secret Key verification (không dùng JWT)
+
+| Endpoint                             | Method | Description          | Caller      | Auth Method          | Implementation Notes    |
+| ------------------------------------ | ------ | -------------------- | ----------- | -------------------- | ----------------------- |
+| `/api/webhooks/rtmp/stream-started`  | POST   | Stream bắt đầu live  | RTMP Server | X-Webhook-Secret     | Set `isLive=true`       |
+| `/api/webhooks/rtmp/stream-ended`    | POST   | Stream kết thúc      | RTMP Server | X-Webhook-Secret     | Set `isLive=false`      |
+
+**Request Format**:
+
+```json
+POST /api/webhooks/rtmp/stream-started
+Content-Type: application/json
+X-Webhook-Secret: {RTMP_WEBHOOK_SECRET}
+
+{
+  "streamKey": "abc123xyz",
+  "timestamp": "2025-12-18T21:00:00Z"
+}
+```
+
+**Response Format**:
+
+```json
+{
+  "success": true,
+  "message": "Webhook processed"
+}
+```
+
+**SecurityConfig**:
+
+```java
+// Webhooks: permitAll vì dùng secret key verification trong controller
+.requestMatchers("/api/webhooks/**").permitAll()
+```
+
+**Flow Diagram**:
+
+```
+OBS → RTMP Server → POST /api/webhooks/rtmp/stream-started → Backend
+                                    ↓
+                         Verify X-Webhook-Secret
+                                    ↓
+                         Update DB + Redis cache
+```
+
+**Development Testing**:
+
+Dev có thể test webhook bằng cách gọi trực tiếp endpoint với secret key:
+
+```http
+POST {{host}}/api/webhooks/rtmp/stream-started
+Content-Type: application/json
+X-Webhook-Secret: dev-secret-key
+
+{
+  "streamKey": "abc123xyz"
+}
 ```
 
 ---

@@ -93,7 +93,47 @@
 - [ ] Cache key có version prefix (e.g., `entity:v1:id`)
 - [ ] TTL được set explicitly (no eternal keys)
 
----
+### Exception Handling
+
+**BẮT BUỘC** khi tạo Custom Exception mới, phải thêm handler trong `GlobalExceptionHandler`.
+
+**Pattern:**
+
+```java
+// 1. Tạo exception class trong common/exception/
+@ResponseStatus(HttpStatus.UNAUTHORIZED)  // Optional: fallback status
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}
+
+// 2. NGAY LẬP TỨC thêm handler trong GlobalExceptionHandler
+@ExceptionHandler(UnauthorizedException.class)
+public ResponseEntity<ApiResponse<Void>> handleUnauthorizedException(
+        UnauthorizedException ex) {
+    log.warn("Unauthorized: {}", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ApiResponse.error(ex.getMessage()));
+}
+```
+
+**Mapping chuẩn:**
+
+| Exception | HTTP Status | Use Case |
+|-----------|-------------|----------|
+| `ResourceNotFoundException` | 404 | Entity không tồn tại |
+| `BusinessException` | 400 | Business logic violation |
+| `ForbiddenException` | 403 | Không có quyền (đã auth) |
+| `UnauthorizedException` | 401 | Chưa xác thực / Invalid credentials |
+
+**Checklist khi tạo Exception mới:**
+
+- [ ] Tạo file trong `common/exception/`
+- [ ] Extends `RuntimeException`
+- [ ] Thêm `@ExceptionHandler` trong `GlobalExceptionHandler`
+- [ ] Log level phù hợp (warn cho client errors, error cho server errors)
+- [ ] Return `ApiResponse.error()` với message rõ ràng
 
 ## API Implementation Rules
 

@@ -54,12 +54,29 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ### ============================================================
+### STREAM LIFECYCLE (via Webhooks)
+### ============================================================
+# Stream start/end is managed via RTMP server webhooks.
+# See: .http/webhook-controller.http
+# See: docs/concepts/webhooks.md
+
+### ============================================================
 ### USAGE NOTES
 ### ============================================================
 # 1. Trước tiên, đăng nhập qua auth-controller.http để lấy token
-# 2. Copy token vào biến @token ở trên
-# 3. User phải có ROLE_STREAMER hoặc ROLE_ADMIN để tạo stream
-# 4. Nếu chỉ có ROLE_USER, sẽ nhận được 403 Forbidden
+# 2. User phải có ROLE_STREAMER hoặc ROLE_ADMIN để tạo stream
+# 3. Nếu chỉ có ROLE_USER, sẽ nhận được 403 Forbidden
+
+### ============================================================
+### FULL LIFECYCLE TEST FLOW (với Webhook)
+### ============================================================
+# 1. Login as STREAMER: POST /api/auth/login
+# 2. Create stream: POST /api/streams → nhận streamKey
+# 3. (RTMP) Webhook: POST /api/webhooks/rtmp/stream-started {streamKey}
+# 4. Track viewers: POST /api/streams/{streamId}/view (nhiều lần)
+# 5. Check count: GET /api/streams/{streamId}/viewers
+# 6. (RTMP) Webhook: POST /api/webhooks/rtmp/stream-ended {streamKey}
+# 7. Verify Redis: docker exec -it redis redis-cli EXISTS stream:{streamId}:live
 
 ### ============================================================
 ### VIEWER TRACKING TEST FLOW

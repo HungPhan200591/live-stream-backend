@@ -1,0 +1,73 @@
+### Webhook Controller API Tests
+### Xem docs: docs/concepts/webhooks.md
+### ============================================================
+### RTMP SERVER WEBHOOKS
+### ============================================================
+
+### Test stream started webhook
+### Simulates RTMP server calling when OBS starts streaming
+POST {{host}}/api/webhooks/rtmp/stream-started
+Content-Type: application/json
+X-Webhook-Secret: dev-secret-key
+
+{
+  "streamKey": "abc123xyz",
+  "timestamp": "2025-12-18T21:00:00Z"
+}
+
+###
+
+### Test stream ended webhook
+### Simulates RTMP server calling when OBS stops streaming
+POST {{host}}/api/webhooks/rtmp/stream-ended
+Content-Type: application/json
+X-Webhook-Secret: dev-secret-key
+
+{
+  "streamKey": "abc123xyz",
+  "timestamp": "2025-12-18T21:30:00Z"
+}
+
+### ============================================================
+### ERROR CASES
+### ============================================================
+
+### Missing secret header (should return 401)
+POST {{host}}/api/webhooks/rtmp/stream-started
+Content-Type: application/json
+
+{
+  "streamKey": "abc123xyz"
+}
+
+###
+
+### Invalid secret (should return 401)
+POST {{host}}/api/webhooks/rtmp/stream-started
+Content-Type: application/json
+X-Webhook-Secret: wrong-secret
+
+{
+  "streamKey": "abc123xyz"
+}
+
+###
+
+### Invalid streamKey (should return 404)
+POST {{host}}/api/webhooks/rtmp/stream-started
+Content-Type: application/json
+X-Webhook-Secret: dev-secret-key
+
+{
+  "streamKey": "non-existent-key"
+}
+
+### ============================================================
+### FULL TEST FLOW
+### ============================================================
+# 1. Create stream via StreamController (as STREAMER)
+#    POST /api/streams → get streamKey
+# 2. Call webhook stream-started with streamKey
+# 3. Verify stream isLive=true
+# 4. Call webhook stream-ended
+# 5. Verify stream isLive=false

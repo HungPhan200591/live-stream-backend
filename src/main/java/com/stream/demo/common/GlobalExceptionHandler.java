@@ -3,6 +3,8 @@ package com.stream.demo.common;
 import com.stream.demo.common.exception.BusinessException;
 import com.stream.demo.common.exception.ForbiddenException;
 import com.stream.demo.common.exception.ResourceNotFoundException;
+import com.stream.demo.common.exception.UnauthorizedException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,14 @@ public class GlobalExceptionHandler {
 			ForbiddenException ex) {
 		log.warn("Forbidden: {}", ex.getMessage());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN)
+				.body(ApiResponse.error(ex.getMessage()));
+	}
+
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<ApiResponse<Void>> handleUnauthorizedException(
+			com.stream.demo.common.exception.UnauthorizedException ex) {
+		log.warn("Unauthorized: {}", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.body(ApiResponse.error(ex.getMessage()));
 	}
 
