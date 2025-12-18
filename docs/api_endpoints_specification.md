@@ -182,6 +182,8 @@ public class AuthController {
 
 ## 2. API Endpoints Specification
 
+<a id="auth-api"></a>
+
 ### 2.1. Authentication (`/api/auth/**`)
 
 **Authorization**: Public (permitAll)
@@ -201,6 +203,8 @@ public class AuthController {
 ```
 
 ---
+
+<a id="user-api"></a>
 
 ### 2.2. User Management (`/api/users/**`)
 
@@ -229,6 +233,8 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 
 ---
 
+<a id="stream-management"></a>
+
 ### 2.3. Stream Management (`/api/streams/**`)
 
 **Authorization**: Mixed (Public view + Role-based management)
@@ -252,6 +258,8 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 ```
 
 ---
+
+<a id="chat-api"></a>
 
 ### 2.4. Chat (`/api/chat/**`)
 
@@ -277,6 +285,8 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 
 ---
 
+<a id="gift-api"></a>
+
 ### 2.5. Gifts & Transactions (`/api/gifts/**`, `/api/transactions/**`)
 
 **Authorization**: Authenticated
@@ -297,6 +307,8 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 
 ---
 
+<a id="analytics-api"></a>
+
 ### 2.6. Analytics (`/api/analytics/**`)
 
 **Authorization**: ADMIN only
@@ -315,6 +327,8 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 ```
 
 ---
+
+<a id="admin-api"></a>
 
 ### 2.7. Admin (`/api/admin/**`)
 
