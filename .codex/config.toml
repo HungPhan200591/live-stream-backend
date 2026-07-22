@@ -1,0 +1,18 @@
+# Cấu hình MCP dùng chung cho repository demo này.
+
+[mcp_servers.livestream_postgres]
+command = "npx"
+args = [
+  "-y",
+  "@modelcontextprotocol/server-postgres",
+  "postgresql://admin:password@localhost:15432/livestream",
+]
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+
+[mcp_servers.livestream_postgres.env]
+PGHOST = "localhost"
+PGPORT = "15432"
+PGDATABASE = "livestream"
+PGUSER = "admin"
+PGPASSWORD = "password"

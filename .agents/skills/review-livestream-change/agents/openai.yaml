@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review livestream"
+  short_description: "Review thay đổi về rủi ro và tính đúng đắn"
+  default_prompt: "Dùng $review-livestream-change để review tính đúng đắn, bảo mật và quy ước dự án."

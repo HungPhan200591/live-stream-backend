@@ -2,7 +2,7 @@
 
 > **Mục đích**: Tài liệu chi tiết với full code examples cho các coding patterns.  
 > **Audience**: Developers và AI agents khi cần reference cụ thể.  
-> **Quick Reference**: Xem `.agent/rules/coding-rule.md` cho checklist nhanh.
+> **Quick Reference**: Xem `AGENTS.md` ở thư mục gốc cho rules và checklist của Codex.
 
 ---
 
@@ -620,4 +620,4 @@ src/main/java/com/stream/demo/
 
 ---
 
-**Reference**: Xem `.agent/rules/coding-rule.md` cho quick checklist và `.agent/rules/context-load.md` cho project context.
+**Reference**: Xem `AGENTS.md` cho Codex rules, project context và quick checklist.

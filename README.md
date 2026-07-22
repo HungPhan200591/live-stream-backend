@@ -57,7 +57,8 @@ open http://localhost:8080/swagger-ui.html
 
 ## Documentation
 - Entry cho developer: `docs/000_DOCS_GUIDE.md`
-- Entry cho AI agent: `docs/agent/rules/context-load.md`
+- Codex guidance: `AGENTS.md`; reusable repository skills: `.agents/skills/`
+- Codex PostgreSQL MCP: `.codex/config.toml`; guide: `docs/codex/mcp-postgres.md`
 - Roadmap & phase: `docs/implementation/000_ROADMAP.md`
 - API & authorization: `docs/api_endpoints_specification.md`
 
@@ -73,9 +74,9 @@ open http://localhost:8080/swagger-ui.html
 ---
 
 ## Development Guidelines
-- Coding standards: `docs/agent/rules/coding-rule.md`.
+- Codex rules: `AGENTS.md`; coding examples: `docs/coding_standards.md`.
 - Workflow: Business Flows -> Phase doc -> API spec -> implement -> tạo `.http` -> verify.
-- Testing: unit, integration, manual; người dùng chủ động chạy khi cần.
+- Testing: Codex chạy các check phù hợp trước khi bàn giao và báo rõ check nào chưa chạy.
 
 ---
 
@@ -110,7 +111,7 @@ docker-compose logs -f redis  # View logs
 1. Onboarding (~2 hours)
    - Read `docs/business_flows.md`
    - Skim `docs/system_design_livestream.md`
-   - Review `docs/agent/rules/coding-rule.md`
+   - Review `AGENTS.md` and `docs/coding_standards.md`
    - Check current phase in `docs/implementation/000_ROADMAP.md`
 2. Start coding
    - Pick task from current phase
@@ -130,7 +131,7 @@ docker-compose logs -f redis  # View logs
 - Documentation entry: `docs/000_DOCS_GUIDE.md`
 - API reference: `docs/api_endpoints_specification.md`
 - Implementation guide: `docs/implementation/000_ROADMAP.md`
-- Coding standards: `docs/agent/rules/coding-rule.md`
+- Codex rules & coding standards: `AGENTS.md`, `docs/coding_standards.md`
 
 ---
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quản lý port cục bộ"
+  short_description: "Kiểm tra và giải phóng port phát triển an toàn"
+  default_prompt: "Dùng $manage-local-port để tìm và giải phóng port phát triển cục bộ."

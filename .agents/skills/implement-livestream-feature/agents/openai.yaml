@@ -1,0 +1,4 @@
+interface:
+  display_name: "Triển khai feature livestream"
+  short_description: "Triển khai feature backend đầu-cuối"
+  default_prompt: "Dùng $implement-livestream-feature để triển khai feature backend đầu-cuối và kiểm chứng."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chẩn đoán livestream"
+  short_description: "Chẩn đoán lỗi backend bằng bằng chứng"
+  default_prompt: "Dùng $diagnose-livestream-backend để tái hiện và chẩn đoán lỗi backend này."

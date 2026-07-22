@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tối ưu prompt kỹ thuật"
+  short_description: "Làm rõ yêu cầu backend trước khi triển khai"
+  default_prompt: "Dùng $refine-engineering-prompt để biến yêu cầu kỹ thuật thô thành prompt có thể thực thi."
