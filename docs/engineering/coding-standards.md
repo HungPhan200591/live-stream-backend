@@ -2,8 +2,8 @@
 
 > Trạng thái: `ACTIVE`<br>
 > Cập nhật: 2026-07-25<br>
-> Rule bắt buộc nằm ở [`AGENTS.md`](../AGENTS.md); tài liệu này giải thích cách áp dụng.<br>
-> Bản example-heavy 2025 được lưu tại [archive](archive/2025-reference/coding_standards.md).
+> Rule bắt buộc nằm ở [`AGENTS.md`](../../AGENTS.md); tài liệu này giải thích cách áp dụng.<br>
+> Bản example-heavy 2025 được lưu tại [archive](../archive/2025-reference/coding-standards.md).
 
 ## 1. Thứ tự ưu tiên
 

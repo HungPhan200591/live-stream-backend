@@ -7,7 +7,7 @@
 
 Project có domain phù hợp để luyện phỏng vấn Senior Backend, nhưng implementation hiện ở mức **happy-path demo**. Giá trị lớn nhất của code hiện tại là tạo ra các điểm xuất phát thật cho bài toán security, transaction, concurrency, cache consistency, messaging và database performance.
 
-Legacy Phase 5-12 không còn là active backlog. Trước hết cần ổn định security và test harness, sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). [Implementation Map](implementation/000_ROADMAP.md) chỉ ghi nhận code coverage hiện tại; phase plan cũ đã chuyển vào archive.
+Legacy Phase 5-12 không còn là active backlog. Trước hết cần ổn định security và test harness, sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). [Implementation Map](implementation/current-implementation-map.md) chỉ ghi nhận code coverage hiện tại; phase plan cũ đã chuyển vào archive.
 
 ## 1.1. Khoảng cách cần thu hẹp
 
@@ -130,7 +130,7 @@ Không dùng nhãn `DONE` duy nhất. Mỗi capability được đánh giá theo
 - Prompt AI chung đã chuyển tới `docs/archive/2025-ai-prompts/`; workflow Codex active nằm trong `003_AI_AGENT_ENGINEERING_SYSTEM.md` và `.agents/skills/*`.
 - Business flows được giữ làm target contract nhưng có capability status; source code/test vẫn là current evidence.
 
-Archive manifest và replacement map nằm tại [Documentation Archive](archive/README.md). Graphify output hiện phản ánh topology trước migration và không được coi là source-of-truth cho đường dẫn mới cho tới lần update kế tiếp.
+Archive manifest và replacement map nằm tại [Documentation Archive](archive/index.md). Graphify output hiện phản ánh topology trước migration và không được coi là source-of-truth cho đường dẫn mới cho tới lần update kế tiếp.
 
 ## 8. Cổng bắt đầu
 

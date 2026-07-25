@@ -52,7 +52,7 @@ flowchart TB
     style E fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
-Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Template](templates/LEARNING_CASE_TEMPLATE.md) để lưu toàn bộ vòng lặp.
+Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Template](templates/learning-case-template.md) để lưu toàn bộ vòng lặp.
 
 ## 4. Bản đồ năng lực
 

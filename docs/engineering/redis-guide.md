@@ -2,7 +2,7 @@
 
 > Trạng thái: `CURRENT IMPLEMENTATION + LEARNING TARGETS`<br>
 > Cập nhật: 2026-07-25<br>
-> Bản hướng dẫn 2025 được lưu tại [archive](archive/2025-reference/redis_usage_guide.md).
+> Bản hướng dẫn 2025 được lưu tại [archive](../archive/2025-reference/redis-usage-guide.md).
 
 ## 1. Vai trò của Redis
 

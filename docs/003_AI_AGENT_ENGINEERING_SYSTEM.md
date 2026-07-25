@@ -57,11 +57,11 @@ Quy tắc quyết định:
 
 | Câu hỏi | Nguồn chuẩn | Nguồn hỗ trợ |
 | --- | --- | --- |
-| Business mong đợi gì? | `docs/business_flows.md` | phase docs |
-| REST contract và authorization hiện tại? | `docs/api_endpoints_specification.md` và `docs/authorization_flow.md` | `.http`, OpenAPI, tests |
+| Business mong đợi gì? | `docs/contracts/business-flows.md` | active learning case |
+| REST contract và authorization hiện tại? | `docs/contracts/api-contract.md` và `docs/security/authorization-flow.md` | `.http`, OpenAPI, tests |
 | Code đang làm gì? | source code + automated tests | runtime logs |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
-| Capability nào còn thiếu? | `docs/implementation/000_ROADMAP.md` | Senior case backlog |
+| Capability nào còn thiếu? | `docs/implementation/current-implementation-map.md` | Senior case backlog |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
 | Performance claim dựa vào đâu? | `docs/learning/experiments/*` | raw result artifact |
 | Incident xử lý thế nào? | `docs/operations/runbooks/*` | dashboard/alert |
@@ -71,43 +71,25 @@ Khi contract, code và docs mâu thuẫn, Agent phải nêu drift. Không tự c
 
 ## 4. Information architecture mục tiêu
 
-Đây là target tree. Những folder chưa có artifact thật chưa được tạo để tránh empty-doc architecture.
+Taxonomy active và naming convention được sở hữu bởi [Documentation Orchestrator](000_DOCUMENTATION_ORCHESTRATOR.md). File này chỉ mô tả các nhánh sẽ được bổ sung khi có artifact thật, tránh duy trì hai cây tài liệu cạnh tranh.
 
 ```text
 docs/
-├── 000_DOCS_GUIDE.md
-├── 001_SENIOR_JAVA_INTERVIEW_ROADMAP.md
-├── 002_CURRENT_STATE_AND_GAP_ANALYSIS.md
-├── 003_AI_AGENT_ENGINEERING_SYSTEM.md
-├── business_flows.md
-├── api_endpoints_specification.md
-├── authorization_flow.md
-├── coding_standards.md
-├── redis_usage_guide.md
 ├── architecture/
-│   ├── system-context.md
-│   ├── module-boundaries.md
-│   ├── capacity-model.md
-│   └── adr/
+│   ├── adr/                    # khi có architecture decision thật
+│   ├── module-boundaries.md    # khi bắt đầu modularization
+│   └── capacity-model.md       # khi có workload/assumption
 ├── learning/
-│   ├── cases/
-│   ├── experiments/
-│   ├── interview-notes/
-│   └── reading-notes/
+│   ├── cases/                  # active learning case
+│   ├── experiments/            # reproducible measurement
+│   └── interview-notes/        # debrief sau evidence
 ├── engineering/
-│   ├── testing-strategy.md
-│   ├── security-model.md
-│   ├── data-consistency.md
-│   ├── event-catalog.md
-│   └── observability.md
-├── implementation/
-│   └── 000_ROADMAP.md
-├── operations/
-│   └── runbooks/
-├── templates/
-│   └── LEARNING_CASE_TEMPLATE.md
-└── archive/
-    └── README.md
+│   ├── testing-strategy.md     # sau TEST-01
+│   ├── data-consistency.md     # sau transaction/cache case
+│   ├── event-catalog.md        # khi có business event
+│   └── observability.md        # khi có metric/SLO baseline
+└── operations/
+    └── runbooks/               # sau incident/failure drill
 ```
 
 ### Quy tắc placement
@@ -125,7 +107,7 @@ docs/
 ### Workflow A - Chọn learning case
 
 1. Chọn case có prerequisite đã đạt và giải một khoảng trống thật trong code.
-2. Dùng `templates/LEARNING_CASE_TEMPLATE.md` tạo case file.
+2. Dùng `templates/learning-case-template.md` tạo case file.
 3. Ghi câu hỏi phỏng vấn, invariant, baseline và failure cần tái hiện.
 4. Giới hạn scope để case hoàn tất trong một vertical slice.
 5. Chưa chọn implementation solution trước khi có reproducer hoặc evidence.

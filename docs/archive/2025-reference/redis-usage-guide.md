@@ -1,6 +1,6 @@
 # Redis Usage Guide - Live Stream Backend
 
-> **ARCHIVED 2026-07-25** — Generic tutorial cũ. Dùng [Current Redis Guide](../../redis_usage_guide.md).
+> **ARCHIVED 2026-07-25** — Generic tutorial cũ. Dùng [Current Redis Guide](../../engineering/redis-guide.md).
 
 ## 📚 Overview
 

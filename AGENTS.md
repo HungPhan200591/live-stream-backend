@@ -16,21 +16,21 @@
 - Cấu hình: `src/main/resources/application.yml`.
 - Yêu cầu HTTP thủ công: `.http/`.
 - Hạ tầng cục bộ: `docker-compose.yml` gồm PostgreSQL, Redis và RabbitMQ.
-- MCP PostgreSQL cho Codex: `.codex/config.toml`; hướng dẫn sử dụng: `docs/codex/mcp-postgres.md`.
-- Điểm vào tài liệu: `docs/000_DOCS_GUIDE.md`.
+- MCP PostgreSQL cho Codex: `.codex/config.toml`; hướng dẫn sử dụng: `docs/tools/codex-postgres-mcp.md`.
+- Điểm vào và routing tài liệu cho Human/AI: `docs/000_DOCUMENTATION_ORCHESTRATOR.md`.
 
 ## Nạp context cần thiết
 
 Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với công việc:
 
-- Nghiệp vụ: `docs/business_flows.md`.
+- Nghiệp vụ: `docs/contracts/business-flows.md`.
 - Kiến trúc và capability hiện tại: `docs/architecture/system-context.md`.
-- Phạm vi triển khai hiện tại: `docs/implementation/000_ROADMAP.md`; thứ tự học và case active: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`.
-- Hợp đồng REST và quyền: `docs/api_endpoints_specification.md`.
-- Phân quyền REST/WebSocket: `docs/authorization_flow.md`.
-- Quy ước mã nguồn và ví dụ: `docs/coding_standards.md`.
-- Redis: key, DTO, serializer và TTL: `docs/redis_usage_guide.md`.
-- Webhook: `docs/concepts/webhooks.md`.
+- Phạm vi triển khai hiện tại: `docs/implementation/current-implementation-map.md`; thứ tự học và case active: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`.
+- Hợp đồng REST và quyền: `docs/contracts/api-contract.md`.
+- Phân quyền REST/WebSocket: `docs/security/authorization-flow.md`.
+- Quy ước mã nguồn và ví dụ: `docs/engineering/coding-standards.md`.
+- Redis: key, DTO, serializer và TTL: `docs/engineering/redis-guide.md`.
+- Webhook: `docs/engineering/rtmp-webhook-guide.md`.
 
 Business flow là target business intent. API specification chỉ liệt kê current endpoint và gap đã biết. Mã nguồn và test là bằng chứng cho hành vi hiện tại. Khi chúng mâu thuẫn, không âm thầm chọn một bên: nêu rõ độ lệch, làm theo kết quả người dùng yêu cầu và cập nhật hoặc đánh dấu tài liệu bị ảnh hưởng.
 
@@ -56,7 +56,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 
 ## Nguyên tắc API và bảo mật
 
-- Khớp path, method, role và ownership rule trong `docs/api_endpoints_specification.md`, trừ khi task thay đổi hợp đồng một cách rõ ràng.
+- Khớp path, method, role và ownership rule trong `docs/contracts/api-contract.md`, trừ khi task thay đổi hợp đồng một cách rõ ràng.
 - Dùng rule cấp URL trong `SecurityConfig` cho pattern rộng và `@PreAuthorize` cho role/ownership chi tiết.
 - Với WebSocket, kiểm tra quyền ở handshake, subscription và xử lý message; kiểm tra trạng thái mute/ban trong Redis trước khi xử lý message.
 - Giữ semantics session-backed JWT: refresh token chỉ hợp lệ khi session trong database còn hợp lệ.
@@ -66,7 +66,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 
 ## Redis và xử lý bất đồng bộ
 
-- Theo `docs/redis_usage_guide.md`: cache DTO có kiểu, template có tên, key có version và TTL tường minh.
+- Theo `docs/engineering/redis-guide.md`: cache DTO có kiểu, template có tên, key có version và TTL tường minh.
 - Không tạo cache key vĩnh viễn nếu không có lý do được ghi rõ.
 - Xem xét invalidation, tương thích serialization, cache stampede và fallback về PostgreSQL.
 - RabbitMQ consumer phải idempotent, có quy định retry/failure trước khi acknowledge message.

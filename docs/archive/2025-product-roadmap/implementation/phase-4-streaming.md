@@ -1,6 +1,6 @@
 # Phase 4: Module Quản lý Livestream (Streaming)
 
-> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Current Implementation Map](../../../implementation/000_ROADMAP.md) và active learning cases.
+> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Current Implementation Map](../../../implementation/current-implementation-map.md) và active learning cases.
 
 > **Trạng thái**: ✅ DONE  
 > **Phụ thuộc**: Phase 3 (Authentication & User Management)  
@@ -24,8 +24,8 @@
 
 ### User Flows
 
-- [Streamer Lifecycle Journey](../business_flows.md#flow-1-streamer-lifecycle-journey)
-- [Viewer Journey](../business_flows.md#flow-2-viewer-journey)
+- [Streamer Lifecycle Journey](../../../contracts/business-flows.md#flow-1-streamer-lifecycle-journey)
+- [Viewer Journey](../../../contracts/business-flows.md#flow-2-viewer-journey)
 
 ---
 
@@ -47,7 +47,7 @@
 
 > [!NOTE]
 > Các thông số chi tiết về API và quy tắc phân quyền đã được quy định tại Single Source of Truth:
-> 👉 **[api_endpoints_specification.md > 2.3. Stream Management](../api_endpoints_specification.md#stream-management)**
+> 👉 **[API specification > 2.3. Stream Management](../../2025-reference/api-endpoints-specification.md#stream-management)**
 
 **Điểm lưu ý khi triển khai:**
 
@@ -59,7 +59,7 @@
 
 > [!IMPORTANT]
 > **Stream start/end được quản lý qua RTMP Webhooks, không phải user-facing API endpoints.**
-> Xem chi tiết: [Webhook Documentation](../concepts/webhooks.md)
+> Xem chi tiết: [Webhook Documentation](../../../engineering/rtmp-webhook-guide.md)
 
 **Flow thực tế:**
 

@@ -25,7 +25,7 @@ Roadmap chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVI
 
 `SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`
 
-[Current Implementation Map](docs/implementation/000_ROADMAP.md) chỉ mô tả code coverage; không phải backlog cạnh tranh với learning roadmap.
+[Current Implementation Map](docs/implementation/current-implementation-map.md) chỉ mô tả code coverage; không phải backlog cạnh tranh với learning roadmap.
 
 ## Quick start trên Windows
 
@@ -54,17 +54,17 @@ Test hiện có thể phụ thuộc PostgreSQL local. Đây là known gap, khôn
 
 ## Documentation
 
-- [Documentation Guide](docs/000_DOCS_GUIDE.md)
+- [Documentation Orchestrator](docs/000_DOCUMENTATION_ORCHESTRATOR.md)
 - [Senior Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md)
 - [System Context](docs/architecture/system-context.md)
-- [Business Flows](docs/business_flows.md)
-- [API Contract](docs/api_endpoints_specification.md)
-- [Security Flow](docs/authorization_flow.md)
-- [Redis Guide](docs/redis_usage_guide.md)
+- [Business Flows](docs/contracts/business-flows.md)
+- [API Contract](docs/contracts/api-contract.md)
+- [Security Flow](docs/security/authorization-flow.md)
+- [Redis Guide](docs/engineering/redis-guide.md)
 - [AI Agent Engineering System](docs/003_AI_AGENT_ENGINEERING_SYSTEM.md)
 - Repository guardrails: [AGENTS.md](AGENTS.md)
 
-Legacy phase plans, generic prompts và design giả định đã được giữ tại [Documentation Archive](docs/archive/README.md).
+Legacy phase plans, generic prompts và design giả định đã được giữ tại [Documentation Archive](docs/archive/index.md).
 
 ## Engineering constraints
 

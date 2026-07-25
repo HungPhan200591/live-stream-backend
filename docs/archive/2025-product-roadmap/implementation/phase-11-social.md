@@ -85,4 +85,4 @@ SET user:{userId}:followers {followerIds} EX 300
 ---
 
 ## Reference
-- [API Roadmap - Social Features](../api_roadmap.md#-phase-11-social-features-optional)
+- [API Roadmap - Social Features](../api-roadmap.md#-phase-11-social-features-optional)

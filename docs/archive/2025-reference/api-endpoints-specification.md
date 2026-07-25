@@ -1,6 +1,6 @@
 # API Endpoints Specification & Authorization Rules
 
-> **ARCHIVED 2026-07-25** — Trộn current và future endpoints. Dùng [Current API Contract](../../api_endpoints_specification.md).
+> **ARCHIVED 2026-07-25** — Trộn current và future endpoints. Dùng [Current API Contract](../../contracts/api-contract.md).
 
 > **Mục đích**: Tài liệu chuẩn cho việc implement và phân quyền API endpoints trong Spring Boot Livestream Backend.  
 > **Target Audience**: AI Agent, Backend Developers  
@@ -269,7 +269,7 @@ public ApiResponse<UserDTO> updateUser(@PathVariable Long userId, ...) { }
 ### 2.10. Webhooks (`/api/webhooks/**`)
 
 > [!NOTE]
-> **Xem thêm**: [docs/concepts/webhooks.md](../concepts/webhooks.md) - Kiến thức chi tiết về webhook
+> **Xem thêm**: [RTMP Webhook Guide](../../engineering/rtmp-webhook-guide.md) - Kiến thức chi tiết về webhook
 
 **Purpose**: Nhận callbacks từ external services (RTMP server, Payment gateway, etc.)
 

@@ -91,5 +91,5 @@
 ---
 
 ## Reference
-- [Business Flows - UC-07](../business_flows.md#uc-07-admin-moderation)
-- [API Specification - Admin](../api_endpoints_specification.md#27-admin-apiadmin)
+- [Business Flows - UC-07](../../../contracts/business-flows.md#uc-07-admin-moderation)
+- [API Specification - Admin](../../2025-reference/api-endpoints-specification.md#27-admin-apiadmin)

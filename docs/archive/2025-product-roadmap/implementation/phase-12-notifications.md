@@ -101,4 +101,4 @@ SET notifications:{userId}:unread {count} EX 60
 ---
 
 ## Reference
-- [API Roadmap - Notifications](../api_roadmap.md#-phase-12-notification-system-optional)
+- [API Roadmap - Notifications](../api-roadmap.md#-phase-12-notification-system-optional)

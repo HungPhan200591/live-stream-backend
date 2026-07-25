@@ -3,7 +3,7 @@
 > Trạng thái: `CURRENT CONTRACT`<br>
 > Cập nhật: 2026-07-25<br>
 > Nguồn kiểm chứng: controller, `SecurityConfig`, OpenAPI annotations và automated tests.<br>
-> Bản đặc tả 2025 đã được lưu tại [archive](archive/2025-reference/api_endpoints_specification.md).
+> Bản đặc tả 2025 đã được lưu tại [archive](../archive/2025-reference/api-endpoints-specification.md).
 
 Tài liệu này chỉ liệt kê endpoint đang tồn tại trong code. Endpoint tương lai phải xuất phát từ một learning case active, có acceptance criteria và được thêm vào đây cùng lúc với implementation.
 
@@ -55,7 +55,7 @@ Tài liệu này chỉ liệt kê endpoint đang tồn tại trong code. Endpoin
 | POST | `/api/webhooks/rtmp/stream-started` | RTMP server mô phỏng | `X-Webhook-Secret` tĩnh |
 | POST | `/api/webhooks/rtmp/stream-ended` | RTMP server mô phỏng | `X-Webhook-Secret` tĩnh |
 
-Target của SEC-03 là HMAC trên raw body, timestamp window, event ID/idempotency và secret rotation. Chi tiết tại [Webhook Concepts](concepts/webhooks.md).
+Target của SEC-03 là HMAC trên raw body, timestamp window, event ID/idempotency và secret rotation. Chi tiết tại [RTMP Webhook Guide](../engineering/rtmp-webhook-guide.md).
 
 ### Development-only surface
 
@@ -71,7 +71,7 @@ Các endpoint này hiện vẫn public trong configuration mặc định. Stage 
 
 ## 3. Capability chưa có API
 
-Chat, gifts, durable wallet/ledger, transactions, analytics leaderboard, admin, notification, Kafka và microservice chưa có endpoint chạy được. Chúng là learning/product backlog trong [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), không phải current contract.
+Chat, gifts, durable wallet/ledger, transactions, analytics leaderboard, admin, notification, Kafka và microservice chưa có endpoint chạy được. Chúng là learning/product backlog trong [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), không phải current contract.
 
 ## 4. Authorization invariants
 

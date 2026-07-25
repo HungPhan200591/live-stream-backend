@@ -16,7 +16,7 @@
 | UC-06 Analytics | Chỉ unique-view HLL | Kafka/analytics capstone |
 | UC-07 Admin | Chưa implement | Security/operations cases |
 
-Các flow bên dưới mô tả target business journey. Bước chưa có code phải được triển khai qua learning case và cập nhật [current API contract](api_endpoints_specification.md).
+Các flow bên dưới mô tả target business journey. Bước chưa có code phải được triển khai qua learning case và cập nhật [current API contract](api-contract.md).
 
 ---
 
@@ -76,7 +76,7 @@ Các flow bên dưới mô tả target business journey. Bước chưa có code 
 
 > [!IMPORTANT]
 > Stream lifecycle được quản lý qua **RTMP Webhooks**, không phải user-facing API endpoints.
-> Xem chi tiết: [Webhook Documentation](concepts/webhooks.md)
+> Xem chi tiết: [RTMP Webhook Guide](../engineering/rtmp-webhook-guide.md)
 
 **Business Value**: Cho phép content creators phát sóng và tương tác với audience
 
@@ -558,8 +558,8 @@ stateDiagram-v2
 
 | Business Flow | Current/target owner |
 |---------------|----------------------|
-| UC-01: Authentication | Current JWT/session flow; [Security Flow](authorization_flow.md) |
-| UC-02: Streaming | Current stream/webhook/Redis baseline; [System Context](architecture/system-context.md) |
+| UC-01: Authentication | Current JWT/session flow; [Security Flow](../security/authorization-flow.md) |
+| UC-02: Streaming | Current stream/webhook/Redis baseline; [System Context](../architecture/system-context.md) |
 | UC-03: Viewer tracking | Current HLL unique reach; concurrent viewer design is target |
 | UC-04: Chat | Target realtime capability; chưa có component owner |
 | UC-05: Gifts | Target wallet/ledger + reliable event flow |
@@ -570,8 +570,8 @@ stateDiagram-v2
 
 | Use Case | API Endpoints |
 |----------|---------------|
-| UC-01 | Current auth/user endpoints trong [API Contract](api_endpoints_specification.md#2-current-rest-contract) |
-| UC-02 | Current stream/webhook endpoints trong [API Contract](api_endpoints_specification.md#2-current-rest-contract) |
+| UC-01 | Current auth/user endpoints trong [API Contract](api-contract.md#2-current-rest-contract) |
+| UC-02 | Current stream/webhook endpoints trong [API Contract](api-contract.md#2-current-rest-contract) |
 | UC-03 | Current stream viewing/tracking endpoints; media delivery ngoài scope |
 | UC-04 | Chưa có API/WebSocket contract active |
 | UC-05 | Chỉ có development deposit simulation; gift/transaction chưa có |
@@ -593,6 +593,6 @@ stateDiagram-v2
 ---
 
 **Next Steps**:
-- Đọc [System Context](architecture/system-context.md) để phân biệt current và target architecture.
-- Xem [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) để chọn active case.
-- Check [API Contract](api_endpoints_specification.md) cho endpoint đang tồn tại.
+- Đọc [System Context](../architecture/system-context.md) để phân biệt current và target architecture.
+- Xem [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) để chọn active case.
+- Check [API Contract](api-contract.md) cho endpoint đang tồn tại.

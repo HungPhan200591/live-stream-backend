@@ -1,6 +1,6 @@
 # Phase 2: Development Simulation APIs
 
-> **ARCHIVED 2026-07-25** — Checklist lịch sử, không chứng minh current maturity. Dùng [Current Implementation Map](../../../implementation/000_ROADMAP.md).
+> **ARCHIVED 2026-07-25** — Checklist lịch sử, không chứng minh current maturity. Dùng [Current Implementation Map](../../../implementation/current-implementation-map.md).
 
 > **Status**: ✅ COMPLETED  
 > **Dependencies**: Phase 1 (Foundation)

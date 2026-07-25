@@ -1,6 +1,6 @@
 # Coding Standards - Spring Boot Livestream Backend
 
-> **ARCHIVED 2026-07-25** — Example-heavy guide đã drift. Dùng [Coding Standards](../../coding_standards.md) và [`AGENTS.md`](../../../AGENTS.md).
+> **ARCHIVED 2026-07-25** — Example-heavy guide đã drift. Dùng [Coding Standards](../../engineering/coding-standards.md) và [`AGENTS.md`](../../../AGENTS.md).
 
 > **Mục đích**: Tài liệu chi tiết với full code examples cho các coding patterns.  
 > **Audience**: Developers và AI agents khi cần reference cụ thể.  

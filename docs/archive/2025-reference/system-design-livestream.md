@@ -4,7 +4,7 @@
 
 ## 0. Business Context
 
-> **Đọc trước**: [Business Flows & Use Cases](business_flows.md) để hiểu nghiệp vụ trước khi đọc technical design.
+> **Đọc trước**: [Business Flows & Use Cases](../../contracts/business-flows.md) để hiểu nghiệp vụ trước khi đọc technical design.
 
 ### Core Use Cases Supported
 
@@ -121,7 +121,7 @@ RTMP Server (như SRS, nginx-rtmp) sẽ gọi **webhooks** khi phát hiện stre
 - **Security**: Verify `X-Webhook-Secret` header để đảm bảo request từ RTMP server thật.
 - **Dev Testing**: Gọi trực tiếp webhook endpoint với secret key (thay thế SimulationController cũ).
 
-> **Xem thêm**: [Webhook Documentation](concepts/webhooks.md)
+> **Xem thêm**: [Webhook Documentation](../../engineering/rtmp-webhook-guide.md)
 
 ### 4.3. Hệ Thống Chat Real-time
 

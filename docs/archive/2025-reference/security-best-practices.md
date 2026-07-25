@@ -8,7 +8,7 @@ Ok, phần này em sẽ **đóng gói thành “cheat-sheet kiến trúc securit
 
 # SECURITY BEST PRACTICE — TỔNG HỢP CHUẨN (CHEAT-SHEET)
 
-> **ARCHIVED 2026-07-25** — Cheat sheet không phải tested contract. Dùng [Security Flow](../../authorization_flow.md).
+> **ARCHIVED 2026-07-25** — Cheat sheet không phải tested contract. Dùng [Security Flow](../../security/authorization-flow.md).
 
 ## 1. 3 TIER SECURITY – ĐỪNG NHẦM LẪN
 

@@ -2,7 +2,7 @@
 
 > Trạng thái: `CURRENT BASELINE`<br>
 > Cập nhật: 2026-07-25<br>
-> Thiết kế giả định 2025 được lưu tại [archive](../archive/2025-reference/system_design_livestream.md).
+> Thiết kế giả định 2025 được lưu tại [archive](../archive/2025-reference/system-design-livestream.md).
 
 ## 1. Kiến trúc đang chạy
 
@@ -60,4 +60,3 @@ Chi tiết và exit gate nằm trong [Senior Java Interview Roadmap](../001_SENI
 - PostgreSQL là durable source of truth; Redis/broker là state khác consistency boundary.
 - External integration giữ simulation-first cho tới khi task yêu cầu tích hợp thật.
 - Mọi claim về scale cần workload, metric và failure model.
-

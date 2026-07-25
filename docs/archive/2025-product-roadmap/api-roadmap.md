@@ -1,6 +1,6 @@
 # API Implementation Roadmap
 
-> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng [Current Implementation Map](../../implementation/000_ROADMAP.md) và [Senior Roadmap](../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng [Current Implementation Map](../../implementation/current-implementation-map.md) và [Senior Roadmap](../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
 
 **Purpose**: Tổng hợp tất cả API endpoints theo thứ tự triển khai (Phase) để dễ dàng theo dõi lộ trình coding.
 
@@ -20,7 +20,7 @@ Test hạ tầng và endpoints cho external service callbacks.
 | `/api/test/rabbitmq`                  | GET    | Test RabbitMQ connection    |
 
 > **Note**: Stream start/end được quản lý qua **Webhooks** từ RTMP server.
-> Xem chi tiết: [Webhook Documentation](concepts/webhooks.md)
+> Xem chi tiết: [Webhook Documentation](../../engineering/rtmp-webhook-guide.md)
 
 ---
 

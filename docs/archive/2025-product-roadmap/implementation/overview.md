@@ -1,11 +1,11 @@
 # Implementation Roadmap
 
-> **ARCHIVED 2026-07-25** — Phase plan lịch sử. Dùng [Current Implementation Map](../../../implementation/000_ROADMAP.md) và [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+> **ARCHIVED 2026-07-25** — Phase plan lịch sử. Dùng [Current Implementation Map](../../../implementation/current-implementation-map.md) và [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
 
 > **Mục đích**: Tổng quan về lộ trình implementation của Spring Boot Livestream Backend<br>
 > **Cập nhật**: 2026-07-25
 
-> **Lưu ý snapshot 2026-07-25**: Đây là roadmap coverage của feature demo, không phải roadmap maturity Senior. Phase 4 đã có implementation và phase/API docs đánh dấu hoàn thành ở mức demo. Trước Phase 5, ưu tiên Stage 0 trong [Senior Backend Interview Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+> **Lưu ý snapshot 2026-07-25**: Đây là roadmap coverage của feature demo, không phải roadmap maturity Senior. Phase 4 đã có implementation và phase/API docs đánh dấu hoàn thành ở mức demo. Trước Phase 5, ưu tiên Stage 0 trong [Senior Backend Interview Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
 
 ---
 
@@ -67,12 +67,12 @@ graph TD
 
 1. **Understand Business Context**
 
-   - Read [Business Flows](../business_flows.md) để hiểu use cases
+   - Read [Business Flows](../../../contracts/business-flows.md) để hiểu use cases
    - Xem sequence diagrams để nắm user journeys
 
 2. **Review System Design**
 
-   - Đọc [System Design](../system_design_livestream.md) để hiểu architecture
+   - Đọc [System Design](../../2025-reference/system-design-livestream.md) để hiểu architecture
    - Nắm rõ lý do chọn công nghệ (Redis, RabbitMQ, PostgreSQL)
 
 3. **Check Current Phase**
@@ -213,11 +213,11 @@ graph TD
 
 ## 📚 Related Documentation
 
-- [Business Flows](../business_flows.md) - Use cases & user journeys
-- [System Design](../system_design_livestream.md) - Technical architecture
-- [API Specification](../api_endpoints_specification.md) - Endpoint details
-- [API Roadmap](../api_roadmap.md) - API implementation order
-- [Repository Rules](../../AGENTS.md) - Development standards and Agent guardrails
+- [Business Flows](../../../contracts/business-flows.md) - Use cases & user journeys
+- [System Design](../../2025-reference/system-design-livestream.md) - Technical architecture
+- [API Specification](../../2025-reference/api-endpoints-specification.md) - Endpoint details
+- [API Roadmap](../api-roadmap.md) - API implementation order
+- [Repository Rules](../../../../AGENTS.md) - Development standards and Agent guardrails
 
 ---
 

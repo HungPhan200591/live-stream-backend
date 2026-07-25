@@ -19,7 +19,7 @@
 - ✅ Scalable architecture (Redis Pub/Sub)
 
 ### User Flows Supported
-- [Viewer Journey](../business_flows.md#flow-2-viewer-journey) (Chat part)
+- [Viewer Journey](../../../contracts/business-flows.md#flow-2-viewer-journey) (Chat part)
 
 ---
 
@@ -108,5 +108,5 @@ EXPIRE muted:{streamId} {duration}
 ---
 
 ## Reference
-- [Business Flows - UC-04](../business_flows.md#uc-04-real-time-chat-interaction)
-- [API Specification - Chat](../api_endpoints_specification.md#24-chat-apichat)
+- [Business Flows - UC-04](../../../contracts/business-flows.md#uc-04-real-time-chat-interaction)
+- [API Specification - Chat](../../2025-reference/api-endpoints-specification.md#24-chat-apichat)

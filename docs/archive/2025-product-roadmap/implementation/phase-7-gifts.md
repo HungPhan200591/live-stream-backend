@@ -19,7 +19,7 @@
 - ✅ Leaderboard updates
 
 ### User Flows Supported
-- [Gift Transaction Flow](../business_flows.md#flow-3-gift-transaction-flow)
+- [Gift Transaction Flow](../../../contracts/business-flows.md#flow-3-gift-transaction-flow)
 
 ---
 
@@ -106,5 +106,5 @@ gift.transaction.dlq (for failed processing)
 ---
 
 ## Reference
-- [Business Flows - UC-05](../business_flows.md#uc-05-gift-sending--wallet-management)
-- [API Specification - Gifts](../api_endpoints_specification.md#25-gifts--transactions-apigifts-apitransactions)
+- [Business Flows - UC-05](../../../contracts/business-flows.md#uc-05-gift-sending--wallet-management)
+- [API Specification - Gifts](../../2025-reference/api-endpoints-specification.md#25-gifts--transactions-apigifts-apitransactions)

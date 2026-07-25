@@ -3,7 +3,7 @@
 > Trạng thái: `CURRENT CODE COVERAGE`<br>
 > Cập nhật: 2026-07-25<br>
 > Đây không còn là roadmap điều phối công việc. Roadmap học chuẩn là [Senior Java Interview Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).<br>
-> Product phase plan 1-12 cũ được lưu tại [archive](../archive/2025-product-roadmap/implementation/000_ROADMAP.md).
+> Product phase plan 1-12 cũ được lưu tại [archive](../archive/2025-product-roadmap/implementation/overview.md).
 
 ## 1. Từ phase cũ sang learning cases
 

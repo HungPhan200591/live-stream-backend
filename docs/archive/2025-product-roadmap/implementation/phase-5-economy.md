@@ -19,7 +19,7 @@
 - ✅ Balance tracking và history
 
 ### User Flows Supported
-- [Gift Transaction Flow](../business_flows.md#flow-3-gift-transaction-flow) (Wallet part)
+- [Gift Transaction Flow](../../../contracts/business-flows.md#flow-3-gift-transaction-flow) (Wallet part)
 
 ---
 
@@ -124,5 +124,5 @@ SET wallet:{userId}:balance {amount} EX 60
 ---
 
 ## Reference
-- [Business Flows - UC-05](../business_flows.md#uc-05-gift-sending--wallet-management)
-- [API Specification - Transactions](../api_endpoints_specification.md#25-gifts--transactions-apigifts-apitransactions)
+- [Business Flows - UC-05](../../../contracts/business-flows.md#uc-05-gift-sending--wallet-management)
+- [API Specification - Transactions](../../2025-reference/api-endpoints-specification.md#25-gifts--transactions-apigifts-apitransactions)

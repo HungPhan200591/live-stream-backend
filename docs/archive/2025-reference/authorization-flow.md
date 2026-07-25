@@ -1,6 +1,6 @@
 # Authorization Flow - Livestream Backend
 
-> **ARCHIVED 2026-07-25** — Trộn implementation hiện tại với money/action-token target. Dùng [Security Flow](../../authorization_flow.md).
+> **ARCHIVED 2026-07-25** — Trộn implementation hiện tại với money/action-token target. Dùng [Security Flow](../../security/authorization-flow.md).
 
 > **Phiên bản**: Final (17/12/2024)
 > **Kiến trúc**: JWT + Session-backed Refresh Token
@@ -439,6 +439,6 @@ rate:donate:{userId}     → count (TTL 3600s, max 10/hour)
 
 ---
 
-> 📌 **Xem thêm**: [security_best_practices.md](usage/security_best_practices.md)
+> 📌 **Xem thêm**: [Security Best Practices](security-best-practices.md)
 
 **End of Document**

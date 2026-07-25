@@ -2,7 +2,7 @@
 
 > Trạng thái: `CURRENT + STAGE 0 TARGET`<br>
 > Cập nhật: 2026-07-25<br>
-> Bản thiết kế 2025 được lưu tại [archive](archive/2025-reference/authorization_flow.md).
+> Bản thiết kế 2025 được lưu tại [archive](../archive/2025-reference/authorization-flow.md).
 
 ## 1. Mental model
 

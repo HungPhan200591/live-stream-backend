@@ -101,5 +101,5 @@ ZREVRANGE leaderboard:daily:{date} 0 9 WITHSCORES
 ---
 
 ## Reference
-- [Business Flows - UC-06](../business_flows.md#uc-06-analytics--leaderboard)
-- [API Specification - Analytics](../api_endpoints_specification.md#26-analytics-apianalytics)
+- [Business Flows - UC-06](../../../contracts/business-flows.md#uc-06-analytics--leaderboard)
+- [API Specification - Analytics](../../2025-reference/api-endpoints-specification.md#26-analytics-apianalytics)

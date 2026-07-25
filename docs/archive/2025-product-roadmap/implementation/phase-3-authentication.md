@@ -1,6 +1,6 @@
 # Phase 3: Authentication & User Management
 
-> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Security Flow](../../../authorization_flow.md) và [Current Implementation Map](../../../implementation/000_ROADMAP.md).
+> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Security Flow](../../../security/authorization-flow.md) và [Current Implementation Map](../../../implementation/current-implementation-map.md).
 
 > **Status**: ✅ COMPLETED  
 > **Dependencies**: Phase 1 (Foundation)
@@ -19,7 +19,7 @@
 - ✅ Secure JWT-based authentication
 
 ### User Flows Supported
-- [Authentication Flow](../business_flows.md#flow-4-authentication--session-management)
+- [Authentication Flow](../../../contracts/business-flows.md#flow-4-authentication--session-management)
 
 ---
 
@@ -152,6 +152,6 @@ public class UserSession {
 
 ## Reference
 
-- [Business Flows - UC-01](../business_flows.md#uc-01-user-registration--authentication)
-- [API Specification - Authentication](../api_endpoints_specification.md#21-authentication-apiauth)
-- [Authorization Flow](../authorization_flow.md)
+- [Business Flows - UC-01](../../../contracts/business-flows.md#uc-01-user-registration--authentication)
+- [API Specification - Authentication](../../2025-reference/api-endpoints-specification.md#21-authentication-apiauth)
+- [Authorization Flow](../../2025-reference/authorization-flow.md)
