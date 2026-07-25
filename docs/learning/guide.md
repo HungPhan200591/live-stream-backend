@@ -83,11 +83,12 @@ Hãy dạy theo mental model -> mechanism -> invariant -> failure -> trade-off.
 Sau mỗi phần, hỏi tôi tự giải thích lại; đừng tự trả lời thay toàn bộ.
 ```
 
-### Đào sâu câu hỏi Senior/Architect/Expert
+### Luyện question bank từ câu phổ biến tới câu đào sâu
 
 ```text
 Dùng $run-senior-java-learning cho active topic.
-Lấy câu hỏi từ question bank theo thứ tự SENIOR -> ARCHITECT -> EXPERT.
+Lấy câu hỏi theo Recommended practice order: HIGH FOUNDATION -> HIGH/MEDIUM SENIOR
+-> project application -> ARCHITECT/EXPERT stretch. Không bắt đầu bằng câu LOW/pathological.
 Hỏi từng câu, chờ tôi trả lời, rồi đánh giá mental model, missing boundary,
 trade-off, red flags và evidence còn thiếu.
 ```

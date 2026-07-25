@@ -100,6 +100,14 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 
 Không hạ level chỉ vì câu hỏi dùng thuật ngữ khó. Level được xác định bởi depth của reasoning, failure boundary và trade-off phải bảo vệ.
 
+Khi tạo hoặc luyện question bank, không chia đều máy móc theo level:
+
+- Gắn `Interview likelihood: HIGH | MEDIUM | LOW` cho từng câu. Đây là heuristic trong phạm vi topic/role, không phải thống kê thị trường.
+- Đi theo thứ tự `HIGH FOUNDATION -> HIGH/MEDIUM SENIOR -> project application -> ARCHITECT/EXPERT stretch`; không mở đầu bằng pathological hoặc multi-region case.
+- Ưu tiên câu hỏi core thường gặp và cách diễn đạt tự nhiên của interviewer; dùng câu riêng của project để chứng minh khả năng vận dụng, không thay thế foundation.
+- Một bank mặc định nên có nhiều câu `FOUNDATION`/`SENIOR` xác suất cao hơn câu `ARCHITECT`/`EXPERT` xác suất thấp. Với slice hẹp, ghi rõ giới hạn thay vì bịa thêm câu phổ biến.
+- Mỗi file có `Recommended practice order` để người học biết câu nào phải trả lời trước. Câu `LOW` vẫn được giữ làm stretch discriminator nhưng không nằm trong first pass.
+
 ## 6. Kết thúc session và lưu checkpoint
 
 Trước khi bàn giao:
