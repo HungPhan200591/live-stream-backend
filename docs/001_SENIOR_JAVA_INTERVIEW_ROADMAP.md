@@ -118,8 +118,12 @@ Roadmap có thứ tự dependency nhưng không có deadline cố định. Mỗi
 
 **Câu hỏi trung tâm:** Làm sao biết một thay đổi đúng và có thể tái lập?
 
+**Ưu tiên đầu tiên:** đưa build/runtime về Java 21 LTS có evidence trước khi thêm implementation mới. Java 21 mở đường cho virtual threads và các capability hiện đại, nhưng virtual threads là lab/decision có measurement; không phải default configuration.
+
 Thực hiện:
 
+- `JDK-01`: audit declared JDK, Maven/CI/runtime/container compatibility; chuyển baseline project sang Java 21, chạy compile/test/startup evidence và đánh giá virtual threads bằng workload + JFR;
+- theo dõi JDK 25 là latest LTS tại thời điểm cập nhật roadmap, nhưng chỉ nâng application sau `JDK-02` compatibility gate gồm target Spring Boot/dependency upgrade, regression và rollback plan;
 - sửa các correctness/security defect đang chặn Stage 0 về token type, auth matcher, session cache, stream-key exposure và hardening shared-secret webhook;
 - tách `dev`, `test`, `prod` configuration; không để dev/test endpoint tự xuất hiện trong production;
 - dùng Flyway làm nguồn schema versioned;
@@ -133,6 +137,8 @@ Thực hiện:
 
 **Exit gate**
 
+- Java 21 là declared/toolchain/CI/runtime baseline nhất quán; Java 25 có compatibility decision rõ, không phải assumption.
+- Virtual-thread mode được `enabled` hoặc `deferred` bằng workload/JFR evidence; không có claim performance chỉ từ feature flag.
 - Các defect chặn Stage 0 đều có regression test.
 - Test chạy trên máy sạch không cần database có sẵn.
 - `ddl-auto` không âm thầm thay schema.
@@ -158,7 +164,7 @@ Case:
 11. JVM lab: class loading/linking/initialization, stack/heap/metaspace/direct memory, allocation/GC roots, JIT/warm-up, safepoint, G1 và ZGC.
 12. Chẩn đoán CPU spike, allocation pressure, memory leak, deadlock và thread starvation bằng JFR, GC log, heap/thread dump trước khi tuning.
 
-Java 17 vẫn là baseline chạy project. Learning track phải biết khác biệt và migration risk của các LTS mới hơn, đặc biệt Java 21/25; virtual threads chỉ thử trên nhánh/lab JDK phù hợp sau khi có blocking-I/O benchmark. Không nâng version chỉ để dùng keyword mới và không dùng virtual thread như cách tăng tốc workload CPU-bound.
+Java 21 là baseline target của project và là prerequisite trước implementation mới. Java 17 chỉ là current declared state cho tới khi `JDK-01` đóng. JDK 25 là latest LTS tại thời điểm cập nhật roadmap, nhưng app chỉ nâng sau compatibility gate của `JDK-02` vì Spring Boot 3.4 hiện công bố compatibility tới Java 24. Virtual threads chỉ bật sau blocking-I/O benchmark và JFR/pinning check; không nâng version chỉ để dùng keyword mới và không dùng virtual thread như cách tăng tốc workload CPU-bound.
 
 **Exit gate**
 
@@ -454,9 +460,15 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 
 Priority trong bảng là importance của evidence mà case tạo ra theo mục 2.1, không tự ghi đè case đang active hay dependency giữa các stage. Một capability P0 có thể có case P1/P2 bổ sung vì case đó chỉ cover một nhánh chuyên biệt. Chỉ tạo artifact/folder khi case được active; backlog không phải yêu cầu scaffold hàng loạt.
 
+**Nguyên tắc sắp thứ tự:** bắt đầu bằng case vừa tạo platform/safety net cho tất cả case sau, rồi mới đi vào vertical slice correctness/security hẹp. Mỗi case phải đi đủ `theory -> deep-dive -> question bank -> project reproducer -> decision -> implementation -> evidence -> teach-back`; không học hết theory trước rồi mới tìm project để áp dụng, cũng không sửa bug trước khi có mental model/reproducer.
+
+`JDK-01` đứng đầu vì POM vẫn khai báo Java 17, current-state từng ghi nhận runtime Java 22 và virtual-thread learning bị khóa bởi baseline drift. `TEST-01` đứng thứ hai vì project chỉ có một context smoke test; không có safety net thì mọi claim correctness của security/concurrency đều yếu. `SEC-01` không bị loại, nhưng được đặt sau hai prerequisite này như vertical security case đầu tiên.
+
 | ID | Case | Stage | Priority |
 | --- | --- | --- | --- |
-| [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion (`ACTIVE`) | 0 | P0 |
+| [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) | Java 21 platform baseline, toolchain drift và virtual-thread decision (`ACTIVE`) | 0/1 | P0 |
+| JDK-02 | JDK 25 latest-LTS compatibility: target Spring Boot/dependency upgrade, regression và rollback plan | 0/1 | P1 |
+| [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion (`PAUSED`; sau JDK-01 + TEST-01) | 0 | P0 |
 | SEC-02 | Logout-all với stale Redis session | 0/4 | P0 |
 | SEC-03 | Stream key exposure và webhook replay | 0/7 | P0 |
 | TEST-01 | Hermetic integration test bằng Testcontainers | 0 | P0 |
@@ -487,9 +499,9 @@ Priority trong bảng là importance của evidence mà case tạo ra theo mục
 | REACT-01 | MVC vs virtual thread vs WebFlux benchmark và decision | 1/2/8 | P2 |
 | LEAD-01 | Code review, ADR, incident postmortem và behavioral evidence pack | 12 | P0 |
 
-Thứ tự bắt đầu đề xuất: `SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`. Sau sáu case này mới quyết định nhánh Redis/Kafka tiếp theo theo mục tiêu phỏng vấn gần nhất.
+Thứ tự bắt đầu đề xuất: `JDK-01 -> TEST-01 -> SEC-01 -> SEC-03 -> CON-01 -> DB-01 -> WAL-01`. `JDK-02` là nhánh compatibility có điều kiện: chuẩn bị sau JDK-01 nhưng không block các correctness case nếu target Spring Boot chưa hỗ trợ Java 25. Sau bảy case trên mới quyết định nhánh Redis/Kafka tiếp theo theo mục tiêu phỏng vấn gần nhất.
 
-Active case hiện tại: [SEC-01 - Access token vs refresh token confusion](learning/cases/sec-01-access-vs-refresh-token.md). Chỉ active thêm case khác sau khi SEC-01 đạt closure gate hoặc được đánh dấu paused có lý do.
+Active case hiện tại: [JDK-01 - Java 21 platform baseline and virtual-thread decision](learning/cases/jdk-01-java21-platform-baseline.md). SEC-01 được `PAUSED` vì chưa có theory/reproducer/evidence; chỉ re-activate sau JDK-01 + TEST-01 hoặc khi có lý do scope rõ ràng. Chỉ active thêm case khác sau khi JDK-01 đạt closure gate hoặc được đánh dấu paused có lý do.
 
 ## 7. Definition of Done cho một learning case
 
@@ -523,6 +535,8 @@ Active case hiện tại: [SEC-01 - Access token vs refresh token confusion](lea
 
 - [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)
 - [OpenJDK JEP 444 - Virtual Threads](https://openjdk.org/jeps/444)
+- [Spring Boot 3.4 system requirements](https://docs.spring.io/spring-boot/3.4/system-requirements.html)
+- [Spring Boot 3.4 virtual threads](https://docs.spring.io/spring-boot/3.4/reference/features/spring-application.html#features.spring-application.virtual-threads)
 - [Maven dependency mechanism và BOM](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)
 - [RFC 9110 - HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [Spring transaction management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)

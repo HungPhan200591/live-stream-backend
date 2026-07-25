@@ -18,15 +18,15 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 
 | Field | Value |
 | --- | --- |
-| Active case | [SEC-01 - Access token vs refresh token confusion](cases/sec-01-access-vs-refresh-token.md) |
-| Case status | `ACTIVE`; chưa có implementation hoặc runtime evidence |
+| Active case | [JDK-01 - Java 21 platform baseline and virtual-thread decision](cases/jdk-01-java21-platform-baseline.md) |
+| Case status | `ACTIVE`; chưa có Java 21 compatibility, build hoặc runtime evidence |
 | Current checkpoint | `THEORY_CORE` |
-| Next action | Tạo core theory canonical về JWT token lifecycle; sau đó người học đọc, viết lại mental model và làm self-check trước khi mở rộng deep-dive |
-| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active case; [Theory Note Template](../templates/theory-note-template.md) |
-| Write target | `docs/learning/theory/core/security/jwt-token-lifecycle.md` — chỉ tạo khi bắt đầu artifact thật |
-| Latest evidence | Case SEC-01 là bản nháp AI-assisted; reproducer và experiment vẫn `NOT RUN` |
-| Implementation gate | `LOCKED` cho tới khi theory, question rubric, case review, reproducer và design gate đạt |
-| Blocker | Core theory chưa tồn tại và người học chưa hoàn tất mental model/teach-back foundation bằng lời của mình |
+| Next action | Tạo core theory canonical về Java 21 platform baseline và virtual-thread mental model; sau đó người học đọc, viết lại mental model và làm self-check trước khi mở rộng deep-dive |
+| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Theory Note Template](../templates/theory-note-template.md) |
+| Write target | `docs/learning/theory/core/java/java21-platform-baseline.md` — chỉ tạo khi bắt đầu artifact thật |
+| Latest evidence | JDK-01 là bản nháp AI-assisted; Java 21 compatibility, build, JFR và experiment vẫn `NOT RUN` |
+| Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
+| Blocker | Core theory chưa tồn tại; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-25` |
 
 Khi kết thúc mỗi session, cập nhật block này với next action đủ nhỏ để thực hiện ngay. Nếu dừng giữa phase, giữ nguyên checkpoint và ghi rõ phần còn lại.
@@ -87,12 +87,12 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 
 | Knowledge domain | Roadmap coverage | Trạng thái knowledge hiện tại |
 | --- | --- | --- |
-| Java Core, JMM và concurrency | Stage 1 | `NOT_STARTED` |
+| Java Core, JMM và concurrency | Stage 0/1 | `IN_PROGRESS`: JDK-01 active; Java 21 theory/compatibility evidence pending |
 | Spring internals và transactions | Stage 2 | `NOT_STARTED` |
 | PostgreSQL và data lifecycle | Stage 3, 9 | `NOT_STARTED` |
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
-| Security, realtime và abuse resistance | Stage 0, 7 | `IN_PROGRESS`: SEC-01 active; theory artifacts pending |
+| Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ JDK-01 + TEST-01 safety net |
 | Testing, observability và performance | Stage 0, 8 | `NOT_STARTED` |
 | Modular monolith, microservices và resilience | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
@@ -109,12 +109,12 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 ## 8. Current active slice
 
-SEC-01 sẽ là lượt chạy thử đầu tiên của system, nhưng task chuẩn hóa hiện tại không implement case. Artifact được tạo dần theo checkpoint:
+JDK-01 là lượt chạy thử đầu tiên của system theo thứ tự mới: platform baseline có evidence trước, rồi TEST-01 tạo safety net, sau đó mới re-activate SEC-01. Artifact được tạo dần theo checkpoint:
 
-1. `theory/core/security/jwt-token-lifecycle.md`.
-2. `theory/deep-dives/security/session-backed-jwt.md`.
-3. `question-bank/security.md`.
-4. Cập nhật case SEC-01 và tạo reproducer khi người dùng yêu cầu thực thi.
-5. Chỉ sau experiment mới tạo `experiments/sec-01-token-purpose-negative-tests.md` và `interview-notes/sec-01-jwt-token-lifecycle.md`.
+1. `theory/core/java/java21-platform-baseline.md`.
+2. `theory/deep-dives/java/virtual-threads-and-pinning.md`.
+3. `question-bank/java.md`.
+4. Cập nhật case JDK-01, chụp baseline Maven/runtime và tạo compatibility reproducer khi người dùng yêu cầu thực thi.
+5. Chỉ sau experiment mới tạo `experiments/jdk-01-java21-compatibility-and-virtual-thread-lab.md` và `interview-notes/jdk-01-java21-platform-baseline.md`.
 
 Các path trên là routing target, không phải bằng chứng file đã tồn tại.

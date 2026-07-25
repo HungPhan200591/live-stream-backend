@@ -148,6 +148,7 @@ docs/
 │   ├── guide.md
 │   ├── index.md
 │   └── cases/
+│       ├── jdk-01-java21-platform-baseline.md
 │       └── sec-01-access-vs-refresh-token.md
 ├── tools/
 │   ├── codex-postgres-mcp.md
@@ -191,6 +192,7 @@ Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có a
 | `CURRENT GAP` | Behavior tồn tại nhưng chưa đạt invariant/verification |
 | `TARGET` | Intended design, chưa phải implementation |
 | `LEARNING BACKLOG` | Case chưa active |
+| `PAUSED` | Learning case dừng có chủ đích; phải có reason và điều kiện re-activate |
 | `ARCHIVED` | Chỉ giữ lịch sử |
 
 Maturity M0–M4 được định nghĩa trong [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md#6-maturity-model-dùng-cho-project).

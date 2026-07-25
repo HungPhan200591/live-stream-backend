@@ -31,7 +31,7 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 
 | Capability | Target | Current depth | Evidence / next action |
 | --- | --- | --- | --- |
-| Java language, collections, algorithm và complexity | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
+| Java language, collections, algorithm và complexity | D3 | Chưa đánh giá | `JDK-01` active: Java 21 baseline/theory/compatibility evidence pending |
 | Object-oriented design và refactoring | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
 | JVM runtime và diagnostics | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1/8 active |
 | Concurrency, JMM và async model | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
@@ -60,8 +60,8 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 
 ### 3.1. Java language, collections, algorithm và complexity — P0, target D3
 
-- **D1:** Phân biệt primitive/reference, immutable/mutable, `equals`/`hashCode`, `List`/`Set`/`Map`, array/list/tree/hash/queue và Big-O cơ bản.
-- **D2:** Giải thích generics/type erasure, exception contract, Stream API, time/locale/money boundary; chọn data structure dựa trên access pattern, ordering, memory và complexity.
+- **D1:** Phân biệt primitive/reference, immutable/mutable, `equals`/`hashCode`, `List`/`Set`/`Map`, array/list/tree/hash/queue, Big-O cơ bản và các Java 21 language/runtime capability liên quan đến codebase.
+- **D2:** Giải thích generics/type erasure, exception contract, Stream API, time/locale/money boundary, Java 17-to-21 migration boundary; chọn data structure dựa trên access pattern, ordering, memory và complexity.
 - **D3:** Viết test cho equality/money/time edge case; thay collection hoặc algorithm trên hot path, đo allocation/latency và giải thích before/after; xử lý serialization compatibility tại boundary.
 - **D4:** Đặt guideline chọn collection/value object cho module, review được complexity claim sai và dẫn một refactor có benchmark, compatibility và rollback plan.
 

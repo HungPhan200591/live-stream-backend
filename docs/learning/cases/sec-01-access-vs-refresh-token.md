@@ -1,11 +1,13 @@
 # SEC-01: Access token vs refresh token confusion
 
-> Status: `ACTIVE`<br>
+> Status: `PAUSED`<br>
 > Maturity target: `M2 - Correct`<br>
 > Roadmap stage: `Stage 0 - Stabilize the laboratory`<br>
 > Prerequisites: `CURRENT auth/session implementation`, [Security Flow](../../security/authorization-flow.md), [API Contract](../../contracts/api-contract.md)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-25`
+
+> Pause reason: `JDK-01` (Java 21 platform baseline) và `TEST-01` được ưu tiên làm prerequisite để build/runtime baseline và safety net có evidence trước khi sửa authentication. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
 
 ## Scope lock
 
@@ -356,7 +358,7 @@ Không bắt đầu checkpoint implementation khi design này chưa được ng�
 
 ### Raw results
 
-`NOT RUN` — case mới ở trạng thái `ACTIVE`, chưa implement và chưa chạy reproducer.
+`NOT RUN` — case đang `PAUSED`, chưa implement và chưa chạy reproducer.
 
 ### Summary
 
@@ -437,7 +439,7 @@ JWT signature hợp lệ chỉ chứng minh issuer/key và integrity, không ch�
 - [ ] API/security docs và status đã sync sau implementation.
 - [ ] Tôi tự giải thích được mà không đọc AI output.
 
-Case giữ trạng thái `ACTIVE` cho tới khi mọi gate bắt buộc hoàn thành; không đổi sang `EVIDENCE_READY` chỉ vì document đã đầy đủ.
+Case giữ trạng thái `PAUSED` cho tới khi JDK-01 + TEST-01 đạt gate hoặc có lý do scope rõ để re-activate. Sau khi re-activate, không đổi sang `EVIDENCE_READY` chỉ vì document đã đầy đủ.
 
 ## 15. Links
 

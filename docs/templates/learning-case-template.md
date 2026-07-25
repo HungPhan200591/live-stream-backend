@@ -1,6 +1,6 @@
 # CASE-XXX: <Tên bài toán>
 
-> Status: `PROPOSED | ACTIVE | EVIDENCE_READY | CLOSED`<br>
+> Status: `PROPOSED | ACTIVE | PAUSED | EVIDENCE_READY | CLOSED`<br>
 > Maturity target: `M1 | M2 | M3 | M4`<br>
 > Roadmap stage: `<stage>`<br>
 > Prerequisites: `<case/doc/test>`<br>
