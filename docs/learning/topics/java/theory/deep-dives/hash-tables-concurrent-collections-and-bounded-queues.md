@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Collections, Data Structures and Complexity](../core/collections-data-structures-and-complexity.md), [JMM](../core/jmm-synchronization-and-thread-safety.md)<br>
-> Related cases: [`CACHE-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases), [`CHAT-UC-01`](../../../use-case-catalog.md#chat-uc-01)<br>
+> Related cases: [`CACHE-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`CHAT-UC-01`](../../../../use-case-catalog.md#chat-uc-01)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

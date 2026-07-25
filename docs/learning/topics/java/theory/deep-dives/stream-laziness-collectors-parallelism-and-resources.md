@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Stream API core](../core/stream-api-functional-programming-and-optional.md)<br>
-> Related cases: [`FEED-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases), [`ANALYTICS-UC-01`](../../../use-case-catalog.md#analytics-uc-01)<br>
+> Related cases: [`FEED-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`ANALYTICS-UC-01`](../../../../use-case-catalog.md#analytics-uc-01)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

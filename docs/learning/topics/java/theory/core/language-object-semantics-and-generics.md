@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Java 21 platform baseline](java21-platform-baseline.md)<br>
-> Related cases: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md), [`GIFT-UC-01`](../../../use-case-catalog.md#gift-uc-01)<br>
+> Related cases: [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md), [`GIFT-UC-01`](../../../../use-case-catalog.md#gift-uc-01)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

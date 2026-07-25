@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Executors, CompletableFuture and Concurrency Control](../core/executors-completablefuture-and-concurrency-control.md)<br>
-> Related cases: [`RECONNECT-UC-01`](../../../use-case-catalog.md#reconnect-uc-01), [`LIVE-UC-01`](../../../use-case-catalog.md#live-uc-01)<br>
+> Related cases: [`RECONNECT-UC-01`](../../../../use-case-catalog.md#reconnect-uc-01), [`LIVE-UC-01`](../../../../use-case-catalog.md#live-uc-01)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

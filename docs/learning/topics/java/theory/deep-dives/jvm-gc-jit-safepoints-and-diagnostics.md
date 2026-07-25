@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JVM Class Loading, Bytecode and Memory](../core/jvm-class-loading-bytecode-and-memory.md)<br>
-> Related cases: [`JVM-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases), [`LIVE-UC-01`](../../../use-case-catalog.md#live-uc-01)<br>
+> Related cases: [`JVM-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`LIVE-UC-01`](../../../../use-case-catalog.md#live-uc-01)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

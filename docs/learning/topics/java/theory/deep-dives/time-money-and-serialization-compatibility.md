@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Exceptions, Time, Money and Serialization](../core/exceptions-time-money-and-serialization-boundaries.md)<br>
-> Related cases: [`GIFT-UC-01`](../../../use-case-catalog.md#gift-uc-01), [`PAYOUT-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
+> Related cases: [`GIFT-UC-01`](../../../../use-case-catalog.md#gift-uc-01), [`PAYOUT-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

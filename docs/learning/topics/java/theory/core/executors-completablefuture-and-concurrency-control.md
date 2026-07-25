@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JMM and thread safety](jmm-synchronization-and-thread-safety.md), [Java 21 virtual threads](java21-platform-baseline.md)<br>
-> Related cases: [`RECONNECT-UC-01`](../../../use-case-catalog.md#reconnect-uc-01), [`NOTIFY-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
+> Related cases: [`RECONNECT-UC-01`](../../../../use-case-catalog.md#reconnect-uc-01), [`NOTIFY-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 

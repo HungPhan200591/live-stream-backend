@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics](language-object-semantics-and-generics.md), [JVM runtime](jvm-class-loading-bytecode-and-memory.md)<br>
-> Related cases: [`STREAM-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases), [`VIEWCOUNT-UC-01`](../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
+> Related cases: [`STREAM-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`VIEWCOUNT-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
