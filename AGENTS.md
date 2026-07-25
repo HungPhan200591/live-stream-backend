@@ -21,7 +21,7 @@
 - Điểm vào và routing tài liệu cho Human/AI: `docs/000_DOCUMENTATION_ORCHESTRATOR.md`.
 - Hướng dẫn Human học và implement cùng AI Agent: `docs/learning/guide.md`.
 - Điểm vào hệ học/phỏng vấn và checkpoint phiên hiện tại: `docs/learning/index.md`.
-- Catalog canonical các bài toán Livestream concrete để thực hành/System Design: `docs/learning/use-case-catalog.md`.
+- Catalog canonical các bài toán Livestream concrete, use-case priority/difficulty và owner coverage để thực hành/System Design: `docs/learning/use-case-catalog.md`.
 
 ## Nạp context cần thiết
 
@@ -55,7 +55,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 5. Chẩn đoán bằng bằng chứng trước khi sửa. Không che lỗi bằng catch quá rộng, tắt validation hoặc làm yếu authorization.
 6. Sau khi sửa, chạy kiểm chứng phù hợp nhỏ nhất và báo rõ kiểm tra nào chưa chạy.
 7. Giữ nguyên nguyên tắc simulation-first. Không tích hợp media server, payment provider hay dịch vụ bên ngoài thật nếu người dùng chưa yêu cầu rõ.
-8. Ưu tiên learning-case roadmap hơn feature count. Chỉ một learning case chính được `ACTIVE`; không tự mở case kế tiếp khi case hiện tại chưa đóng hoặc paused có lý do. Khi tạo case mới, chọn scenario từ `docs/learning/use-case-catalog.md` và đặt tên bằng actor/tải/failure/outcome concrete; không dùng tên công nghệ hoặc chủ đề lý thuyết làm problem statement.
+8. Ưu tiên learning-case roadmap hơn feature count. Chỉ một learning case chính được `ACTIVE`; không tự mở case kế tiếp khi case hiện tại chưa đóng hoặc paused có lý do. Khi tạo case mới, chọn scenario priority cao nhất có prerequisite phù hợp từ `docs/learning/use-case-catalog.md` và đặt tên bằng actor/tải/failure/outcome concrete. Use-case priority không được làm thay đổi Stage order; không dùng tên công nghệ hoặc chủ đề lý thuyết làm problem statement.
 9. Knowledge tổ chức domain-first: core theory thuộc `docs/learning/topics/<domain>/theory/core`, internals/cross-layer analysis thuộc `topics/<domain>/theory/deep-dives`, question/rubric thuộc `topics/<domain>/question-bank`; project detail thuộc `cases`, số đo thuộc `experiments`, câu trả lời cá nhân sau evidence thuộc `interview-notes`.
 10. Link tới learning source of truth thay vì sao chép. Khi phát hiện misconception mới, cập nhật theory hoặc negative test liên quan.
 11. Mỗi learning session phải đọc và cập nhật cursor trong `docs/learning/index.md`. Không tạo hàng loạt folder/file học rỗng và không tăng checkpoint/maturity nếu thiếu evidence gate.

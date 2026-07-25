@@ -10,7 +10,7 @@ Tuân thủ `AGENTS.md`. Dùng roadmap để kiểm soát độ phủ kiến th�
 ## 1. Source of truth
 
 - Dùng `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` để biết phạm vi Senior Java/Spring Boot và case ưu tiên.
-- Dùng `docs/learning/use-case-catalog.md` để chọn và đặt tên bài toán Livestream concrete; roadmap vẫn sở hữu execution order.
+- Dùng `docs/learning/use-case-catalog.md` để chọn/đặt tên bài toán Livestream concrete theo use-case priority, difficulty và owner coverage; roadmap vẫn sở hữu execution order.
 - Dùng `docs/learning/index.md` làm learning entry point và session cursor.
 - Dùng learning case `ACTIVE` làm owner của problem, invariant, project code path và closure gate.
 - Dùng code, test, raw experiment result và runtime signal làm bằng chứng hành vi.
@@ -27,7 +27,7 @@ Chỉ một learning case chính được `ACTIVE`. Nếu roadmap, index và cas
 5. Kiểm tra evidence link thực sự tồn tại trước khi coi phase trước đã hoàn thành.
 6. Tiếp tục từ `Current checkpoint`; không tự suy đoán tiến độ từ một checklist hoặc bản nháp do AI tạo.
 
-Nếu chưa có active case, dùng roadmap chọn owner item có prerequisite phù hợp, sau đó chọn scenario concrete từ `docs/learning/use-case-catalog.md` và scope thành một failure slice. Chỉ kích hoạt sau khi ghi rõ objective, scope và next checkpoint. Không tự active nhiều case để “cover roadmap” nhanh hơn.
+Nếu chưa có active case, dùng roadmap chọn owner item có prerequisite phù hợp, sau đó chọn scenario concrete priority cao nhất có thể kiểm chứng từ `docs/learning/use-case-catalog.md` và scope thành một failure slice. `UC-P0..P3` không được dùng để nhảy Stage; difficulty `ARCHITECT/EXPERT` không được mở trước foundation liên quan. Chỉ kích hoạt sau khi ghi rõ objective, scope và next checkpoint. Không tự active nhiều case để “cover roadmap” nhanh hơn.
 
 ## 3. Chu trình knowledge-to-evidence
 

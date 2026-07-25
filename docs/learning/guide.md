@@ -14,7 +14,9 @@ AI Agent tự đọc [`docs/learning/index.md`](index.md) để biết đang h�
 
 Roadmap chỉ dùng để kiểm soát độ phủ dài hạn. Theory, question bank, case, experiment và code chỉ được mở khi checkpoint hiện tại cần chúng.
 
-Khi muốn xem các bài toán thực hành bằng ngôn ngữ nghiệp vụ, mở [Livestream Domain Use-case Catalog](use-case-catalog.md). Ví dụ: “100.000 người cùng xem một livestream”, “gift sale không double-spend”, “30.000 client reconnect sau gateway restart”. Roadmap quyết định **khi nào học**; use-case catalog nói rõ **bài toán nào sẽ được giải**.
+Khi muốn xem các bài toán thực hành bằng ngôn ngữ nghiệp vụ, mở [Livestream Domain Use-case Catalog](use-case-catalog.md). Ví dụ: “100.000 người cùng xem một livestream”, “gift spike không double-spend”, “30.000 client reconnect sau gateway restart”. Roadmap quyết định **khi nào học**; use-case catalog nói rõ **bài toán nào sẽ được giải**, priority thực tế/phỏng vấn và difficulty của scenario đó.
+
+Trong learning item hiện tại, ưu tiên `UC-P0` rồi `UC-P1` có prerequisite phù hợp. Không dùng use-case priority để bỏ qua Stage hoặc đổi session cursor; case `ARCHITECT/EXPERT` chỉ được mở khi foundation liên quan đã có evidence.
 
 Bạn không tự chọn một dòng bất kỳ trong backlog catalog. [Roadmap mục 5](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#5-roadmap-theo-stage) sở hữu Stage order; [mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12) chỉ xếp item bên trong từng Stage và mục 6.2 map mỗi item về một `Primary Stage`. Agent chọn item đầu tiên chưa đóng trong Stage hiện tại; `learning/index.md` chỉ giữ con trỏ của item đó.
 

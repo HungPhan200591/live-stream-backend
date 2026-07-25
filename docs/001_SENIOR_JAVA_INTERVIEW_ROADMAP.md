@@ -15,7 +15,7 @@ Mục tiêu của project không phải là hoàn thành nhiều endpoint. Mục
 3. Triển khai một hoặc nhiều solution và đo được kết quả.
 4. Bảo vệ trade-off trong phỏng vấn bằng code, query plan, metric và incident evidence.
 
-Domain livestream là bối cảnh nhất quán để nối các chủ đề Java Core, Spring Boot, transaction, concurrency, security, PostgreSQL, Redis, Kafka, microservice và solution architecture. Tên, scenario, invariant và output của các bài toán thực hành được chuẩn hóa trong [Livestream Domain Use-case Catalog](learning/use-case-catalog.md); không dùng tên công nghệ/lý thuyết thay cho problem statement.
+Domain livestream là bối cảnh nhất quán để nối các chủ đề Java Core, Spring Boot, transaction, concurrency, security, PostgreSQL, Redis, Kafka, microservice và solution architecture. Tên, scenario, invariant, use-case priority/difficulty và output của các bài toán thực hành được chuẩn hóa trong [Livestream Domain Use-case Catalog](learning/use-case-catalog.md); không dùng tên công nghệ/lý thuyết thay cho problem statement.
 
 ## 2. Nguyên tắc điều hướng
 
@@ -464,7 +464,7 @@ Mỗi capstone phải có assumption, Little's Law/queueing hoặc capacity math
 5. [`ANALYTICS-UC-01`](learning/use-case-catalog.md#analytics-uc-01): near-real-time analytics có replay/backfill nhưng không chặn transaction path.
 6. [`BAN-UC-01`](learning/use-case-catalog.md#ban-uc-01): ban user có hiệu lực qua token, session, cache, WebSocket, event và audit.
 7. Chọn PostgreSQL, Redis, search index, object storage hoặc columnar store cho workload của [`ANALYTICS-UC-01`](learning/use-case-catalog.md#analytics-uc-01) theo consistency, retention, recovery, operation và cost.
-8. [`API-UC-01`](learning/use-case-catalog.md#3-mười-use-case-supporting-để-implement-hoặc-chạy-lab): public API qua DNS/TLS/CDN/load balancer/gateway chịu bot/retry/DDoS-like traffic.
+8. [`API-UC-01`](learning/use-case-catalog.md#32-architect-và-expert-cases): public API qua DNS/TLS/CDN/load balancer/gateway chịu bot/retry/DDoS-like traffic.
 9. Chọn cloud managed service/Kubernetes/self-managed và IaC để vận hành [`LIVE-UC-01`](learning/use-case-catalog.md#live-uc-01) hoặc [`REGION-UC-01`](learning/use-case-catalog.md#region-uc-01), không thêm platform khi chưa có constraint.
 
 Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 phút.
@@ -533,7 +533,7 @@ Các quyết định khóa thứ tự:
 
 ### 6.2. Backlog catalog map theo Primary Stage
 
-> Bảng dưới là **learning-item catalog** để kiểm soát thứ tự, owner và evidence gate; không phải danh sách use case nghiệp vụ. Khi cần biết “sẽ giải bài toán Livestream nào”, đọc [Livestream Domain Use-case Catalog](learning/use-case-catalog.md). Khi item được active, chọn một scenario concrete trong catalog rồi scope thành learning case; không đặt tên case bằng thuật ngữ lý thuyết đơn thuần.
+> Bảng dưới là **learning-item catalog** để kiểm soát thứ tự, owner và evidence gate; không phải danh sách use case nghiệp vụ. Khi cần biết “sẽ giải bài toán Livestream nào”, đọc [Livestream Domain Use-case Catalog](learning/use-case-catalog.md). Catalog sở hữu use-case priority/difficulty và coverage map, nhưng `UC-P0..P3` không được dùng để nhảy Stage. Khi item được active, chọn scenario priority cao nhất có prerequisite phù hợp rồi scope thành learning case; không đặt tên case bằng thuật ngữ lý thuyết đơn thuần.
 
 | Primary Stage | Lane | ID | Scope hẹp / activation rule | Kind | Priority |
 | --- | --- | --- | --- | --- | --- |

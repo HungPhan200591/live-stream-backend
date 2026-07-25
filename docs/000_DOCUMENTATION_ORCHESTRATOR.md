@@ -72,7 +72,7 @@ flowchart TB
 | REST endpoint/quyền hiện tại? | [API Contract](contracts/api-contract.md) + code/test | OpenAPI và `.http` |
 | Kiến trúc đang chạy? | [System Context](architecture/system-context.md) + runtime config | ADR target |
 | Học gì tiếp theo? | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) | [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) |
-| Bài toán Livestream concrete nào dùng để thực hành? | [Livestream Use-case Catalog](learning/use-case-catalog.md) | Roadmap owner item và active learning case |
+| Bài toán Livestream concrete nào dùng để thực hành trước? | [Livestream Use-case Catalog](learning/use-case-catalog.md) — scenario, `UC-P0..P3`, difficulty và coverage | Roadmap owner item và active learning case |
 | Agent được làm gì? | `AGENTS.md` | Skill/workflow đã trigger |
 | Vì sao chọn solution? | ADR + experiment evidence | Learning case notes |
 
@@ -117,7 +117,7 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
 | Core/deep-dive knowledge | `learning/topics/<domain>/theory/...`; case/question bank chỉ link, không duplicate |
 | Interview question/rubric | `learning/topics/<domain>/question-bank/<slice>.md` + theory/evidence links |
-| Domain scenario/use-case catalog | `learning/use-case-catalog.md`; chỉ thay đổi scenario/mapping, không ghi active status |
+| Domain scenario/use-case catalog | `learning/use-case-catalog.md`; quản lý scenario, use-case priority/difficulty và owner coverage, không ghi active status/execution order |
 | Learning session progress | `learning/index.md` cursor + active artifact/case |
 | Learning case complete | Case file, roadmap status/maturity |
 | Experiment/interview extraction | `learning/experiments/...` raw evidence; `learning/interview-notes/...` teach-back cá nhân |
