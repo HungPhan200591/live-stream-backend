@@ -1,0 +1,4 @@
+interface:
+  display_name: "Điều phối học Senior Java"
+  short_description: "Điều phối learning case Senior Java có evidence"
+  default_prompt: "Dùng $run-senior-java-learning để tiếp tục learning case ACTIVE từ checkpoint gần nhất."

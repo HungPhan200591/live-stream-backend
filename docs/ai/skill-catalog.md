@@ -12,10 +12,10 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 
 | Scope | Vị trí | Số lượng | Ý nghĩa |
 | --- | --- | ---: | --- |
-| Project | `.agents/skills/` | 5 | Workflow riêng của `live-stream-backend` |
+| Project | `.agents/skills/` | 6 | Workflow riêng của `live-stream-backend` |
 | User global | `$CODEX_HOME/skills/` | 2 | Skill dùng được giữa nhiều repository |
 | Codex system | `$CODEX_HOME/skills/.system/` | 6 | Skill do môi trường Codex cung cấp |
-| **Tổng cài đặt** |  | **13** | 12 skill được expose trong session hiện tại; `review-agent` chỉ được cài trên filesystem |
+| **Tổng cài đặt** |  | **14** | 13 skill được expose trong session hiện tại; `review-agent` chỉ được cài trên filesystem |
 
 ## 2. Project skills
 
@@ -26,6 +26,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | [`review-livestream-change`](../../.agents/skills/review-livestream-change/SKILL.md) | Review defect-first cho diff/commit/PR, bao gồm security, transaction/concurrency, query/cache/event reliability, test và docs drift. | Code review, risk assessment, regression hoặc pre-merge validation. | Người dùng yêu cầu trực tiếp triển khai feature thay vì review. |
 | [`refine-engineering-prompt`](../../.agents/skills/refine-engineering-prompt/SKILL.md) | Chuyển yêu cầu kỹ thuật thô thành prompt có scope, context, constraints, Acceptance Criteria và verification. | Cần làm rõ, viết lại hoặc cấu trúc yêu cầu trước khi thực thi. | Yêu cầu đã đủ rõ và người dùng muốn triển khai ngay. |
 | [`manage-local-port`](../../.agents/skills/manage-local-port/SKILL.md) | Tìm process sở hữu TCP port trên Windows và giải phóng port an toàn. | Port local bị chiếm, cần xác định hoặc dừng đúng process. | Debug network/application không liên quan ownership của local port. |
+| [`run-senior-java-learning`](../../.agents/skills/run-senior-java-learning/SKILL.md) | Điều phối knowledge-to-evidence từ core theory/deep-dive/question bank tới case, implementation, experiment, review và teach-back bằng session checkpoint. | Bắt đầu/tiếp tục learning topic hoặc case, chọn học gì tiếp theo, luyện Senior/Architect/Expert question dựa trên project evidence. | Bug fix, feature implementation hoặc review độc lập không có learning objective. |
 
 ## 3. User-global skills
 
@@ -54,6 +55,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Review change | `review-livestream-change` |
 | Làm rõ prompt kỹ thuật | `refine-engineering-prompt` |
 | Tìm process chiếm port | `manage-local-port` |
+| Bắt đầu/tiếp tục learning case Senior Java | `run-senior-java-learning` |
 | Hiểu codebase/architecture/file relationships | `graphify` |
 | Tạo hoặc sửa Mermaid | `mermaid-styling` |
 | Tạo hoặc sửa skill | `skill-creator` |

@@ -61,6 +61,8 @@ Quy tắc quyết định:
 | REST contract và authorization hiện tại? | `docs/contracts/api-contract.md` và `docs/security/authorization-flow.md` | `.http`, OpenAPI, tests |
 | Code đang làm gì? | source code + automated tests | runtime logs |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
+| Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
+| Kiến thức dùng lại nằm ở đâu? | `docs/learning/theory/*` | question bank và learning cases link tới theory |
 | Capability nào còn thiếu? | `docs/implementation/current-implementation-map.md` | Senior case backlog |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
 | Performance claim dựa vào đâu? | `docs/learning/experiments/*` | raw result artifact |
@@ -80,6 +82,11 @@ docs/
 │   ├── module-boundaries.md    # khi bắt đầu modularization
 │   └── capacity-model.md       # khi có workload/assumption
 ├── learning/
+│   ├── index.md                # entry point và session cursor
+│   ├── theory/
+│   │   ├── core/               # mental model/mechanism/invariant dùng lại
+│   │   └── deep-dives/         # internals/failure/scale/cross-layer
+│   ├── question-bank/          # level nằm trên từng câu hỏi
 │   ├── cases/                  # active learning case
 │   ├── experiments/            # reproducible measurement
 │   └── interview-notes/        # debrief sau evidence
@@ -94,8 +101,12 @@ docs/
 
 ### Quy tắc placement
 
+- `learning/index.md`: active case, checkpoint, next action, required reading, write target và latest evidence.
+- `learning/theory/core`: mental model, mechanism, invariant và boundary dùng lại cho nhiều case.
+- `learning/theory/deep-dives`: internals, failure mode, edge case, scale/security và cross-layer interaction.
+- `learning/question-bank`: question, level, interviewer intent, answer outline, follow-up và red flags; không chứa full essay.
 - `architecture/adr`: một quyết định có alternatives và consequences.
-- `learning/cases`: hồ sơ từ theory đến interview debrief của một case.
+- `learning/cases`: problem, invariant, current code path, reproducer, design và evidence link riêng của project; không sao chép textbook.
 - `learning/experiments`: procedure, dataset, environment, raw result và conclusion.
 - `interview-notes`: câu trả lời cô đọng được rút ra sau khi case đã có evidence.
 - `engineering`: policy/design xuyên nhiều module, không phải implementation checklist.
@@ -103,6 +114,23 @@ docs/
 - `archive`: docs bị thay thế nhưng còn giá trị lịch sử; phải có banner chỉ nguồn mới.
 
 ## 5. Workflow chuẩn với Codex
+
+### Workflow 0 - Knowledge-to-evidence end-to-end
+
+Dùng `$run-senior-java-learning` làm skill điều phối khi request có mục tiêu học/phỏng vấn. Skill khôi phục từ cursor trong `learning/index.md` và đi theo chu trình:
+
+1. Core theory: tạo/đọc source canonical về mental model, mechanism, invariant và boundary; người học tự viết lại phần self-check.
+2. Deep-dive: internals, failure mode, edge case, scale, security và cross-layer interaction.
+3. Question bank: tạo ladder `FOUNDATION -> SENIOR -> ARCHITECT -> EXPERT`; trả lời foundation/senior trước.
+4. Learning case: chọn failure thật trong project và khóa scope.
+5. Reproducer: ghi actual failure trước khi sửa.
+6. Design/trade-off: so sánh alternatives và decision.
+7. Implementation: vertical slice nhỏ nhất, test và docs sync.
+8. Experiment/evidence: fault injection, raw results và interpretation.
+9. Review: correctness, security, failure recovery và residual risk.
+10. Interview note/teach-back: trả lời lại architect/expert bằng evidence, bản 2 phút và 15 phút.
+
+Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint gần nhất. Theory là source of truth dùng lại; case chỉ kết nối knowledge với project. Question bank được revisit sau evidence, không dùng answer outline ban đầu thay cho trải nghiệm thực tế.
 
 ### Workflow A - Chọn learning case
 
@@ -201,8 +229,9 @@ Không tạo nhiều `AGENTS.md` ngay từ đầu vì dễ tạo rule shadowing 
 
 Inventory, mô tả và trigger canonical của project/global/system skills nằm tại [Codex Skill Catalog](ai/skill-catalog.md). Không duy trì thêm một bảng inventory cạnh tranh trong file này.
 
-Nâng cấp dự kiến của project skills:
+Routing hiện tại và nâng cấp dự kiến của project skills:
 
+- `run-senior-java-learning`: skill điều phối umbrella cho learning loop, artifact ownership, checkpoint và teach-back; không thay skill implementation/review chuyên biệt.
 - `implement-livestream-feature`: thêm route tới active learning case và evidence gate.
 - `diagnose-livestream-backend`: thêm incident timeline, metric/trace và failure-injection route.
 - `review-livestream-change`: thêm maturity/learning artifact check, Kafka và replica/partition concerns.
@@ -215,13 +244,7 @@ Mỗi skill phải giữ `SKILL.md` ngắn, trigger nằm trong frontmatter desc
 
 Không tạo một skill cho mỗi công nghệ. Chỉ tạo khi workflow đã lặp lại ít nhất hai lần hoặc thao tác có rủi ro/determinism cao.
 
-### P0 - `design-senior-learning-case`
-
-**Trigger:** người dùng muốn bóc tách một chủ đề/case phỏng vấn thành bài tập thực thi.
-
-**Output:** case file từ template, prerequisite, invariant, reproducer, alternatives, evidence gate và interview questions.
-
-**Resources:** learning-case template, maturity model, case catalog.
+`design-senior-learning-case` không còn là skill P0 riêng: responsibility chọn/thiết kế case đã được đặt trong `$run-senior-java-learning` để một skill theo được toàn bộ learning loop và giữ một session cursor thống nhất.
 
 ### P1 - `test-transaction-concurrency`
 
@@ -304,6 +327,7 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 ### Iteration B - Case SEC-01/TEST-01 (`IN PROGRESS`)
 
 - [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đã được tạo và đánh dấu `ACTIVE`; chưa có implementation/evidence.
+- Đã tạo learning entry point, reusable templates và `$run-senior-java-learning`; SEC-01 bắt đầu ở checkpoint `THEORY_CORE` và chưa được phép suy diễn là đã implement.
 - Tạo TEST-01 chỉ sau khi SEC-01 đã có reproducer/verification boundary rõ hoặc khi TEST-01 trở thành prerequisite thực tế.
 - Tạo `docs/architecture/adr/` khi có quyết định thật.
 - Tạo testing strategy từ test harness đã chạy, không viết trước implementation.
@@ -329,4 +353,5 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 - Agent luôn báo verification chưa chạy và docs drift đã thấy.
 - Roadmap status chỉ tăng khi evidence gate có link.
 - Learning note có phần teach-back của người học, không chỉ là output do AI viết.
+- Session mới khôi phục được active case, checkpoint, required reading và write target từ `learning/index.md` mà không cần lịch sử chat.
 - Rules đủ ngắn để luôn hữu ích; detailed knowledge được nạp theo concern.

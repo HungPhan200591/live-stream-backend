@@ -42,25 +42,23 @@
 
 - `<Non-goal>`
 
-## 3. Theory notes bằng lời của tôi
+## 3. Knowledge links và case-specific interpretation
 
-### Mental model
+### Reusable knowledge
 
-`<Không copy documentation. Tự diễn giải cơ chế và boundary.>`
+- Core theory:
+- Deep-dive:
+- Question bank:
 
-### Thuật ngữ
+Không sao chép theory đầy đủ vào case. Nếu knowledge cần dùng lại cho case khác, cập nhật theory source of truth rồi link về đây.
 
-| Thuật ngữ | Định nghĩa ngắn | Dễ nhầm với |
-| --- | --- | --- |
-| | | |
+### Áp dụng vào case này
 
-### Classic cases
+`<Theory/invariant nào giải thích current project failure và boundary nào chỉ riêng case này>`
 
-- `<Lost update, duplicate delivery, stale read...>`
+### Misconception phát hiện từ case
 
-### Misconceptions cần tránh
-
-- `<Exactly-once không đồng nghĩa...>`
+- `<Link theory update hoặc negative test; không tạo bản giải thích cạnh tranh>`
 
 ## 4. Current baseline
 
@@ -207,9 +205,13 @@ Không bắt buộc mọi hàng cho mọi case. Ghi `N/A` kèm lý do thay vì b
 
 ## 13. Interview debrief
 
+### Canonical interview note
+
+`<Link docs/learning/interview-notes/...; chỉ tạo sau evidence>`
+
 ### Câu trả lời 2 phút
 
-`<Problem -> invariant -> decision -> evidence -> trade-off>`
+`<Tóm tắt Problem -> invariant -> decision -> evidence -> trade-off; full personal answer nằm trong interview note>`
 
 ### Deep dive 15 phút
 

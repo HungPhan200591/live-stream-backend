@@ -18,6 +18,7 @@
 - Hạ tầng cục bộ: `docker-compose.yml` gồm PostgreSQL, Redis và RabbitMQ.
 - MCP PostgreSQL cho Codex: `.codex/config.toml`; hướng dẫn sử dụng: `docs/tools/codex-postgres-mcp.md`.
 - Điểm vào và routing tài liệu cho Human/AI: `docs/000_DOCUMENTATION_ORCHESTRATOR.md`.
+- Điểm vào hệ học/phỏng vấn và checkpoint phiên hiện tại: `docs/learning/index.md`.
 
 ## Nạp context cần thiết
 
@@ -26,6 +27,7 @@ Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với côn
 - Nghiệp vụ: `docs/contracts/business-flows.md`.
 - Kiến trúc và capability hiện tại: `docs/architecture/system-context.md`.
 - Phạm vi triển khai hiện tại: `docs/implementation/current-implementation-map.md`; thứ tự học và case active: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`.
+- Khi bắt đầu hoặc tiếp tục học: `docs/learning/index.md`, active case và đúng theory/deep-dive/question-bank được link từ checkpoint.
 - Hợp đồng REST và quyền: `docs/contracts/api-contract.md`.
 - Phân quyền REST/WebSocket: `docs/security/authorization-flow.md`.
 - Quy ước mã nguồn và ví dụ: `docs/engineering/coding-standards.md`.
@@ -43,6 +45,10 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 5. Chẩn đoán bằng bằng chứng trước khi sửa. Không che lỗi bằng catch quá rộng, tắt validation hoặc làm yếu authorization.
 6. Sau khi sửa, chạy kiểm chứng phù hợp nhỏ nhất và báo rõ kiểm tra nào chưa chạy.
 7. Giữ nguyên nguyên tắc simulation-first. Không tích hợp media server, payment provider hay dịch vụ bên ngoài thật nếu người dùng chưa yêu cầu rõ.
+8. Ưu tiên learning-case roadmap hơn feature count. Chỉ một learning case chính được `ACTIVE`; không tự mở case kế tiếp khi case hiện tại chưa đóng hoặc paused có lý do.
+9. Kiến thức tái sử dụng thuộc `docs/learning/theory`; internals/cross-layer analysis thuộc `theory/deep-dives`; project detail thuộc `cases`; số đo thuộc `experiments`; question/rubric thuộc `question-bank`; câu trả lời cá nhân sau evidence thuộc `interview-notes`.
+10. Link tới learning source of truth thay vì sao chép. Khi phát hiện misconception mới, cập nhật theory hoặc negative test liên quan.
+11. Mỗi learning session phải đọc và cập nhật cursor trong `docs/learning/index.md`. Không tạo hàng loạt folder/file học rỗng và không tăng checkpoint/maturity nếu thiếu evidence gate.
 
 ## Nguyên tắc kiến trúc bắt buộc
 
@@ -94,4 +100,5 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Dùng `$review-livestream-change` để review diff, commit hoặc pull request.
 - Dùng `$refine-engineering-prompt` khi cần làm rõ yêu cầu kỹ thuật thô trước khi triển khai.
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
+- Dùng `$run-senior-java-learning` để bắt đầu hoặc tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back từ checkpoint gần nhất.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, bắt buộc cập nhật `docs/ai/skill-catalog.md` trong cùng change. Skill change chưa hoàn thành nếu catalog chưa đồng bộ.

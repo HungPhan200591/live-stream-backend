@@ -37,6 +37,7 @@ flowchart TB
 | Intent | Đọc bắt buộc | Chỉ đọc thêm khi liên quan | Output/write-back |
 | --- | --- | --- | --- |
 | Chọn case học tiếp | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) | [Implementation Map](implementation/current-implementation-map.md) | Learning case từ [template](templates/learning-case-template.md) |
+| Bắt đầu/tiếp tục phiên học Senior | [Learning System](learning/index.md), active case và checkpoint hiện tại | Theory/deep-dive, question bank, concern docs, code/test được checkpoint link | Knowledge artifact đúng owner, evidence và session cursor |
 | Implement feature/case | `AGENTS.md`, active case, [Coding Standards](engineering/coding-standards.md) | Business/API/security/Redis/webhook theo concern | Code, tests, OpenAPI, `.http`, case evidence |
 | Hiểu business | [Business Flows](contracts/business-flows.md) | [API Contract](contracts/api-contract.md) | Làm rõ invariant hoặc contract drift |
 | Hiểu code đang có gì | [Implementation Map](implementation/current-implementation-map.md), [System Context](architecture/system-context.md) | Source code, tests, runtime evidence | Cập nhật map khi capability thay đổi |
@@ -96,11 +97,11 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 
 ### Chuẩn bị một buổi học
 
-1. Chọn một case trong roadmap.
-2. Tạo learning case từ template.
-3. Đọc current code path và đúng concern docs.
-4. Viết theory/invariant bằng lời của mình.
-5. Reproduce failure, implement, đo, review và teach-back.
+1. Mở [Learning System](learning/index.md) và đọc `Current session cursor`.
+2. Đọc active case, đúng template và các artifact được checkpoint link.
+3. Tiếp tục bằng `$run-senior-java-learning`; không tự nhảy qua evidence gate.
+4. Chỉ đọc current code path/concern docs khi checkpoint đã tới case hoặc reproducer.
+5. Kết thúc bằng cách ghi artifact đúng owner và cập nhật cursor cho session sau.
 
 ## 5. Write-back routing
 
@@ -112,7 +113,11 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Redis key/TTL/serializer | `engineering/redis-guide.md`, tests, compatibility plan |
 | Webhook contract | `engineering/rtmp-webhook-guide.md`, API contract, tests |
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
+| Core/deep-dive knowledge | `learning/theory/...`; case/question bank chỉ link, không duplicate |
+| Interview question/rubric | `learning/question-bank/<domain>.md` + theory/evidence links |
+| Learning session progress | `learning/index.md` cursor + active artifact/case |
 | Learning case complete | Case file, roadmap status/maturity |
+| Experiment/interview extraction | `learning/experiments/...` raw evidence; `learning/interview-notes/...` teach-back cá nhân |
 | Agent rule/workflow/skill | `AGENTS.md`, `003_AI_AGENT_ENGINEERING_SYSTEM.md`, `ai/skill-catalog.md`, skill validation |
 | Tài liệu bị thay thế | Chuyển `archive/`, thêm banner và cập nhật `archive/index.md` |
 
@@ -140,6 +145,7 @@ docs/
 ├── implementation/
 │   └── current-implementation-map.md
 ├── learning/
+│   ├── index.md
 │   └── cases/
 │       └── sec-01-access-vs-refresh-token.md
 ├── tools/
@@ -147,12 +153,16 @@ docs/
 │   ├── data-initialization.md
 │   └── p6spy-sql-logging.md
 ├── templates/
-│   └── learning-case-template.md
+│   ├── experiment-template.md
+│   ├── interview-note-template.md
+│   ├── learning-case-template.md
+│   ├── question-bank-template.md
+│   └── theory-note-template.md
 └── archive/
     └── index.md
 ```
 
-Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật. `learning/` đã được khởi tạo bởi active case SEC-01; chỉ thêm `experiments/` hoặc `interview-notes/` khi có artifact tương ứng.
+Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật. Trong `learning/`, các nhánh `theory/core/<domain>`, `theory/deep-dives/<domain>`, `question-bank`, `experiments` và `interview-notes` cũng chỉ được tạo khi có artifact đầu tiên; không scaffold cây rỗng từ coverage map.
 
 ## 7. Naming convention
 
@@ -192,4 +202,5 @@ Maturity M0–M4 được định nghĩa trong [Current Gaps](002_CURRENT_STATE_
 - README và `AGENTS.md` phải trỏ tới file orchestrator này.
 - Khi rename/move doc, cập nhật repository rules, project skills và link checker cùng lượt.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, cập nhật `ai/skill-catalog.md` trong cùng change.
+- `learning/index.md` phải trỏ đúng một active case và checkpoint không được đi trước evidence thực tế.
 - Graphify phải được update sau một migration lớn trước khi dùng lại như source navigation.
