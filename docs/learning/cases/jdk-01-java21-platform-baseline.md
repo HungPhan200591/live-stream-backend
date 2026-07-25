@@ -11,7 +11,7 @@
 
 Case này đưa project từ Java 17 declared baseline sang **Java 21 LTS** có toolchain/CI evidence, sau đó đánh giá virtual threads bằng một lab có workload và JFR. Nó không nâng Spring Boot major version, không nâng trực tiếp lên JDK 25, không refactor mọi executor/thread pool và không bật virtual threads trên runtime chính chỉ để dùng công nghệ mới.
 
-JDK 25 là latest LTS tại thời điểm roadmap này được cập nhật, nhưng Spring Boot 3.4 hiện chỉ công bố compatibility tới Java 24. JDK 25 thuộc `JDK-02` với compatibility gate riêng; không được gộp vào JDK-01.
+JDK 25 là latest LTS tại thời điểm roadmap này được cập nhật. Spring Boot 3.4 chỉ công bố compatibility tới Java 24, còn Spring Boot 3.5 công bố compatibility tới Java 25. JDK 25 + target Spring Boot/BOM thuộc `JDK-02` với compatibility decision gate riêng; không gộp framework/JDK upgrade đó vào JDK-01 trước khi có TEST-01 safety net.
 
 ## 1. Interview objective
 
@@ -113,7 +113,7 @@ Project build, test và chạy bằng một Java 21 baseline được khai báo,
 | --- | --- | --- | --- | --- | --- |
 | A. Giữ Java 17 | Không giải quyết toolchain drift/new runtime baseline | Thấp lúc đầu | Không có virtual threads | Support/licensing/migration horizon kém hơn | Chỉ khi dependency/platform chưa hỗ trợ Java 21 |
 | B. Nâng Java 21, virtual threads deferred/lab | Compatibility nhỏ nhất với Spring Boot 3.4 | Vừa | Có cơ sở đo trước khi bật | Toolchain rõ, rollback đơn giản | **Chọn cho project hiện tại** |
-| C. Nâng thẳng JDK 25 + Spring Boot upgrade | Có thể tốt dài hạn nhưng thêm framework risk | Cao | Chưa có evidence cho workload | Cần compatibility/regression plan riêng | Chỉ sau `JDK-02` gate |
+| C. Nâng thẳng JDK 25 + supported Spring Boot line | Có thể tốt dài hạn nhưng trộn JDK/framework risk trước safety net | Cao | Chưa có evidence cho workload | Cần compatibility/regression/rollback plan riêng | Chỉ sau `JDK-02` gate |
 
 ### Chọn
 
@@ -121,7 +121,7 @@ Chọn Java 21 làm runtime/platform baseline đầu tiên. Sau build/test/start
 
 ### Không chọn
 
-Không giữ Java 17 chỉ vì code hiện còn compile. Không dùng JDK 25 cho application runtime trong JDK-01 vì Spring Boot 3.4 chưa công bố compatibility tới Java 25; quyết định này được review lại tại JDK-02 khi target Spring Boot đã xác định.
+Không giữ Java 17 chỉ vì code hiện còn compile. Không dùng JDK 25 trong JDK-01 vì current Spring Boot 3.4 line chưa công bố compatibility và việc đồng thời đổi framework line sẽ làm mờ nguyên nhân regression trước khi TEST-01 tồn tại. JDK-02 phải so sánh ít nhất target Spring Boot 3.5/4.x và có thể kết thúc bằng migrate-now hoặc time-boxed defer.
 
 ### ADR
 
@@ -147,7 +147,7 @@ Không giữ Java 17 chỉ vì code hiện còn compile. Không dùng JDK 25 cho
 - Migration: không có schema migration trong JDK-01.
 - API contract: không đổi.
 - Cache/event: không đổi.
-- Compatibility: Java 21 is target; JDK 25 requires a separate framework/dependency compatibility matrix.
+- Compatibility: Java 21 là target của case này; JDK 25 yêu cầu framework/BOM/dependency compatibility matrix riêng dù một Spring Boot line mới hơn đã công bố support.
 
 ### Security
 
@@ -223,7 +223,7 @@ Không giữ Java 17 chỉ vì code hiện còn compile. Không dùng JDK 25 cho
 | High | POM Java 17 nhưng snapshot từng chạy test bằng Java 22.0.2 | Open; mục tiêu chính JDK-01 |
 | High | Chỉ có một context smoke test, nên Java 21 pass không chứng minh behavior đủ rộng | Chấp nhận M1; TEST-01 là case kế tiếp |
 | Medium | Virtual threads chưa có workload/JFR evidence | Deferred cho tới lab |
-| Medium | JDK 25 latest LTS chưa tương thích được Spring Boot 3.4 công bố | Theo dõi JDK-02, không gộp |
+| Medium | JDK 25 cần đổi khỏi current Spring Boot 3.4 line hoặc target framework khác đã công bố support | Chốt tại JDK-02 sau TEST-01; không gộp |
 
 ## 13. Interview debrief
 
@@ -233,7 +233,7 @@ Chỉ tạo `docs/learning/interview-notes/jdk-01-java21-platform-baseline.md` s
 
 ### Câu trả lời 2 phút
 
-Tôi không nâng JDK chỉ để dùng syntax mới. Project khai báo Java 17 nhưng runtime evidence từng khác version, nên tôi chọn Java 21 LTS làm baseline có toolchain/CI evidence trước. Java 21 cho virtual threads, nhưng tôi giữ chúng là một experiment: chúng giúp workload blocking I/O scale bằng thread-per-request, không làm CPU hay connection pool nhanh hơn. Tôi chỉ bật sau benchmark và JFR kiểm tra pinning; nếu Spring Boot scheduler/lifecycle hoặc downstream saturation tạo rủi ro, tôi defer. JDK 25 là LTS mới hơn nhưng project hiện dùng Spring Boot 3.4, nên nó cần compatibility/upgrade case riêng.
+Tôi không nâng JDK chỉ để dùng syntax mới. Project khai báo Java 17 nhưng runtime evidence từng khác version, nên tôi chọn Java 21 LTS làm baseline có toolchain/CI evidence trước. Java 21 cho virtual threads, nhưng tôi giữ chúng là một experiment: chúng giúp workload blocking I/O scale bằng thread-per-request, không làm CPU hay connection pool nhanh hơn. Tôi chỉ bật sau benchmark và JFR kiểm tra pinning; nếu scheduler/lifecycle hoặc downstream saturation tạo rủi ro, tôi defer. JDK 25 là LTS mới hơn và Spring Boot 3.5 đã công bố support, nhưng current app còn ở Boot 3.4 và gần như không có safety net, nên combined platform upgrade phải là JDK-02 riêng với compatibility/regression/rollback decision.
 
 ### Deep dive 15 phút
 
@@ -257,7 +257,7 @@ Tôi không nâng JDK chỉ để dùng syntax mới. Project khai báo Java 17 
 2. **Q:** Java 21 làm JDBC connection pool lớn hơn không?<br>
    **A:** Không; database connection vẫn là resource hữu hạn và cần sizing riêng.
 3. **Q:** Vì sao JDK 25 chưa phải bước đầu?<br>
-   **A:** Vì framework version hiện tại chưa công bố compatibility tới Java 25; upgrade phải có matrix và regression plan riêng.
+   **A:** Vì framework line hiện tại chưa công bố compatibility và project chưa có safety net; Boot 3.5 có support nhưng đổi JDK + framework cùng lúc phải có matrix, regression và rollback plan riêng.
 
 ## 14. Closure gate
 
@@ -276,4 +276,4 @@ Tôi không nâng JDK chỉ để dùng syntax mới. Project khai báo Java 17 
 - Test: [`LiveStreamBackendApplicationTests`](../../../src/test/java/com/stream/demo/LiveStreamBackendApplicationTests.java)
 - Scheduler: [`SessionCleanupScheduler`](../../../src/main/java/com/stream/demo/scheduler/SessionCleanupScheduler.java)
 - Current evidence: [Current Gaps](../../002_CURRENT_STATE_AND_GAP_ANALYSIS.md), [Implementation Map](../../implementation/current-implementation-map.md)
-- Official references: [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html), [JEP 444 - Virtual Threads](https://openjdk.org/jeps/444), [Spring Boot 3.4 System Requirements](https://docs.spring.io/spring-boot/3.4/system-requirements.html), [Spring Boot virtual threads](https://docs.spring.io/spring-boot/3.4/reference/features/spring-application.html#features.spring-application.virtual-threads)
+- Official references: [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html), [JEP 444 - Virtual Threads](https://openjdk.org/jeps/444), [Spring Boot 3.4 System Requirements](https://docs.spring.io/spring-boot/3.4/system-requirements.html), [Spring Boot 3.5 System Requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html), [Spring Boot virtual threads](https://docs.spring.io/spring-boot/3.4/reference/features/spring-application.html#features.spring-application.virtual-threads)

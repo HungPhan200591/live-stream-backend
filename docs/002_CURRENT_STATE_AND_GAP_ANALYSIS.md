@@ -7,13 +7,13 @@
 
 Project có domain phù hợp để luyện phỏng vấn Senior Backend, nhưng implementation hiện ở mức **happy-path demo**. Giá trị lớn nhất của code hiện tại là tạo ra các điểm xuất phát thật cho bài toán security, transaction, concurrency, cache consistency, messaging và database performance.
 
-Legacy Phase 5-12 không còn là active backlog. Trước hết cần ổn định security và test harness, sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). [Implementation Map](implementation/current-implementation-map.md) chỉ ghi nhận code coverage hiện tại; phase plan cũ đã chuyển vào archive.
+Legacy Phase 5-12 không còn là active backlog. Trước hết cần đóng platform/toolchain drift, tạo test/schema safety net và xử lý các security gap hiện hữu; sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). [Implementation Map](implementation/current-implementation-map.md) chỉ ghi nhận code coverage hiện tại; phase plan cũ đã chuyển vào archive.
 
 ## 1.1. Khoảng cách cần thu hẹp
 
 ```mermaid
 flowchart TB
-    N["Current demo<br/>happy path"] --> S["Stage 0<br/>security and test"]
+    N["Current demo<br/>happy path"] --> S["Stage 0<br/>platform, schema,<br/>test and security"]
     S --> C["Correctness<br/>transaction and concurrency"]
     C --> R["Resilience<br/>events and failures"]
     R --> O["Operability<br/>metrics and runbooks"]
@@ -55,7 +55,7 @@ Vì test hiện dùng profile mặc định, PostgreSQL local và `ddl-auto=upda
 | WebSocket | dependency; chưa có broker config, handler hoặc authorization flow chạy được |
 | Kafka | chưa có dependency, topology, producer, consumer hoặc contract |
 | Observability | log và P6Spy; chưa có Actuator, metrics, tracing, dashboard hoặc alert |
-| AI agent | `AGENTS.md`, `PLANS.md` và 5 project skills đã có nền tảng tốt |
+| AI agent | `AGENTS.md`, `PLANS.md` và 6 project skills đã có nền tảng tốt |
 
 ## 4. Những gì nên giữ và tái sử dụng
 
@@ -73,6 +73,7 @@ Vì test hiện dùng profile mặc định, PostgreSQL local và `ddl-auto=upda
 
 | Vấn đề | Bằng chứng hiện tại | Learning case mở ra |
 | --- | --- | --- |
+| Declared/runtime JDK và framework lifecycle bị drift | POM khai báo Java 17, test snapshot từng chạy Java 22.0.2, chưa có Toolchains/CI lock; Spring Boot đang ở 3.4.0 | Java release policy, `--release`/toolchain/runtime boundary, Java 21 baseline, JDK 25 + supported Spring Boot decision |
 | Access/refresh token chưa phân biệt loại | Cùng key, cùng `validateToken`; access token filter không kiểm tra claim loại token | JWT claims, token lifecycle, key rotation, negative security test |
 | Auth matcher quá rộng | `/api/auth/**` đang `permitAll`, bao gồm cả endpoint cần đăng nhập | Filter chain, URL rule và method security |
 | Logout-all không invalid session cache | DB bulk update nhưng không xóa cache; cache-hit path không recheck DB status | Source of truth, cache invalidation, security-sensitive cache |
@@ -136,10 +137,11 @@ Archive manifest và replacement map nằm tại [Documentation Archive](archive
 
 Chỉ bắt đầu case Wallet/Kafka/microservice sau khi Stage 0 của roadmap đạt các điều kiện:
 
-1. P0 security có regression test.
-2. Flyway thay `ddl-auto=update` trong runtime kiểm soát.
-3. Unit/integration test chạy tái lập bằng profile test và Testcontainers.
-4. CI chạy compile + test trên JDK đã khóa.
-5. Có learning-case template, ADR đầu tiên và nơi lưu kết quả experiment.
+1. Java 21 là declared/toolchain/CI/runtime baseline có compile/test/startup evidence; JDK 25 + target Spring Boot line có `MIGRATE_NOW` hoặc `TIME_BOXED_DEFERRED` decision rõ.
+2. Unit/integration test chạy tái lập bằng profile test và Testcontainers.
+3. Flyway thay `ddl-auto=update` trong runtime kiểm soát và bootstrap được database rỗng.
+4. P0 security có regression test.
+5. CI chạy compile + test trên JDK đã khóa.
+6. Có learning-case template, ADR đầu tiên và nơi lưu kết quả experiment.
 
 Snapshot này cần được cập nhật khi hoàn thành một stage, không cập nhật sau từng commit nhỏ.

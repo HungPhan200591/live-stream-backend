@@ -16,7 +16,7 @@ Tuân thủ `AGENTS.md`. Phân biệt bằng chứng đã xác nhận với gi�
 
 ## 2. Lần theo từng subsystem
 
-- Build/startup: Java 17, Maven dependency/plugin, configuration binding, Spring context và hạ tầng cần thiết.
+- Build/startup: declared/target/runtime JDK lấy từ POM, `AGENTS.md` và learning cursor; kiểm tra Maven dependency/plugin, configuration binding, Spring context và hạ tầng cần thiết.
 - HTTP/security: request mapping, validation, `SecurityConfig`, JWT filter, principal shape, `@PreAuthorize` và exception mapping.
 - Database: transaction boundary, query semantics, explicit foreign ID, uniqueness, locking và P6Spy SQL.
 - Redis: connectivity, serializer/template, key version, TTL, cache miss/fallback và invalidation.

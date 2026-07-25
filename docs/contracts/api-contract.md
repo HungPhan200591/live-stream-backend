@@ -24,9 +24,9 @@ Tài liệu này chỉ liệt kê endpoint đang tồn tại trong code. Endpoin
 | POST | `/api/auth/register` | Public | Public | Tạo user, role mặc định và session |
 | POST | `/api/auth/login` | Public | Public | Trả access token, refresh token và session |
 | POST | `/api/auth/refresh` | Public với refresh token hợp lệ | Public | Session-backed refresh |
-| GET | `/api/auth/me` | Authenticated | `CURRENT GAP`: URL matcher public | Phải được khóa trong SEC-01 |
-| POST | `/api/auth/logout` | Authenticated hoặc refresh-token proof rõ ràng | `CURRENT GAP`: URL matcher public | Revoke một session |
-| POST | `/api/auth/logout-all` | Authenticated | `CURRENT GAP`: URL matcher public | Có nguy cơ principal null; cache chưa invalidate toàn bộ |
+| GET | `/api/auth/me` | Authenticated | `CURRENT GAP`: URL matcher public | Phải được khóa trong SEC-06 |
+| POST | `/api/auth/logout` | Authenticated hoặc refresh-token proof rõ ràng | `CURRENT GAP`: URL matcher public | SEC-06 khóa matcher; revoke một session |
+| POST | `/api/auth/logout-all` | Authenticated | `CURRENT GAP`: URL matcher public | SEC-06 khóa matcher; SEC-02 xử lý cache invalidation |
 
 ### User
 
@@ -44,7 +44,7 @@ Tài liệu này chỉ liệt kê endpoint đang tồn tại trong code. Endpoin
 | GET | `/api/streams/{streamId}/viewers` | Public | Unique viewers ước lượng từ HyperLogLog |
 | POST | `/api/streams/{streamId}/view` | `CURRENT`: Authenticated; controller dự kiến hỗ trợ guest | URL rule và controller intent đang drift |
 | POST | `/api/streams` | `STREAMER` hoặc `ADMIN` | Tạo stream và sinh stream key |
-| GET | `/api/streams/my` | `CURRENT GAP`: URL matcher public, service cần principal | Phải có authenticated rule/test tường minh |
+| GET | `/api/streams/my` | `CURRENT GAP`: URL matcher public, service cần principal | SEC-06 phải có authenticated rule/test tường minh |
 
 `StreamDTO` hiện được dùng cho cả public và owner response, vì vậy stream key có thể bị lộ. SEC-03 phải tách DTO theo audience trước khi mở rộng API stream.
 
@@ -55,7 +55,7 @@ Tài liệu này chỉ liệt kê endpoint đang tồn tại trong code. Endpoin
 | POST | `/api/webhooks/rtmp/stream-started` | RTMP server mô phỏng | `X-Webhook-Secret` tĩnh |
 | POST | `/api/webhooks/rtmp/stream-ended` | RTMP server mô phỏng | `X-Webhook-Secret` tĩnh |
 
-Target của SEC-03 là HMAC trên raw body, timestamp window, event ID/idempotency và secret rotation. Chi tiết tại [RTMP Webhook Guide](../engineering/rtmp-webhook-guide.md).
+Target của SEC-05 là HMAC trên raw body, timestamp window, event ID/idempotency và secret rotation. Chi tiết tại [RTMP Webhook Guide](../engineering/rtmp-webhook-guide.md).
 
 ### Development-only surface
 

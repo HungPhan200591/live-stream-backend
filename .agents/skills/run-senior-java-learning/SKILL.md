@@ -97,7 +97,7 @@ Nếu session dừng giữa checkpoint, giữ nguyên checkpoint và ghi next ac
 
 Nên trigger cho các request như:
 
-- “Tiếp tục SEC-01 từ checkpoint gần nhất.”
+- “Tiếp tục learning case `ACTIVE` từ checkpoint gần nhất.”
 - “Cho tôi học sâu transaction isolation rồi nối vào một reproducer trong project.”
 - “Học gì tiếp theo để cover Senior Java/Spring Boot và luyện câu hỏi architect?”
 - “Đóng learning case này và luyện teach-back.”

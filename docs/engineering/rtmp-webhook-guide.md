@@ -1,6 +1,6 @@
 # RTMP Webhook: Concepts, Current Flow và Hardening
 
-> Trạng thái: `CURRENT + SEC-03 TARGET`<br>
+> Trạng thái: `CURRENT + SEC-05 TARGET`<br>
 > Cập nhật: 2026-07-25
 
 Webhook là endpoint do một external service gọi khi sự kiện xảy ra. Trong project này, RTMP server được mô phỏng gọi backend khi OBS bắt đầu hoặc kết thúc stream. Webhook xác thực service identity, không dùng user JWT.
@@ -48,7 +48,7 @@ Nút “Go Live” không chứng minh media stream đã tới RTMP server. Even
 - Stream key đang xuất hiện trong log và public `StreamDTO`.
 - DB update và Redis side effect không phải một atomic transaction.
 
-## 4. SEC-03 target contract
+## 4. SEC-05 target contract
 
 Headers dự kiến:
 

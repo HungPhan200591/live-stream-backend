@@ -33,14 +33,14 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 | --- | --- | --- | --- |
 | Java language, collections, algorithm và complexity | D3 | Chưa đánh giá | `JDK-01` active: Java 21 baseline/theory/compatibility evidence pending |
 | Object-oriented design và refactoring | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
-| JVM runtime và diagnostics | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1/8 active |
-| Concurrency, JMM và async model | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
+| JVM runtime và diagnostics | D3 | Chưa đánh giá | `JDK-01` chỉ mở platform/JFR boundary; chưa có workload diagnostic để nâng depth |
+| Concurrency, JMM và async model | D3 | Chưa đánh giá | `JDK-01` chỉ cover virtual-thread mental model/decision; `CON-01` evidence chưa chạy |
 | Spring Framework và Spring Boot | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
 | HTTP, API design và network fundamentals | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
 | Transaction và data consistency | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
-| Security và identity | D3 | Chưa đánh giá | SEC-01 đang ở `THEORY_CORE`; chưa có theory/evidence |
-| PostgreSQL và data modeling | D3 | Chưa đánh giá | Chọn case/lab khi Stage 3 active |
-| Testing và quality strategy | D3 | Chưa đánh giá | Chọn case/lab khi Stage 0/8 active |
+| Security và identity | D3 | Chưa đánh giá | `SEC-01` đang `PAUSED`, chờ platform/safety-net foundation queue; chưa có theory/reproducer/evidence |
+| PostgreSQL, SQL và data modeling | D3 | Chưa đánh giá | Chọn MIG-01/DB-01/SQL-01/WAL-01 theo execution queue |
+| Testing và quality strategy | D3 | Chưa đánh giá | `TEST-01` queued sau JDK-01; context smoke hiện tại không đủ evidence để nâng depth |
 | Observability, reliability và incident response | D3 | Chưa đánh giá | Chọn case/lab khi Stage 8 active |
 | Distributed systems fundamentals | D3 | Chưa đánh giá | Chọn case/lab khi Stage 10/11 active |
 | Solution architecture | D3 | Chưa đánh giá | Chọn capstone khi Stage 11 active |
@@ -48,7 +48,7 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 | Redis | D3 | Chưa đánh giá | Chọn case/lab khi Stage 4 active |
 | RabbitMQ, Kafka và event-driven workflow | D3 | Chưa đánh giá | Chọn case/lab khi Stage 5/6 active |
 | Domain modeling và modular architecture | D3 | Chưa đánh giá | Chọn case/lab khi Stage 10 active |
-| Git, Linux, container, build và CI/CD | D2-D3 | Chưa đánh giá | Chọn case/lab khi Stage 0/8 active |
+| Git, Linux, container, build và CI/CD | D2-D3 | Chưa đánh giá | `JDK-01` active: toolchain/CI/runtime evidence pending; chưa nâng depth |
 | Data operations và lifecycle | D2-D3 | Chưa đánh giá | Chọn case/lab khi Stage 3/9 active |
 | Microservice architecture | D2-D3 | Chưa đánh giá | Chọn case/lab khi Stage 10 active |
 | Cloud, Kubernetes và IaC | D1-D2 | Chưa đánh giá | Chỉ chọn khi target role/case yêu cầu |
@@ -60,8 +60,8 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 
 ### 3.1. Java language, collections, algorithm và complexity — P0, target D3
 
-- **D1:** Phân biệt primitive/reference, immutable/mutable, `equals`/`hashCode`, `List`/`Set`/`Map`, array/list/tree/hash/queue, Big-O cơ bản và các Java 21 language/runtime capability liên quan đến codebase.
-- **D2:** Giải thích generics/type erasure, exception contract, Stream API, time/locale/money boundary, Java 17-to-21 migration boundary; chọn data structure dựa trên access pattern, ordering, memory và complexity.
+- **D1:** Phân biệt primitive/reference, immutable/mutable, `equals`/`hashCode`, `List`/`Set`/`Map`, array/list/tree/hash/queue, Big-O cơ bản; nhận diện Java 21/25 LTS, final/preview/incubator feature và declared/toolchain/runtime JDK.
+- **D2:** Giải thích generics/type erasure, exception contract, Stream API, time/locale/money boundary, `--release`/toolchain/runtime và Java 17-to-21/25 migration/support lifecycle; chọn data structure dựa trên access pattern, ordering, memory và complexity.
 - **D3:** Viết test cho equality/money/time edge case; thay collection hoặc algorithm trên hot path, đo allocation/latency và giải thích before/after; xử lý serialization compatibility tại boundary.
 - **D4:** Đặt guideline chọn collection/value object cho module, review được complexity claim sai và dẫn một refactor có benchmark, compatibility và rollback plan.
 
@@ -110,15 +110,15 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 ### 3.8. Security và identity — P0, target D3
 
 - **D1:** Phân biệt authentication, authorization, session, JWT, access/refresh token, OAuth2, OIDC, RBAC, ownership, secret, hash, encryption và HMAC.
-- **D2:** Giải thích token audience/scope/expiry/rotation, authorization code + PKCE, webhook replay protection, CORS/CSRF/SSRF, TLS termination và OWASP API risks.
-- **D3:** Viết negative authorization/security test; tái hiện token misuse, replay hoặc broken object authorization; triển khai/đánh giá key-secret rotation, redaction, dependency scan và incident response path.
+- **D2:** Giải thích adaptive password hashing/migration, account enumeration, brute-force/credential stuffing, recovery/MFA boundary, token audience/scope/expiry/rotation, authorization code + PKCE, webhook replay protection, CORS/CSRF/SSRF, TLS termination và OWASP API risks.
+- **D3:** Viết negative authorization/security test; tái hiện token misuse, replay, broken object authorization hoặc login-abuse path; triển khai/đánh giá rate limit, key-secret rotation, redaction, dependency scan và incident response path.
 - **D4:** Lập threat model xuyên trust boundary, review security design với product/ops, dẫn credential compromise drill và bảo vệ trade-off giữa UX, least privilege, audit, compliance và recovery.
 
-### 3.9. PostgreSQL và data modeling — P0, target D3
+### 3.9. PostgreSQL, SQL và data modeling — P0, target D3
 
-- **D1:** Biết table/key/constraint, normalization, index, MVCC, transaction isolation, lock, vacuum, query plan, connection pool và ORM persistence context.
-- **D2:** Giải thích N+1, dirty checking/flush, fetch/projection, B-tree/composite/partial index, selectivity, write amplification, bloat và pool exhaustion.
-- **D3:** Thiết kế migration + constraint giữ invariant; đọc `EXPLAIN (ANALYZE, BUFFERS)`, tái hiện lock/deadlock/N+1/pool exhaustion và cải thiện bằng query/index/schema có before/after evidence.
+- **D1:** Biết table/key/constraint, normalization, join/aggregation/window/CTE, index, MVCC, transaction isolation, lock, vacuum, query plan, connection pool và ORM persistence context.
+- **D2:** Giải thích set-based processing, query shape, N+1, dirty checking/flush, fetch/projection, B-tree/composite/partial index, selectivity, write amplification, bloat và pool exhaustion.
+- **D3:** Viết/test SQL join/window/CTE và transaction-safe DML trên dataset đại diện; thiết kế migration + constraint giữ invariant; đọc `EXPLAIN (ANALYZE, BUFFERS)`, tái hiện lock/deadlock/N+1/pool exhaustion và cải thiện bằng query/index/schema có before/after evidence.
 - **D4:** Dẫn review data model/query strategy, đặt data access SLO/capacity, xử lý DB incident và quyết định khi nào không thêm index/denormalization vì write/operation cost.
 
 ### 3.10. Testing và quality strategy — P0, target D3
@@ -130,23 +130,23 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 
 ### 3.11. Observability, reliability và incident response — P0, target D3
 
-- **D1:** Biết log/metric/trace, correlation ID, SLI/SLO, p50/p95/p99, saturation, alert, runbook, error budget và incident timeline.
-- **D2:** Giải thích metric nào trả lời symptom nào, sampling/redaction, dashboard vs alert, leading/lagging signal và vì sao một alert phải actionable.
-- **D3:** Instrument hot path, lần một failure qua log/trace/metric, tạo alert + runbook, inject DB/Redis/broker/resource fault và ghi evidence recovery.
+- **D1:** Biết log/metric/trace, correlation/trace context, metric cardinality, sampling, SLI/SLO, p50/p95/p99, saturation, alert, runbook, error budget và incident timeline.
+- **D2:** Giải thích metric nào trả lời symptom nào, cardinality explosion, context propagation, sampling/redaction, telemetry overhead/cost, dashboard vs alert, leading/lagging signal và vì sao một alert phải actionable.
+- **D3:** Instrument hot path và async/broker boundary, lần một failure qua log/trace/metric, kiểm soát cardinality/PII/overhead, tạo alert + runbook, inject DB/Redis/broker/resource fault và ghi evidence recovery.
 - **D4:** Điều phối incident drill/postmortem, đặt SLO/capacity policy, ưu tiên reliability work theo impact và truyền đạt residual risk tới stakeholder.
 
 ### 3.12. Distributed systems fundamentals — P0, target D3
 
-- **D1:** Biết partial failure, timeout, duplicate, reorder, network partition, clock skew, consistency, availability, leader/quorum và backpressure.
-- **D2:** Giải thích CAP/PACELC trong context cụ thể, read-your-writes, eventual consistency, retry/idempotency, ordering key và vì sao timeout không đồng nghĩa operation đã thất bại.
-- **D3:** Viết failure matrix/timeline cho flow distributed, tái hiện duplicate/out-of-order/timeout, chọn consistency/retry/dedup/recovery policy và kiểm chứng invariant.
+- **D1:** Biết partial failure, timeout, duplicate, reorder, network partition, clock skew, consistency, availability, leader/quorum, retry, circuit breaker, bulkhead, load shedding và backpressure.
+- **D2:** Giải thích retry budget/backoff/jitter, retry storm/cascading failure, admission control, CAP/PACELC trong context cụ thể, read-your-writes, eventual consistency, ordering key và vì sao timeout không đồng nghĩa operation đã thất bại.
+- **D3:** Viết failure matrix/timeline, tái hiện duplicate/out-of-order/timeout/retry storm, đo saturation và chọn bounded retry/circuit/bulkhead/load-shed/consistency/dedup/recovery policy để kiểm chứng invariant.
 - **D4:** Thiết kế cross-service consistency model, dẫn trade-off với product/ops, review failure domain và dạy team tránh dùng distributed-system slogan thay cho evidence.
 
 ### 3.13. Solution architecture — P0, target D3
 
-- **D1:** Biết capacity, throughput, latency, bottleneck, HA, DR, RPO/RTO, failure domain, cost và evolution path.
-- **D2:** Ước lượng capacity bằng assumption rõ ràng; so sánh scale up/out, sync/async, single/multi-region, managed/self-managed và chỉ ra bottleneck đầu tiên.
-- **D3:** Viết architecture dossier cho một capstone gồm data flow, capacity math, threat/failure model, consistency, cost, observability và phased rollout; phản biện được alternative.
+- **D1:** Biết capacity, throughput, latency, concurrency, queue, saturation/headroom, bottleneck, HA, DR, RPO/RTO, failure domain, cost và evolution path.
+- **D2:** Dùng Little's Law/queueing hoặc capacity math phù hợp với assumption rõ ràng; đặt concurrency budget/headroom, so sánh scale up/out, sync/async, single/multi-region, managed/self-managed và chỉ ra bottleneck đầu tiên.
+- **D3:** Viết architecture dossier cho một capstone gồm data flow, capacity/queueing math, saturation/backpressure, threat/failure model, consistency, cost, observability và phased rollout; phản biện được alternative.
 - **D4:** Dẫn architecture review đa stakeholder, cập nhật design sau incident/workload mới, quản lý decision debt và trình bày cùng một thiết kế ở bản 2/15/45 phút.
 
 ### 3.14. Technical leadership và delivery — P0, target D3

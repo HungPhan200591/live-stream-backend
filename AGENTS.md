@@ -10,7 +10,8 @@
 
 ## Bản đồ dự án
 
-- Môi trường chạy: Java 17, Spring Boot 3.4, Maven Wrapper.
+- Môi trường hiện tại: POM khai báo Java 17, Spring Boot 3.4, Maven Wrapper; runtime evidence từng khác declared version.
+- Platform target: Java 21 qua `JDK-01`; JDK 25 + Spring Boot line phù hợp được quyết định riêng tại `JDK-02`. Không coi target là đã implement trước khi có evidence.
 - Mã nguồn chính: `src/main/java/com/stream/demo`.
 - Kiểm thử: `src/test/java/com/stream/demo`.
 - Cấu hình: `src/main/resources/application.yml`.
@@ -27,7 +28,7 @@ Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với côn
 
 - Nghiệp vụ: `docs/contracts/business-flows.md`.
 - Kiến trúc và capability hiện tại: `docs/architecture/system-context.md`.
-- Phạm vi triển khai hiện tại: `docs/implementation/current-implementation-map.md`; thứ tự học và case active: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`.
+- Phạm vi code hiện tại: `docs/implementation/current-implementation-map.md`; coverage, priority và execution order: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`; active case/checkpoint: `docs/learning/index.md`.
 - Khi bắt đầu hoặc tiếp tục học: `docs/learning/index.md`, active case và đúng theory/deep-dive/question-bank được link từ checkpoint.
 - Hợp đồng REST và quyền: `docs/contracts/api-contract.md`.
 - Phân quyền REST/WebSocket: `docs/security/authorization-flow.md`.

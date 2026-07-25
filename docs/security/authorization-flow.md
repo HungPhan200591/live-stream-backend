@@ -63,10 +63,10 @@ Current gap: access và refresh token chưa được phân biệt chắc chắn 
 | ID | Gap | Failure mode | Gate |
 | --- | --- | --- | --- |
 | SEC-01 | Access/refresh token type confusion | Refresh token có thể đi qua access-token path | Claim/type validation + negative tests |
-| SEC-01 | `/api/auth/**` public quá rộng | `/me` và `/logout-all` không được URL layer bảo vệ | Matcher tường minh |
+| SEC-06 | `/api/auth/**` public quá rộng | `/me` và `/logout-all` không được URL layer bảo vệ | Matcher tường minh + method-authorization negative tests |
 | SEC-02 | Logout-all không invalidate cache | Session đã revoke vẫn cache-hit | User-session index hoặc bounded invalidation |
 | SEC-03 | Stream key trong public DTO/log | Secret exposure | DTO theo audience + log redaction |
-| SEC-03 | Webhook shared secret tĩnh | Replay/spoof nếu secret lộ | HMAC + timestamp + event ID |
+| SEC-05 | Webhook shared secret tĩnh | Replay/spoof nếu secret lộ | HMAC + timestamp + event ID |
 | STAGE-0 | Dev/test endpoint trong default context | Production attack surface | Profile/conditional bean tests |
 
 ## 4. Target invariants

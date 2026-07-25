@@ -85,7 +85,7 @@ Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Templa
 
 | Năng lực | Priority | Độ sâu đích | Case/chủ đề chính trong domain | Bằng chứng phải tạo |
 | --- | --- | --- | --- | --- |
-| Java language, collections, algorithm và complexity | P0 | D3 | value object tiền, equality/hash, collection choice, heap/queue, Big-O trên hot path | Unit/property test, complexity và memory trade-off |
+| Java language, collections, algorithm và complexity | P0 | D3 | Java 17-to-21/25 release policy, final/preview/incubator boundary, value object tiền, equality/hash, collection choice, heap/queue, Big-O trên hot path | Compatibility matrix, unit/property test, complexity và memory trade-off |
 | Object-oriented design và refactoring | P0 | D3 | encapsulation, composition/polymorphism, coupling/cohesion, SOLID heuristic, state/strategy/adapter/decorator | Refactoring diff, characterization/invariant test và ADR giải thích cả anti-pattern |
 | JVM runtime và diagnostics | P0 | D3 | class loading, bytecode awareness, heap/off-heap, allocation, JIT, safepoint, G1/ZGC | JFR/GC log, heap/thread dump, profiling report và tuning hypothesis |
 | Concurrency, JMM và async model | P0 | D3 | start webhook đồng thời, wallet deduct, executor, virtual thread, reactive/backpressure | Race test lặp lại, happens-before timeline, contention/throughput metric |
@@ -93,11 +93,11 @@ Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Templa
 | HTTP, API design và network fundamentals | P0 | D3 | method/status/cache semantics, idempotency, pagination, versioning, compatibility, TLS/DNS/TCP/proxy/LB | Contract test, packet/request timeline, compatibility và client-failure test |
 | Transaction và data consistency | P0 | D3 | rollback, propagation, isolation, after-commit side effect | Integration test từng anomaly, transaction/crash timeline |
 | Security và identity | P0 | D3 | JWT/session, OAuth2/OIDC, webhook HMAC, RBAC/ownership, OWASP API risks, secrets | Threat model, negative test, dependency/security scan, audit log đã redact |
-| PostgreSQL và data modeling | P0 | D3 | schema/normalization, MVCC, lock, index, cursor, constraint, deadlock, pool | Flyway migration, dataset, `EXPLAIN (ANALYZE, BUFFERS)`, lock/pool evidence |
+| PostgreSQL, SQL và data modeling | P0 | D3 | schema/normalization, join/aggregation/window/CTE, set-based DML, MVCC, lock, index, cursor, constraint, deadlock, pool | Flyway migration, dataset, SQL test, `EXPLAIN (ANALYZE, BUFFERS)`, lock/pool evidence |
 | Testing và quality strategy | P0 | D3 | unit, property, slice, module, integration, contract, concurrency, load, fault | Risk-based test pyramid, mutation/coverage interpretation và CI artifact |
-| Observability, reliability và incident response | P0 | D3 | structured log, metric, trace, SLI/SLO, alert, capacity, graceful degradation | Dashboard, actionable alert, runbook, incident timeline/postmortem |
-| Distributed systems fundamentals | P0 | D3 | failure model, consistency model, time/clock, CAP/PACELC, coordination, backpressure | Failure matrix, sequence/timeline, consistency và recovery decision |
-| Solution architecture | P0 | D3 | capacity, bottleneck, HA, DR, security, cost, evolution | Architecture dossier và phiên trình bày 2/15/45 phút |
+| Observability, reliability và incident response | P0 | D3 | structured log, metric cardinality, trace-context propagation, sampling/telemetry cost, SLI/SLO, alert, capacity, graceful degradation | Dashboard, actionable alert, telemetry budget, runbook, incident timeline/postmortem |
+| Distributed systems fundamentals | P0 | D3 | partial failure, timeout/retry budget, retry storm, circuit breaker/bulkhead/load shedding, consistency model, time/clock, CAP/PACELC, coordination, backpressure | Fault-injection matrix, sequence/timeline, saturation metric, consistency và recovery decision |
+| Solution architecture | P0 | D3 | Little's Law/queueing, concurrency budget, headroom, bottleneck, HA, DR, security, cost, evolution | Capacity sheet, architecture dossier và phiên trình bày 2/15/45 phút |
 | Technical leadership và delivery | P0 | D3 | code review, ADR, incident leadership, mentoring, prioritization, stakeholder trade-off | Review record, ADR, postmortem và STAR/teach-back story có evidence |
 | Redis | P1 | D3 | cache-aside, TTL, stampede, HLL, ZSET, rate limit, lock | Key schema, hit ratio, degraded-mode test, recovery policy |
 | RabbitMQ/Kafka và event-driven workflow | P1 | D3 | queue/log, partition/order, ACK/offset, retry/DLQ, outbox/inbox, saga | Contract, duplicate/crash/replay experiment, lag/queue metric |
@@ -123,7 +123,7 @@ Roadmap có thứ tự dependency nhưng không có deadline cố định. Mỗi
 Thực hiện:
 
 - `JDK-01`: audit declared JDK, Maven/CI/runtime/container compatibility; chuyển baseline project sang Java 21, chạy compile/test/startup evidence và đánh giá virtual threads bằng workload + JFR;
-- theo dõi JDK 25 là latest LTS tại thời điểm cập nhật roadmap, nhưng chỉ nâng application sau `JDK-02` compatibility gate gồm target Spring Boot/dependency upgrade, regression và rollback plan;
+- sau Java 21 baseline và safety net, chạy `JDK-02` decision gate cho JDK 25 + Spring Boot line được hỗ trợ; gate phải kết thúc bằng `MIGRATE_NOW` hoặc `TIME_BOXED_DEFERRED` có owner/revisit date, compatibility matrix, regression và rollback plan;
 - sửa các correctness/security defect đang chặn Stage 0 về token type, auth matcher, session cache, stream-key exposure và hardening shared-secret webhook;
 - tách `dev`, `test`, `prod` configuration; không để dev/test endpoint tự xuất hiện trong production;
 - dùng Flyway làm nguồn schema versioned;
@@ -137,7 +137,7 @@ Thực hiện:
 
 **Exit gate**
 
-- Java 21 là declared/toolchain/CI/runtime baseline nhất quán; Java 25 có compatibility decision rõ, không phải assumption.
+- Java 21 là declared/toolchain/CI/runtime baseline nhất quán; Java 25 + target Spring Boot line có compatibility decision rõ, không phải assumption hoặc backlog treo vô hạn.
 - Virtual-thread mode được `enabled` hoặc `deferred` bằng workload/JFR evidence; không có claim performance chỉ từ feature flag.
 - Các defect chặn Stage 0 đều có regression test.
 - Test chạy trên máy sạch không cần database có sẵn.
@@ -164,7 +164,7 @@ Case:
 11. JVM lab: class loading/linking/initialization, stack/heap/metaspace/direct memory, allocation/GC roots, JIT/warm-up, safepoint, G1 và ZGC.
 12. Chẩn đoán CPU spike, allocation pressure, memory leak, deadlock và thread starvation bằng JFR, GC log, heap/thread dump trước khi tuning.
 
-Java 21 là baseline target của project và là prerequisite trước implementation mới. Java 17 chỉ là current declared state cho tới khi `JDK-01` đóng. JDK 25 là latest LTS tại thời điểm cập nhật roadmap, nhưng app chỉ nâng sau compatibility gate của `JDK-02` vì Spring Boot 3.4 hiện công bố compatibility tới Java 24. Virtual threads chỉ bật sau blocking-I/O benchmark và JFR/pinning check; không nâng version chỉ để dùng keyword mới và không dùng virtual thread như cách tăng tốc workload CPU-bound.
+Java 21 là baseline target đầu tiên của project và là prerequisite trước implementation mới. Java 17 chỉ là current declared state cho tới khi `JDK-01` đóng. JDK 25 là latest LTS tại thời điểm cập nhật roadmap; Spring Boot 3.4 công bố compatibility tới Java 24, còn Spring Boot 3.5 công bố compatibility tới Java 25. Vì vậy `JDK-02` phải đánh giá cả JDK, Spring Boot/BOM và dependency lifecycle thay vì mặc định rằng JDK 25 không dùng được hoặc nâng thẳng cả platform không cần regression plan. Virtual threads chỉ bật sau blocking-I/O benchmark và JFR/pinning check; không nâng version chỉ để dùng keyword mới và không dùng virtual thread như cách tăng tốc workload CPU-bound.
 
 **Exit gate**
 
@@ -186,6 +186,7 @@ Case:
 - HTTP method/status/cache semantics, safe/idempotent operation, conditional request, idempotency key và error contract;
 - API evolution: cursor pagination, versioning, backward/forward compatibility, deprecation, quota và contract test;
 - HTTP client: DNS/connect/TLS/read/write/pool timeout, cancellation, retry budget và connection-pool exhaustion;
+- tái hiện retry storm/cascading failure; so sánh bounded retry với backoff+jitter, circuit breaker, bulkhead, admission control và load shedding;
 - chọn Spring MVC, MVC + virtual threads hoặc WebFlux/Reactor bằng workload và benchmark; không trộn blocking call vào reactive path mà không kiểm soát;
 - `@Transactional` proxy, self-invocation, rollback rule và exception translation;
 - propagation `REQUIRED`, `REQUIRES_NEW`, nested behavior và timeout;
@@ -210,6 +211,7 @@ Case:
 
 - xây wallet + immutable ledger, constraint bảo vệ balance/invariant;
 - schema modeling: key, normalization/denormalization, nullability, temporal/audit data và aggregate invariant;
+- viết SQL set-based có join, aggregation, window function và CTE; đọc query shape trước khi đổ lỗi cho ORM hoặc thêm index;
 - JPA persistence context, dirty checking, flush, batching, fetch strategy/projection và query boundary;
 - sửa manual N+1 của stream list bằng projection/batch query và đo query count;
 - cursor pagination cho stream/history thay unbounded `findAll`;
@@ -320,6 +322,7 @@ Case:
 - threat model theo asset, trust boundary và attacker story;
 - OWASP/API risks: broken object/function authorization, mass assignment/property binding, injection, SSRF, unsafe deserialization, resource exhaustion và security misconfiguration;
 - CORS, CSRF, SameSite/cookie, TLS termination/proxy header trust, secret lifecycle và least-privilege service identity;
+- adaptive password hashing và migration, account enumeration, brute-force/credential stuffing, recovery và MFA boundary; không tự xây authorization server chỉ để có keyword OAuth2;
 - software supply chain: trusted artifact/repository, SBOM, dependency/CVE response, build provenance và secret scanning.
 
 **Exit gate**
@@ -337,6 +340,7 @@ Case:
 Thực hiện xuyên suốt rồi chuẩn hóa tại stage này:
 
 - structured JSON log, correlation/trace ID và sampling/redaction;
+- kiểm soát metric cardinality, trace-context propagation qua async/broker, sampling, telemetry overhead/cost và PII;
 - Actuator + Micrometer metrics, Prometheus/Grafana local stack;
 - OpenTelemetry trace cho HTTP, JDBC, Redis và broker;
 - SLI/SLO: availability, latency, error rate, consumer lag và queue depth;
@@ -424,7 +428,7 @@ Sau khi tách, học:
 
 ### Stage 11 - Solution architecture capstones
 
-Mỗi capstone phải có assumption, capacity math, bottleneck, failure domain, consistency, security, cost và evolution path.
+Mỗi capstone phải có assumption, Little's Law/queueing hoặc capacity math phù hợp, concurrency budget, saturation/headroom, bottleneck, failure domain, consistency, security, cost và evolution path.
 
 1. Livestream 100 nghìn concurrent viewers, chat fan-out và reconnect storm.
 2. Gift sale spike với wallet invariant và event backlog.
@@ -458,50 +462,83 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 
 ## 6. Case backlog ưu tiên
 
-Priority trong bảng là importance của evidence mà case tạo ra theo mục 2.1, không tự ghi đè case đang active hay dependency giữa các stage. Một capability P0 có thể có case P1/P2 bổ sung vì case đó chỉ cover một nhánh chuyên biệt. Chỉ tạo artifact/folder khi case được active; backlog không phải yêu cầu scaffold hàng loạt.
+Priority đo importance của năng lực/evidence theo mục 2.1; **không phải số thứ tự chạy**. Backlog dùng năm loại artifact để tránh biến mọi chủ đề thành feature:
 
-**Nguyên tắc sắp thứ tự:** bắt đầu bằng case vừa tạo platform/safety net cho tất cả case sau, rồi mới đi vào vertical slice correctness/security hẹp. Mỗi case phải đi đủ `theory -> deep-dive -> question bank -> project reproducer -> decision -> implementation -> evidence -> teach-back`; không học hết theory trước rồi mới tìm project để áp dụng, cũng không sửa bug trước khi có mental model/reproducer.
+- `CASE`: một failure/invariant của project, thường có implementation;
+- `LAB`: một workload/hypothesis hẹp, kết thúc bằng số đo hoặc diagnostic;
+- `DECISION`: compatibility/architecture gate kết thúc bằng quyết định, owner và trigger revisit;
+- `CAPSTONE`: bài thiết kế có assumption, capacity/failure/cost và defense, không bắt buộc sửa application;
+- `TRACK`: evidence tích lũy xuyên nhiều case, không được active như một feature độc lập.
 
-`JDK-01` đứng đầu vì POM vẫn khai báo Java 17, current-state từng ghi nhận runtime Java 22 và virtual-thread learning bị khóa bởi baseline drift. `TEST-01` đứng thứ hai vì project chỉ có một context smoke test; không có safety net thì mọi claim correctness của security/concurrency đều yếu. `SEC-01` không bị loại, nhưng được đặt sau hai prerequisite này như vertical security case đầu tiên.
+Mỗi `CASE`/`LAB` vẫn đi đủ `theory -> deep-dive -> question bank -> reproducer -> decision -> implementation/experiment -> evidence -> review -> teach-back`. Chỉ tạo artifact/folder khi item được active; backlog không phải yêu cầu scaffold hàng loạt.
 
-| ID | Case | Stage | Priority |
-| --- | --- | --- | --- |
-| [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) | Java 21 platform baseline, toolchain drift và virtual-thread decision (`ACTIVE`) | 0/1 | P0 |
-| JDK-02 | JDK 25 latest-LTS compatibility: target Spring Boot/dependency upgrade, regression và rollback plan | 0/1 | P1 |
-| [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion (`PAUSED`; sau JDK-01 + TEST-01) | 0 | P0 |
-| SEC-02 | Logout-all với stale Redis session | 0/4 | P0 |
-| SEC-03 | Stream key exposure và webhook replay | 0/7 | P0 |
-| TEST-01 | Hermetic integration test bằng Testcontainers | 0 | P0 |
-| CON-01 | Concurrent stream state transition | 1/2 | P0 |
-| JAVA-01 | Collection/algorithm/complexity và memory trade-off trên hot path | 1 | P0 |
-| JVM-01 | Allocation/GC/JIT/thread diagnostic bằng JFR và dump | 1/8 | P0 |
-| API-01 | HTTP semantics, idempotency, API evolution và client timeout | 2 | P0 |
-| DB-01 | Manual N+1 và cursor pagination | 3 | P1 |
-| WAL-01 | Lost update và ledger invariant | 1/3 | P0 |
-| TX-01 | DB commit vs Redis side effect | 2/4 | P1 |
-| RED-01 | Cache stampede và Redis outage | 4 | P1 |
-| MQ-01 | Consumer crash before ACK/offset commit | 5 | P1 |
-| KFK-01 | Partition key, ordering và hot partition | 5 | P1 |
-| EVT-01 | Gift transactional outbox/inbox | 6 | P1 |
-| SEC-04 | OAuth2/OIDC flow, token replay/key rotation và API threat model | 7 | P0 |
-| RT-01 | WebSocket auth, reconnect và slow consumer | 7 | P2 |
-| OBS-01 | Trace request-to-consumer và incident alert | 8 | P0 |
-| OPS-01 | Container probes, resource limit, graceful shutdown và rollback | 8 | P1 |
-| DB-02 | Replica lag và read-your-writes | 9 | P2 |
-| DB-03 | Time partitioning ledger/chat history | 9 | P2 |
-| DB-04 | Safe schema migration, connection pool và restore/PITR drill | 3/9 | P1 |
-| DDD-01 | Bounded context, aggregate invariant và modular boundary | 10 | P1 |
-| DS-01 | Partial failure, consistency model, clock và retry/idempotency design | 10/11 | P0 |
-| MS-01 | Analytics service extraction scorecard | 10 | P2 |
-| ARCH-01 | 100k-viewer capacity and failure design | 11 | P0 |
-| DATA-01 | Storage/search/object-store selection theo access pattern và cost | 11 | P2 |
-| CLOUD-01 | Kubernetes/managed service/IaC deployment decision | 11 | P2 |
-| REACT-01 | MVC vs virtual thread vs WebFlux benchmark và decision | 1/2/8 | P2 |
-| LEAD-01 | Code review, ADR, incident postmortem và behavioral evidence pack | 12 | P0 |
+### 6.1. Execution queue hiện tại
 
-Thứ tự bắt đầu đề xuất: `JDK-01 -> TEST-01 -> SEC-01 -> SEC-03 -> CON-01 -> DB-01 -> WAL-01`. `JDK-02` là nhánh compatibility có điều kiện: chuẩn bị sau JDK-01 nhưng không block các correctness case nếu target Spring Boot chưa hỗ trợ Java 25. Sau bảy case trên mới quyết định nhánh Redis/Kafka tiếp theo theo mục tiêu phỏng vấn gần nhất.
+Queue canonical được chia thành wave để chỉ **item đầu tiên chưa đóng** là next actionable:
 
-Active case hiện tại: [JDK-01 - Java 21 platform baseline and virtual-thread decision](learning/cases/jdk-01-java21-platform-baseline.md). SEC-01 được `PAUSED` vì chưa có theory/reproducer/evidence; chỉ re-activate sau JDK-01 + TEST-01 hoặc khi có lý do scope rõ ràng. Chỉ active thêm case khác sau khi JDK-01 đạt closure gate hoặc được đánh dấu paused có lý do.
+| Wave | Sequence | Mục tiêu trước khi sang wave sau |
+| --- | --- | --- |
+| F0 - Platform/safety net | `JDK-01 -> TEST-01 -> JDK-02 decision gate -> MIG-01` | Build/runtime/test/schema tái lập; latest-LTS decision có owner |
+| C1 - Current P0 security | `SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05` | Token, matcher, cache revocation, secret và webhook trust boundary có negative test |
+| C2 - Core correctness | `SPR-01 -> CON-01 -> TX-01 -> WAL-01 -> DB-01` | Spring/transaction/state/money invariant đúng trước khi tối ưu query |
+
+- `JDK-01` đứng đầu vì POM vẫn khai báo Java 17, runtime evidence từng là Java 22 và người học ưu tiên Java 21/virtual threads.
+- `TEST-01` tạo safety net trước khi framework/platform hoặc security behavior thay đổi.
+- `JDK-02` là **decision gate**, không phải nâng cấp mặc định: kết thúc bằng `MIGRATE_NOW` hoặc `TIME_BOXED_DEFERRED` có owner/revisit date. Tại snapshot này Spring Boot 3.5 đã công bố Java 25 compatibility, nên gate phải so sánh target Spring Boot 3.5/4.x, BOM/dependency, regression và rollback; một quyết định defer rõ ràng không được chặn các correctness case.
+- `MIG-01` làm sạch schema bootstrap bằng Flyway trên database rỗng trước các case tạo thêm durable state.
+- `SEC-01` chỉ đóng token-purpose confusion; `SEC-06`, `SEC-02`, `SEC-03` và `SEC-05` lần lượt đóng public matcher, cache revocation, secret exposure và webhook replay thay vì gộp nhiều trust boundary vào một case.
+- Correctness đi trước performance: Spring/transaction boundary, state transition, DB-Redis consistency và wallet invariant đứng trước N+1/pagination.
+
+Sau `DB-01`, chọn lane kế tiếp theo P0/P1 depth gap và job description gần nhất; không coi toàn bộ bảng dưới đây là một chuỗi phải chạy máy móc.
+
+### 6.2. Backlog catalog theo lane
+
+| Lane | ID | Scope hẹp / activation rule | Kind | Stage | Priority |
+| --- | --- | --- | --- | --- | --- |
+| Foundation | [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) | Java 21 baseline, toolchain drift và virtual-thread decision (`ACTIVE`) | CASE/LAB | 0/1 | P0 |
+| Foundation | TEST-01 | Hermetic integration test bằng Testcontainers; risk-based test boundary | CASE | 0 | P0 |
+| Foundation | JDK-02 | JDK 25 + supported Spring Boot/BOM compatibility; `MIGRATE_NOW` hoặc time-boxed defer | DECISION | 0/1 | P1 |
+| Foundation | MIG-01 | Flyway baseline và clean-database bootstrap; không gộp online migration/PITR | CASE | 0/3 | P0 |
+| Correctness | [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion (`PAUSED`; chờ foundation queue) | CASE | 0 | P0 |
+| Correctness | SEC-06 | Public/private URL matcher và method-authorization boundary | CASE | 0 | P0 |
+| Correctness | SEC-02 | Logout-all với stale Redis session | CASE | 0/4 | P0 |
+| Correctness | SEC-03 | Stream-key/secret exposure, audience DTO và log redaction | CASE | 0/7 | P0 |
+| Correctness | SEC-05 | Webhook HMAC, timestamp/event ID, replay và secret rotation | CASE | 0/7 | P0 |
+| Correctness | SPR-01 | Bean/proxy/AOP, request pipeline và `@Transactional` self-invocation failure | CASE/LAB | 2 | P0 |
+| Correctness | CON-01 | Concurrent stream state transition | CASE | 1/2 | P0 |
+| Correctness | TX-01 | DB commit vs Redis side effect và crash window | CASE | 2/4 | P0 |
+| Correctness | WAL-01 | Lost update và ledger invariant | CASE | 1/3 | P0 |
+| Correctness | DB-01 | Manual N+1, cursor pagination và before/after query plan | CASE/LAB | 3 | P1 |
+| Core evidence | JAVA-01 | Chỉ active sau khi chọn hot path/data shape cụ thể cho collection/algorithm trade-off | LAB | 1 | P0 |
+| Core evidence | JVM-01 | Chỉ active với workload/triệu chứng cụ thể cho allocation/GC/JIT/thread diagnostic | LAB | 1/8 | P0 |
+| Core evidence | API-01 | HTTP semantics, idempotency và compatible API evolution; client resilience thuộc RES-01 | CASE/LAB | 2 | P0 |
+| Core evidence | SQL-01 | Join/aggregation/window/CTE, set-based DML và plan trên dataset đại diện | LAB | 3 | P0 |
+| Core evidence | TEST-02 | Property/contract/concurrency/load/fault/mutation evidence tích lũy từ case thật | TRACK | 0/8 | P0 |
+| Data/events | RED-01 | Cache stampede và Redis outage | CASE/LAB | 4 | P1 |
+| Data/events | MQ-01 | RabbitMQ consumer crash before ACK | CASE/LAB | 5 | P1 |
+| Data/events | KFK-01 | Kafka partition key, ordering và hot partition | LAB | 5 | P1 |
+| Data/events | EVT-01 | Gift transactional outbox/inbox | CASE | 6 | P1 |
+| Reliability | RES-01 | Timeout/cancellation, retry storm, backoff+jitter, circuit breaker/bulkhead, pool exhaustion và load shedding | CASE/LAB | 2/8/10 | P0 |
+| Identity/realtime | SEC-04 | OAuth2/OIDC/resource-server threat model, token replay/key rotation; không tự xây IdP | LAB/CAPSTONE | 7 | P0 |
+| Identity/realtime | RT-01 | WebSocket auth, reconnect, slow consumer và resource protection | CASE/LAB | 7 | P1 |
+| Operability | OBS-01 | Trace request-to-consumer, cardinality/sampling/context propagation và incident alert | CASE/LAB | 8 | P0 |
+| Operability | OPS-01 | Container probes, resource limit, graceful shutdown và rollback | CASE/LAB | 8 | P1 |
+| Data lifecycle | DB-02 | Replica lag và read-your-writes | LAB | 9 | P2 |
+| Data lifecycle | DB-03 | Time partitioning ledger/chat history | LAB | 9 | P2 |
+| Data lifecycle | DB-04 | Safe online schema migration theo expand-contract | CASE/LAB | 3/9 | P1 |
+| Data lifecycle | DR-01 | Backup/restore/PITR, failover và RPO/RTO evidence | LAB | 9 | P1 |
+| Architecture | DDD-01 | Bounded context, aggregate invariant và modular boundary | CASE/CAPSTONE | 10 | P1 |
+| Architecture | DS-01 | Partial failure, consistency model và clock/coordination decision; resilience experiment thuộc RES-01 | CAPSTONE | 10/11 | P0 |
+| Architecture | MS-01 | Analytics service extraction scorecard | CAPSTONE | 10 | P2 |
+| Architecture | ARCH-01 | 100k-viewer capacity, queueing, saturation và failure design | CAPSTONE | 11 | P0 |
+| Conditional | DATA-01 | Storage/search/object-store selection theo access pattern và cost | CAPSTONE | 11 | P2 |
+| Conditional | CLOUD-01 | Kubernetes/managed service/IaC deployment decision | CAPSTONE | 11 | P2 |
+| Conditional | REACT-01 | MVC vs virtual thread vs WebFlux benchmark; chỉ khi có workload phù hợp | LAB | 1/2/8 | P2 |
+| Cross-cutting | LEAD-01 | Review, ADR, incident/postmortem, mentoring và behavioral evidence từ các case đã chạy | TRACK | 12 | P0 |
+
+P0 owner mapping: Java `JDK-01/JAVA-01`; OOD `SPR-01/CON-01/DDD-01`; JVM `JDK-01/JVM-01`; concurrency `CON-01/WAL-01`; Spring `SPR-01/TX-01/SEC-01`; HTTP/network `API-01/RES-01`; transaction `TX-01/WAL-01`; security `SEC-*`; PostgreSQL/SQL `MIG-01/DB-01/SQL-01/WAL-01`; testing `TEST-01/TEST-02` và test gate của mọi case; observability `OBS-01`; distributed systems `RES-01/DS-01/EVT-01`; solution architecture `ARCH-01`; leadership `LEAD-01` và review/teach-back của mọi case. Một owner ID chỉ chứng minh coverage khi artifact đạt depth/evidence gate; tên trong backlog không tự nâng D1-D4.
+
+Active case hiện tại: [JDK-01 - Java 21 platform baseline and virtual-thread decision](learning/cases/jdk-01-java21-platform-baseline.md). SEC-01 được `PAUSED`; chỉ active item tiếp theo sau khi JDK-01 đạt closure gate hoặc được paused có reason, và `learning/index.md` luôn là source of truth cho active case/checkpoint.
 
 ## 7. Definition of Done cho một learning case
 
@@ -536,6 +573,8 @@ Active case hiện tại: [JDK-01 - Java 21 platform baseline and virtual-thread
 - [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)
 - [OpenJDK JEP 444 - Virtual Threads](https://openjdk.org/jeps/444)
 - [Spring Boot 3.4 system requirements](https://docs.spring.io/spring-boot/3.4/system-requirements.html)
+- [Spring Boot 3.5 system requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html)
+- [Spring Boot current system requirements](https://docs.spring.io/spring-boot/system-requirements.html)
 - [Spring Boot 3.4 virtual threads](https://docs.spring.io/spring-boot/3.4/reference/features/spring-application.html#features.spring-application.virtual-threads)
 - [Maven dependency mechanism và BOM](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)
 - [RFC 9110 - HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)

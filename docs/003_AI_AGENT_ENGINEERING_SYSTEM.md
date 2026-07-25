@@ -13,7 +13,7 @@ Giữ và mở rộng nền tảng hiện có thay vì tạo một hệ thống 
 - `docs/*` là knowledge base và learning evidence.
 - code, test, query plan, metric và runbook là bằng chứng thực thi.
 
-Vấn đề hiện tại không phải thiếu prompt. Vấn đề là chưa có source-of-truth map, case workflow và cơ chế ngăn docs/roadmap drift.
+Hệ thống hiện đã có source-of-truth map, case workflow và session cursor. Rủi ro còn lại là sao chép status/order sang nhiều file rồi để chúng drift; vì vậy roadmap sở hữu coverage/order, còn `learning/index.md` sở hữu active case/checkpoint.
 
 ## 1.1. Luồng làm việc của Agent
 
@@ -64,7 +64,8 @@ Quy tắc quyết định:
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
 | Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
 | Kiến thức dùng lại nằm ở đâu? | `docs/learning/theory/*` | question bank và learning cases link tới theory |
-| Capability nào còn thiếu? | `docs/implementation/current-implementation-map.md` | Senior case backlog |
+| Code capability nào đang tồn tại? | `docs/implementation/current-implementation-map.md` | source code + tests |
+| Knowledge/case coverage nào còn thiếu? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` và `docs/learning/knowledge-depth-rubric.md` | current-state assessment |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
 | Performance claim dựa vào đâu? | `docs/learning/experiments/*` | raw result artifact |
 | Incident xử lý thế nào? | `docs/operations/runbooks/*` | dashboard/alert |
@@ -85,6 +86,7 @@ docs/
 ├── learning/
 │   ├── guide.md                # human quick start và prompt chuẩn
 │   ├── index.md                # entry point và session cursor
+│   ├── knowledge-depth-rubric.md # D1-D4 criteria và evidence tracker
 │   ├── theory/
 │   │   ├── core/               # mental model/mechanism/invariant dùng lại
 │   │   └── deep-dives/         # internals/failure/scale/cross-layer
@@ -206,14 +208,7 @@ Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint g�
 
 Các rule hiện tại về DTO, explicit ID, controller/service boundary, transaction, authorization, Redis TTL, async reliability, simulation-first và verification vẫn phù hợp.
 
-Nên bổ sung trong iteration kế tiếp:
-
-- Project ưu tiên learning-case roadmap hơn feature-count roadmap.
-- Mọi performance/scale claim phải có workload và measurement.
-- Không tách microservice nếu chưa có extraction ADR và service data owner.
-- Kafka/Rabbit event phải có schema/version, idempotency, ordering và replay policy.
-- Case chạm state/money/security bắt buộc có failure/concurrency/negative test.
-- Không đánh dấu maturity nếu thiếu evidence gate.
+Đã có trong `AGENTS.md`: ưu tiên learning-case roadmap hơn feature count, một active case, artifact ownership, session cursor và không tăng checkpoint/maturity khi thiếu evidence. Các guardrail chỉ áp dụng theo concern tiếp tục nằm ở roadmap/skill tương ứng: performance claim cần workload/measurement; microservice cần extraction ADR/data owner; event cần schema/idempotency/ordering/replay; state/money/security cần failure/concurrency/negative test.
 
 Không thêm toàn bộ roadmap vào `AGENTS.md`; chỉ thêm invariant hành vi Agent cần nhớ ở mọi task.
 
@@ -326,11 +321,12 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 - Đã tạo current API/security/architecture/coding/Redis docs có status rõ.
 - Đã chuyển product phases, reference trộn current/target và prompt AI cũ vào archive có replacement map.
 
-### Iteration B - Case SEC-01/TEST-01 (`IN PROGRESS`)
+### Iteration B - Platform, safety net và first security slice (`IN PROGRESS`)
 
-- [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đã được tạo và đánh dấu `ACTIVE`; chưa có implementation/evidence.
-- Đã tạo learning entry point, reusable templates và `$run-senior-java-learning`; SEC-01 bắt đầu ở checkpoint `THEORY_CORE` và chưa được phép suy diễn là đã implement.
-- Tạo TEST-01 chỉ sau khi SEC-01 đã có reproducer/verification boundary rõ hoặc khi TEST-01 trở thành prerequisite thực tế.
+- [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) là case `ACTIVE`, bắt đầu ở checkpoint `THEORY_CORE`; chưa có Java 21 compatibility/build/runtime evidence.
+- `TEST-01` là case kế tiếp để tạo hermetic safety net. Sau đó `JDK-02` phải chốt JDK 25 + supported Spring Boot decision trước khi tiếp tục foundation/correctness queue.
+- [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đang `PAUSED`; chỉ re-activate khi foundation queue trước nó đã đóng hoặc được reschedule có reason/scope rõ trong cursor.
+- Đã tạo learning entry point, reusable templates và `$run-senior-java-learning`; không được suy diễn document đầy đủ là implementation/evidence đã tồn tại.
 - Tạo `docs/architecture/adr/` khi có quyết định thật.
 - Tạo testing strategy từ test harness đã chạy, không viết trước implementation.
 - Cập nhật project skills hiện tại theo evidence gate.

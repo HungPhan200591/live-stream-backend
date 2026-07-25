@@ -28,4 +28,4 @@ Kiểm chứng
 
 ## Mặc định theo dự án
 
-Khi liên quan, đưa vào prompt các ràng buộc từ `AGENTS.md`: Java 17/Spring Boot, DTO-first API, không dùng JPA relationship annotation, authorization hai tầng, Redis TTL/invalidation, OpenAPI cùng `.http`, simulation-first và test phù hợp.
+Khi liên quan, đưa vào prompt các ràng buộc từ `AGENTS.md`: current/target Java-Spring baseline lấy từ POM và learning cursor, DTO-first API, không dùng JPA relationship annotation, authorization hai tầng, Redis TTL/invalidation, OpenAPI cùng `.http`, simulation-first và test phù hợp. Không hard-code version target đã cũ vào prompt mới.

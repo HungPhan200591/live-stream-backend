@@ -8,8 +8,8 @@
 
 | Use case | Current coverage | Learning target |
 | --- | --- | --- |
-| UC-01 Authentication | M1 demo | SEC-01, SEC-02, TEST-01 |
-| UC-02 Stream lifecycle | M1 demo, chưa có state/concurrency guard | SEC-03, CON-01, TX-01 |
+| UC-01 Authentication | M1 demo | SEC-01, SEC-06, SEC-02, TEST-01 |
+| UC-02 Stream lifecycle | M1 demo, chưa có state/concurrency guard | SEC-03, SEC-05, CON-01, TX-01 |
 | UC-03 Viewer tracking | HLL unique viewers; không có media delivery | RED-01, realtime/load labs |
 | UC-04 Chat | Chưa implement | Stage 7 realtime |
 | UC-05 Wallet/gifts | Deposit DTO mô phỏng; không persist | WAL-01, EVT-01 |

@@ -7,13 +7,13 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-25`
 
-> Pause reason: `JDK-01` (Java 21 platform baseline) và `TEST-01` được ưu tiên làm prerequisite để build/runtime baseline và safety net có evidence trước khi sửa authentication. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
+> Pause reason: `JDK-01` (Java 21 platform baseline) và `TEST-01` được ưu tiên làm prerequisite để build/runtime baseline và safety net có evidence trước khi sửa authentication. Theo execution queue hiện tại, `JDK-02` decision gate và `MIG-01` cũng phải đóng hoặc được reschedule có lý do trong cursor trước khi re-activate SEC-01. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
 
 ## Scope lock
 
 Case này chỉ xử lý **token purpose confusion**: refresh token đi qua access-token authentication path hoặc access token đi qua refresh path. Không sửa code trong bước chuẩn bị này.
 
-Các vấn đề `/api/auth/**` matcher quá rộng, logout-all với stale Redis cache, refresh-token rotation, stream-key/webhook, key rotation và production secret management thuộc case hoặc checkpoint khác. Chúng chỉ được nhắc khi cần làm rõ boundary, không được kéo vào vertical slice SEC-01.
+Các vấn đề `/api/auth/**` matcher quá rộng (`SEC-06`), logout-all với stale Redis cache, refresh-token rotation, stream-key/webhook, key rotation và production secret management thuộc case hoặc checkpoint khác. Chúng chỉ được nhắc khi cần làm rõ boundary, không được kéo vào vertical slice SEC-01.
 
 ## 1. Interview objective
 
@@ -60,12 +60,12 @@ Các vấn đề `/api/auth/**` matcher quá rộng, logout-all với stale Redi
 
 ### Không nằm trong scope
 
-- Sửa URL matcher của toàn bộ `/api/auth/**`.
+- Sửa URL matcher của toàn bộ `/api/auth/**` (`SEC-06`).
 - Giải quyết logout-all cache invalidation (`SEC-02`).
 - Refresh-token rotation/reuse detection hoặc token family.
 - Tách signing service, asymmetric key/JWKS hoặc key rotation production.
 - Thay toàn bộ refresh token JWT bằng opaque token ngay trong case này.
-- Hardening stream key hoặc webhook (`SEC-03`).
+- Hardening stream key (`SEC-03`) hoặc webhook (`SEC-05`).
 - Thay đổi role/ownership business rules.
 
 ## 3. Theory notes bằng lời của tôi
@@ -164,7 +164,7 @@ POST /api/auth/refresh
 - [`UserController`](../../../src/main/java/com/stream/demo/controller/UserController.java) có `GET /api/users/{userId}` yêu cầu `isAuthenticated()`, phù hợp làm protected endpoint cho reproducer.
 - [`application.yml`](../../../src/main/resources/application.yml) đang đặt access TTL khoảng 100 giờ cho local demo và refresh TTL 7 ngày; lifetime dài làm impact của token misuse rõ hơn nhưng TTL không phải root cause.
 - Test hiện chỉ có `LiveStreamBackendApplicationTests.contextLoads`; chưa có unit, filter hoặc MockMvc security regression test.
-- [Security Flow](../../security/authorization-flow.md) và [API Contract](../../contracts/api-contract.md) đã đánh dấu SEC-01 là `CURRENT GAP`.
+- [Security Flow](../../security/authorization-flow.md) đã đánh dấu token-purpose confusion là SEC-01; [API Contract](../../contracts/api-contract.md) route matcher gap riêng sang SEC-06.
 
 ### Documentation drift
 
@@ -351,7 +351,7 @@ Không bắt đầu checkpoint implementation khi design này chưa được ng�
 ### Environment
 
 - Git commit: `TBD khi bắt đầu implementation`.
-- JDK/application: Java 17, Spring Boot 3.4.
+- JDK/application: lấy từ POM/`AGENTS.md` tại lúc re-activate; snapshot khi case được tạo là Java 17, Spring Boot 3.4.
 - Infrastructure: PostgreSQL/Redis theo test scope; không cần RabbitMQ cho SEC-01.
 - Dataset: một user và một active session là đủ cho reproducer.
 - Workload: single request; không có performance workload.
@@ -390,7 +390,7 @@ Không bắt đầu checkpoint implementation khi design này chưa được ng�
 | High | Refresh token có thể dựng access principal | Chưa reproduced runtime; red test bắt buộc |
 | Medium | Access token tại refresh path lỗi muộn thay vì purpose rejection | Open |
 | Medium | Token cũ thiếu purpose sẽ bị invalid sau rollout | Chấp nhận cho demo; production cần rollout plan |
-| Out of scope | `/api/auth/**` matcher quá rộng | Theo dõi Stage 0 security matcher work, không gộp implementation |
+| Out of scope | `/api/auth/**` matcher quá rộng | Theo dõi SEC-06, không gộp implementation |
 | Out of scope | Logout-all cache invalidation | SEC-02 |
 
 ## 13. Interview debrief
@@ -439,7 +439,7 @@ JWT signature hợp lệ chỉ chứng minh issuer/key và integrity, không ch�
 - [ ] API/security docs và status đã sync sau implementation.
 - [ ] Tôi tự giải thích được mà không đọc AI output.
 
-Case giữ trạng thái `PAUSED` cho tới khi JDK-01 + TEST-01 đạt gate hoặc có lý do scope rõ để re-activate. Sau khi re-activate, không đổi sang `EVIDENCE_READY` chỉ vì document đã đầy đủ.
+Case giữ trạng thái `PAUSED` cho tới khi JDK-01 + TEST-01 đạt gate và các foundation decision trước nó đã đóng/reschedule có reason trong cursor. Sau khi re-activate, không đổi sang `EVIDENCE_READY` chỉ vì document đã đầy đủ.
 
 ## 15. Links
 

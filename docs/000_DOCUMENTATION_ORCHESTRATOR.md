@@ -147,6 +147,7 @@ docs/
 ├── learning/
 │   ├── guide.md
 │   ├── index.md
+│   ├── knowledge-depth-rubric.md
 │   └── cases/
 │       ├── jdk-01-java21-platform-baseline.md
 │       └── sec-01-access-vs-refresh-token.md
@@ -192,7 +193,10 @@ Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có a
 | `CURRENT GAP` | Behavior tồn tại nhưng chưa đạt invariant/verification |
 | `TARGET` | Intended design, chưa phải implementation |
 | `LEARNING BACKLOG` | Case chưa active |
+| `ACTIVE` | Learning case duy nhất đang được điều phối bởi `learning/index.md` |
 | `PAUSED` | Learning case dừng có chủ đích; phải có reason và điều kiện re-activate |
+| `EVIDENCE_READY` | Case đã có artifact/evidence để review closure gate; chưa mặc định là closed |
+| `CLOSED` | Case đã qua closure/review gate và cursor đã chuyển khỏi case đó |
 | `ARCHIVED` | Chỉ giữ lịch sử |
 
 Maturity M0–M4 được định nghĩa trong [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md#6-maturity-model-dùng-cho-project).

@@ -6,7 +6,8 @@ Project dùng domain livestream để luyện các bài toán Senior Backend b�
 
 | Thành phần | Hiện trạng |
 | --- | --- |
-| Runtime khai báo | Java 17, Spring Boot 3.4, Maven Wrapper |
+| Runtime hiện tại | Java 17 khai báo trong POM, Spring Boot 3.4, Maven Wrapper; runtime evidence từng là Java 22 nên chưa tái lập |
+| Platform target | Java 21 qua `JDK-01`; sau safety net chạy `JDK-02` decision gate cho JDK 25 + Spring Boot line được hỗ trợ |
 | Durable data | PostgreSQL; Hibernate hiện còn `ddl-auto=update` |
 | Redis | Session cache, live status, HyperLogLog unique viewers |
 | Authentication | Session-backed JWT; còn P0 token/matcher/cache gaps |
@@ -21,15 +22,13 @@ Chi tiết bằng chứng và gap: [Current State & Gap Analysis](docs/002_CURRE
 
 ## Roadmap
 
-Roadmap chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). Priority hiện tại:
-
-`SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`
+Roadmap/order chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active case và checkpoint chỉ lấy từ [Learning System](docs/learning/index.md). Hiện `JDK-01` là case `ACTIVE`, `TEST-01` là safety-net case kế tiếp và `SEC-01` đang `PAUSED`. Không sao chép toàn bộ execution queue vào README để tránh tạo backlog cạnh tranh.
 
 [Current Implementation Map](docs/implementation/current-implementation-map.md) chỉ mô tả code coverage; không phải backlog cạnh tranh với learning roadmap.
 
 ## Quick start trên Windows
 
-Yêu cầu: JDK 17, Docker Desktop và PowerShell.
+Yêu cầu hiện tại: JDK 17, Docker Desktop và PowerShell. Đây là requirement theo POM trước khi `JDK-01` đóng, không phải target dài hạn.
 
 ```powershell
 docker compose up -d postgres redis rabbitmq
@@ -62,6 +61,8 @@ Test hiện có thể phụ thuộc PostgreSQL local. Đây là known gap, khôn
 - [Security Flow](docs/security/authorization-flow.md)
 - [Redis Guide](docs/engineering/redis-guide.md)
 - [AI Agent Engineering System](docs/003_AI_AGENT_ENGINEERING_SYSTEM.md)
+- [Learning Guide](docs/learning/guide.md)
+- [Learning System & Session Cursor](docs/learning/index.md)
 - [Codex Skill Catalog](docs/ai/skill-catalog.md)
 - Repository guardrails: [AGENTS.md](AGENTS.md)
 

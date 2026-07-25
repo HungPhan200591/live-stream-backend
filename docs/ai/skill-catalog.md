@@ -111,5 +111,6 @@ Change chưa hoàn thành nếu catalog chưa được đồng bộ. Khi cập n
 
 - Owner của project skill: repository này.
 - Owner của user-global/system skill: Codex installation; project chỉ ghi nhận cách dùng và availability.
+- Project skills phải đọc Java/Spring baseline từ POM/`AGENTS.md` và active learning case từ `learning/index.md`; không hard-code case ID hoặc version target vào ví dụ/instruction dễ drift.
 - Kiểm kê lại catalog khi nâng cấp Codex, cài plugin/skill hoặc trước một đợt refactor Agent system lớn.
 - Nếu catalog và runtime khác nhau, báo drift, dùng runtime làm bằng chứng availability và cập nhật catalog.
