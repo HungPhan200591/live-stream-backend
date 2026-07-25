@@ -21,12 +21,12 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Active case | [JDK-01 - Java 21 platform baseline and virtual-thread decision](cases/jdk-01-java21-platform-baseline.md) |
 | Case status | `ACTIVE`; chưa có Java 21 compatibility, build hoặc runtime evidence |
 | Current checkpoint | `THEORY_CORE` |
-| Next action | Tạo core theory canonical về Java 21 platform baseline và virtual-thread mental model; sau đó người học đọc, viết lại mental model và làm self-check trước khi mở rộng deep-dive |
-| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Theory Note Template](../templates/theory-note-template.md) |
-| Write target | `docs/learning/theory/core/java/java21-platform-baseline.md` — chỉ tạo khi bắt đầu artifact thật |
-| Latest evidence | JDK-01 là bản nháp AI-assisted; Java 21 compatibility, build, JFR và experiment vẫn `NOT RUN` |
+| Next action | Người học đọc [Java 21 platform baseline](theory/core/java/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
+| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](theory/core/java/java21-platform-baseline.md) |
+| Write target | `docs/learning/theory/core/java/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
+| Latest evidence | Core theory, deep-dive và question bank JDK-01 đã có preview `DRAFT`; learner review và mọi Java 21 compatibility/build/JFR/experiment evidence vẫn `NOT RUN` |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
-| Blocker | Core theory chưa tồn tại; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
+| Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-25` |
 
 Khi kết thúc mỗi session, cập nhật block này với next action đủ nhỏ để thực hiện ngay. Nếu dừng giữa phase, giữ nguyên checkpoint và ghi rõ phần còn lại.
@@ -112,11 +112,11 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 ## 8. Current active slice
 
-JDK-01 là item đầu tiên của Stage 0. Sau khi đóng, thứ tự còn lại của Stage 0 là `TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`; sau đó mới sang Stage 1 `JAVA-01 -> JVM-01 -> CON-01` theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12). Index không duy trì execution queue thứ hai. Artifact của JDK-01 được tạo dần theo checkpoint:
+JDK-01 là item đầu tiên của Stage 0. Sau khi đóng, thứ tự còn lại của Stage 0 là `TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`; sau đó mới sang Stage 1 `JAVA-01 -> JVM-01 -> CON-01` theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12). Index không duy trì execution queue thứ hai. Preview pack đã được tạo để chuẩn hóa format, nhưng cursor vẫn ở `THEORY_CORE` cho tới khi learner write-back/self-check đạt gate:
 
-1. `theory/core/java/java21-platform-baseline.md`.
-2. `theory/deep-dives/java/virtual-threads-and-pinning.md`.
-3. `question-bank/java.md`.
+1. [Core theory Java 21 platform baseline](theory/core/java/java21-platform-baseline.md) — current write target.
+2. [Deep-dive virtual threads/pinning](theory/deep-dives/java/virtual-threads-and-pinning.md) — preview cho checkpoint kế tiếp.
+3. [Java question bank](question-bank/java.md) — preview cho `QUESTION_BANK`.
 4. Cập nhật case JDK-01, chụp baseline Maven/runtime và tạo compatibility reproducer khi người dùng yêu cầu thực thi.
 5. Chỉ sau experiment mới tạo `experiments/jdk-01-java21-compatibility-and-virtual-thread-lab.md` và `interview-notes/jdk-01-java21-platform-baseline.md`.
 

@@ -148,9 +148,16 @@ docs/
 │   ├── guide.md
 │   ├── index.md
 │   ├── knowledge-depth-rubric.md
-│   └── cases/
-│       ├── jdk-01-java21-platform-baseline.md
-│       └── sec-01-access-vs-refresh-token.md
+│   ├── cases/
+│   │   ├── jdk-01-java21-platform-baseline.md
+│   │   └── sec-01-access-vs-refresh-token.md
+│   ├── theory/
+│   │   ├── core/java/
+│   │   │   └── java21-platform-baseline.md
+│   │   └── deep-dives/java/
+│   │       └── virtual-threads-and-pinning.md
+│   └── question-bank/
+│       └── java.md
 ├── tools/
 │   ├── codex-postgres-mcp.md
 │   ├── data-initialization.md

@@ -1,6 +1,6 @@
 ---
 name: run-senior-java-learning
-description: Điều phối toàn bộ chu trình học và luyện phỏng vấn Senior Java/Spring Boot của live-stream-backend từ core theory, deep-dive, question bank theo level, learning case, reproducer, design/trade-off, implementation, experiment/evidence, review đến interview note và teach-back. Dùng khi bắt đầu hoặc tiếp tục một learning topic/case, hỏi học gì tiếp theo, muốn đào sâu lý thuyết rồi vận dụng vào project, hoặc cần khôi phục phiên học từ checkpoint. Không dùng cho bug fix, feature implementation hay code review độc lập không có mục tiêu học.
+description: Điều phối và chuẩn hóa artifact cho toàn bộ chu trình học/phỏng vấn Senior Java/Spring Boot của live-stream-backend từ core theory, deep-dive, question bank theo level, learning case, reproducer, design/trade-off, implementation, experiment/evidence, review đến interview note và teach-back. Dùng khi bắt đầu/tiếp tục topic hoặc case, hỏi học gì tiếp theo, yêu cầu tạo learning pack theo format chuẩn, đào sâu lý thuyết rồi vận dụng vào project, hoặc khôi phục phiên từ checkpoint. Không dùng cho bug fix, feature implementation hay code review độc lập không có mục tiêu học.
 ---
 
 # Điều phối học Senior Java
@@ -48,6 +48,13 @@ Thực hiện tuần tự, nhưng chỉ xử lý checkpoint người dùng yêu 
 
 Question bank được dùng hai lần: tạo ladder và rubric tại `QUESTION_BANK`, rồi trả lời lại câu `ARCHITECT`/`EXPERT` bằng evidence ở `INTERVIEW_NOTE_TEACH_BACK`.
 
+Khi người dùng yêu cầu rõ một **preview learning pack** để chuẩn hóa format, có thể tạo trước core theory, deep-dive và question bank trong cùng change, nhưng:
+
+- mọi artifact giữ `DRAFT`, learner section giữ `LEARNER TODO` và evidence giữ `NOT RUN`;
+- cursor vẫn trỏ checkpoint sớm nhất chưa đạt, không nhảy theo số file đã tạo;
+- deep-dive/question bank là preview cho phase sau, không chứng minh phase đó hoàn tất;
+- không tạo experiment result, interview note hoặc claim depth D3/D4 trước evidence.
+
 Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học lý thuyết, thiết kế hoặc chuẩn bị case. Khi implementation được yêu cầu, dùng `$implement-livestream-feature`; khi review được yêu cầu, dùng `$review-livestream-change`.
 
 ## 4. Ghi kiến thức đúng chỗ
@@ -72,6 +79,16 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 - Khi phát hiện misconception mới, cập nhật theory hoặc thêm negative test.
 - Không tạo trước cây folder/file rỗng; tạo directory khi ghi artifact đầu tiên.
 
+### Artifact contract bắt buộc
+
+- **Core theory:** có target depth, scope, mental model/mechanism/invariant/boundary, misconceptions, self-check, official sources; phần learner write-back không được Agent điền thay.
+- **Deep-dive:** link core theory, chỉ thêm internals, pathological/failure cases, version boundary, cross-layer/operability và experiment implication; không copy core.
+- **Question bank:** dùng ID ổn định `<DOMAIN>-<TOPIC>-NNN`; mỗi câu có level, target depth, interviewer intent, answer outline, trade-off/follow-up/red flags và evidence status. Outline không phải full answer.
+- **Learning case:** chỉ giữ current project path, invariant, hypothesis, reproducer/design gate và links tới reusable knowledge.
+- **Experiment:** được tạo `PLANNED` khi procedure/hypothesis cụ thể; raw results phải là output thật, không sinh số liệu mẫu như evidence.
+- **Interview note:** chỉ tạo sau evidence; dùng giọng người học và link claim tới test/experiment/review.
+- **Version-sensitive topic:** pin release/runtime/framework version trong claim và dùng primary/official source; ghi rõ khi behavior thay đổi giữa version.
+
 ## 5. Phân cấp câu hỏi
 
 - `FOUNDATION`: khái niệm, vocabulary và cơ chế nền tảng.
@@ -90,6 +107,8 @@ Trước khi bàn giao:
 3. Cập nhật active case nếu scope, hypothesis, reproducer, decision, findings hoặc closure gate thay đổi.
 4. Chỉ cập nhật roadmap/maturity khi evidence gate tương ứng đã tồn tại.
 5. Báo verification đã chạy, chưa chạy và điều người học phải tự teach-back.
+
+6. Với docs-only learning pack, validate tối thiểu: frontmatter/status, stable question IDs, relative links/anchors, không có evidence giả, cursor vẫn ở earliest incomplete checkpoint và `git diff --check`.
 
 Nếu session dừng giữa checkpoint, giữ nguyên checkpoint và ghi next action cụ thể; không nhảy phase để tạo cảm giác tiến bộ.
 

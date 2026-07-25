@@ -58,9 +58,9 @@ Project build, test và chạy bằng một Java 21 baseline được khai báo,
 
 ### Reusable knowledge
 
-- Core theory: `docs/learning/theory/core/java/java21-platform-baseline.md` — chỉ tạo tại `THEORY_CORE`.
-- Deep-dive: `docs/learning/theory/deep-dives/java/virtual-threads-and-pinning.md` — chỉ tạo sau core theory.
-- Question bank: `docs/learning/question-bank/java.md` — chỉ tạo tại `QUESTION_BANK`.
+- Core theory: [Java 21 platform baseline](../theory/core/java/java21-platform-baseline.md) — `DRAFT`, chờ learner write-back/self-check.
+- Deep-dive: [Virtual threads, pinning và downstream backpressure](../theory/deep-dives/java/virtual-threads-and-pinning.md) — preview `DRAFT`, chưa đạt `THEORY_DEEP_DIVE` gate.
+- Question bank: [Java Interview Question Bank](../question-bank/java.md) — preview `DRAFT`, mọi câu JDK-01 chưa có evidence.
 - Depth rubric: [Java language/runtime](../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3), [Concurrency](../knowledge-depth-rubric.md#34-concurrency-jmm-và-async-model--p0-target-d3), [JVM](../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3).
 
 ### Áp dụng vào case này
@@ -231,9 +231,9 @@ Không giữ Java 17 chỉ vì code hiện còn compile. Không dùng JDK 25 tro
 
 Chỉ tạo `docs/learning/interview-notes/jdk-01-java21-platform-baseline.md` sau evidence.
 
-### Câu trả lời 2 phút
+### Câu trả lời 2 phút — draft outline, chưa evidence-backed
 
-Tôi không nâng JDK chỉ để dùng syntax mới. Project khai báo Java 17 nhưng runtime evidence từng khác version, nên tôi chọn Java 21 LTS làm baseline có toolchain/CI evidence trước. Java 21 cho virtual threads, nhưng tôi giữ chúng là một experiment: chúng giúp workload blocking I/O scale bằng thread-per-request, không làm CPU hay connection pool nhanh hơn. Tôi chỉ bật sau benchmark và JFR kiểm tra pinning; nếu scheduler/lifecycle hoặc downstream saturation tạo rủi ro, tôi defer. JDK 25 là LTS mới hơn và Spring Boot 3.5.16 đã công bố support, nhưng current app còn ở Boot 3.4 và gần như không có safety net, nên combined platform upgrade phải là JDK-02 riêng với compatibility/regression/rollback decision.
+Outline do Agent chuẩn bị: current drift -> Java 21 platform invariant -> virtual-thread workload boundary -> enable/defer criteria -> JDK 25/JDK-02 boundary. Người học chỉ viết full personal answer sau experiment/review evidence; không dùng outline này như câu trả lời đã sở hữu.
 
 ### Deep dive 15 phút
 

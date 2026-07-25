@@ -2,10 +2,11 @@
 
 > Status: `DRAFT | ACTIVE | REVIEWED`<br>
 > Domain owner: `<learning domain>`<br>
+> Active slice: `<CASE-ID hoặc GENERAL>`<br>
 > Related theory: `<links>`<br>
 > Updated: `YYYY-MM-DD`
 
-Question bank chứa câu hỏi và evaluation rubric, không chứa bài luận hoàn chỉnh. Link câu trả lời nền tảng tới theory và câu trả lời dựa trên trải nghiệm tới interview note.
+Question bank chứa câu hỏi và evaluation rubric, không chứa bài luận hoàn chỉnh. Người học trả lời trước khi mở `Answer outline`. Link câu trả lời nền tảng tới theory và câu trả lời dựa trên trải nghiệm tới interview note; không dùng `EVIDENCE_BACKED` khi test/experiment/review chưa tồn tại.
 
 ## Level rubric
 
@@ -31,6 +32,8 @@ Level được gắn trên từng câu hỏi; không tách file/folder theo leve
 **Question:**
 
 `<Câu hỏi>`
+
+**Target depth:** `D1 | D2 | D3 | D4`
 
 **Interviewer evaluates:**
 
@@ -64,7 +67,4 @@ Level được gắn trên từng câu hỏi; không tách file/folder theo leve
 - Tests/experiment:
 - Interview note:
 
-**Self-assessment:**
-
-- Status: `UNANSWERED | NEEDS_WORK | EVIDENCE_BACKED`
-- Gap cần học lại:
+**Self-assessment:** `UNANSWERED | NEEDS_WORK | EVIDENCE_BACKED`

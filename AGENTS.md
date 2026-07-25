@@ -109,5 +109,5 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Dùng `$review-livestream-change` để review diff, commit hoặc pull request.
 - Dùng `$refine-engineering-prompt` khi cần làm rõ yêu cầu kỹ thuật thô trước khi triển khai.
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
-- Dùng `$run-senior-java-learning` để bắt đầu hoặc tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back từ checkpoint gần nhất.
+- Dùng `$run-senior-java-learning` để bắt đầu/tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back hoặc tạo preview learning pack chuẩn mà không vượt checkpoint/evidence gate.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, bắt buộc cập nhật `docs/ai/skill-catalog.md` trong cùng change. Skill change chưa hoàn thành nếu catalog chưa đồng bộ.

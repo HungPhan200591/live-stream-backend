@@ -67,6 +67,14 @@ Nếu bạn yêu cầu implement quá sớm, Agent phải chỉ ra gate còn thi
 
 ## 5. Prompt theo nhu cầu
 
+### Tạo preview learning pack để duyệt format
+
+```text
+Dùng $run-senior-java-learning để tạo preview pack cho active case gồm core theory,
+deep-dive và question bank theo template. Giữ tất cả ở DRAFT, để learner write-back
+là LEARNER TODO, không tạo evidence/interview note và không đổi checkpoint chỉ vì file đã tồn tại.
+```
+
 ### Học tiếp checkpoint hiện tại
 
 ```text

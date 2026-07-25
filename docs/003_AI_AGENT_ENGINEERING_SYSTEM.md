@@ -142,7 +142,7 @@ Dùng `$run-senior-java-learning` làm skill điều phối khi request có mụ
 9. Review: correctness, security, failure recovery và residual risk.
 10. Interview note/teach-back: trả lời lại architect/expert bằng evidence, bản 2 phút và 15 phút.
 
-Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint gần nhất. Theory là source of truth dùng lại; case chỉ kết nối knowledge với project. Question bank được revisit sau evidence, không dùng answer outline ban đầu thay cho trải nghiệm thực tế.
+Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint gần nhất. Theory là source of truth dùng lại; case chỉ kết nối knowledge với project. Question bank được revisit sau evidence, không dùng answer outline ban đầu thay cho trải nghiệm thực tế. Nếu người dùng yêu cầu preview pack để duyệt format, Agent có thể tạo core/deep-dive/question bank cùng lúc ở trạng thái `DRAFT`, nhưng cursor vẫn đứng tại checkpoint sớm nhất chưa đạt và interview note vẫn bị khóa tới khi có evidence.
 
 ### Workflow A - Chọn learning case
 

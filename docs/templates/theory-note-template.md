@@ -2,13 +2,15 @@
 
 > Type: `CORE | DEEP_DIVE`<br>
 > Domain: `java | spring | security | database | redis | messaging | distributed-systems | architecture | testing-observability`<br>
+> Target depth: `D1 | D2 | D3 | D4; điều kiện đạt depth`<br>
 > Status: `DRAFT | LEARNER_REVIEWED | EVIDENCE_LINKED`<br>
+> Evidence status: `NOT RUN | PARTIAL | EVIDENCE_LINKED`<br>
 > Prerequisites: `<theory/doc>`<br>
 > Related cases: `<links>`<br>
 > Owner: `<learner>`<br>
 > Updated: `YYYY-MM-DD`
 
-Không copy documentation. Agent có thể tạo bản giải thích canonical để người học đọc, nhưng artifact giữ `DRAFT` cho tới khi người học viết lại mental model và làm self-check bằng lời của mình. Dùng official references để kiểm chứng và link sang case thay vì đưa current project detail vào theory.
+Không copy documentation. Agent có thể tạo bản giải thích canonical để người học đọc, nhưng artifact giữ `DRAFT` cho tới khi người học viết lại mental model và làm self-check bằng lời của mình. `EVIDENCE_LINKED` chỉ dùng khi test/experiment/review thực sự tồn tại. Dùng official references để kiểm chứng và link sang case thay vì đưa current project detail vào theory. Deep-dive phải link core theory và chỉ viết phần internals/failure/cross-layer tăng thêm, không lặp lại toàn bộ core.
 
 ## 1. Learning objectives
 
@@ -20,7 +22,7 @@ Sau topic này, tôi có thể:
 
 ## 2. Mental model bằng lời của tôi
 
-`<Giải thích ngắn gọn mà không nhìn tài liệu>`
+`LEARNER TODO — <Giải thích ngắn gọn mà không nhìn tài liệu>`
 
 ## 3. Cơ chế hoạt động
 
@@ -82,9 +84,9 @@ Với `CORE`, ghi overview và link deep-dive tương ứng. Với `DEEP_DIVE`, 
 ## 12. Self-check
 
 1. **Question:** `<Foundation check>`<br>
-   **My answer:** `<Viết trước khi mở notes>`
+   **My answer:** `LEARNER TODO — viết trước khi mở notes`
 2. **Question:** `<Senior failure/trade-off check>`<br>
-   **My answer:**
+   **My answer:** `LEARNER TODO`
 
 ## 13. Official references
 
