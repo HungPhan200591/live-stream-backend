@@ -39,19 +39,9 @@
 
 ## 3. Nguồn chuẩn theo loại thông tin
 
-```mermaid
-flowchart TD
-    B[Business flows] --> A[API contract]
-    B --> S[System design]
-    A --> P[Product phase]
-    S --> P
-    R[Senior roadmap] --> C[Learning case]
-    P --> C
-    C --> D[ADR / experiment]
-    C --> X[Code + tests]
-    X --> E[Runtime evidence]
-    E --> I[Interview notes]
-```
+`Business flows → API contract + system design → product phase → learning case → ADR/experiment + code/tests → runtime evidence → interview notes`
+
+`Senior roadmap → learning case`
 
 - Business intent: `business_flows.md`.
 - Expected REST contract: `api_endpoints_specification.md`.

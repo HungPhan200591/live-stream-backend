@@ -115,16 +115,7 @@
 
 ### Happy path
 
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant A as Application
-    participant D as Database
-    C->>A: Request
-    A->>D: Durable change
-    D-->>A: Commit
-    A-->>C: Response
-```
+`Client → Application → Database: durable change → Application: commit confirmed → Client: response`
 
 ### Failure/crash points
 

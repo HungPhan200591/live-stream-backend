@@ -30,16 +30,26 @@ Domain livestream chỉ là bối cảnh nhất quán để nối các chủ đ�
 ## 3. Learning loop chuẩn cho mọi case
 
 ```mermaid
-flowchart LR
-    Q[Question/Failure] --> T[Theory & invariant]
-    T --> R[Minimal reproducer]
-    R --> B[Baseline measurement]
-    B --> D[Design alternatives]
-    D --> I[Implementation]
-    I --> F[Failure injection]
-    F --> O[Observe & measure]
-    O --> E[Explain trade-off]
+flowchart TB
+    Q["Question<br/>or failure"] --> T["Theory<br/>and invariant"]
+    T --> R["Minimal<br/>reproducer"]
+    R --> B["Baseline<br/>measurement"]
+    B --> D["Design<br/>alternatives"]
+    D --> I["Implementation"]
+    I --> F["Failure<br/>injection"]
+    F --> O["Observe<br/>and measure"]
+    O --> E["Explain<br/>trade-off"]
     E --> Q
+
+    style Q fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style T fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style R fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style I fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style O fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
 Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Template](templates/LEARNING_CASE_TEMPLATE.md) để lưu toàn bộ vòng lặp.
