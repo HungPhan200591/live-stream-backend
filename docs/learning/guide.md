@@ -5,11 +5,12 @@
 
 Đây là file duy nhất bạn cần nhớ để sử dụng learning system. Không đọc toàn bộ `docs/` và không tự chọn hàng chục tài liệu trước mỗi buổi.
 
-## 1. Chỉ cần nhớ 2 file và 1 skill
+## 1. Chỉ cần nhớ 1 file và 1 skill
 
-1. `docs/learning/guide.md`: cách làm việc — chính là file này.
-2. [`docs/learning/index.md`](index.md): đang học case nào, checkpoint nào và bước tiếp theo là gì.
-3. `$run-senior-java-learning`: AI Agent điều phối theory, question, case, implementation, evidence và teach-back.
+1. `docs/learning/guide.md`: file bạn mở để biết cách bắt đầu — chính là file này.
+2. `$run-senior-java-learning`: skill điều phối theory, question, case, implementation, evidence và teach-back.
+
+AI Agent tự đọc [`docs/learning/index.md`](index.md) để biết đang học case nào, checkpoint nào và bước tiếp theo là gì. Bạn chỉ cần mở index khi muốn tự kiểm tra tiến độ.
 
 Roadmap chỉ dùng để kiểm soát độ phủ dài hạn. Theory, question bank, case, experiment và code chỉ được mở khi checkpoint hiện tại cần chúng.
 
