@@ -323,9 +323,8 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 
 ### Iteration B - Platform, safety net và first security slice (`IN PROGRESS`)
 
-- [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) là case `ACTIVE`, bắt đầu ở checkpoint `THEORY_CORE`; chưa có Java 21 compatibility/build/runtime evidence.
-- `TEST-01` là case kế tiếp để tạo hermetic safety net. Sau đó `JDK-02` phải chốt JDK 25 + supported Spring Boot decision trước khi tiếp tục foundation/correctness queue.
-- [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đang `PAUSED`; chỉ re-activate khi foundation queue trước nó đã đóng hoặc được reschedule có reason/scope rõ trong cursor.
+- Deliverable và dependency mặc định của platform, safety net, schema/config foundation và first security slice lấy từ wave F0/C1 trong [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); section này không sao chép execution queue.
+- Case artifact [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) và [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đã tồn tại. Status/checkpoint/next action tại runtime chỉ lấy từ [Learning System](learning/index.md) và header của case được cursor trỏ tới.
 - Đã tạo learning entry point, reusable templates và `$run-senior-java-learning`; không được suy diễn document đầy đủ là implementation/evidence đã tồn tại.
 - Tạo `docs/architecture/adr/` khi có quyết định thật.
 - Tạo testing strategy từ test harness đã chạy, không viết trước implementation.

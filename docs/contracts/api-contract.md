@@ -67,7 +67,7 @@ Target của SEC-05 là HMAC trên raw body, timestamp window, event ID/idempote
 | GET | `/api/test/rabbitmq` | Publish test message | Không chứng minh có business consumer |
 | GET | `/api/test/sql` | Kích hoạt query để quan sát P6Spy | Trả plain text, chỉ dev/test |
 
-Các endpoint này hiện vẫn public trong configuration mặc định. Stage 0 phải tách profile để chúng không tồn tại trong production context.
+Các endpoint này hiện vẫn public trong configuration mặc định. `CFG-01` phải tách profile để chúng không tồn tại trong production context.
 
 ## 3. Capability chưa có API
 

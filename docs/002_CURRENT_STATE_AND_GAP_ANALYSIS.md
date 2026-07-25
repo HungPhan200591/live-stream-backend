@@ -69,11 +69,15 @@ Vì test hiện dùng profile mặc định, PostgreSQL local và `ddl-auto=upda
 
 ## 5. Khoảng trống ưu tiên
 
+Priority trong section này là thứ tự remediation của codebase hiện tại. Nó không thay thế priority P0-P3 về tầm quan trọng năng lực Senior trong [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 ### P0 - phải xử lý trước khi thêm feature
 
 | Vấn đề | Bằng chứng hiện tại | Learning case mở ra |
 | --- | --- | --- |
-| Declared/runtime JDK và framework lifecycle bị drift | POM khai báo Java 17, test snapshot từng chạy Java 22.0.2, chưa có Toolchains/CI lock; Spring Boot đang ở 3.4.0 | Java release policy, `--release`/toolchain/runtime boundary, Java 21 baseline, JDK 25 + supported Spring Boot decision |
+| Declared/runtime JDK bị drift | POM khai báo Java 17, test snapshot từng chạy Java 22.0.2, chưa có Toolchains/CI lock | `JDK-01`: Java release policy, `--release`/toolchain/runtime boundary và Java 21 baseline |
+| Không có migration versioned | Schema bootstrap chưa tái lập từ database rỗng và khó benchmark index an toàn | `MIG-01`: Flyway baseline và clean-database bootstrap |
+| Dev/test surface và default secret có trong default context | `/api/dev/**`, `/api/test/**`, Swagger/diagnostic surface và `dev-secret-key` chưa bị chặn bằng production-context test | `CFG-01`: profile isolation, conditional bean và production fail-fast |
 | Access/refresh token chưa phân biệt loại | Cùng key, cùng `validateToken`; access token filter không kiểm tra claim loại token | JWT claims, token lifecycle, key rotation, negative security test |
 | Auth matcher quá rộng | `/api/auth/**` đang `permitAll`, bao gồm cả endpoint cần đăng nhập | Filter chain, URL rule và method security |
 | Logout-all không invalid session cache | DB bulk update nhưng không xóa cache; cache-hit path không recheck DB status | Source of truth, cache invalidation, security-sensitive cache |
@@ -81,17 +85,17 @@ Vì test hiện dùng profile mặc định, PostgreSQL local và `ddl-auto=upda
 | Webhook auth mới ở mức shared secret | Controller so sánh `X-Webhook-Secret`, nhưng có default `dev-secret-key`, chưa có HMAC/timestamp/event-ID chống replay | HMAC, secret rotation, replay protection, idempotency, timestamp window |
 | Test không đủ làm safety net | Chỉ có một context smoke test và phụ thuộc DB local | Test pyramid, Testcontainers, deterministic fixtures |
 
-### P1 - correctness, transaction và concurrency
+### P1 - lifecycle, correctness, transaction và concurrency
 
 | Vấn đề | Failure mode cần tái hiện |
 | --- | --- |
+| JDK 25 và framework lifecycle chưa có quyết định versioned | Nâng đồng thời JDK/framework không có compatibility matrix, hoặc defer vô thời hạn không owner/revisit date; xử lý bằng `JDK-02` |
 | Stream chỉ có boolean `isLive` | start lặp lại reset `startedAt`; start/end đồng thời không có transition guard |
 | DB và Redis được cập nhật trong cùng method nhưng không atomic | DB rollback sau khi Redis đã đổi hoặc Redis lỗi sau DB update |
 | `findAll` và DTO mapping gọi thêm query creator | unbounded response và manual N+1 |
 | Max-session dùng count rồi revoke rồi insert | login đồng thời có thể vượt giới hạn hoặc revoke sai session |
 | Wallet mới là simulation, chưa có ledger | lost update, balance âm, thiếu audit và idempotency |
 | HyperLogLog được dùng cho viewer count | HLL đo unique reach xấp xỉ, không biểu diễn current concurrent viewers |
-| Không có migration versioned | schema drift, khó tái lập và khó benchmark index an toàn |
 
 ### P2 - distributed systems và operations
 

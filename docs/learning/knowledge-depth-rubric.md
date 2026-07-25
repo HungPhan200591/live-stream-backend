@@ -31,16 +31,16 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 
 | Capability | Target | Current depth | Evidence / next action |
 | --- | --- | --- | --- |
-| Java language, collections, algorithm và complexity | D3 | Chưa đánh giá | `JDK-01` active: Java 21 baseline/theory/compatibility evidence pending |
+| Java language, collections, algorithm và complexity | D3 | Chưa đánh giá | Chưa có Java 21 theory/compatibility evidence; trạng thái case lấy từ [Learning System](index.md) |
 | Object-oriented design và refactoring | D3 | Chưa đánh giá | Chọn case/lab khi Stage 1 active |
-| JVM runtime và diagnostics | D3 | Chưa đánh giá | `JDK-01` chỉ mở platform/JFR boundary; chưa có workload diagnostic để nâng depth |
-| Concurrency, JMM và async model | D3 | Chưa đánh giá | `JDK-01` chỉ cover virtual-thread mental model/decision; `CON-01` evidence chưa chạy |
+| JVM runtime và diagnostics | D3 | Chưa đánh giá | Chưa có workload/JFR diagnostic để nâng depth; `JDK-01`/`JVM-01` chỉ là evidence owner |
+| Concurrency, JMM và async model | D3 | Chưa đánh giá | Chưa có virtual-thread/JMM/concurrency experiment; `JDK-01`/`CON-01` chỉ là evidence owner |
 | Spring Framework và Spring Boot | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
 | HTTP, API design và network fundamentals | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
 | Transaction và data consistency | D3 | Chưa đánh giá | Chọn case/lab khi Stage 2 active |
-| Security và identity | D3 | Chưa đánh giá | `SEC-01` đang `PAUSED`, chờ platform/safety-net foundation queue; chưa có theory/reproducer/evidence |
+| Security và identity | D3 | Chưa đánh giá | `SEC-01` chưa có theory/reproducer/evidence; prerequisite và trạng thái lấy từ learning cursor |
 | PostgreSQL, SQL và data modeling | D3 | Chưa đánh giá | Chọn MIG-01/DB-01/SQL-01/WAL-01 theo execution queue |
-| Testing và quality strategy | D3 | Chưa đánh giá | `TEST-01` queued sau JDK-01; context smoke hiện tại không đủ evidence để nâng depth |
+| Testing và quality strategy | D3 | Chưa đánh giá | Chỉ có context smoke; chưa có hermetic/risk-based test evidence để nâng depth |
 | Observability, reliability và incident response | D3 | Chưa đánh giá | Chọn case/lab khi Stage 8 active |
 | Distributed systems fundamentals | D3 | Chưa đánh giá | Chọn case/lab khi Stage 10/11 active |
 | Solution architecture | D3 | Chưa đánh giá | Chọn capstone khi Stage 11 active |
@@ -48,7 +48,7 @@ Chỉ tự nhận một mức khi **toàn bộ mức thấp hơn đã đạt**. 
 | Redis | D3 | Chưa đánh giá | Chọn case/lab khi Stage 4 active |
 | RabbitMQ, Kafka và event-driven workflow | D3 | Chưa đánh giá | Chọn case/lab khi Stage 5/6 active |
 | Domain modeling và modular architecture | D3 | Chưa đánh giá | Chọn case/lab khi Stage 10 active |
-| Git, Linux, container, build và CI/CD | D2-D3 | Chưa đánh giá | `JDK-01` active: toolchain/CI/runtime evidence pending; chưa nâng depth |
+| Git, Linux, container, build và CI/CD | D2-D3 | Chưa đánh giá | Chưa có toolchain/CI/runtime evidence tái lập; chưa nâng depth |
 | Data operations và lifecycle | D2-D3 | Chưa đánh giá | Chọn case/lab khi Stage 3/9 active |
 | Microservice architecture | D2-D3 | Chưa đánh giá | Chọn case/lab khi Stage 10 active |
 | Cloud, Kubernetes và IaC | D1-D2 | Chưa đánh giá | Chỉ chọn khi target role/case yêu cầu |

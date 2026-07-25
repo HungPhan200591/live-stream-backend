@@ -94,7 +94,7 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
 | Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ platform/safety-net foundation queue đóng hoặc được reschedule có reason |
-| Testing, observability và performance | Stage 0, 8 | `QUEUED`: TEST-01 đứng sau JDK-01 |
+| Testing, observability và performance | Stage 0, 8 | `LEARNING BACKLOG`: TEST-01 đứng sau JDK-01 |
 | Resilience và distributed failure | Stage 2, 8, 10 | `NOT_STARTED` |
 | Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
@@ -112,7 +112,7 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 ## 8. Current active slice
 
-JDK-01 là lượt chạy thử đầu tiên của system theo thứ tự mới: Java 21 platform baseline có evidence trước, rồi TEST-01 tạo safety net, JDK-02 chốt latest-LTS/Spring Boot decision, MIG-01 tạo schema baseline và sau đó mới re-activate SEC-01. JDK-02 có thể đóng bằng time-boxed defer rõ ràng; không tự biến thành platform upgrade khi chưa được active. Artifact của JDK-01 được tạo dần theo checkpoint:
+JDK-01 là lượt chạy thử đầu tiên của system theo thứ tự mới: Java 21 platform baseline có evidence trước, rồi TEST-01 tạo safety net, JDK-02 chốt latest-LTS/Spring Boot decision, MIG-01 tạo schema baseline, CFG-01 khóa production context và sau đó mới re-activate SEC-01. JDK-02 có thể đóng bằng time-boxed defer rõ ràng; không tự biến thành platform upgrade khi chưa được active. Artifact của JDK-01 được tạo dần theo checkpoint:
 
 1. `theory/core/java/java21-platform-baseline.md`.
 2. `theory/deep-dives/java/virtual-threads-and-pinning.md`.

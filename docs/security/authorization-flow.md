@@ -67,7 +67,7 @@ Current gap: access và refresh token chưa được phân biệt chắc chắn 
 | SEC-02 | Logout-all không invalidate cache | Session đã revoke vẫn cache-hit | User-session index hoặc bounded invalidation |
 | SEC-03 | Stream key trong public DTO/log | Secret exposure | DTO theo audience + log redaction |
 | SEC-05 | Webhook shared secret tĩnh | Replay/spoof nếu secret lộ | HMAC + timestamp + event ID |
-| STAGE-0 | Dev/test endpoint trong default context | Production attack surface | Profile/conditional bean tests |
+| CFG-01 | Dev/test endpoint trong default context | Production attack surface | Profile/conditional bean tests |
 
 ## 4. Target invariants
 

@@ -22,7 +22,7 @@ Chi tiết bằng chứng và gap: [Current State & Gap Analysis](docs/002_CURRE
 
 ## Roadmap
 
-Roadmap/order chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active case và checkpoint chỉ lấy từ [Learning System](docs/learning/index.md). Hiện `JDK-01` là case `ACTIVE`, `TEST-01` là safety-net case kế tiếp và `SEC-01` đang `PAUSED`. Không sao chép toàn bộ execution queue vào README để tránh tạo backlog cạnh tranh.
+Roadmap/order chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active case, checkpoint và next action chỉ lấy từ [Learning System](docs/learning/index.md). README không sao chép trạng thái động hoặc toàn bộ execution queue để tránh tạo backlog cạnh tranh.
 
 [Current Implementation Map](docs/implementation/current-implementation-map.md) chỉ mô tả code coverage; không phải backlog cạnh tranh với learning roadmap.
 
