@@ -60,6 +60,7 @@ Quy tắc quyết định:
 | Business mong đợi gì? | `docs/contracts/business-flows.md` | active learning case |
 | REST contract và authorization hiện tại? | `docs/contracts/api-contract.md` và `docs/security/authorization-flow.md` | `.http`, OpenAPI, tests |
 | Code đang làm gì? | source code + automated tests | runtime logs |
+| Human dùng learning system thế nào? | `docs/learning/guide.md` | `docs/learning/index.md` cursor |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
 | Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
 | Kiến thức dùng lại nằm ở đâu? | `docs/learning/theory/*` | question bank và learning cases link tới theory |
@@ -82,6 +83,7 @@ docs/
 │   ├── module-boundaries.md    # khi bắt đầu modularization
 │   └── capacity-model.md       # khi có workload/assumption
 ├── learning/
+│   ├── guide.md                # human quick start và prompt chuẩn
 │   ├── index.md                # entry point và session cursor
 │   ├── theory/
 │   │   ├── core/               # mental model/mechanism/invariant dùng lại

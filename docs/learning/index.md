@@ -4,6 +4,8 @@
 > Phạm vi: Senior Java, Spring Boot, data, distributed systems và solution architecture<br>
 > Cập nhật: 2026-07-25
 
+> **Bạn là người học và chưa biết bắt đầu từ đâu?** Đọc [Hướng dẫn học và implement cùng AI Agent](guide.md), rồi dùng prompt bắt đầu chuẩn trong guide. File này chủ yếu lưu trạng thái/checkpoint cho session hiện tại.
+
 Learning system nối kiến thức có thể tái sử dụng với failure thật trong project theo chu trình:
 
 `Core theory -> Deep-dive -> Question bank -> Learning case -> Reproducer -> Design/trade-off -> Implementation -> Experiment/evidence -> Review -> Interview note/teach-back`

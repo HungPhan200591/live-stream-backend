@@ -18,6 +18,7 @@
 - Hạ tầng cục bộ: `docker-compose.yml` gồm PostgreSQL, Redis và RabbitMQ.
 - MCP PostgreSQL cho Codex: `.codex/config.toml`; hướng dẫn sử dụng: `docs/tools/codex-postgres-mcp.md`.
 - Điểm vào và routing tài liệu cho Human/AI: `docs/000_DOCUMENTATION_ORCHESTRATOR.md`.
+- Hướng dẫn Human học và implement cùng AI Agent: `docs/learning/guide.md`.
 - Điểm vào hệ học/phỏng vấn và checkpoint phiên hiện tại: `docs/learning/index.md`.
 
 ## Nạp context cần thiết

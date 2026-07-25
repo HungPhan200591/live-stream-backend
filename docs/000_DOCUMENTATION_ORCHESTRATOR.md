@@ -37,7 +37,7 @@ flowchart TB
 | Intent | Đọc bắt buộc | Chỉ đọc thêm khi liên quan | Output/write-back |
 | --- | --- | --- | --- |
 | Chọn case học tiếp | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) | [Implementation Map](implementation/current-implementation-map.md) | Learning case từ [template](templates/learning-case-template.md) |
-| Bắt đầu/tiếp tục phiên học Senior | [Learning System](learning/index.md), active case và checkpoint hiện tại | Theory/deep-dive, question bank, concern docs, code/test được checkpoint link | Knowledge artifact đúng owner, evidence và session cursor |
+| Bắt đầu/tiếp tục phiên học Senior | [Learning Guide](learning/guide.md), [Learning System](learning/index.md), active case và checkpoint hiện tại | Theory/deep-dive, question bank, concern docs, code/test được checkpoint link | Knowledge artifact đúng owner, evidence và session cursor |
 | Implement feature/case | `AGENTS.md`, active case, [Coding Standards](engineering/coding-standards.md) | Business/API/security/Redis/webhook theo concern | Code, tests, OpenAPI, `.http`, case evidence |
 | Hiểu business | [Business Flows](contracts/business-flows.md) | [API Contract](contracts/api-contract.md) | Làm rõ invariant hoặc contract drift |
 | Hiểu code đang có gì | [Implementation Map](implementation/current-implementation-map.md), [System Context](architecture/system-context.md) | Source code, tests, runtime evidence | Cập nhật map khi capability thay đổi |
@@ -97,8 +97,8 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 
 ### Chuẩn bị một buổi học
 
-1. Mở [Learning System](learning/index.md) và đọc `Current session cursor`.
-2. Đọc active case, đúng template và các artifact được checkpoint link.
+1. Mở [Learning Guide](learning/guide.md) và dùng prompt bắt đầu chuẩn.
+2. Agent đọc [Learning System](learning/index.md), active case, đúng template và các artifact được checkpoint link.
 3. Tiếp tục bằng `$run-senior-java-learning`; không tự nhảy qua evidence gate.
 4. Chỉ đọc current code path/concern docs khi checkpoint đã tới case hoặc reproducer.
 5. Kết thúc bằng cách ghi artifact đúng owner và cập nhật cursor cho session sau.
@@ -145,6 +145,7 @@ docs/
 ├── implementation/
 │   └── current-implementation-map.md
 ├── learning/
+│   ├── guide.md
 │   ├── index.md
 │   └── cases/
 │       └── sec-01-access-vs-refresh-token.md
