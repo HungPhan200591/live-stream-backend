@@ -7,7 +7,7 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-25`
 
-> Pause reason: `JDK-01` (Java 21 platform baseline) và `TEST-01` được ưu tiên làm prerequisite để build/runtime baseline và safety net có evidence trước khi sửa authentication. Theo execution queue hiện tại, `JDK-02` decision gate, `MIG-01` và `CFG-01` cũng phải đóng hoặc được reschedule có lý do trong cursor trước khi re-activate SEC-01. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
+> Pause reason: SEC-01 thuộc wave W1; các item đứng trước nó trong W0 phải đóng hoặc được reschedule có reason/dependency/revisit point trong cursor trước khi re-activate. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
 
 ## Scope lock
 
