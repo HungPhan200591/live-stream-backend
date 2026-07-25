@@ -27,6 +27,33 @@ Domain livestream chỉ là bối cảnh nhất quán để nối các chủ đ�
 - Mỗi case có một hypothesis đo được, một failure scenario và một exit gate.
 - Không tự gọi một capability là `DONE`; dùng maturity M0-M4 trong [current-state assessment](002_CURRENT_STATE_AND_GAP_ANALYSIS.md#6-maturity-model-dùng-cho-project).
 
+### 2.1. Thang ưu tiên năng lực
+
+Priority dưới đây đo **độ quan trọng đối với năng lực Senior Java Backend**, không phải defect/incident severity hay thứ tự tự động triển khai case. Dependency, case đang active và bằng chứng còn thiếu vẫn quyết định thứ tự học thực tế.
+
+| Priority | Ý nghĩa | Độ sâu tối thiểu |
+| --- | --- | --- |
+| **P0 - Essential** | Không thể bỏ qua với Senior Java Backend ở hầu hết môi trường | Giải thích từ first principles, debug failure, triển khai được và bảo vệ trade-off bằng evidence |
+| **P1 - High** | Gặp thường xuyên trong backend production; thiếu sẽ tạo lỗ hổng năng lực đáng kể | Thiết kế được, có ít nhất một case/lab thực tế và biết failure/operations |
+| **P2 - Contextual** | Quan trọng tùy quy mô, domain hoặc platform của công ty | Biết khi nào cần, chọn/loại phương án có lý do; implementation có thể là lab nhỏ |
+| **P3 - Specialization** | Hữu ích cho vị trí/chuyên môn cụ thể, không phải baseline chung | Có vocabulary chính xác, decision criteria và biết giới hạn để không over-engineer |
+
+Độ sâu kiến thức dùng thang riêng: **D1 - nhận diện đúng**, **D2 - giải thích/so sánh**, **D3 - áp dụng, tái hiện và debug bằng evidence**, **D4 - dẫn dắt, teach-back và tiến hóa quyết định qua nhiều constraint**. Thang D1-D4 không thay maturity M0-M4 của implementation đang chạy.
+
+Quy tắc coverage: P0 phải đạt ít nhất D3; P1 nên đạt D2-D3; P2 đạt D1-D2 theo mục tiêu phỏng vấn; P3 chỉ học khi job description hoặc case thực tế yêu cầu. Một tên công nghệ không tự tạo coverage nếu chưa có câu hỏi, failure scenario và evidence.
+
+### 2.2. Biên coverage và cách rà soát lại
+
+Roadmap này đặt baseline cho **Senior Java Backend có thể tiến tới Solution Architect**, không cố biến một người thành đồng thời DBA, security specialist, SRE và platform engineer. P0/P1 là core coverage; P2/P3 được chọn theo job description, domain, quy mô hệ thống và khoảng trống evidence của người học.
+
+Rà soát lại ma trận mỗi quý hoặc trước một vòng phỏng vấn: đối chiếu job description, phiên bản Java/Spring được hỗ trợ, incident/case mới và maturity M0-M4. Công nghệ mới chỉ được thêm khi nó đại diện cho capability hoặc trade-off chưa có; công nghệ cũ được thay thế bằng decision/evidence mới thay vì giữ vì quán tính.
+
+### 2.3. Đích theo level phỏng vấn
+
+- **Senior Java Backend:** toàn bộ P0 đạt D3 và các P1 sát job description đạt ít nhất D2; có thể tự triển khai, debug và vận hành một vertical slice production.
+- **Senior+ / Solution Architect:** ngoài baseline Senior, các năng lực distributed systems, security, reliability, data, capacity/cost và evolution đạt D3-D4; bảo vệ được quyết định liên team và failure domain.
+- **Expert theo domain:** giữ breadth ở baseline Senior nhưng chọn một đến hai năng lực đạt D4 bằng incident, benchmark, source-level/runtime analysis hoặc production-scale evidence. Không yêu cầu “expert mọi stack”.
+
 ## 3. Learning loop chuẩn cho mọi case
 
 ```mermaid
@@ -56,23 +83,32 @@ Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Templa
 
 ## 4. Bản đồ năng lực
 
-| Chủ đề | Case chính trong domain | Bằng chứng phải tạo |
-| --- | --- | --- |
-| Java Core | value object tiền, collections, equality, exception, executor | Unit test, JMH/JFR khi có performance claim, giải thích memory model |
-| Concurrency | start webhook đồng thời, wallet deduct, consumer song song | Race test lặp lại, invariant query, lock/conflict metric |
-| Spring Boot | bean lifecycle, proxy/AOP, validation, filter chain, configuration | Slice test, context test có mục tiêu, architecture test |
-| Transaction | rollback, propagation, isolation, after-commit side effect | Integration test từng anomaly, transaction timeline |
-| Security | JWT/session, webhook HMAC, RBAC/ownership, rate limit | Threat model, negative test, audit log đã redact |
-| PostgreSQL | MVCC, lock, index, cursor, constraint, deadlock | Flyway migration, dataset generator, `EXPLAIN (ANALYZE, BUFFERS)` |
-| Redis | cache-aside, TTL, stampede, HLL, ZSET, rate limit, lock | Key schema, hit ratio, degraded-mode test, recovery policy |
-| RabbitMQ | command/work queue, retry, DLQ, manual ACK | Duplicate/crash test, queue metrics, replay procedure |
-| Kafka | event log, partition/order, consumer group, replay, retention | Topic contract, key choice, lag/rebalance/replay experiment |
-| Testing | unit, slice, integration, contract, concurrency, load, chaos | Test pyramid và CI artifact |
-| Observability | structured log, metric, trace, SLI/SLO | Dashboard, alert, trace example, incident timeline |
-| Data scale | primary/replica, lag, partition, archive, shard decision | Read-routing test, lag experiment, pruning/query-plan report |
-| Design patterns | state machine, strategy, decorator, adapter, outbox, saga | ADR giải thích pattern và anti-pattern, không chỉ class diagram |
-| Microservice | service boundary, contract, data ownership, resilience | Extraction scorecard, contract test, distributed trace |
-| Solution architecture | capacity, bottleneck, HA, DR, security, cost | Architecture dossier và 15/45-minute interview presentation |
+| Năng lực | Priority | Độ sâu đích | Case/chủ đề chính trong domain | Bằng chứng phải tạo |
+| --- | --- | --- | --- | --- |
+| Java language, collections, algorithm và complexity | P0 | D3 | value object tiền, equality/hash, collection choice, heap/queue, Big-O trên hot path | Unit/property test, complexity và memory trade-off |
+| Object-oriented design và refactoring | P0 | D3 | encapsulation, composition/polymorphism, coupling/cohesion, SOLID heuristic, state/strategy/adapter/decorator | Refactoring diff, characterization/invariant test và ADR giải thích cả anti-pattern |
+| JVM runtime và diagnostics | P0 | D3 | class loading, bytecode awareness, heap/off-heap, allocation, JIT, safepoint, G1/ZGC | JFR/GC log, heap/thread dump, profiling report và tuning hypothesis |
+| Concurrency, JMM và async model | P0 | D3 | start webhook đồng thời, wallet deduct, executor, virtual thread, reactive/backpressure | Race test lặp lại, happens-before timeline, contention/throughput metric |
+| Spring Framework và Spring Boot | P0 | D3 | IoC lifecycle, proxy/AOP, MVC pipeline, validation, configuration, auto-configuration | Slice/context test có mục tiêu, condition report, architecture test |
+| HTTP, API design và network fundamentals | P0 | D3 | method/status/cache semantics, idempotency, pagination, versioning, compatibility, TLS/DNS/TCP/proxy/LB | Contract test, packet/request timeline, compatibility và client-failure test |
+| Transaction và data consistency | P0 | D3 | rollback, propagation, isolation, after-commit side effect | Integration test từng anomaly, transaction/crash timeline |
+| Security và identity | P0 | D3 | JWT/session, OAuth2/OIDC, webhook HMAC, RBAC/ownership, OWASP API risks, secrets | Threat model, negative test, dependency/security scan, audit log đã redact |
+| PostgreSQL và data modeling | P0 | D3 | schema/normalization, MVCC, lock, index, cursor, constraint, deadlock, pool | Flyway migration, dataset, `EXPLAIN (ANALYZE, BUFFERS)`, lock/pool evidence |
+| Testing và quality strategy | P0 | D3 | unit, property, slice, module, integration, contract, concurrency, load, fault | Risk-based test pyramid, mutation/coverage interpretation và CI artifact |
+| Observability, reliability và incident response | P0 | D3 | structured log, metric, trace, SLI/SLO, alert, capacity, graceful degradation | Dashboard, actionable alert, runbook, incident timeline/postmortem |
+| Distributed systems fundamentals | P0 | D3 | failure model, consistency model, time/clock, CAP/PACELC, coordination, backpressure | Failure matrix, sequence/timeline, consistency và recovery decision |
+| Solution architecture | P0 | D3 | capacity, bottleneck, HA, DR, security, cost, evolution | Architecture dossier và phiên trình bày 2/15/45 phút |
+| Technical leadership và delivery | P0 | D3 | code review, ADR, incident leadership, mentoring, prioritization, stakeholder trade-off | Review record, ADR, postmortem và STAR/teach-back story có evidence |
+| Redis | P1 | D3 | cache-aside, TTL, stampede, HLL, ZSET, rate limit, lock | Key schema, hit ratio, degraded-mode test, recovery policy |
+| RabbitMQ/Kafka và event-driven workflow | P1 | D3 | queue/log, partition/order, ACK/offset, retry/DLQ, outbox/inbox, saga | Contract, duplicate/crash/replay experiment, lag/queue metric |
+| Domain modeling và modular architecture | P1 | D3 | bounded context, aggregate invariant, module API/data owner, state machine | Context/module map, architecture test, ADR và invariant test |
+| Git, Linux, container, build và CI/CD | P1 | D2-D3 | diff/history/bisect/revert, process/thread/socket/FD, cgroup, Maven/BOM, image, probe, resource limit, rollout | Reproducible build, SBOM, container/runtime evidence, rollback drill |
+| Data operations và lifecycle | P1 | D2-D3 | safe migration, backup/restore/PITR, replica, retention, partition | Migration rehearsal, restore evidence, lag/pruning report, RPO/RTO |
+| Microservice architecture | P1 | D2-D3 | service boundary, contract, data ownership, resilience | Extraction scorecard, contract test, distributed trace |
+| Cloud/Kubernetes/IaC | P2 | D1-D2 | workload/probe/resource/autoscaling, IAM/secret, managed service, IaC | Deployment lab hoặc design review; cost/failure/lock-in trade-off |
+| Storage selection ngoài RDBMS | P2 | D1-D2 | search index, object storage, document/key-value/columnar use case | Decision matrix theo access pattern, consistency, operation và cost |
+| Reactive programming/WebFlux | P2 | D1-D2 | MVC vs virtual threads vs Reactor, non-blocking I/O và backpressure | Benchmark đúng workload, thread/context trace, decision record |
+| gRPC/GraphQL, native image và platform-specific stack | P3 | D1 | chỉ thêm khi contract, latency, startup hoặc target role chứng minh cần | Spike nhỏ và ADR nêu rõ benefit, constraint, operational cost |
 
 ## 5. Roadmap theo stage
 
@@ -84,21 +120,24 @@ Roadmap có thứ tự dependency nhưng không có deadline cố định. Mỗi
 
 Thực hiện:
 
-- sửa các P0 về token type, auth matcher, session cache, stream-key exposure và hardening shared-secret webhook;
+- sửa các correctness/security defect đang chặn Stage 0 về token type, auth matcher, session cache, stream-key exposure và hardening shared-secret webhook;
 - tách `dev`, `test`, `prod` configuration; không để dev/test endpoint tự xuất hiện trong production;
 - dùng Flyway làm nguồn schema versioned;
 - dùng Testcontainers cho PostgreSQL, Redis và broker cần thiết;
-- khóa JDK trong CI/toolchain; compile và test không phụ thuộc máy developer;
+- khóa JDK, Maven Wrapper, plugin và dependency management/BOM trong CI; compile và test không phụ thuộc máy developer;
+- thực hành Git diff/history, conflict resolution, revert và bisect trên change nhỏ; commit phải review/rollback được;
+- hiểu dependency mediation, kiểm tra dependency convergence; tạo SBOM và dependency/CVE scan có policy xử lý finding thay vì chỉ sinh report;
 - tạo test data builder, deterministic clock/ID seam và test naming convention;
 - thêm correlation ID và log-redaction baseline;
 - tạo ADR đầu tiên và learning case đầu tiên.
 
 **Exit gate**
 
-- P0 đều có regression test.
+- Các defect chặn Stage 0 đều có regression test.
 - Test chạy trên máy sạch không cần database có sẵn.
 - `ddl-auto` không âm thầm thay schema.
-- CI xuất kết quả test; không có secret trong log.
+- CI xuất kết quả test, SBOM và security finding; không có secret trong log.
+- Có thể giải thích dependency nào được chọn, vì sao và cách rollback một dependency upgrade lỗi.
 
 ### Stage 1 - Java Core, state và concurrency
 
@@ -112,21 +151,36 @@ Case:
 4. Tái hiện lost update khi 100 request deduct cùng wallet.
 5. So sánh optimistic lock, pessimistic lock và conditional SQL update.
 6. Phân tích `synchronized`, `Lock`, atomic class, executor, `CompletableFuture`, ThreadLocal và Java Memory Model trong đúng context case.
+7. Ôn generics/type erasure, immutability, exception contract, records/sealed classes, Stream API và equality/hash contract bằng code nhỏ có test.
+8. Chọn collection/data structure bằng access pattern và Big-O: array/list, hash/tree, set/map, heap/priority queue, deque; phân tích CPU-memory trade-off thay vì học thuộc API.
+9. Refactor theo encapsulation, composition/polymorphism, coupling/cohesion và SOLID như heuristic; so sánh state/strategy/adapter/decorator với phương án đơn giản hơn.
+10. Xử lý time zone/clock, locale, money/rounding, null/optional và serialization compatibility tại domain boundary.
+11. JVM lab: class loading/linking/initialization, stack/heap/metaspace/direct memory, allocation/GC roots, JIT/warm-up, safepoint, G1 và ZGC.
+12. Chẩn đoán CPU spike, allocation pressure, memory leak, deadlock và thread starvation bằng JFR, GC log, heap/thread dump trước khi tuning.
 
-Java 17 vẫn là baseline. Virtual threads được thử trên nhánh/lab JDK phù hợp sau khi có blocking-I/O benchmark; không nâng version chỉ để dùng keyword mới.
+Java 17 vẫn là baseline chạy project. Learning track phải biết khác biệt và migration risk của các LTS mới hơn, đặc biệt Java 21/25; virtual threads chỉ thử trên nhánh/lab JDK phù hợp sau khi có blocking-I/O benchmark. Không nâng version chỉ để dùng keyword mới và không dùng virtual thread như cách tăng tốc workload CPU-bound.
 
 **Exit gate**
 
 - Race test lặp nhiều lần vẫn giữ invariant.
 - Có giải thích happens-before, visibility, atomicity và contention bằng timeline cụ thể.
 - Chọn lock strategy dựa trên conflict rate và số liệu, không dựa trên sở thích.
+- Giải thích được complexity và memory behavior của collection/algorithm đã chọn trên hot path.
+- Có ít nhất một JVM diagnostic report nối triệu chứng với allocation, GC, lock/thread hoặc code path cụ thể.
+- Phân biệt được platform thread, virtual thread và reactive model theo workload, backpressure, debugging và ecosystem constraint.
 
-### Stage 2 - Spring internals và transaction semantics
+### Stage 2 - Spring internals, HTTP API và transaction semantics
 
 **Câu hỏi trung tâm:** Transaction boundary thực sự nằm ở đâu?
 
 Case:
 
+- IoC lifecycle, bean scope, dependency cycle, configuration properties, auto-configuration/condition và startup failure;
+- request đi qua servlet container, filter, Spring Security chain, `DispatcherServlet`, interceptor, argument resolver, validation, exception handler và message converter;
+- HTTP method/status/cache semantics, safe/idempotent operation, conditional request, idempotency key và error contract;
+- API evolution: cursor pagination, versioning, backward/forward compatibility, deprecation, quota và contract test;
+- HTTP client: DNS/connect/TLS/read/write/pool timeout, cancellation, retry budget và connection-pool exhaustion;
+- chọn Spring MVC, MVC + virtual threads hoặc WebFlux/Reactor bằng workload và benchmark; không trộn blocking call vào reactive path mà không kiểm soát;
 - `@Transactional` proxy, self-invocation, rollback rule và exception translation;
 - propagation `REQUIRED`, `REQUIRES_NEW`, nested behavior và timeout;
 - isolation anomalies trên PostgreSQL: non-repeatable read, phantom-like behavior, write skew/lost update;
@@ -139,6 +193,8 @@ Case:
 - Mỗi claim về propagation/isolation có integration test.
 - Không có Redis/broker side effect được mô tả sai là atomic với database.
 - Có sequence diagram cho commit, rollback và crash window.
+- Có thể lần một request qua đúng Spring pipeline và chứng minh một auto-configuration được bật/tắt vì condition nào.
+- API có compatibility/idempotency/client-failure test, không chỉ happy-path controller test.
 
 ### Stage 3 - PostgreSQL: model, index và query engineering
 
@@ -147,18 +203,23 @@ Case:
 Case:
 
 - xây wallet + immutable ledger, constraint bảo vệ balance/invariant;
+- schema modeling: key, normalization/denormalization, nullability, temporal/audit data và aggregate invariant;
+- JPA persistence context, dirty checking, flush, batching, fetch strategy/projection và query boundary;
 - sửa manual N+1 của stream list bằng projection/batch query và đo query count;
 - cursor pagination cho stream/history thay unbounded `findAll`;
 - B-tree/composite/covering/partial index; column order, selectivity và write amplification;
 - đọc `EXPLAIN (ANALYZE, BUFFERS)`, statistics, scan type và row-estimation error;
 - MVCC, vacuum, bloat, lock wait, deadlock và retry có giới hạn;
-- unique constraint/idempotency key như concurrency primitive.
+- unique constraint/idempotency key như concurrency primitive;
+- connection-pool sizing theo DB capacity và transaction time; tái hiện pool exhaustion;
+- Flyway migration theo expand-contract, lock/scan risk, rollback/roll-forward và zero/low-downtime compatibility.
 
 **Exit gate**
 
 - Dataset đủ lớn để query plan có ý nghĩa.
 - Có before/after plan và latency distribution, không chỉ một con số trung bình.
 - Mỗi index có query owner và chi phí ghi được ghi nhận.
+- Migration được rehearsal trên dataset đại diện và tương thích ít nhất hai phiên bản application khi rollout yêu cầu.
 
 ### Stage 4 - Redis as a distributed data structure
 
@@ -243,20 +304,27 @@ Học và triển khai:
 
 Case:
 
+- phân biệt authentication, authorization, delegation và federation; OAuth2/OIDC role, authorization code + PKCE, token audience/scope, key rotation và logout/revocation boundary;
+- đặt custom session-backed JWT hiện tại cạnh chuẩn OAuth2/OIDC để giải thích khi nào tự xây là phù hợp và khi nào phải dùng authorization server/identity provider;
 - WebSocket/STOMP auth ở CONNECT, SUBSCRIBE và SEND;
 - ownership/ban/mute check, reconnect, duplicate message và token expiry;
 - slow consumer, bounded queue, backpressure và message-size limit;
 - webhook HMAC, timestamp window, nonce/event ID và secret rotation;
 - per-user/room/IP rate limit, abuse signal và audit log;
-- threat model theo asset, trust boundary và attacker story.
+- threat model theo asset, trust boundary và attacker story;
+- OWASP/API risks: broken object/function authorization, mass assignment/property binding, injection, SSRF, unsafe deserialization, resource exhaustion và security misconfiguration;
+- CORS, CSRF, SameSite/cookie, TLS termination/proxy header trust, secret lifecycle và least-privilege service identity;
+- software supply chain: trusted artifact/repository, SBOM, dependency/CVE response, build provenance và secret scanning.
 
 **Exit gate**
 
 - Negative authorization test tồn tại ở HTTP, WebSocket và webhook.
 - Load test chứng minh behavior khi client chậm hoặc reconnect storm.
 - Token, stream key, webhook secret và payload nhạy cảm không xuất hiện trong log.
+- Có protocol/threat timeline cho login, token refresh/rotation/replay, key rotation và compromised credential.
+- Mỗi finding từ dependency/security scan có owner, severity rationale và remediation/acceptance record.
 
-### Stage 8 - Observability, testing và performance engineering
+### Stage 8 - Observability, testing, runtime và delivery engineering
 
 **Câu hỏi trung tâm:** Khi production chậm hoặc sai, bằng chứng đầu tiên nằm ở đâu?
 
@@ -268,13 +336,19 @@ Thực hiện xuyên suốt rồi chuẩn hóa tại stage này:
 - SLI/SLO: availability, latency, error rate, consumer lag và queue depth;
 - unit, slice, module, integration, contract, concurrency, load và fault test;
 - k6/Gatling workload; JFR, GC log, thread dump và connection-pool analysis;
-- incident drills: DB slow, Redis down, broker unavailable, poison message, replica lag.
+- Linux/runtime diagnostics: process/thread, signal, socket/file descriptor, DNS/TCP/TLS, proxy/load balancer và cgroup CPU/memory behavior;
+- container image tối thiểu, non-root runtime, immutable configuration, startup/readiness/liveness semantics và graceful shutdown/drain;
+- CPU/memory request-limit, JVM container awareness, OOM kill/throttling và autoscaling signal;
+- CI/CD quality gate, artifact promotion, database compatibility, rolling/blue-green/canary deployment và rollback;
+- incident drills: DB slow, Redis down, broker unavailable, poison message, replica lag, bad deploy và resource exhaustion.
 
 **Exit gate**
 
 - Một alert có runbook và được kích hoạt bằng fault injection.
 - Có p50/p95/p99, throughput, saturation và error rate cho hot path.
 - Có thể lần theo một gift request xuyên các component bằng trace/correlation ID.
+- Phân biệt đúng startup/readiness/liveness; graceful shutdown không làm mất request/message đang xử lý.
+- Có deployment/rollback rehearsal và chứng minh behavior dưới CPU throttling, OOM hoặc exhausted file/socket/connection resource.
 
 ### Stage 9 - Primary/replica, partitioning và data lifecycle
 
@@ -296,11 +370,19 @@ Case partitioning:
 - detach/archive/drop partition và retention job;
 - sharding chỉ làm architecture exercise sau khi single-node + replica + partition không đủ.
 
+Case data operations:
+
+- backup strategy theo dữ liệu và RPO/RTO; phân biệt logical backup, physical/base backup và WAL archive;
+- thực hành restore/PITR vào môi trường cô lập rồi đối soát invariant, không coi “backup job thành công” là bằng chứng restore được;
+- retention, archive, legal/privacy deletion và restore dependency được ghi rõ;
+- failover/failback, split-brain risk, credential/DNS/pool refresh và application recovery sau role change.
+
 **Exit gate**
 
 - Có lag/stale-read reproducer và policy theo từng endpoint.
 - Partition key đến từ query/retention pattern, không từ phỏng đoán.
 - Có RPO/RTO và failover runbook tối thiểu.
+- Có restore/PITR evidence với thời gian thực tế, phạm vi dữ liệu mất và invariant sau recovery.
 
 ### Stage 10 - Modular monolith to microservices
 
@@ -308,6 +390,7 @@ Case partitioning:
 
 Trước khi tách:
 
+- xác định bounded context, ubiquitous language, aggregate/invariant và transaction boundary; DDD là công cụ làm rõ model chứ không phải yêu cầu tạo đủ mọi tactical pattern;
 - chuyển package-by-feature: `identity`, `stream`, `wallet`, `gift`, `chat`, `analytics`, `admin`, `shared`;
 - định nghĩa module API, data owner và domain event;
 - dùng architecture test hoặc Spring Modulith để phát hiện dependency vi phạm;
@@ -317,6 +400,8 @@ Service extraction đầu tiên nên là capability ít nằm trên strong-consi
 
 Sau khi tách, học:
 
+- failure model của distributed system: partial failure, unbounded delay, duplicate/reorder, clock skew và network partition;
+- consistency model, quorum/leader/consensus awareness, CAP/PACELC và read/write guarantee theo từng use case; không dùng theorem như khẩu hiệu;
 - service-owned data, API/event contract và compatibility;
 - timeout, retry budget, circuit breaker, bulkhead và load shedding;
 - service discovery/gateway chỉ khi topology cần;
@@ -329,6 +414,7 @@ Sau khi tách, học:
 - Có extraction scorecard và ADR chỉ ra cả phương án không tách.
 - Service tách ra có test contract, dashboard, runbook và owner dữ liệu.
 - Chứng minh được lợi ích độc lập về scale/deploy/blast radius lớn hơn chi phí network/operation.
+- Mỗi remote interaction có failure/timeout/retry/idempotency/backpressure policy và consistency expectation tường minh.
 
 ### Stage 11 - Solution architecture capstones
 
@@ -340,10 +426,33 @@ Mỗi capstone phải có assumption, capacity math, bottleneck, failure domain,
 4. Hot streamer/hot partition và celebrity problem.
 5. Analytics near-real-time từ Kafka, replay và backfill.
 6. Ban user toàn hệ thống: session, cache, WebSocket, event và audit.
+7. Chọn PostgreSQL, Redis, search index, object storage hoặc columnar store theo access pattern, consistency, retention, scale, recovery, operation và cost.
+8. Thiết kế public API qua DNS/TLS/CDN/load balancer/gateway; phân tích connection, timeout, cache, quota, DDoS boundary và multi-region traffic.
+9. Chọn cloud managed service/Kubernetes/self-managed và IaC theo team capability, compliance, portability, failure domain, observability và total cost of ownership.
 
 Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 phút.
 
+### Stage 12 - Technical leadership và delivery
+
+Đây là track xuyên suốt, được tổng kết sau các capstone; không chờ đến cuối mới bắt đầu ghi evidence.
+
+- review một change theo correctness, security, compatibility, operability, test gap và blast radius; phân biệt blocker với suggestion;
+- viết ADR ngắn, nêu context, constraint, options, decision, consequence và trigger cần revisit;
+- dẫn dắt incident drill: triage, giao tiếp, mitigation, recovery, timeline và blameless postmortem có action owner;
+- quản lý technical debt và roadmap theo risk/value/dependency; chia delivery thành increment rollback được;
+- mentoring/teach-back, đặt câu hỏi để phát hiện mental model sai và đưa feedback có thể hành động;
+- chuẩn bị behavioral story theo STAR/CAR cho conflict, failure, ownership, influence without authority và quyết định có trade-off;
+- giao tiếp architecture cho developer, product, security và operations ở độ sâu phù hợp.
+
+**Exit gate**
+
+- Có ít nhất ba evidence story lấy từ learning case thật, không phải câu trả lời chung chung.
+- Một review/ADR/postmortem cho thấy quyết định, dữ liệu, owner và follow-up đã đóng vòng lặp.
+- Có thể teach-back một P0 topic trong 15 phút và xử lý follow-up ở mức Senior/Solution Architect.
+
 ## 6. Case backlog ưu tiên
+
+Priority trong bảng là importance của evidence mà case tạo ra theo mục 2.1, không tự ghi đè case đang active hay dependency giữa các stage. Một capability P0 có thể có case P1/P2 bổ sung vì case đó chỉ cover một nhánh chuyên biệt. Chỉ tạo artifact/folder khi case được active; backlog không phải yêu cầu scaffold hàng loạt.
 
 | ID | Case | Stage | Priority |
 | --- | --- | --- | --- |
@@ -352,19 +461,31 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 | SEC-03 | Stream key exposure và webhook replay | 0/7 | P0 |
 | TEST-01 | Hermetic integration test bằng Testcontainers | 0 | P0 |
 | CON-01 | Concurrent stream state transition | 1/2 | P0 |
+| JAVA-01 | Collection/algorithm/complexity và memory trade-off trên hot path | 1 | P0 |
+| JVM-01 | Allocation/GC/JIT/thread diagnostic bằng JFR và dump | 1/8 | P0 |
+| API-01 | HTTP semantics, idempotency, API evolution và client timeout | 2 | P0 |
 | DB-01 | Manual N+1 và cursor pagination | 3 | P1 |
-| WAL-01 | Lost update và ledger invariant | 1/3 | P1 |
+| WAL-01 | Lost update và ledger invariant | 1/3 | P0 |
 | TX-01 | DB commit vs Redis side effect | 2/4 | P1 |
 | RED-01 | Cache stampede và Redis outage | 4 | P1 |
 | MQ-01 | Consumer crash before ACK/offset commit | 5 | P1 |
 | KFK-01 | Partition key, ordering và hot partition | 5 | P1 |
 | EVT-01 | Gift transactional outbox/inbox | 6 | P1 |
+| SEC-04 | OAuth2/OIDC flow, token replay/key rotation và API threat model | 7 | P0 |
 | RT-01 | WebSocket auth, reconnect và slow consumer | 7 | P2 |
-| OBS-01 | Trace request-to-consumer và incident alert | 8 | P1 |
+| OBS-01 | Trace request-to-consumer và incident alert | 8 | P0 |
+| OPS-01 | Container probes, resource limit, graceful shutdown và rollback | 8 | P1 |
 | DB-02 | Replica lag và read-your-writes | 9 | P2 |
 | DB-03 | Time partitioning ledger/chat history | 9 | P2 |
+| DB-04 | Safe schema migration, connection pool và restore/PITR drill | 3/9 | P1 |
+| DDD-01 | Bounded context, aggregate invariant và modular boundary | 10 | P1 |
+| DS-01 | Partial failure, consistency model, clock và retry/idempotency design | 10/11 | P0 |
 | MS-01 | Analytics service extraction scorecard | 10 | P2 |
-| ARCH-01 | 100k-viewer capacity and failure design | 11 | P2 |
+| ARCH-01 | 100k-viewer capacity and failure design | 11 | P0 |
+| DATA-01 | Storage/search/object-store selection theo access pattern và cost | 11 | P2 |
+| CLOUD-01 | Kubernetes/managed service/IaC deployment decision | 11 | P2 |
+| REACT-01 | MVC vs virtual thread vs WebFlux benchmark và decision | 1/2/8 | P2 |
+| LEAD-01 | Code review, ADR, incident postmortem và behavioral evidence pack | 12 | P0 |
 
 Thứ tự bắt đầu đề xuất: `SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`. Sau sáu case này mới quyết định nhánh Redis/Kafka tiếp theo theo mục tiêu phỏng vấn gần nhất.
 
@@ -396,11 +517,21 @@ Active case hiện tại: [SEC-01 - Access token vs refresh token confusion](lea
 - Không viết design pattern chỉ để tăng số class.
 - Không dùng test coverage percentage thay cho failure coverage.
 - Không tối ưu khi chưa có workload và measurement.
+- Không thêm Kubernetes, NoSQL, reactive stack, gRPC hoặc native image chỉ để tăng số keyword; phải có use case, constraint, evidence và exit strategy.
 
 ## 9. Tài liệu chính thức dùng đúng lúc
 
+- [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)
+- [OpenJDK JEP 444 - Virtual Threads](https://openjdk.org/jeps/444)
+- [Maven dependency mechanism và BOM](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)
+- [RFC 9110 - HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [Spring transaction management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)
+- [Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
+- [Spring WebFlux](https://docs.spring.io/spring-framework/reference/web/webflux.html)
 - [Spring Security reference](https://docs.spring.io/spring-security/reference/)
+- [RFC 9700 - OAuth 2.0 Security Best Current Practice](https://www.rfc-editor.org/rfc/rfc9700.html)
+- [OWASP API Security Top 10](https://owasp.org/API-Security/editions/2023/en/0x03-introduction/)
+- [CISA SBOM Resources Library](https://www.cisa.gov/topics/cyber-threats-and-advisories/sbom/sbomresourceslibrary)
 - [Spring Boot Testcontainers](https://docs.spring.io/spring-boot/reference/testing/testcontainers.html)
 - [Spring Boot observability](https://docs.spring.io/spring-boot/reference/actuator/observability.html)
 - [Spring Modulith fundamentals](https://docs.spring.io/spring-modulith/reference/fundamentals.html)
@@ -408,10 +539,14 @@ Active case hiện tại: [SEC-01 - Access token vs refresh token confusion](lea
 - [PostgreSQL indexes and `EXPLAIN`](https://www.postgresql.org/docs/current/indexes.html)
 - [PostgreSQL partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)
 - [PostgreSQL high availability and replication](https://www.postgresql.org/docs/current/high-availability.html)
+- [PostgreSQL backup/restore và PITR](https://www.postgresql.org/docs/current/backup.html)
 - [Redis data types](https://redis.io/docs/latest/develop/data-types/)
 - [Redis Pub/Sub delivery semantics](https://redis.io/docs/latest/develop/interact/pubsub/)
 - [Apache Kafka design](https://kafka.apache.org/documentation/#design)
 - [RabbitMQ acknowledgements and confirms](https://www.rabbitmq.com/docs/confirms)
 - [OpenTelemetry concepts](https://opentelemetry.io/docs/concepts/)
+- [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
+- [Kubernetes startup/readiness/liveness probes](https://kubernetes.io/docs/concepts/workloads/pods/probes/)
+- [Kubernetes resource requests và limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 
 Chỉ đọc reference phục vụ case đang active. Không biến việc đọc tài liệu thành một roadmap song song với việc tái hiện và đo lường.
