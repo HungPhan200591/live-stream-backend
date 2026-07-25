@@ -3,13 +3,33 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `distributed-systems`<br>
 > Target depth: `D3 — thiết kế một resilience policy phối hợp và fault-test overload/recovery thay vì tuning từng annotation riêng lẻ`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Timeout core](../core/timeouts-cancellation-and-pool-exhaustion.md), [Retry core](../core/retry-backoff-jitter-and-retry-storms.md), [Circuit/bulkhead core](../core/circuit-breaker-bulkhead-and-load-shedding.md)<br>
 > Related cases: [`RECONNECT-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`CHAT-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases), [`RATE-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
+
+## 0. Mental model và cách học
+
+Một policy phải đóng vòng capacity–deadline–failure–recovery. Vẽ traffic qua controls theo thứ tự thực, ghi breaker đếm logical call hay attempt và permit có giữ xuyên backoff/retry không. Fault test cả onset lẫn recovery; steady-state success không chứng minh system chống overload.
+
+```mermaid
+flowchart TB
+    S["Downstream chậm"] --> I["In-flight tăng"]
+    I --> Q["Pool / queue đầy"]
+    Q --> T["Timeout"]
+    T --> R["Retry tăng offered load"]
+    R --> S
+    A["Admission + bulkhead +<br/>deadline/budget"] --> I
+    style S fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+    style I fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style Q fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style T fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style R fill:#795548,stroke:#fff,stroke-width:2px,color:#fff
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 1. One policy, not independent knobs
 
@@ -28,6 +48,8 @@ Controls break different edges:
 - Bulkhead limits blast radius/in-flight use.
 - Circuit avoids calls likely to fail.
 - Rate/concurrency limiter/load shedding keeps admitted work near capacity.
+
+Worked example: base load 900 req/s trên capacity 1.000 req/s. Chỉ 20% request retry một lần đã có thể đẩy offered attempts lên 1.080 req/s, làm latency tăng và kích hoạt thêm timeout/retry. Breaker cần samples mới mở; admission/retry budget phải chặn loop trước đó.
 
 ## 3. Sizing and signals
 
@@ -50,6 +72,8 @@ No experiment has run; evidence `NOT RUN`.
 
 ## 5. Fallback correctness
 
+Fallback phải được review như API/business behavior. Trả stale public metadata có max-age và auth scope có thể đúng; trả “gift success” khi ledger unavailable là fabricated success. Với chat, explicit rejection tốt hơn ACK rồi silent drop vì caller có thể quyết định retry/display failure.
+
 | Workload | Possible fallback | Forbidden shortcut |
 | --- | --- | --- |
 | Public stream metadata | Bounded-age cached snapshot | Cross-tenant/private stale data |
@@ -68,18 +92,29 @@ No experiment has run; evidence `NOT RUN`.
 | Strict bulkheads | Strong isolation | Stranded capacity/rejections |
 | Stale fallback | Read availability | Freshness/security policy required |
 
-## 7. Self-check
+## 7. Interview outline, recap và learner write-back
 
-1. **Question:** Vẽ causal loop của retry storm và control phá từng cạnh.<br>**My answer:** `LEARNER TODO`
-2. **Question:** Breaker nên đếm attempt hay logical request trong design của bạn?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Fault test nào chứng minh recovery không tạo outage lần hai?<br>**My answer:** `LEARNER TODO`
+Vẽ feedback loop và control phá từng edge, tính deadline/attempt/capacity, giải decorator semantics, rồi nêu fault matrix + recovery ramp + safe fallback. Metrics tách logical traffic khỏi attempts.
 
-## 8. References
+- Controls không phải knobs độc lập.
+- Large queue/pool có thể dời failure thành tail/memory pressure.
+- Breaker granularity/sample phải hợp traffic.
+- Recovery là một load event cần giới hạn.
+
+`LEARNER TODO — tạo policy table cho RECONNECT-UC-01 gồm order, budget, metrics và fallback.`
+
+## 8. Guided self-check
+
+1. **Question:** Control phá từng edge nào?<br>**Đọc lại nếu bí:** diagram, mục 1–3.<br>**Rubric:** deadline/cancel duration, budget/jitter arrivals, bulkhead blast radius, breaker unhealthy calls, shedding admission.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Breaker đếm gì?<br>**Đọc lại nếu bí:** mục 1, 3.<br>**Rubric:** explicit choice and consequence for retry attempts/logical SLO/window traffic.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Test recovery thế nào?<br>**Đọc lại nếu bí:** mục 3–4.<br>**Rubric:** restore dependency gradually, synchronized clients, bounded probes/ramp, no queue/attempt second spike.<br>**My answer:** `LEARNER TODO`
+
+## 9. References
 
 - [AWS Builders' Library — Timeouts, retries and backoff](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/)
 - [Resilience4j documentation](https://resilience4j.readme.io/docs)
 
-## 9. Teach-back checklist
+## 10. Teach-back checklist
 
 - [ ] Tôi phối hợp controls theo one deadline/capacity model.
 - [ ] Tôi đo logical calls và attempts riêng.

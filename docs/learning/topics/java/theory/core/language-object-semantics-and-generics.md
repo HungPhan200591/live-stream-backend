@@ -3,7 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — giải thích được type/object semantics, thiết kế value object và tái hiện lỗi equality/generics trên code thật`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Java 21 platform baseline](java21-platform-baseline.md)<br>
@@ -13,6 +13,12 @@
 
 Artifact này là source canonical cho [question bank cùng tên](../../question-bank/language-object-semantics-and-generics.md). Nó không chứng minh `JAVA-01` đã hoàn tất; learner write-back, test và project evidence vẫn chưa có.
 
+## 0. Cách dùng tài liệu này
+
+Tài liệu dành cho developer đã viết Java nhưng vẫn dễ nhầm “object được truyền by reference”, dùng `equals/hashCode` theo thói quen hoặc học thuộc PECS mà chưa hiểu type safety. Đọc từ mục 1 đến 11, sau đó mới viết learner section. Thời gian đọc khoảng 60–90 phút.
+
+Mục tiêu không phải học thuộc toàn bộ JLS. Bạn cần hình dung được ba lớp: biến giữ **value**, reference value có thể trỏ tới **object**, còn generic type chỉ cho compiler biết operation nào an toàn. Khi ba lớp này bị trộn, lỗi thường xuất hiện ở collection, persistence hoặc serialization boundary.
+
 ## 1. Learning objectives
 
 Sau topic này, tôi có thể:
@@ -21,9 +27,29 @@ Sau topic này, tôi có thể:
 2. Thiết kế immutable value object có `equals/hashCode` ổn định và boundary validation rõ.
 3. Giải thích invariance, wildcard, type erasure và nhận diện heap pollution/raw-type escape.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model cốt lõi — phần Agent dạy
 
-`LEARNER TODO — giải thích object/reference, equality contract và generic variance mà không nhìn notes.`
+Java luôn copy **giá trị của biến** khi gọi method. Với primitive, giá trị đó là số/boolean/char. Với reference type, giá trị được copy là một reference; caller và callee có thể có hai biến khác nhau cùng trỏ một object.
+
+```mermaid
+flowchart TB
+    A["Caller variable<br/>reference R"] --> O["Object trên heap<br/>state có thể mutable"]
+    B["Method parameter<br/>copy của reference R"] --> O
+    B --> C["Gán parameter = R2<br/>chỉ đổi biến local"]
+    B --> D["Mutate qua R<br/>object chung thay đổi"]
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style O fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+Identity trả lời “có phải cùng object không?”. Logical equality trả lời “theo business/type contract, hai object có cùng giá trị không?”. Hash collection cần equality và hash ổn định trong thời gian membership.
+
+Generics tạo một “hàng rào compile-time”. `List<Integer>` không phải `List<Number>` vì write operation có thể đưa `Double` vào list chỉ chấp nhận `Integer`. Wildcard mô tả quyền đọc/ghi ở API boundary; erasure giải thích vì sao runtime không còn đầy đủ type argument và unchecked boundary có thể làm lỗi xuất hiện muộn.
+
+> **Câu cần nhớ:** Java copy variable values; equality là contract của type; generics giới hạn operation an toàn ở compile time nhưng raw/unchecked boundary có thể phá hàng rào đó.
 
 ## 3. Cơ chế hoạt động
 
@@ -36,6 +62,48 @@ Generics chủ yếu được kiểm tra ở compile time. `List<Integer>` khôn
 Type erasure xóa phần lớn type argument khỏi runtime representation, thêm cast/bridge method khi cần. Vì vậy không thể `new T()`, không thể tạo generic array an toàn theo cách trực tiếp và overload chỉ khác type argument sẽ đụng erasure.
 
 Records diễn đạt data carrier với state description và generated accessors/equality; chúng không tự làm object graph sâu bên trong immutable. Sealed types giới hạn subtype set, hữu ích khi domain state/command có tập biến thể đóng.
+
+### Worked example 1 — gán lại reference khác với mutate object
+
+```java
+static void change(List<String> names) {
+    names.add("viewer-2");       // mutate object chung
+    names = new ArrayList<>();   // chỉ gán lại parameter local
+    names.add("viewer-3");
+}
+```
+
+Caller thấy `viewer-2` vì cả hai reference từng trỏ cùng list. Caller không thấy `viewer-3` vì parameter đã được gán sang list mới. Đây là pass-by-value của reference, không phải pass-by-reference.
+
+### Worked example 2 — value object bảo vệ business meaning
+
+```java
+public record StreamId(long value) {
+    public StreamId {
+        if (value <= 0) throw new IllegalArgumentException("streamId must be positive");
+    }
+}
+```
+
+So với truyền `long` cho mọi ID, `StreamId` ngăn trộn user ID với stream ID ở compile time và đặt validation tại creation boundary. Record tạo equality theo components, phù hợp khi components thực sự đại diện toàn bộ value semantics.
+
+### Worked example 3 — hiểu PECS từ allowed operations
+
+```java
+static double sum(List<? extends Number> values) {
+    return values.stream().mapToDouble(Number::doubleValue).sum();
+}
+
+static void addDefaults(List<? super Integer> target) {
+    target.add(0);
+}
+```
+
+`? extends Number` có unknown subtype nên đọc ra tối thiểu là `Number`, nhưng không thể thêm một `Integer` vì list thật có thể là `List<Double>`. `? super Integer` cho phép thêm `Integer`; khi đọc chỉ chắc chắn nhận `Object`. PECS là bản tóm tắt của reasoning này.
+
+### Phản ví dụ — record chứa mutable list
+
+`record ViewerBatch(List<Long> ids)` chỉ làm reference component final. Nếu constructor giữ nguyên mutable list từ caller, caller có thể `add` sau khi record được tạo; equality/hash/serialized value của record thay đổi. Defensive copy bằng `List.copyOf` mới bảo vệ shallow collection boundary.
 
 ## 4. Invariant và boundary
 
@@ -66,6 +134,12 @@ Records diễn đạt data carrier với state description và generated accesso
 
 ## 7. Failure modes kinh điển
 
+**Mutable hash key:** object được insert với hash H1 vào bucket tương ứng. Sau mutation, `hashCode()` trả H2; lookup đi bucket H2 và không thấy entry vẫn nằm ở bucket H1. Collection không tự “reindex” khi field đổi.
+
+**Heap pollution:** raw/unchecked code đưa value sai type vào generic container. Write có thể không fail vì runtime container chỉ thấy raw `List`; failure xuất hiện khi typed consumer đọc và compiler-inserted cast chạy. Nơi throw exception khác nơi contract bị phá.
+
+Bảng dưới cô đọng các failure sau khi đã hiểu hai causal story:
+
 | Failure | Trigger | Observable symptom | Root mechanism |
 | --- | --- | --- | --- |
 | Mutable hash key | Field trong `hashCode` đổi sau `put` | `contains/get/remove` trả sai | Object nằm ở bucket theo hash cũ |
@@ -75,6 +149,8 @@ Records diễn đạt data carrier với state description và generated accesso
 | Entity recursion | Lombok-generated equality/toString qua relation/proxy | Stack overflow/query ngoài ý muốn | Generated object semantics không khớp persistence lifecycle |
 
 ## 8. Solution patterns
+
+Không có một equality strategy cho mọi class. Value object thường dùng immutable components và structural equality. Entity cần policy dựa trên lifecycle/identity; DTO cần defensive copy tại trust boundary. Generic adapter phải cô lập raw/unchecked operation và validate trước khi trả typed value cho core.
 
 | Pattern | Bảo vệ điều gì | Giới hạn | Khi nên dùng |
 | --- | --- | --- | --- |
@@ -107,16 +183,53 @@ Records diễn đạt data carrier với state description và generated accesso
 | `VIEWCOUNT-UC-01` | Value/reference mutation và collection membership | Counter implementation/workload |
 | `AUTHZ-UC-01` | Typed role/owner identifiers | Current endpoint/security matcher |
 
-## 12. Self-check
+## 12. Góc nhìn phỏng vấn
+
+### Câu trả lời 30 giây
+
+“Java luôn pass-by-value; với object, value được copy là reference. `==` so identity, `equals` định nghĩa logical equality và equal objects phải có cùng hash. Generics là compile-time type safety, invariant theo mặc định; wildcards diễn đạt read/write capability và erasure làm type arguments phần lớn không reified ở runtime.”
+
+### Outline Senior khoảng 2 phút
+
+1. Minh họa reference copy bằng reassign và mutation.
+2. Nêu equality/hash contract cùng mutable-key failure.
+3. Phân biệt value-object equality với entity lifecycle/proxy identity.
+4. Giải thích invariance từ write-safety, rồi suy ra `extends/super`.
+5. Nêu erasure/unchecked boundary và heap pollution failure location.
+
+## 13. Tóm tắt cô đọng
+
+1. Method nhận bản copy của variable value; reference copy vẫn có thể trỏ cùng mutable object.
+2. `==` trên reference so identity; `equals` là logical contract.
+3. Equal objects phải cùng hash; fields tham gia hash phải ổn định khi object ở hash collection.
+4. `final` reference và record không tạo deep immutability.
+5. Generic classes invariant để bảo vệ cả read và write operation.
+6. `extends` chủ yếu cho typed read, `super` cho typed write; hãy reason từ allowed operations.
+7. Erasure làm lỗi từ raw/unchecked boundary có thể xuất hiện muộn tại typed read.
+8. Value object, entity và DTO có lifecycle/boundary khác nên không dùng cùng equality template máy móc.
+
+## 14. Bài tập diễn đạt lại — phần của tôi
+
+Viết 10–15 câu: mô tả reference copy; phân biệt identity/equality; kể mutable-key causal chain; giải thích invariance và một wildcard signature; nêu erasure boundary; chọn equality strategy cho một `Money` value object và một generated-ID entity.
+
+> **Bài viết của tôi — `LEARNER TODO`:** lần đầu được nhìn mục 13; lần sau đóng file và nói lại khoảng hai phút.
+
+## 15. Self-check có hướng dẫn
 
 1. **Question:** Java pass-by-value giải thích thế nào khi method mutate được object của caller?<br>
-   **My answer:** `LEARNER TODO — viết trước khi mở notes`
+   **Đọc lại nếu bí:** mục 2 và worked example 1.<br>
+   **Một câu trả lời tốt phải có:** copy reference value, shared object, reassign khác mutation.<br>
+   **My answer:** `LEARNER TODO`
 2. **Question:** Vì sao mutable JPA entity hoặc mutable key trong `HashSet` dễ gây lỗi khó debug?<br>
+   **Đọc lại nếu bí:** mục 4 và 7.<br>
+   **Một câu trả lời tốt phải có:** stable hash membership, lifecycle/proxy boundary và symptom lookup sai.<br>
    **My answer:** `LEARNER TODO`
 3. **Question:** Thiết kế signature đọc từ subtype và ghi vào supertype bằng wildcard thế nào, và giới hạn của PECS là gì?<br>
+   **Đọc lại nếu bí:** worked example 3.<br>
+   **Một câu trả lời tốt phải có:** allowed read/write operations, unknown captured type và `Object` read từ `super`.<br>
    **My answer:** `LEARNER TODO`
 
-## 13. Official references
+## 16. Official references
 
 - [Java Language Specification 21](https://docs.oracle.com/javase/specs/jls/se21/html/)
 - [JLS 4 — Types, Values, and Variables](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html)
@@ -124,7 +237,7 @@ Records diễn đạt data carrier với state description và generated accesso
 - [JLS 18 — Type Inference](https://docs.oracle.com/javase/specs/jls/se21/html/jls-18.html)
 - [JEP 395 — Records](https://openjdk.org/jeps/395)
 
-## 14. Teach-back checklist
+## 17. Teach-back checklist
 
 - [ ] Tôi giải thích được Java pass-by-value bằng object/reference diagram.
 - [ ] Tôi bảo vệ được equality/hash strategy cho value object và entity.

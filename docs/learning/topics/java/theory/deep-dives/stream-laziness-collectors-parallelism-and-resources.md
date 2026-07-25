@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — chẩn đoán pipeline allocation/N+1/ordering và benchmark parallel decision đúng cách`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Stream API core](../core/stream-api-functional-programming-and-optional.md)<br>
@@ -11,15 +11,35 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
+## 0. Cách học file này
+
+Theo dõi một phần tử qua pipeline trước, rồi mới hỏi pipeline cần giữ state toàn cục nào. Với collector, kiểm tra kết quả khi chia input thành hai phần rồi combine có giống xử lý tuần tự không. Với resource và parallelism, xác định rõ owner/pool thay vì dựa vào default.
+
 ## 1. Learning objectives
 
 1. Reason về stage fusion, short-circuit, stateful operations và spliterator characteristics.
 2. Chứng minh collector associativity/identity/ordering trước parallel execution.
 3. Giữ resource/transaction/context lifetime không bị lazy pipeline vượt qua.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — vẽ demand từ terminal operation ngược về source và đánh dấu stage cần buffer/order/resource.`
+Terminal operation tạo demand kéo phần tử từ source qua chuỗi stage. Implementation có thể fuse stage stateless để một phần tử đi hết pipeline trước khi lấy phần tử kế tiếp. Stateful operation phá tính streaming vì cần nhìn nhiều hoặc toàn bộ input. Parallel pipeline chia source, tích lũy từng phần rồi combine; phép combine phải giữ cùng meaning bất kể cách chia nhóm.
+
+```mermaid
+flowchart TB
+    A["Source spliterator"] --> B["Chia partition"]
+    B --> C1["accumulate phần 1"]
+    B --> C2["accumulate phần 2"]
+    C1 --> D["combine associative"]
+    C2 --> D
+    D --> E["finish result"]
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style C1 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style C2 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Internal mechanism
 
@@ -31,7 +51,23 @@ Reduction song song cần associative accumulator/combiner và identity đúng. 
 
 Resource-backed streams như file lines hoặc persistence/query stream mang close/lifecycle obligation. Lazy stream trả khỏi transaction có thể evaluate sau khi session/connection đóng hoặc giữ resource lâu hơn caller nghĩ.
 
+### Worked example — collector đúng và sai
+
+Tính tổng bằng identity `0`, accumulator `+`, combiner `+` là associative. Ngược lại, lấy “trung bình của các trung bình” mà không mang theo count là sai khi partition có kích thước khác nhau. Collector đúng phải tích lũy `(sum, count)` rồi combine cả hai. Pipeline tuần tự cho kết quả đúng chưa chứng minh collector song song đúng.
+
+### Worked example — resource lifecycle
+
+```java
+try (Stream<String> lines = Files.lines(path)) {
+    return lines.filter(this::isValid).limit(100).toList();
+}
+```
+
+Scope lexical nói rõ ai đóng file kể cả khi mapper ném exception. Trả stream ra ngoài chuyển trách nhiệm đóng cho caller; với JPA stream còn có thể kéo cursor/connection vượt transaction.
+
 ## 4. Pathological cases
+
+Các failure có cùng mẫu: abstraction làm chi phí bị ẩn. `distinct` giữ set đã thấy; `sorted` giữ dữ liệu; ordered parallel pipeline phối hợp để giữ encounter order; blocking mapper chiếm common-pool worker; resource-backed source giữ handle đến khi đóng. Muốn debug, mở pipeline thành từng stage và ghi state/resource của stage đó.
 
 | Case | Causal chain | Symptom |
 | --- | --- | --- |
@@ -73,19 +109,32 @@ Resource-backed streams như file lines hoặc persistence/query stream mang clo
 | `ANALYTICS-UC-01` | Associative projection/replay | Event workload |
 | `NOTIFY-UC-01` | Batch/filter without shared side effect | Fan-out load |
 
-## 9. Self-check
+## 9. Interview answer outline
 
-1. **Question:** Operation nào phá streaming/fusion và vì sao?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Collector nào hợp lệ sequential nhưng sai parallel, hãy nêu causal chain?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Stream resource/transaction lifetime phải thuộc layer nào?<br>**My answer:** `LEARNER TODO`
+Trả lời từ execution model: terminal demand kéo source; stateless stages có thể fuse, stateful stages buffer; parallel execution cần splittable source và associative collector; common pool không phù hợp mặc định cho blocking request work; resource-backed stream phải đóng trong owner scope. Kèm counterexample average-of-averages hoặc JPA stream vượt transaction.
 
-## 10. Official references
+## 10. Tóm tắt và learner write-back
+
+- Collector contract là algebraic correctness, không chỉ thread safety.
+- `parallel()` đổi execution strategy, không sửa algorithm hay I/O boundary.
+- Encounter order có correctness cost và coordination cost.
+- Lazy resource phải có lifetime ngắn, explicit và test được.
+
+`LEARNER TODO — giải thích một collector bằng supplier/accumulator/combiner/finisher và chỉ ra resource owner.`
+
+## 11. Guided self-check
+
+1. **Question:** Operation nào phá streaming/fusion và vì sao?<br>**Đọc lại nếu bí:** mục 2–4.<br>**Rubric:** stateful stage, buffering/barrier, order và short-circuit placement.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Collector nào hợp lệ sequential nhưng sai parallel?<br>**Đọc lại nếu bí:** worked example.<br>**Rubric:** identity/associativity/combiner và partition khác kích thước.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Resource/transaction lifetime thuộc layer nào?<br>**Đọc lại nếu bí:** resource example và mục 5.<br>**Rubric:** lexical owner, try-with-resources, terminal execution trước khi transaction đóng.<br>**My answer:** `LEARNER TODO`
+
+## 12. Official references
 
 - [Java SE 21 Stream package](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
 - [Java SE 21 `Spliterator`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Spliterator.html)
 - [Java SE 21 `Collector`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Collector.html)
 
-## 11. Teach-back checklist
+## 13. Teach-back checklist
 
 - [ ] Tôi giải thích stateful barrier/short-circuit/order.
 - [ ] Tôi chứng minh collector algebra thay vì nói “thread-safe”.

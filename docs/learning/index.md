@@ -28,7 +28,7 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) từ mục 0 đến 13; sau đó viết mục 14 và trả lời guided self-check mục 15, rồi yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
 | Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 14 và guided self-check mục 15; không sửa code |
-| Latest evidence | Quality audit trên `36` theory/deep-dive phát hiện `0` Mermaid diagram và nhiều preview chỉ là outline/matrix. Đã nâng Java 21 core, Virtual Threads deep-dive và Spring IoC core/deep-dive thành `TEACHABLE_DRAFT`; `32` file còn lại được gắn trung thực `OUTLINE_ONLY` và phải migrate topic-by-topic trước khi dùng để học. Learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không checkpoint/depth nào được tăng. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
+| Latest evidence | Quality migration đã nâng toàn bộ `36/36` theory/deep-dive hiện có thành `TEACHABLE_DRAFT` (`18` Java, `10` Spring, `4` HTTP/API, `4` Resilience), với `46` Mermaid diagrams cùng worked example, causal failure, interview outline và guided self-check. Đây chỉ là teaching readiness: learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không checkpoint/depth nào được tăng. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-26` |
@@ -92,16 +92,16 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 
 | Knowledge domain | Roadmap coverage | Trạng thái knowledge hiện tại |
 | --- | --- | --- |
-| Java Core, JMM và concurrency | Stage 0/1 | `IN_PROGRESS`: Java 21 core + Virtual Threads deep-dive là `TEACHABLE_DRAFT`; các preview Java khác `OUTLINE_ONLY`; compatibility evidence pending |
+| Java Core, JMM và concurrency | Stage 0/1 | `TEACHABLE_DRAFT` cho toàn bộ theory hiện có; JDK-01 đang `IN_PROGRESS`, compatibility evidence pending |
 | Build, dependency lifecycle và CI/runtime | Stage 0/8 | `IN_PROGRESS`: JDK-01 toolchain evidence pending; JDK-02 decision chưa chạy |
-| Spring internals và transactions | Stage 2 | IoC core/deep-dive là `TEACHABLE_DRAFT`; các Spring preview còn lại `OUTLINE_ONLY`; chưa active/học và evidence `NOT RUN` |
-| HTTP/API semantics và compatibility | Stage 2 | `OUTLINE_ONLY`; chưa đủ chuẩn tự học, chưa active và evidence `NOT RUN` |
+| Spring internals và transactions | Stage 2 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
+| HTTP/API semantics và compatibility | Stage 2 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
 | PostgreSQL và data lifecycle | Stage 3, 9 | `NOT_STARTED` |
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
 | Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ platform/safety-net foundation queue đóng hoặc được reschedule có reason |
 | Testing, observability và performance | Stage 0, 8 | `LEARNING BACKLOG`: TEST-01 đứng sau JDK-01 |
-| Resilience và distributed failure | Stage 2, 8, 10 | `OUTLINE_ONLY`; chưa đủ chuẩn tự học, chưa active và evidence `NOT RUN` |
+| Resilience và distributed failure | Stage 2, 8, 10 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
 | Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
 | Technical leadership và delivery | Xuyên suốt/Stage 12 | `NOT_STARTED`: chỉ ghi từ review/ADR/incident/teach-back thật |

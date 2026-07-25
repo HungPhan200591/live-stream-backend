@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — fault/load test saturation, cancellation leak và context propagation trên async path`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Executors, CompletableFuture and Concurrency Control](../core/executors-completablefuture-and-concurrency-control.md)<br>
@@ -11,15 +11,35 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
+## 0. Cách học file này
+
+Đặt một timeline cho request: queue wait, run, remote wait, response deadline và cleanup. Tô phần work còn sống sau caller; đó là cancellation leak. Sau đó dùng capacity thật của DB/remote làm admission bound và đo recovery sau burst.
+
 ## 1. Learning objectives
 
 1. Lập concurrency/queue/deadline budget từ arrival rate, service time và downstream limits.
 2. Phân tích cancellation/deadline khi work đã tạo side effect hoặc API không interruptible.
 3. Bảo vệ trace/security/MDC/transaction context qua async boundary.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — vẽ request deadline, queued/running/remote work, response timeout và work còn sống sau caller.`
+Concurrency là số work đang nợ hệ thống; queue là phần chưa bắt đầu, in-flight là phần đang giữ resource. Deadline thuộc toàn request, timeout từng hop chỉ tiêu một phần ngân sách. Caller ngừng chờ không tự hủy queued/running/remote work. Context cũng là dữ liệu phải capture tối thiểu, propagate và clear tại boundary.
+
+```mermaid
+flowchart TB
+    R["Request deadline"] --> Q["Queue wait"]
+    Q --> W["Running work"]
+    W --> D["Remote side effect"]
+    R --> T["Response timeout"]
+    T --> Z["Zombie work nếu<br/>không cancel/cleanup"]
+    D --> Z
+    style R fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style Q fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style W fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style T fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style Z fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Saturation mechanics
 
@@ -31,6 +51,8 @@ Bulkhead chia capacity/blast radius. Quá nhiều bulkhead nhỏ có thể under
 
 ## 4. Cancellation/deadline mechanics
 
+Ví dụ request có budget 500 ms, đã mất 120 ms queue/validation thì child không nên nhận timeout 500 ms mới. Nó nhận remaining budget trừ cleanup margin. Nếu timeout sau remote commit nhưng trước response, outcome là ambiguous: API cần idempotency key/status query/reconciliation, không retry mù vì original có thể đã thành công.
+
 Timeout ở caller có thể chỉ dừng chờ. Work đã dequeue/running hoặc remote request có thể tiếp tục và commit side effect. Interruption cooperative: code/library phải check/propagate và restore interrupt status khi không xử lý. Swallow `InterruptedException` phá shutdown/cancellation protocol.
 
 Một deadline end-to-end tốt hơn mỗi hop tự dùng timeout đầy đủ; child nhận remaining budget. Hedging/retry tạo duplicate work nên cần idempotency/cancellation và retry budget. Cancellation sau “point of no return” cần query/reconciliation thay vì giả định rollback.
@@ -38,6 +60,8 @@ Một deadline end-to-end tốt hơn mỗi hop tự dùng timeout đầy đủ; 
 `CompletableFuture` graph có thể complete exceptionally mà underlying task vẫn chạy. `allOf` failure/timeout policy phải quyết định cancel siblings, collect partial result hay wait cleanup.
 
 ## 5. Context mechanics
+
+Một task decorator thường capture trace ID/user ID cần thiết trước submit, set khi chạy và clear trong `finally`. Copy cả authentication token/large request object vào long-lived task vừa tạo security risk vừa giữ memory. Transaction context thread-bound không nên được “copy”; async DB work cần transaction boundary mới rõ ràng.
 
 Thread-local MDC/security/request transaction context không tự theo lambda chạy thread khác. Wrapper/decorator/framework instrumentation cần capture immutable minimum context và clear sau execution để tránh leak/cross-request contamination. Không copy secret/token đầy đủ vào async diagnostic context.
 
@@ -79,20 +103,34 @@ Database transaction thường thread-bound; chạy repository work trong arbitr
 | `LIVE-UC-01` | Concurrency/headroom/downstream budget | Capacity workload |
 | `DEPLOY-UC-01` | Drain/shutdown/cancellation | Rolling-deploy rehearsal |
 
-## 10. Self-check
+## 10. Interview answer outline
 
-1. **Question:** Queue tăng capacity hay chỉ đổi overload thành latency/memory debt?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Caller timeout rồi business side effect vẫn xảy ra, API phải trả/khôi phục thế nào?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Platform pool, virtual thread+semaphore và reactive demand cần cùng metric nào để so công bằng?<br>**My answer:** `LEARNER TODO`
+Lập budget bằng capacity/Little's Law có điều kiện, nêu queue debt và recovery. Phân biệt timeout, interruption, cancellation và ambiguous side effect. So platform pool, virtual thread + semaphore, reactive bằng cùng downstream permits và metrics; trình bày context capture/clear và shutdown/drain.
 
-## 11. Official references
+## 11. Tóm tắt và learner write-back
+
+- Queue age thường cảnh báo user latency tốt hơn depth đơn lẻ.
+- Deadline end-to-end tránh mỗi hop dùng lại toàn budget.
+- Timeout có thể để lại zombie work và ambiguous outcome.
+- Context phải tối thiểu, explicit và được clear.
+- So concurrency model dưới cùng resource limit mới công bằng.
+
+`LEARNER TODO — lập timeline và saturation budget cho RECONNECT-UC-01.`
+
+## 12. Guided self-check
+
+1. **Question:** Queue tăng capacity hay chỉ đổi overload?<br>**Đọc lại nếu bí:** mục 2–3, 6.<br>**Rubric:** service rate không đổi, queue wait/age/memory/recovery debt.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Timeout sau side effect xử lý ra sao?<br>**Đọc lại nếu bí:** mục 4 và 6.<br>**Rubric:** ambiguous outcome, idempotency/status query/reconciliation, không retry mù.<br>**My answer:** `LEARNER TODO`
+3. **Question:** So các concurrency model bằng metric nào?<br>**Đọc lại nếu bí:** mục 3, 7–8.<br>**Rubric:** same downstream permits, throughput/p99/in-flight/queue age/reject/CPU/memory/recovery.<br>**My answer:** `LEARNER TODO`
+
+## 13. Official references
 
 - [Java SE 21 `ThreadPoolExecutor`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html)
 - [Java SE 21 `CompletableFuture`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html)
 - [Java SE 21 `Future`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Future.html)
 - [JEP 444 — Virtual Threads](https://openjdk.org/jeps/444)
 
-## 12. Teach-back checklist
+## 14. Teach-back checklist
 
 - [ ] Tôi lập concurrency/queue/deadline budget.
 - [ ] Tôi không đồng nhất response timeout với work cancellation.

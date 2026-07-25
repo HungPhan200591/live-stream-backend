@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — tái hiện contract break/heap pollution và bảo vệ API/entity/value-object boundary`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Language, Object Semantics and Generics](../core/language-object-semantics-and-generics.md)<br>
@@ -13,15 +13,49 @@
 
 Deep-dive này chỉ đào internals/pathological cases; foundation và full equality/generics vocabulary thuộc core note.
 
+## 0. Cách dùng và câu hỏi trung tâm
+
+Deep-dive trả lời ba câu mà core chưa đi hết: tại sao hash key mutation phá lookup structure; equality của inheritance/JPA proxy khó hơn value object; và vì sao erasure làm lỗi generic xuất hiện xa unchecked source. Đọc core trước, sau đó đi theo causal diagrams và experiment plan ở file này.
+
 ## 1. Learning objectives
 
 1. Phân tích equality khi inheritance, proxy, generated ID và mutable state giao nhau.
 2. Giải thích wildcard capture/erasure/bridge method và failure xuất hiện muộn do unchecked boundary.
 3. Thiết kế reproducer chứng minh mutable hash key hoặc heap pollution thay vì chỉ mô tả.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model cốt lõi — phần Agent dạy
 
-`LEARNER TODO — vẽ hash bucket trước/sau mutation và generic value đi qua raw boundary tới compiler-inserted cast.`
+Hash collection không “tìm toàn bộ map”. Nó tính hash hiện tại, chọn bucket, rồi mới so equality trong bucket đó. Mutation làm object và lookup disagree về địa chỉ bucket.
+
+```mermaid
+flowchart TB
+    A["put(key)<br/>hash = H1"] --> B["Entry lưu tại<br/>bucket H1"]
+    B --> C["Mutate field<br/>hash thành H2"]
+    C --> D["get(key)<br/>đi bucket H2"]
+    D --> E["Không thấy entry<br/>vẫn nằm ở H1"]
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+Với generics, raw/unchecked boundary là nơi hàng rào bị thủng; compiler-inserted cast ở typed read là nơi ta nhìn thấy hậu quả.
+
+```mermaid
+flowchart TB
+    A["Typed List<String>"] --> B["Raw reference<br/>mất compile-time guard"]
+    B --> C["Add Integer<br/>runtime chưa cast"]
+    C --> D["Typed read<br/>compiler chèn cast String"]
+    D --> E["ClassCastException<br/>xa nguồn pollution"]
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Internal mechanism
 
@@ -33,7 +67,28 @@ Erasure biến `List<String>` và `List<Integer>` thành cùng raw runtime class
 
 Wildcard capture cho phép compiler đặt tên tạm cho unknown type; helper generic method có thể thao tác an toàn mà public API vẫn dùng wildcard. Nó không biến producer thành mutable consumer.
 
+### Worked example — heap pollution tối thiểu
+
+```java
+List<String> names = new ArrayList<>();
+List raw = names;          // unchecked boundary
+raw.add(42);               // runtime list accepts Object
+String first = names.get(0); // compiler-inserted cast fails here
+```
+
+Fix không phải catch `ClassCastException` ở read site. Fix là cô lập/loại raw type hoặc validate/adapt value ngay tại legacy/deserialization boundary.
+
+### Equality inheritance pathology
+
+Nếu base `Point(x,y)` coi mọi subtype có cùng x/y là equal, còn `ColoredPoint` yêu cầu thêm color, ta có thể có `base.equals(colored) == true` nhưng chiều ngược lại false. Dùng `getClass()` tránh symmetry issue bằng cách chỉ equal cùng runtime class, nhưng JPA proxy subclass có thể làm cùng database identity trở nên unequal. Bởi vậy value type thường final/record; entity cần policy gắn với persistence lifecycle và actual proxy behavior.
+
 ## 4. Pathological/cross-layer cases
+
+Ba case quan trọng cần đọc như causal chain, không chỉ như tên lỗi:
+
+- **Generated ID:** hai transient entities đều `id=null`; equality chỉ dựa ID có thể coi chúng equal. Sau persist, ID/hash đổi trong khi entity đang ở `HashSet` lại tạo mutable-key problem.
+- **Generic varargs:** array reified chứa erased generic elements; nếu method write/escape array không an toàn, caller có thể quan sát wrong parameterized type. `@SafeVarargs` là promise của implementer, không phải suppression vô điều kiện.
+- **Deserialization:** JSON/raw map tạo object graph không qua typed constructor; unchecked cast đưa sai type sâu vào core và failure xảy ra ở consumer.
 
 | Case | Causal chain | Observable consequence |
 | --- | --- | --- |
@@ -49,6 +104,8 @@ Wildcard capture cho phép compiler đặt tên tạm cho unknown type; helper g
 2. Test inheritance symmetry theo cả `a.equals(b)` và `b.equals(a)`, thêm transitivity set.
 3. Test raw list pollution: isolate unchecked line, observe failure tại typed read.
 4. Với entity/proxy, chỉ claim sau khi chạy persistence test trên actual mapping; hiện `NOT RUN`.
+
+Một reproducer tốt giữ một variable thay đổi mỗi lần. Mutable-key test không cần Spring; entity/proxy equality phải dùng actual persistence mapping vì mock subclass không chứng minh Hibernate/Spring Data behavior.
 
 ## 6. Design choices
 
@@ -74,20 +131,32 @@ Wildcard capture cho phép compiler đặt tên tạm cho unknown type; helper g
 | `VIEWCOUNT-UC-01` | Session/viewer identity used for dedup | Concurrent membership workload |
 | `SESSION-UC-01` | Cache DTO typed boundary | Serialization compatibility test |
 
-## 9. Self-check
+## 9. Góc nhìn phỏng vấn và tóm tắt
 
-1. **Question:** Vì sao mutable key “mất” khỏi map dù entry vẫn tồn tại?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Policy equality nào phù hợp cho value object và generated-ID entity, tại sao khác nhau?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Erasure/bridge/cast khiến heap-pollution failure xuất hiện ở đâu?<br>**My answer:** `LEARNER TODO`
+Senior answer phải kể mutable-key hoặc heap-pollution causal chain. Architect answer tách value semantics, persistence identity và serialization boundary. Expert answer chỉ ra failure site khác contract-break site và nêu evidence cần thiết trước khi chọn equality policy.
 
-## 10. Official references
+Tóm tắt: hash lookup phụ thuộc hash ổn định; open inheritance làm equality contract khó giữ; generated ID có transient/persisted phases; erasure giữ compile-time types nhưng runtime raw class chung; unchecked boundary phải được cô lập; wildcard capture là compiler technique giữ operation type-safe trên unknown type.
+
+## 10. Bài tập diễn đạt lại — phần của tôi
+
+Vẽ hoặc mô tả hai flow: bucket H1 -> mutation H2 -> lookup miss và typed list -> raw write -> inserted cast failure. Sau đó chọn equality policy cho immutable `Money` và generated-ID entity, kèm test cần chạy.
+
+> **Bài viết của tôi — `LEARNER TODO`**
+
+## 11. Self-check có hướng dẫn
+
+1. **Question:** Vì sao mutable key “mất” khỏi map dù entry vẫn tồn tại?<br>**Đọc lại nếu bí:** mục 2–3.<br>**Một câu trả lời tốt phải có:** hash-at-operation-time, bucket H1/H2 và no automatic reindex.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Policy equality nào phù hợp cho value object và generated-ID entity, tại sao khác nhau?<br>**Đọc lại nếu bí:** mục 3–4.<br>**Một câu trả lời tốt phải có:** immutable structural value, transient ID, proxy/lifecycle và test boundary.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Erasure/bridge/cast khiến heap-pollution failure xuất hiện ở đâu?<br>**Đọc lại nếu bí:** mục 2–3.<br>**Một câu trả lời tốt phải có:** unchecked write source, erased runtime container, typed-read cast failure.<br>**My answer:** `LEARNER TODO`
+
+## 12. Official references
 
 - [JLS 4.6 — Type Erasure](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.6)
 - [JLS 4.10 — Subtyping](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.10)
 - [JLS 5.1.10 — Capture Conversion](https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html#jls-5.1.10)
 - [Java SE 21 `Object`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
 
-## 11. Teach-back checklist
+## 13. Teach-back checklist
 
 - [ ] Tôi tái hiện được mutable-key và heap-pollution failure.
 - [ ] Tôi bảo vệ equality policy theo lifecycle.

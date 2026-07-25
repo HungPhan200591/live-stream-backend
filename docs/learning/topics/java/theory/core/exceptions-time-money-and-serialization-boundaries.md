@@ -3,7 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — thiết kế boundary deterministic/compatible và tái hiện lỗi exception, clock, money hoặc serialization`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics and generics](language-object-semantics-and-generics.md)<br>
@@ -13,15 +13,32 @@
 
 Source canonical cho [boundary question bank](../../question-bank/exceptions-time-money-and-serialization-boundaries.md). File tách Java/domain representation khỏi HTTP mapping, database isolation và security policy ở các stage sau.
 
+## 0. Cách học file này
+
+Bốn chủ đề cùng nằm trong một file vì đều là boundary nơi meaning có thể bị mất: failure bị dịch sai, local time bị coi như instant, số tiền mất currency/rounding, hoặc payload đổi shape giữa hai version. Với mỗi phần, hãy hỏi “meaning canonical là gì, ai chuyển đổi, và version/lifetime nào phải còn đọc được?”.
+
 ## 1. Learning objectives
 
 1. Thiết kế exception contract giữ nguyên cause, cleanup và actionable category mà không catch quá rộng.
 2. Mô hình hóa instant/local time/zone/clock và viết test deterministic.
 3. Bảo vệ Money/BigDecimal invariant và serialization compatibility qua version evolution.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — giải thích ba boundary: control transfer bằng exception, time mapping và representation crossing process/storage.`
+Exception chuyển control cùng thông tin nguyên nhân; time map giữa human calendar và UTC timeline; Money gắn con số với currency/arithmetic policy; serialization đóng băng representation để process/version khác đọc. Bug xảy ra khi ta chỉ chuyển bytes/value mà làm rơi semantic context.
+
+```mermaid
+flowchart TB
+    D["Domain meaning"] --> R["Representation<br/>exception, instant, amount, DTO"]
+    R --> B["Boundary<br/>layer, zone, process, storage"]
+    B --> C["Consumer diễn giải"]
+    C --> I["Phải giữ invariant<br/>và compatibility"]
+    style D fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style R fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style I fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Cơ chế hoạt động
 
@@ -32,6 +49,26 @@ Checked/unchecked là compile-time handling distinction, không phải severity.
 `BigDecimal` lưu unscaled value và scale. `equals` xét cả scale, `compareTo` xét numerical order; division có thể cần rounding policy. Money cần currency, canonical scale/rounding và arithmetic rule, không chỉ một `BigDecimal` rời rạc.
 
 Serialization là public compatibility boundary. Producer/consumer có thể chạy mixed version; field rename/default/enum expansion/type change phải có policy. Java native serialization không nên là default network/storage contract; DTO schema/version và explicit mapper dễ kiểm soát hơn.
+
+### 3.1. Worked example — translate exception nhưng giữ cause
+
+```java
+try {
+    paymentClient.charge(command);
+} catch (SocketTimeoutException ex) {
+    throw new PaymentTemporarilyUnavailableException(command.id(), ex);
+}
+```
+
+Layer này có context để đổi transport failure thành domain/application category, nhưng giữ `ex` để điều tra. Không nên bắt `Exception` rồi trả empty, vì auth bug, programming bug và timeout sẽ bị caller hiểu giống nhau.
+
+### 3.2. Worked example — expiry deterministic
+
+Service nhận `Clock`, lấy `Instant.now(clock)` và so với `expiresAt`. Test dùng `Clock.fixed(...)`, không sleep và không phụ thuộc timezone máy chạy. `LocalDateTime` phù hợp cho “20:00 theo giờ Việt Nam” khi đi cùng `ZoneId`; nó không đủ để lưu một event đã xảy ra trên timeline.
+
+### 3.3. Worked example — Money và compatibility
+
+`new BigDecimal("1.0").equals(new BigDecimal("1.00"))` là false dù `compareTo` trả 0. Một `Money` value object phải canonicalize hoặc định nghĩa equality/scale rõ, luôn mang currency và rounding. Với JSON event, thêm enum constant có thể làm old consumer fail; tolerant reader hoặc `UNKNOWN` policy phải được thiết kế và thử bằng old/new payload fixture.
 
 ## 4. Invariant và boundary
 
@@ -62,6 +99,8 @@ Serialization là public compatibility boundary. Producer/consumer có thể ch�
 | Enum chỉ cần thêm constant | Old consumer có thể reject unknown | Forward compatibility cần unknown policy |
 
 ## 7. Failure modes kinh điển
+
+Chuỗi nhân quả tiêu biểu: dùng local wall-clock cho expiry → DST overlap tạo hai local time giống nhau → ordering/expiry lệch; dùng `double` cho ledger → sai số nhị phân tích lũy → reconciliation không khớp; đổi DTO cache trong rolling deployment → node mới ghi shape mới, node cũ không decode → cache miss/fallback storm. Đây là contract failure, không chỉ lỗi utility class.
 
 | Failure | Trigger | Symptom | Root mechanism |
 | --- | --- | --- | --- |
@@ -105,20 +144,33 @@ Serialization là public compatibility boundary. Producer/consumer có thể ch�
 | `SESSION-UC-01` | Instant/Clock/expiry và cached DTO version | Token/session implementation |
 | `PAYOUT-UC-01` | Adjustment/rounding/audit representation | Settlement workflow |
 
-## 12. Self-check
+## 12. Interview answer outline
 
-1. **Question:** Catch ở layer nào và khi nào translate exception mà không mất cause?<br>**My answer:** `LEARNER TODO`
-2. **Question:** `Instant`, `LocalDateTime`, `OffsetDateTime`, `ZonedDateTime` dùng khác nhau thế nào?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Money và serialized event/cache DTO cần invariant/version policy nào?<br>**My answer:** `LEARNER TODO`
+Trả lời theo semantic boundary: catch ở nơi recover/translate được và giữ cause; lưu event time bằng `Instant`, inject `Clock`, convert zone ở presentation/scheduling boundary; Money cần decimal + currency + rounding; serialized DTO cần compatibility window và mixed-version test. Đưa ít nhất một failure chain thay vì chỉ liệt kê class.
 
-## 13. Official references
+## 13. Tóm tắt và learner write-back
+
+- Checked/unchecked không quyết định recoverability.
+- Timeline, local calendar và zone là ba khái niệm khác nhau.
+- Money không phải một con số trần.
+- Payload đã lưu/gửi là public runtime contract dù class Java là internal.
+
+`LEARNER TODO — mô tả policy exception, time, Money và DTO version cho một use case trong project.`
+
+## 14. Guided self-check
+
+1. **Question:** Catch ở layer nào và khi nào translate exception mà không mất cause?<br>**Đọc lại nếu bí:** mục 3.1, 4 và 7.<br>**Rubric:** đủ context để recover/translate, typed category, cause/suppressed preserved, không catch rộng.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Các kiểu time dùng khác nhau thế nào?<br>**Đọc lại nếu bí:** mục 3 và 3.2.<br>**Rubric:** timeline vs local vs offset/zone rules; storage, display và scheduling boundary.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Money và serialized DTO cần policy nào?<br>**Đọc lại nếu bí:** mục 3.3 và deep-dive.<br>**Rubric:** currency/scale/rounding/equality cùng compatibility window, tolerant reader và fixture test.<br>**My answer:** `LEARNER TODO`
+
+## 15. Official references
 
 - [JLS 11 — Exceptions](https://docs.oracle.com/javase/specs/jls/se21/html/jls-11.html)
 - [Java SE 21 `java.time`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html)
 - [Java SE 21 `BigDecimal`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)
 - [Java Object Serialization Specification](https://docs.oracle.com/en/java/javase/21/docs/specs/serialization/)
 
-## 14. Teach-back checklist
+## 16. Teach-back checklist
 
 - [ ] Tôi phân biệt checked/unchecked với recoverable/non-recoverable.
 - [ ] Tôi giữ cause/suppressed exception và resource ownership.

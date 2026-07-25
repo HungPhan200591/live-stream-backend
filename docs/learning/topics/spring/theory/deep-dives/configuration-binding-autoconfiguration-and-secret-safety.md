@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — audit effective config/conditions và chứng minh production safety bằng startup matrix`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Configuration core](../core/configuration-and-profile-safety.md)<br>
@@ -11,7 +11,28 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
+## 0. Mental model và cách học
+
+Audit config bằng provenance graph: canonical key, candidates, winning origin, typed value, validation và bean outcome. Secret value bị che nhưng origin/version vẫn quan sát được. Upgrade dependency được coi là input có thể thay condition graph dù application source không đổi.
+
+```mermaid
+flowchart TB
+    K["Canonical key"] --> P["Candidate sources<br/>+ precedence"]
+    P --> W["Winning origin<br/>value redacted"]
+    W --> B["Typed bind +<br/>cross-field validation"]
+    B --> C["Condition outcome"]
+    C --> G["Bean graph / capability"]
+    style K fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style P fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style W fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
+
 ## 1. Binding and precedence reasoning
+
+Worked example: `pool.size=20` và `queue.size=0` có thể từng field hợp lệ nhưng cặp không phù hợp policy. Typed immutable configuration cần class-level validation. Nếu runtime refresh hai field riêng, intermediate snapshot có thể invalid; publish nguyên snapshot versioned/atomic phù hợp hơn.
 
 Config audit bắt đầu bằng key canonical, bound type/unit, all possible sources và winning source. YAML nesting, environment-variable transformation, command-line/system properties và test overrides có thể tạo effective value khác file đang đọc. Unknown/deprecated key policy cần rõ để typo không silently fall back.
 
@@ -24,6 +45,8 @@ Auto-configuration là conditional bean definitions dựa trên classpath, bean 
 Condition evaluation report giúp giải thích match/no-match. Test phải assert capability outcome, không snapshot toàn report dễ brittle. `@ConditionalOnMissingBean` cũng có ordering/search-scope nuance; exact behavior cần xem docs/version active.
 
 ## 3. Secret and production safety
+
+Rotation không chỉ thay value: producer/consumer có thể cần overlap key versions, audit active key ID và rollback plan. Missing JWT/webhook key phải fail closed/startup; optional analytics endpoint có thể disable kèm health/metric. Tuyệt đối không “degrade” authentication bằng default secret.
 
 Secret value không nằm trong git, default config, exception, actuator dump hoặc command history. Rotation cần overlap/version/refresh/restart plan. Authorization/webhook/JWT secret missing hoặc placeholder phải fail closed/fail startup; optional analytics endpoint có thể degrade nếu policy ghi rõ.
 
@@ -52,18 +75,29 @@ Evidence `NOT RUN`; bảng là acceptance plan.
 | Restart rollout | Immutable process config | Deployment latency |
 | Central secret/config service | Rotation/audit | Bootstrap dependency |
 
-## 6. Self-check
+## 6. Interview outline, recap và learner write-back
 
-1. **Question:** Làm sao chứng minh source nào thắng mà không log value bí mật?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Upgrade dependency có thể đổi auto-config graph ra sao?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Config nào phải fail startup, config nào được degrade?<br>**My answer:** `LEARNER TODO`
+Trình bày provenance→binding→validation→condition→capability, rồi production guard và rotation. Nêu startup failure-injection matrix và dependency-upgrade regression test.
 
-## 7. References
+- Unknown key/typo policy quan trọng như precedence.
+- Condition graph phụ thuộc classpath/bean/property/order.
+- Secret criticality quyết định fail policy.
+- Runtime refresh cần atomic multi-property snapshot.
+
+`LEARNER TODO — audit một config group và lập enabled/disabled/invalid matrix.`
+
+## 7. Guided self-check
+
+1. **Question:** Chứng minh source thắng an toàn?<br>**Đọc lại nếu bí:** mental model, mục 1.<br>**Rubric:** canonical key, origin/precedence/key version, redacted value.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Upgrade đổi graph ra sao?<br>**Đọc lại nếu bí:** mục 2, 4.<br>**Rubric:** classpath/conditions/default backoff and capability assertion.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Fail hay degrade?<br>**Đọc lại nếu bí:** mục 3–5.<br>**Rubric:** security/data-critical fail closed; optional observable disable; explicit policy/test.<br>**My answer:** `LEARNER TODO`
+
+## 8. References
 
 - [Spring Boot — Externalized Configuration](https://docs.spring.io/spring-boot/reference/features/external-config.html)
 - [Spring Boot — Creating Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
 
-## 8. Teach-back checklist
+## 9. Teach-back checklist
 
 - [ ] Tôi audit precedence/binding/condition theo evidence.
 - [ ] Tôi có production guard và secret rotation story.

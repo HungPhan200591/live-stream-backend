@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — chứng minh race bằng happens-before graph, stress test và lock/progress evidence`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JMM, Synchronization and Thread Safety](../core/jmm-synchronization-and-thread-safety.md)<br>
@@ -11,15 +11,33 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
+## 0. Cách học file này
+
+Viết graph actions/edges bằng giấy trước khi nhìn primitive. Một synchronization choice chỉ đúng khi vừa chứng minh safety vừa kiểm tra progress dưới contention. Reproducer dùng barrier/latch để điều khiển cửa sổ race, không dùng `sleep` làm bằng chứng chính.
+
 ## 1. Learning objectives
 
 1. Dựng happens-before proof cho publication, handoff và state transition.
 2. Phân tích lock/CAS failure gồm contention, deadlock, starvation và retry amplification.
 3. Thiết kế concurrency reproducer kiểm soát interleaving thay vì dựa vào sleep.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — vẽ actions của T1/T2, program-order edges, synchronization edges và read nào được phép thấy write nào.`
+Happens-before graph gồm node là actions và edge là program order hoặc synchronization rule. Nếu write nối được tới read bằng chuỗi edge, effects được đảm bảo visible; nếu hai conflicting access không ordered, có data race. Lock/CAS là cách tạo state transition, nhưng mỗi cách đổi contention, retry và liveness cost.
+
+```mermaid
+flowchart TB
+    A["T1 dựng snapshot"] --> B["T1 volatile write ref"]
+    B --> C["T2 volatile read ref"]
+    C --> D["T2 đọc initialized fields"]
+    E["Conflicting access<br/>không có edge"] --> F["Data race"]
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Happens-before reasoning
 
@@ -38,6 +56,14 @@ Intrinsic/explicit lock tạo mutual exclusion nhưng scope/order quyết địn
 CAS đọc state, thử replace nếu unchanged và retry khi conflict. Under contention, failed retry tiêu CPU; multi-field invariant cần immutable state aggregate/version or other ownership. ABA nghĩa value trở lại representation cũ trong khi state history đổi; version/stamp/higher-level design có thể cần.
 
 `LongAdder` giảm contention cho statistical counter bằng cells nhưng `sum()` không phải atomic snapshot cho money/strict invariant.
+
+### Worked example — DCL và publication
+
+Double-checked locking chỉ hợp lệ khi instance reference là `volatile`: construction actions program-order trước volatile write, volatile write happens-before read thấy reference, rồi transitivity đưa initialized state tới consumer. Initialization-on-demand holder thường dễ chứng minh hơn vì class initialization đã có synchronization semantics.
+
+### Counterexample — tối ưu counter sai invariant
+
+`LongAdder` hợp với metrics/view count approximate vì update phân tán. Dùng nó cho wallet balance rồi đọc `sum()` để quyết định chi tiêu là sai: snapshot không atomic với concurrent updates và invariant còn liên quan ledger/database. “Nhanh hơn” không bù được boundary sai.
 
 ## 5. Pathological cases
 
@@ -83,20 +109,34 @@ CAS đọc state, thử replace nếu unchanged và retry khi conflict. Under co
 | `GIFT-UC-01` | Lost update/multi-field money invariant | Concurrent ledger test |
 | `VIEWCOUNT-UC-01` | LongAdder/exact-vs-approximate | Load/reconciliation |
 
-## 10. Self-check
+## 10. Interview answer outline
 
-1. **Question:** Hãy dựng happens-before chain cho producer publish immutable snapshot cho consumer.<br>**My answer:** `LEARNER TODO`
-2. **Question:** Vì sao volatile sửa visibility nhưng không sửa compound invariant?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Stress test nào chứng minh race và boundary nào Java lock không thể bảo vệ?<br>**My answer:** `LEARNER TODO`
+Dựng HB chain cụ thể, nói safety lẫn liveness, rồi so lock/CAS/confinement theo invariant. Nêu controlled reproducer và boundary: Java lock dừng ở một JVM, durable multi-node invariant cần database conditional update/constraint hoặc partitioned owner.
 
-## 11. Official references
+## 11. Tóm tắt và learner write-back
+
+- HB là relation đảm bảo visibility, không phải timestamp.
+- Final-field rule cần construction/publication đúng.
+- Lock đúng data vẫn có thể fail progress.
+- CAS contention tạo retry amplification; primitive phải fit invariant.
+- Repeated stress tăng confidence, không tạo mathematical proof.
+
+`LEARNER TODO — vẽ HB proof và một liveness failure cho STREAM-UC-01.`
+
+## 12. Guided self-check
+
+1. **Question:** Dựng HB chain publish immutable snapshot.<br>**Đọc lại nếu bí:** mục 2–3 và DCL example.<br>**Rubric:** construction/program order → sync edge → consumer read, transitivity.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Vì sao volatile không sửa compound invariant?<br>**Đọc lại nếu bí:** mục 3–4.<br>**Rubric:** visibility/order per variable vs multi-step/multi-field atomicity.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Reproducer và boundary nào?<br>**Đọc lại nếu bí:** mục 6–8.<br>**Rubric:** barrier/latch/repeat + Java lock chỉ một JVM, durable owner ngoài process.<br>**My answer:** `LEARNER TODO`
+
+## 13. Official references
 
 - [JLS 17.4 — Memory Model](https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4)
 - [JLS 17.5 — Final Field Semantics](https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.5)
 - [Java SE 21 `ReentrantLock`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)
 - [Java SE 21 atomic package](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html)
 
-## 12. Teach-back checklist
+## 14. Teach-back checklist
 
 - [ ] Tôi chứng minh bằng edge, không bằng log/wall-clock intuition.
 - [ ] Tôi phân biệt data safety và liveness/progress.

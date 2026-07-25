@@ -3,7 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — thiết kế bounded async pipeline có timeout/cancellation/context và tái hiện saturation`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JMM and thread safety](jmm-synchronization-and-thread-safety.md), [Java 21 virtual threads](java21-platform-baseline.md)<br>
@@ -13,15 +13,35 @@
 
 Source canonical cho [Executor/CompletableFuture question bank](../../question-bank/executors-completablefuture-and-concurrency-control.md). Async syntax không tự tạo capacity, timeout propagation hoặc backpressure.
 
+## 0. Cách học file này
+
+Vẽ đường đi của task từ admission tới completion, ghi capacity tại queue, worker, connection pool và downstream. Sau đó đặt deadline/cancellation/context lên cùng hình. Nếu chỉ nhìn `CompletableFuture` syntax mà không thấy bounded resource và lifetime owner, thiết kế vẫn thiếu phần quan trọng nhất.
+
 ## 1. Learning objectives
 
 1. Chọn executor/thread model theo CPU/blocking/resource budget và ownership lifecycle.
 2. Compose `CompletableFuture` với executor, timeout, exception, cancellation và context semantics rõ.
 3. Thiết kế bounded admission/queue/rejection để overload degrade có chủ đích.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — vẽ submission -> queue/admission -> worker/task -> downstream -> completion và chỉ ra mọi bounded resource.`
+Executor là admission và scheduling policy cho task, không tạo thêm năng lực downstream. Queue giữ latency debt; worker/virtual thread chỉ là nơi code chạy; connection/quota mới thường là resource thật. `CompletableFuture` mô tả completion graph, còn cancellation và context propagation là protocol phải thiết kế riêng.
+
+```mermaid
+flowchart TB
+    A["Request + deadline"] --> Q["Admission / bounded queue"]
+    Q --> W["Worker hoặc virtual thread"]
+    W --> D["DB / remote bounded resource"]
+    D --> C["Completion stage"]
+    A --> X["Cancel / timeout signal"]
+    X --> W
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style Q fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style W fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style X fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Cơ chế hoạt động
 
@@ -32,6 +52,14 @@ Executor tách task submission khỏi execution policy. Pool sizing không phả
 `thenApply` map value; `thenCompose` flatten async dependency; `allOf` chỉ báo completion và caller vẫn phải thu kết quả/failure. `get`/`join` có exception wrapper khác nhau. Timeout của wrapper không đảm bảo underlying I/O/task dừng; cancellation là cooperative và `CompletableFuture.cancel` được biểu diễn như exceptional completion, không sở hữu computation để chắc chắn interrupt nó.
 
 Virtual thread giảm chi phí thread-per-task cho blocking style, nhưng connection pool, rate limit, heap và downstream capacity vẫn hữu hạn. Backpressure/admission control phải giới hạn resource thật, không pool virtual threads như platform threads.
+
+### 3.1. Worked example — continuation chạy ở đâu
+
+`thenApply` có thể chạy ngay trên thread hoàn thành stage trước; `thenApplyAsync` không truyền executor thường vào common pool. Nếu continuation block JDBC, nó có thể chiếm worker dùng chung với unrelated work. Production code nên nêu executor/lifetime rõ hoặc giữ blocking style trên virtual thread nhưng vẫn giới hạn DB permits.
+
+### 3.2. Worked example — timeout không đồng nghĩa stop work
+
+Request fan-out gọi remote API 2 giây nhưng wrapper `orTimeout(200ms)` trả lỗi cho caller sau 200 ms. Nếu client call không nhận cancellation/deadline, 1,8 giây còn lại vẫn giữ socket/permit và có thể tạo side effect. Khi traffic cao, “zombie work” tích lũy sau hàng loạt response timeout và làm recovery chậm hơn.
 
 ## 4. Invariant và boundary
 
@@ -102,20 +130,34 @@ Virtual thread giảm chi phí thread-per-task cho blocking style, nhưng connec
 | `NOTIFY-UC-01` | Bounded fan-out/executor/queue | Broker and delivery policy |
 | `LIVE-UC-01` | Concurrency budget and saturation | 100k capacity evidence |
 
-## 12. Self-check
+## 12. Interview answer outline
 
-1. **Question:** Pool, queue và concurrency limit khác nhau, overload xuất hiện ở đâu?<br>**My answer:** `LEARNER TODO`
-2. **Question:** `thenApply`, `thenCompose`, non-async và async continuation chạy khác nhau thế nào?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Timeout/cancellation/context phải thiết kế qua fan-out chain ra sao?<br>**My answer:** `LEARNER TODO`
+Nêu task lifecycle và bounded resources trước API method. Phân biệt `thenApply`/`thenCompose`, async/non-async executor, timeout với cooperative cancellation, platform pool với virtual thread + downstream bulkhead. Kết thúc bằng saturation metrics: in-flight, queue age, rejection, permit/connection wait và zombie work.
 
-## 13. Official references
+## 13. Tóm tắt và learner write-back
+
+- Queue không tạo capacity; nó lưu nợ và cần bound/rejection policy.
+- Async không đồng nghĩa non-blocking.
+- Timeout response không chắc dừng computation.
+- Virtual thread không làm DB/socket/quota vô hạn.
+- Executor, task lifetime và context đều cần owner.
+
+`LEARNER TODO — vẽ một fan-out chain, ghi executor, deadline, cancellation và mọi capacity.`
+
+## 14. Guided self-check
+
+1. **Question:** Pool, queue và concurrency limit khác nhau thế nào?<br>**Đọc lại nếu bí:** mục 2–4.<br>**Rubric:** execution slots, waiting debt, real in-flight resource và overload point.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Các continuation khác nhau thế nào?<br>**Đọc lại nếu bí:** mục 3 và 3.1.<br>**Rubric:** map vs flatten; completer thread vs explicit/default executor; blocking risk.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Timeout/cancellation/context qua fan-out ra sao?<br>**Đọc lại nếu bí:** mục 3.2, 4 và deep-dive.<br>**Rubric:** remaining deadline, cooperative downstream cancel, child lifetime owner, MDC/security propagation.<br>**My answer:** `LEARNER TODO`
+
+## 15. Official references
 
 - [Java SE 21 `ExecutorService`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ExecutorService.html)
 - [Java SE 21 `ThreadPoolExecutor`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html)
 - [Java SE 21 `CompletableFuture`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html)
 - [JEP 444 — Virtual Threads](https://openjdk.org/jeps/444)
 
-## 14. Teach-back checklist
+## 16. Teach-back checklist
 
 - [ ] Tôi vẽ được bounded resources và overload path.
 - [ ] Tôi giải thích executor/continuation/cancellation semantics.

@@ -8,7 +8,7 @@
 
 Các preview pack trước đây tối ưu coverage và số lượng artifact nhưng chưa đạt mục tiêu quan trọng nhất: một developer chưa biết topic phải có thể đọc, hiểu bản chất, tự cô đọng, áp dụng và dùng kiến thức để trả lời phỏng vấn. Nhiều file giống cheat sheet cho người đã biết hơn là bài giảng.
 
-Audit này là migration backlog, không phải learning roadmap thứ hai. Roadmap vẫn quyết định thứ tự học; khi topic sắp active, Agent phải nâng file `OUTLINE_ONLY` thành `TEACHABLE_DRAFT` trước khi yêu cầu learner đọc/trả lời.
+Audit này ghi lại baseline và quality gate, không phải learning roadmap thứ hai. Roadmap vẫn quyết định thứ tự học. Migration toàn bộ preview hiện đã hoàn tất theo yêu cầu của learner; readiness chỉ nói tài liệu đủ để bắt đầu tự học, không nói learner đã học hoặc có runtime evidence.
 
 ## 2. Baseline phát hiện
 
@@ -23,15 +23,15 @@ Tại thời điểm audit:
 
 Số từ không tự quyết định chất lượng; các con số chỉ xác nhận pattern mà learner đã phản ánh khi đọc.
 
-## 3. Readiness sau audit
+## 3. Readiness sau migration
 
 | Domain | `TEACHABLE_DRAFT` | `OUTLINE_ONLY` | Ghi chú |
 | --- | ---: | ---: | --- |
-| Java | 2 | 16 | Java 21 core và Virtual Threads deep-dive đã migrate |
-| Spring | 2 | 8 | IoC core và bean lifecycle deep-dive đã migrate |
-| HTTP/API | 0 | 4 | Chưa dùng để tự học |
-| Resilience | 0 | 4 | Chưa dùng để tự học |
-| **Tổng** | **4** | **32** | Không file nào được coi là learner/evidence completed |
+| Java | 18 | 0 | Toàn bộ core/deep-dive hiện có đã đạt teaching draft |
+| Spring | 10 | 0 | Toàn bộ core/deep-dive hiện có đã đạt teaching draft |
+| HTTP/API | 4 | 0 | Core/deep-dive có mental model, example và guided self-check |
+| Resilience | 4 | 0 | Core/deep-dive có causal loop, policy integration và guided self-check |
+| **Tổng** | **36** | **0** | Không file nào được coi là learner/evidence completed |
 
 Question banks vẫn giữ nguyên coverage/rubric. Readiness của theory không làm câu hỏi thành `ANSWERED` và không tăng checkpoint.
 
@@ -50,17 +50,18 @@ Một file chỉ được nâng readiness khi đạt [theory note template](../t
 9. Self-check chỉ rõ section đọc lại và rubric câu trả lời tốt.
 10. Status/evidence vẫn trung thực; không claim test hoặc depth chưa đạt.
 
-## 5. Migration order
+## 5. Kết quả migration và nguyên tắc tiếp theo
 
-Không migrate hàng loạt chỉ để đổi label. Thứ tự:
+Migration đã nâng `32` file còn lại, ngoài `4` file pilot ban đầu, theo cùng teaching contract:
 
-1. Topic/case đang active.
-2. Topic prerequisite ngay kế tiếp trong roadmap.
-3. Câu hỏi `HIGH` foundation/senior của topic đó.
-4. Deep-dive cần cho failure/case sắp thực hành.
-5. Preview còn lại giữ `OUTLINE_ONLY` cho tới lượt.
+- mental model do người dạy cung cấp nằm trước learner task;
+- mechanism có sequence, worked example/counterexample và causal explanation;
+- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `46` diagrams;
+- interview outline/recap và learner write-back tách riêng;
+- guided self-check có section đọc lại và answer rubric;
+- mọi status vẫn `DRAFT`, evidence vẫn `NOT RUN`.
 
-Mỗi migration session nên hoàn thiện một core/deep-dive pair, learner đọc thử và phản hồi câu tối nghĩa trước khi áp format sang topic khác. Không tạo topic mới trong khi topic active còn `OUTLINE_ONLY`.
+Từ đây không bulk-generate topic mới. Topic mới phải đạt `TEACHABLE_DRAFT` ngay khi được tạo hoặc trung thực gắn `OUTLINE_ONLY`; learning cursor vẫn mở từng artifact theo roadmap/checkpoint, không yêu cầu learner đọc cả corpus.
 
 ## 6. Validation cho Agent
 

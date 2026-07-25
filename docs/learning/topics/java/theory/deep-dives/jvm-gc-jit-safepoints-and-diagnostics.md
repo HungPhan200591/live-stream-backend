@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — phân tích JFR/GC log/profile theo causal chain và bảo vệ tuning bằng before/after evidence`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JVM Class Loading, Bytecode and Memory](../core/jvm-class-loading-bytecode-and-memory.md)<br>
@@ -13,15 +13,36 @@
 
 Source canonical cho [JVM diagnostics question bank](../../question-bank/jvm-gc-jit-safepoints-and-diagnostics.md). Collector/version flags là HotSpot 21 boundary, không phải Java language guarantee.
 
+## 0. Cách học file này
+
+Bắt đầu từ causal question: ứng dụng allocate nhanh, giữ live set lớn, tắc lock/I/O hay tiêu CPU? Sau đó chọn một artifact trả lời đúng câu hỏi và so cùng workload trước/sau. Collector name không phải diagnosis.
+
 ## 1. Learning objectives
 
 1. Phân biệt allocation rate, live set, promotion/fragmentation và pause/throughput goals.
 2. Giải thích interpreter/JIT profiling, compilation, inlining và deoptimization/warm-up effect.
 3. Chọn JFR, GC log, CPU profile, heap/thread dump theo symptom và kiểm chứng fix.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — vẽ mutator allocation -> reachable/live objects -> GC work/pause, đồng thời vẽ hot bytecode -> compiled code -> deoptimization.`
+Application threads (mutators) allocate và thay đổi graph; GC dùng CPU/bandwidth để tìm/giữ live objects và reclaim phần còn lại, đôi lúc cần coordination pause. Song song, interpreter thu type/profile rồi JIT compile hot path; assumption đổi có thể deoptimize. Latency quan sát được là tổng application work, GC/JIT/VM coordination và OS/resource contention.
+
+```mermaid
+flowchart TB
+    A["Mutator allocate"] --> G["Reachability graph"]
+    G --> L["Live set phải giữ"]
+    G --> D["Dead objects reclaim"]
+    L --> P["GC CPU / pause / bandwidth"]
+    A --> J["Profile → JIT compile"]
+    J --> X["Assumption đổi → deopt"]
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style L fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style P fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+    style J fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style X fill:#795548,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. GC internals
 
@@ -38,6 +59,8 @@ HotSpot tiered execution dùng interpreter/profile và compilation tiers. JIT c�
 Code cache/compiler activity, uncommon trap và changing type profile có thể tạo latency/CPU pattern. “Method nhanh trong microbenchmark” không chứng minh request path nhanh hơn nếu database/network/allocation dominates.
 
 ## 5. Diagnostic decision table
+
+Ví dụ: p99 tăng cùng allocation rate nhưng used-after-GC phẳng cho thấy object chết nhanh; heap dump không phải artifact đầu tiên tốt nhất, JFR allocation profile giúp tìm call site tạo DTO/String/buffer. Nếu used-after-GC tăng theo thời gian, dominator/retained path mới kiểm tra leak hypothesis. Hai symptom đều có GC nhiều nhưng root cause khác.
 
 | Symptom | Evidence đầu tiên | Không kết luận vội |
 | --- | --- | --- |
@@ -83,20 +106,33 @@ Code cache/compiler activity, uncommon trap và changing type profile có thể 
 | `LIVE-UC-01` | Thread/heap/headroom capacity | 100k simulation |
 | `CHAT-UC-01` | Buffer/slow-consumer retention | Load/queue evidence |
 
-## 10. Self-check
+## 10. Interview answer outline
 
-1. **Question:** Allocation pressure và memory leak khác evidence nào?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Vì sao safepoint pause không đồng nghĩa GC pause?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Tuning collector/heap cần hypothesis và before/after metrics nào?<br>**My answer:** `LEARNER TODO`
+Phân biệt allocation rate, live set và capacity; giải thích safepoint rộng hơn GC; nêu JIT warm-up/deopt. Sau đó map symptom→artifact→hypothesis→một thay đổi→before/after metrics. Không hứa collector nào “tốt nhất” ngoài workload/SLO.
 
-## 11. Official references
+## 11. Tóm tắt và learner write-back
+
+- GC cost theo allocation và live graph, không chỉ Xmx.
+- Safepoint/stop-the-world có thể đến từ VM operation khác GC.
+- Cold/warm JIT state làm benchmark sai nếu không kiểm soát.
+- Tuning hợp lệ cần raw evidence và cùng workload.
+
+`LEARNER TODO — lập decision tree cho CPU cao, p99 pause và heap tăng.`
+
+## 12. Guided self-check
+
+1. **Question:** Allocation pressure và leak khác evidence nào?<br>**Đọc lại nếu bí:** mục 2–6.<br>**Rubric:** allocation rate/used-after-GC/dominator distinction.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Vì sao safepoint không đồng nghĩa GC pause?<br>**Đọc lại nếu bí:** mục 3.<br>**Rubric:** JVM coordination cho nhiều VM operations và time-to-safepoint.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Tuning cần evidence nào?<br>**Đọc lại nếu bí:** mục 5, 7–8.<br>**Rubric:** fixed workload, throughput/p99/CPU/allocation/live-set/recovery, one variable.<br>**My answer:** `LEARNER TODO`
+
+## 13. Official references
 
 - [Java 21 GC Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/)
 - [G1 GC Tuning](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-garbage-collector-tuning.html)
 - [ZGC](https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector.html)
 - [Troubleshoot performance with JFR](https://docs.oracle.com/en/java/javase/21/troubleshoot/troubleshoot-performance-issues-using-jfr.html)
 
-## 12. Teach-back checklist
+## 14. Teach-back checklist
 
 - [ ] Tôi phân biệt allocation/live set/heap capacity.
 - [ ] Tôi giải thích JIT warm-up/deoptimization effect.

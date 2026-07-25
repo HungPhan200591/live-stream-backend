@@ -3,7 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — tái hiện DST/rounding/mixed-version failure và thiết kế migration/reconciliation`<br>
-> Teaching readiness: `OUTLINE_ONLY`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Exceptions, Time, Money and Serialization](../core/exceptions-time-money-and-serialization-boundaries.md)<br>
@@ -11,21 +11,43 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
+## 0. Cách học file này
+
+Dùng ba phép thử: chuyển đổi qua DST, chia một số tiền không chia hết, và cho old/new reader đọc chéo payload. Nếu design không nêu policy ở các điểm mơ hồ này, code happy path chưa có nghĩa contract an toàn.
+
 ## 1. Learning objectives
 
 1. Phân tích DST gap/overlap, clock drift và expiry boundary theo timeline.
 2. Thiết kế Money canonicalization/rounding/allocation giữ ledger invariant.
 3. Xây compatibility matrix cho old/new reader/writer và replayed cache/event payload.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model do người dạy cung cấp
 
-`LEARNER TODO — mô tả instant trên timeline, local presentation, Money unit/currency và payload version đi qua mixed deployment.`
+`Instant` là điểm duy nhất trên timeline; local date-time là nhãn con người nhìn thấy và cần zone rules để ánh xạ. Money là quantity trong một currency với arithmetic policy. Payload version là lời hứa giữa writer và reader có thể không deploy cùng lúc. Cả ba đều cần giữ meaning khi representation đi qua boundary.
+
+```mermaid
+flowchart TB
+    W1["Old writer"] --> P1["Old payload"]
+    W2["New writer"] --> P2["New payload"]
+    P1 --> R1["Old reader"]
+    P1 --> R2["New reader"]
+    P2 --> R1
+    P2 --> R2
+    style W1 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style W2 fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style P1 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style P2 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style R1 fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style R2 fill:#F44336,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 3. Time internals và failure
 
 Zone rules ánh xạ local time sang zero/one/two valid offsets: DST gap có local time không tồn tại, overlap có hai instant ứng viên. Lưu `LocalDateTime` mà thiếu zone/offset làm mất thông tin. TTL/timeout nên dựa duration/monotonic source khi đo elapsed time; wall clock có thể jump. Business schedule cần explicit zone/rule và policy khi gap/overlap.
 
 Distributed systems không có “now” tuyệt đối đồng nhất. Timestamp không thay causal ordering/sequence/fencing. Token expiry cần bounded skew policy nhưng không mở window tùy tiện.
+
+Ví dụ, `2026-11-01 01:30` ở zone có DST overlap có thể ánh xạ thành hai instant. Policy scheduling phải chọn offset sớm/muộn hoặc từ chối ambiguity; tự động đoán khiến job có thể chạy hai lần. Đo timeout nên dùng duration/monotonic source vì wall clock có thể bị NTP điều chỉnh.
 
 ## 4. Money internals và failure
 
@@ -34,6 +56,8 @@ Distributed systems không có “now” tuyệt đối đồng nhất. Timestam
 Ledger nên lưu immutable entries/adjustments; current balance là derived/projection hoặc atomic durable state có reconciliation. Refund/chargeback không xóa lịch sử cũ mà ghi compensating entry theo policy.
 
 ## 5. Serialization compatibility matrix
+
+Ma trận phải được chạy bằng serializer/config thật. “JSON thường bỏ qua field lạ” không đủ vì application có thể bật strict mode, đổi enum/type, ký canonical bytes hoặc dùng cache key version cũ. Rolling deploy còn cần đường rollback: old app phải chịu được dữ liệu node mới vừa ghi, hoặc key/topic/version phải tách.
 
 | Writer -> Reader | Risk | Required policy |
 | --- | --- | --- |
@@ -80,20 +104,33 @@ Ledger nên lưu immutable entries/adjustments; current balance là derived/proj
 | `PAYOUT-UC-01` | Adjustment/reconciliation | Settlement dataset |
 | `SESSION-UC-01` | Expiry/skew/cache DTO | Clock/serializer tests |
 
-## 10. Self-check
+## 10. Interview answer outline
 
-1. **Question:** DST gap/overlap ảnh hưởng scheduled livestream thế nào và policy nằm đâu?<br>**My answer:** `LEARNER TODO`
-2. **Question:** Chia Money có remainder thì giữ invariant tổng ra sao?<br>**My answer:** `LEARNER TODO`
-3. **Question:** Compatibility matrix nào cần pass để rolling deploy và rollback cache/event an toàn?<br>**My answer:** `LEARNER TODO`
+Nêu canonical model, ambiguity và test: instant/zone/DST + injected Clock; amount/currency/rounding + conservation property; old/new writer-reader + replay/rollback fixture. Senior answer phải chỉ ra policy owner, không nói “dùng thư viện là xong”.
 
-## 11. Official references
+## 11. Tóm tắt và learner write-back
+
+- Wall-clock label không tự xác định một instant.
+- Timestamp không thay causal ordering trong distributed system.
+- Money allocation phải bảo toàn tổng và audit remainder.
+- Compatibility là ma trận hai chiều qua rolling deploy, replay và rollback.
+
+`LEARNER TODO — viết policy cho một lịch livestream, một phép chia gift và một thay đổi DTO.`
+
+## 12. Guided self-check
+
+1. **Question:** DST gap/overlap ảnh hưởng scheduled livestream thế nào?<br>**Đọc lại nếu bí:** mục 2–3.<br>**Rubric:** zero/two valid offsets, explicit policy, zone owner và deterministic test.<br>**My answer:** `LEARNER TODO`
+2. **Question:** Chia Money có remainder thì giữ invariant ra sao?<br>**Đọc lại nếu bí:** mục 4.<br>**Rubric:** minor unit, deterministic allocation, sum(parts)=original và audit.<br>**My answer:** `LEARNER TODO`
+3. **Question:** Compatibility matrix nào cần pass?<br>**Đọc lại nếu bí:** mục 2, 5 và 7.<br>**Rubric:** old→new, new→old, replay, rollback và actual serializer fixtures.<br>**My answer:** `LEARNER TODO`
+
+## 13. Official references
 
 - [Java SE 21 Date and Time API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html)
 - [Java SE 21 `ZoneRules`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/zone/ZoneRules.html)
 - [Java SE 21 `BigDecimal`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)
 - [Java Object Serialization Specification](https://docs.oracle.com/en/java/javase/21/docs/specs/serialization/)
 
-## 12. Teach-back checklist
+## 14. Teach-back checklist
 
 - [ ] Tôi phân biệt elapsed duration với wall-clock timestamp.
 - [ ] Tôi test DST/clock skew bằng injected Clock.
