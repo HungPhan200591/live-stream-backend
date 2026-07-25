@@ -139,6 +139,9 @@ docs/
 │   └── rtmp-webhook-guide.md
 ├── implementation/
 │   └── current-implementation-map.md
+├── learning/
+│   └── cases/
+│       └── sec-01-access-vs-refresh-token.md
 ├── tools/
 │   ├── codex-postgres-mcp.md
 │   ├── data-initialization.md
@@ -149,7 +152,7 @@ docs/
     └── index.md
 ```
 
-Các folder `learning/`, `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật.
+Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật. `learning/` đã được khởi tạo bởi active case SEC-01; chỉ thêm `experiments/` hoặc `interview-notes/` khi có artifact tương ứng.
 
 ## 7. Naming convention
 

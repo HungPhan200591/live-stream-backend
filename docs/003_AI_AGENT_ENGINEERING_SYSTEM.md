@@ -301,9 +301,10 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 - Đã tạo current API/security/architecture/coding/Redis docs có status rõ.
 - Đã chuyển product phases, reference trộn current/target và prompt AI cũ vào archive có replacement map.
 
-### Iteration B - Case SEC-01/TEST-01
+### Iteration B - Case SEC-01/TEST-01 (`IN PROGRESS`)
 
-- Tạo `docs/learning/cases/` và case files đầu tiên.
+- [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) đã được tạo và đánh dấu `ACTIVE`; chưa có implementation/evidence.
+- Tạo TEST-01 chỉ sau khi SEC-01 đã có reproducer/verification boundary rõ hoặc khi TEST-01 trở thành prerequisite thực tế.
 - Tạo `docs/architecture/adr/` khi có quyết định thật.
 - Tạo testing strategy từ test harness đã chạy, không viết trước implementation.
 - Cập nhật project skills hiện tại theo evidence gate.

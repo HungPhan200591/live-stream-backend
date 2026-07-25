@@ -347,7 +347,7 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 
 | ID | Case | Stage | Priority |
 | --- | --- | --- | --- |
-| SEC-01 | Access token vs refresh token confusion | 0 | P0 |
+| [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion (`ACTIVE`) | 0 | P0 |
 | SEC-02 | Logout-all với stale Redis session | 0/4 | P0 |
 | SEC-03 | Stream key exposure và webhook replay | 0/7 | P0 |
 | TEST-01 | Hermetic integration test bằng Testcontainers | 0 | P0 |
@@ -367,6 +367,8 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 | ARCH-01 | 100k-viewer capacity and failure design | 11 | P2 |
 
 Thứ tự bắt đầu đề xuất: `SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`. Sau sáu case này mới quyết định nhánh Redis/Kafka tiếp theo theo mục tiêu phỏng vấn gần nhất.
+
+Active case hiện tại: [SEC-01 - Access token vs refresh token confusion](learning/cases/sec-01-access-vs-refresh-token.md). Chỉ active thêm case khác sau khi SEC-01 đạt closure gate hoặc được đánh dấu paused có lý do.
 
 ## 7. Definition of Done cho một learning case
 
