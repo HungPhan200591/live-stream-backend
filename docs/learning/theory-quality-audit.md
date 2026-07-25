@@ -34,7 +34,8 @@ Số từ không tự quyết định chất lượng; các con số chỉ xác 
 | Testing | 2 | 0 | TEST-01 preview pair đạt teaching gate; harness/test evidence chưa chạy |
 | Database | 10 | 0 | PostgreSQL 15/JPA/SQL batch nối đủ 10 question-bank slices; chưa active case và evidence chưa chạy |
 | Redis | 2 | 0 | Cache consistency và atomic data-structure theory nối đủ 2 question-bank slices; RED-01 chưa active |
-| **Tổng** | **50** | **0** | Không file nào được coi là learner/evidence completed |
+| Security | 2 | 0 | Token/session và authorization foundation nối 2/7 security slices; 5 slices còn lại vẫn là quality backlog |
+| **Tổng** | **52** | **0** | Không file nào được coi là learner/evidence completed |
 
 Question banks vẫn giữ nguyên coverage/rubric. Readiness của theory không làm câu hỏi thành `ANSWERED` và không tăng checkpoint.
 
@@ -59,12 +60,12 @@ Migration đã nâng `32` file còn lại, ngoài `4` file pilot ban đầu, the
 
 - mental model do người dạy cung cấp nằm trước learner task;
 - mechanism có sequence, worked example/counterexample và causal explanation;
-- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `60` diagrams;
+- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `62` diagrams;
 - interview outline/recap và learner write-back tách riêng;
 - guided self-check có section đọc lại và answer rubric;
 - mọi status vẫn `DRAFT`, evidence vẫn `NOT RUN`.
 
-Sau migration, cặp theory `TEST-01`, batch `10` PostgreSQL/JPA/SQL và `2` Redis core theory được tạo theo yêu cầu chuẩn bị trước, đạt `TEACHABLE_DRAFT` ngay từ đầu và nối question bank tương ứng. Việc chuẩn bị trước không thay execution order: mỗi topic chỉ được mở để học khi roadmap/cursor tới owner checkpoint; learning cursor vẫn ở `JDK-01/THEORY_CORE` và không yêu cầu learner đọc cả corpus.
+Sau migration, cặp theory `TEST-01`, batch `10` PostgreSQL/JPA/SQL, `2` Redis và `2/7` Security foundation theory được tạo theo yêu cầu chuẩn bị trước, đạt `TEACHABLE_DRAFT` ngay từ đầu và nối question bank tương ứng. Security coverage chưa hoàn tất cho tới khi 5 trust-boundary slices còn lại được dạy đầy đủ. Việc chuẩn bị trước không thay execution order: learning cursor vẫn ở `JDK-01/THEORY_CORE` và không yêu cầu learner đọc cả corpus.
 
 ## 6. Validation cho Agent
 

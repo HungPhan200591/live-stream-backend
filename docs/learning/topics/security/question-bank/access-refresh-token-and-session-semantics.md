@@ -6,9 +6,9 @@
 > Related roadmap: [Stage 0 and SEC-01](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)<br>
 > Related depth rubric: [Security and identity](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/security/theory/core/token-purpose-and-session-semantics.md`<br>
+> Related theory: [Core theory](../theory/core/token-purpose-and-session-semantics.md)<br>
 > Standards snapshot checked: `2026-07-25`<br>
-> Updated: `2026-07-25`
+> Updated: `2026-07-26`
 
 Question bank này chuẩn bị trước cho case `SEC-01` đang `PAUSED`. Nó không re-activate case, không sửa JWT code và không chứng minh security invariant. Custom session-backed JWT của project được so sánh với OAuth concepts, không được gọi là một OAuth authorization server hoàn chỉnh. Mọi evidence giữ `NOT RUN`/`NOT CREATED`.
 
@@ -74,7 +74,7 @@ Access token và refresh token khác nhau về purpose, recipient, lifetime và 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -117,7 +117,7 @@ JWT signature hợp lệ và chưa hết hạn đã đủ để authenticate/aut
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -160,7 +160,7 @@ JWT signature hợp lệ và chưa hết hạn đã đủ để authenticate/aut
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -204,7 +204,7 @@ Thiết kế mutually exclusive validation rules để access path luôn từ ch
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -248,7 +248,7 @@ Bạn thiết kế refresh-token rotation và reuse detection thế nào? Hai re
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -291,7 +291,7 @@ Refresh validation đọc Redis trước rồi fallback PostgreSQL. Làm sao b�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -334,7 +334,7 @@ Thiết kế HTTP negative-test matrix và error/logging contract cho invalid, e
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -378,7 +378,7 @@ Chọn storage/transport cho access và refresh token trên browser, mobile và 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -421,7 +421,7 @@ Thiết kế signing-key và token-profile rotation trong multi-instance deploym
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -464,7 +464,7 @@ Thiết kế signing-key và token-profile rotation trong multi-instance deploym
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -508,7 +508,7 @@ Refresh, logout và logout-all chạy đồng thời. Hãy phát biểu formal i
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
@@ -552,7 +552,7 @@ Nhiều services/issuers dùng JWT khác mục đích: access, refresh, ID token
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
