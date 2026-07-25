@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DB-01`<br>
 > Related roadmap: [Stage 3](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL/JPA](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/jpa-n-plus-one-pagination-and-query-plans.md`<br>
+> Related theory: [Core theory](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DB-01`. Project vẫn dùng explicit relation IDs; không đề xuất thêm JPA association. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Unit of work tiện nhưng SQL/timing ẩn.<br>
 **Follow-up ladder:** Clear/detach? Flush mode?<br>
 **Red flags:** `save()` luôn lập tức commit.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Batch/fetch/projection giảm round trips nhưng có overfetch/cartesian risk.<br>
 **Follow-up ladder:** EntityGraph? Batch size?<br>
 **Red flags:** Không dùng association thì không thể N+1.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Convenience graph traversal vs predictable SQL/DTO boundary.<br>
 **Follow-up ladder:** LazyInitializationException? OSIV?<br>
 **Red flags:** EAGER luôn một join.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Native tối ưu/control cao nhưng mapping/portability/test burden.<br>
 **Follow-up ladder:** Interface projection? Tuple?<br>
 **Red flags:** Mọi query phải dùng entity để “đúng JPA”.<br>
-**Evidence:** Theory `NOT CREATED`; project convention `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); project convention `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Hai query thêm round trip nhưng semantics/size predictable.<br>
 **Follow-up ladder:** Count query? Multiple bags?<br>
 **Red flags:** Thêm DISTINCT luôn sửa pagination.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Index read win đổi write/storage cost.<br>
 **Follow-up ladder:** Prepared generic plan? Hibernate statistics?<br>
 **Red flags:** Tune JPQL mà không xem SQL thực.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `JPA-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Bulk nhanh nhưng bỏ lifecycle callbacks/dirty checking.<br>
 **Follow-up ladder:** `clearAutomatically`? Version increment?<br>
 **Red flags:** Context tự đồng bộ hai chiều với DB.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/jpa-n-plus-one-pagination-and-query-plans.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JPA-QUERY-008 — `SENIOR`

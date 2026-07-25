@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DR-01`<br>
 > Related roadmap: [Stage 9](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-9---primaryreplica-partitioning-và-data-lifecycle)<br>
 > Related depth rubric: [Data operations](../../../knowledge-depth-rubric.md#319-data-operations-và-lifecycle--p1-target-d2-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/backup-restore-pitr-and-failover.md`<br>
+> Related theory: [Core theory](../theory/core/backup-restore-pitr-and-failover.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** More copies improve recovery but cost/storage/security.<br>
 **Follow-up ladder:** Snapshots? Immutable backup?<br>
 **Red flags:** Hot standby thay thế mọi backup.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Lower RPO/RTO costs more and can reduce normal performance.<br>
 **Follow-up ladder:** MTTR? Service tiers?<br>
 **Red flags:** RPO zero/RTO zero chỉ cần thêm replica.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Flexible logical restore vs speed/fidelity.<br>
 **Follow-up ladder:** Incremental backup?<br>
 **Red flags:** WAL files một mình đủ restore.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fine recovery reduces loss but WAL storage/operations grow.<br>
 **Follow-up ladder:** Restore point? Timeline?<br>
 **Red flags:** Chọn timestamp chính xác luôn loại bỏ bad transaction.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Full rehearsal consumes infra/time but backup-success metric không đủ.<br>
 **Follow-up ladder:** Encrypted keys? DNS isolation?<br>
 **Red flags:** Database starts là restore pass.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Selective restore minimizes downtime but consistency merge hard.<br>
 **Follow-up ladder:** Foreign keys? Sequence values?<br>
 **Red flags:** Restore backup đè thẳng production nhanh nhất.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Isolation reduces breach but lost key makes backup useless.<br>
 **Follow-up ladder:** Ransomware account separation?<br>
 **Red flags:** Same admin credential cho DB và backup tiện hơn.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Automation speeds RTO but unsafe assumptions amplify corruption.<br>
 **Follow-up ladder:** Scheduled jobs duplicate?<br>
 **Red flags:** DB endpoint đổi là toàn hệ thống phục hồi.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Geographic isolation/copies raise cost/compliance complexity.<br>
 **Follow-up ladder:** Cold/warm/hot standby?<br>
 **Red flags:** Multi-region automatically means DR complete.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-DR-010 — `EXPERT`
@@ -129,10 +129,9 @@ First pass `DB-DR-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fast partial service vs risk of inconsistent state.<br>
 **Follow-up ladder:** Broker replay as source? Manual reconstruction?<br>
 **Red flags:** Improvise on production without testing because RTO urgent.<br>
-**Evidence:** Theory `NOT CREATED`; case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/backup-restore-pitr-and-failover.md); case `DR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
 
 Khi `DR-01` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-

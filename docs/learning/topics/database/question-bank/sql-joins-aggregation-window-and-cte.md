@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `SQL-01`<br>
 > Related roadmap: [Stage 3](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL/SQL](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/sql-joins-aggregation-window-and-cte.md`<br>
+> Related theory: [Core theory](../theory/core/sql-joins-aggregation-window-and-cte.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SQL-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Query rõ semantics quan trọng hơn dùng join “mặc định”.<br>
 **Follow-up ladder:** Anti-join? FULL JOIN?<br>
 **Red flags:** ON và WHERE luôn tương đương.<br>
-**Evidence:** Theory `NOT CREATED`; case `SQL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); case `SQL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Rewrite tối ưu phải giữ null/group semantics.<br>
 **Follow-up ladder:** Alias dùng trong HAVING? FILTER clause?<br>
 **Red flags:** HAVING chỉ là WHERE có SUM.<br>
-**Evidence:** Theory `NOT CREATED`; case `SQL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); case `SQL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Window diễn đạt tốt nhưng sort/memory cost có thể cao.<br>
 **Follow-up ladder:** `row_number` vs `rank`? Frame default?<br>
 **Red flags:** Window function luôn nhanh hơn subquery.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Readability vs optimizer fence/materialization cost.<br>
 **Follow-up ladder:** Cycle detection? `WITH MATERIALIZED`?<br>
 **Red flags:** CTE luôn được cache và nhanh.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Real-time aggregate chính xác vs precomputed read model.<br>
 **Follow-up ladder:** Latest row per group? Keyset page ranked data?<br>
 **Red flags:** GROUP BY category rồi LIMIT N toàn cục.<br>
-**Evidence:** Theory `NOT CREATED`; query lab `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); query lab `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Index giúp read nhưng tăng write/storage/vacuum.<br>
 **Follow-up ladder:** Nested loop bad khi nào? Generic plan?<br>
 **Red flags:** Seq scan luôn là lỗi.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Pre-aggregation thêm query complexity nhưng giữ semantics và giảm rows.<br>
 **Follow-up ladder:** Count distinct cost? Lateral join?<br>
 **Red flags:** Thêm DISTINCT vào mọi aggregate.<br>
-**Evidence:** Theory `NOT CREATED`; query lab `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); query lab `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `SQL-QUERY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Flexibility cao làm plan/index/cost khó kiểm soát.<br>
 **Follow-up ladder:** Optional predicates? Prepared statement?<br>
 **Red flags:** Escape chuỗi thủ công là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; project query `NOT SELECTED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/sql-joins-aggregation-window-and-cte.md); project query `NOT SELECTED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SQL-QUERY-009 — `ARCHITECT`

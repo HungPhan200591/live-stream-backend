@@ -32,7 +32,8 @@ Số từ không tự quyết định chất lượng; các con số chỉ xác 
 | HTTP/API | 4 | 0 | Core/deep-dive có mental model, example và guided self-check |
 | Resilience | 4 | 0 | Core/deep-dive có causal loop, policy integration và guided self-check |
 | Testing | 2 | 0 | TEST-01 preview pair đạt teaching gate; harness/test evidence chưa chạy |
-| **Tổng** | **38** | **0** | Không file nào được coi là learner/evidence completed |
+| Database | 10 | 0 | PostgreSQL 15/JPA/SQL batch nối đủ 10 question-bank slices; chưa active case và evidence chưa chạy |
+| **Tổng** | **48** | **0** | Không file nào được coi là learner/evidence completed |
 
 Question banks vẫn giữ nguyên coverage/rubric. Readiness của theory không làm câu hỏi thành `ANSWERED` và không tăng checkpoint.
 
@@ -57,12 +58,12 @@ Migration đã nâng `32` file còn lại, ngoài `4` file pilot ban đầu, the
 
 - mental model do người dạy cung cấp nằm trước learner task;
 - mechanism có sequence, worked example/counterexample và causal explanation;
-- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `48` diagrams;
+- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `58` diagrams;
 - interview outline/recap và learner write-back tách riêng;
 - guided self-check có section đọc lại và answer rubric;
 - mọi status vẫn `DRAFT`, evidence vẫn `NOT RUN`.
 
-Sau migration, cặp theory `TEST-01` được tạo theo đúng roadmap successor và đạt `TEACHABLE_DRAFT` ngay từ đầu. Không bulk-generate topic mới: mỗi topic tiếp theo phải có owner/checkpoint rõ hoặc trung thực gắn `OUTLINE_ONLY`; learning cursor vẫn mở từng artifact theo roadmap, không yêu cầu learner đọc cả corpus.
+Sau migration, cặp theory `TEST-01` và batch `10` PostgreSQL/JPA/SQL theory được tạo theo yêu cầu chuẩn bị trước, đạt `TEACHABLE_DRAFT` ngay từ đầu và nối question bank tương ứng. Việc chuẩn bị trước không thay execution order: mỗi topic chỉ được mở để học khi roadmap/cursor tới owner checkpoint; learning cursor vẫn ở `JDK-01/THEORY_CORE` và không yêu cầu learner đọc cả corpus.
 
 ## 6. Validation cho Agent
 

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DB-02`<br>
 > Related roadmap: [Stage 9](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-9---primaryreplica-partitioning-và-data-lifecycle)<br>
 > Related depth rubric: [Data operations](../../../knowledge-depth-rubric.md#319-data-operations-và-lifecycle--p1-target-d2-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/replica-lag-and-read-your-writes.md`<br>
+> Related theory: [Core theory](../theory/core/replica-lag-and-read-your-writes.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DB-02`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Async latency/availability vs durability/freshness.<br>
 **Follow-up ladder:** Physical vs logical replication?<br>
 **Red flags:** Replica là synchronous copy mặc định.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Detailed metrics improve diagnosis but not guarantee per-row freshness.<br>
 **Follow-up ladder:** Replay timestamp? Queueing?<br>
 **Red flags:** One lag seconds metric proves read consistency.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Stronger session guarantees increase primary load/coordination.<br>
 **Follow-up ladder:** Causal consistency?<br>
 **Red flags:** Eventual consistency implies RYW soon enough.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Automatic routing convenient but hidden context errors.<br>
 **Follow-up ladder:** Lazy connection proxy?<br>
 **Red flags:** readOnly=true luôn chạy replica.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Freshness increases primary load/latency.<br>
 **Follow-up ladder:** Token spoofing? Cache interaction?<br>
 **Red flags:** Retry GET replica nhanh nhiều lần.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Containment may reduce analytics/read capacity.<br>
 **Follow-up ladder:** Hot standby conflict? WAL receiver?<br>
 **Red flags:** Restart replica là bước đầu tiên.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fast failover vs split-brain/data loss risk.<br>
 **Follow-up ladder:** Read-only old primary? DNS TTL?<br>
 **Red flags:** Driver reconnect tự đảm bảo không duplicate.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Real replication lab costly/flaky if timing not controlled.<br>
 **Follow-up ladder:** Testcontainers topology?<br>
 **Red flags:** Mock replica datasource proves WAL lag behavior.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Sync reduces RPO but adds commit latency/availability coupling.<br>
 **Follow-up ladder:** Remote region? Quorum?<br>
 **Red flags:** Một replication mode cho toàn database.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-REPL-010 — `EXPERT`
@@ -129,10 +129,9 @@ First pass `DB-REPL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Strict fencing may delay recovery but protects correctness.<br>
 **Follow-up ladder:** STONITH? Logical reconciliation?<br>
 **Red flags:** Last writer wins merge hai primary.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/replica-lag-and-read-your-writes.md); case `DB-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
 
 Khi `DB-02` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-

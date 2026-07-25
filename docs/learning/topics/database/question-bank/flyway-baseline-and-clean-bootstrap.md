@@ -6,9 +6,9 @@
 > Scope boundary: online/zero-downtime expand-contract migration remains owned by `DB-04`<br>
 > Related roadmap: [Stage 0](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory), [Stage 3 boundary](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL, SQL and data modeling](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3), [Testing and quality strategy](../../../knowledge-depth-rubric.md#310-testing-và-quality-strategy--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/versioned-schema-migration.md`<br>
+> Related theory: [Core theory](../theory/core/versioned-schema-migration.md)<br>
 > Version snapshot checked: `2026-07-25`; re-check Flyway/Spring Boot behavior when `MIG-01` becomes active<br>
-> Updated: `2026-07-25`
+> Updated: `2026-07-26`
 
 Question bank này được chuẩn bị trước cho `MIG-01`. Nó chỉ tạo question ladder/rubric, không cài Flyway, không tạo migration, không baseline database và không chứng minh clean bootstrap. Người học phải trả lời trước khi mở `Answer outline`; mọi test, experiment và interview note giữ `NOT RUN`/`NOT CREATED`.
 
@@ -78,7 +78,7 @@ Vì sao production schema cần một source of truth versioned? Phân biệt Fl
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -121,7 +121,7 @@ Vì sao production schema cần một source of truth versioned? Phân biệt Fl
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -165,7 +165,7 @@ Phân biệt versioned migration, repeatable migration, `baseline` operation và
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -208,7 +208,7 @@ Phân biệt versioned migration, repeatable migration, `baseline` operation và
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -252,7 +252,7 @@ Bạn đưa một production database không rỗng, chưa có Flyway history v�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -296,7 +296,7 @@ Bạn đưa một production database không rỗng, chưa có Flyway history v�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -340,7 +340,7 @@ Flyway báo checksum mismatch cho migration đã apply. Bạn điều tra và x�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -384,7 +384,7 @@ Migration fail giữa chừng. Bạn phân biệt transactional rollback hoàn t
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -428,7 +428,7 @@ Spring Boot startup có Flyway, JPA/Hibernate, `schema.sql` và `data.sql`. Bạ
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -472,7 +472,7 @@ Thiết kế hermetic clean-bootstrap test bằng Testcontainers cho Flyway như
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -517,7 +517,7 @@ Bạn thiết kế governance cho migration naming/version, review, ownership v�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -561,7 +561,7 @@ Migration nên chạy trong mỗi application startup hay qua một deployment j
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -605,7 +605,7 @@ Rollback strategy cho migration nền tảng nên ưu tiên database restore, do
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -649,7 +649,7 @@ Làm sao chứng minh dev/test/staging/prod dùng cùng canonical migration hist
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -694,7 +694,7 @@ Production có emergency hotfix DDL ngoài Flyway, staging không có, còn repo
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
@@ -739,7 +739,7 @@ Một migration gồm transactional PostgreSQL DDL, long-running data update và
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
+- Theory: [Core](../theory/core/versioned-schema-migration.md)
 - Deep-dive: `NOT CREATED`
 - Learning case: `MIG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DB-03`<br>
 > Related roadmap: [Stage 9](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-9---primaryreplica-partitioning-và-data-lifecycle)<br>
 > Related depth rubric: [Data operations](../../../knowledge-depth-rubric.md#319-data-operations-và-lifecycle--p1-target-d2-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/database/theory/core/time-partitioning-retention-and-archive.md`<br>
+> Related theory: [Core theory](../theory/core/time-partitioning-retention-and-archive.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DB-03`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Operational manageability vs planning/schema complexity.<br>
 **Follow-up ladder:** Sharding difference?<br>
 **Red flags:** Bảng lớn luôn nên partition.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Lifecycle locality vs skew/repartition complexity.<br>
 **Follow-up ladder:** Subpartition? Default partition?<br>
 **Red flags:** Chọn key có nhiều distinct nhất.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Explicit predicates may leak storage detail into API/repository.<br>
 **Follow-up ladder:** Runtime pruning?<br>
 **Red flags:** WHERE có timestamp bất kỳ chắc chắn prune.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Including time in key changes business identity semantics.<br>
 **Follow-up ladder:** Primary key design?<br>
 **Red flags:** Unique index trên parent luôn global mọi version.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fine partitions improve pruning/drop but planning/ops overhead.<br>
 **Follow-up ladder:** Timezone boundary? Backfill?<br>
 **Red flags:** Một partition mỗi ngày luôn tối ưu.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fast deletion reduces rollback window; archive adds storage/catalog cost.<br>
 **Follow-up ladder:** Concurrent detach version?<br>
 **Red flags:** DROP old partition không cần backup/legal review.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Partition wins lifecycle even if query latency unchanged.<br>
 **Follow-up ladder:** Too many partitions threshold?<br>
 **Red flags:** One fast query proves partition success.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Parallelism speeds rollout but can saturate DB.<br>
 **Follow-up ladder:** Attach validation? Missing index detection?<br>
 **Red flags:** Loop DDL không logging là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Scale headroom vs architectural complexity.<br>
 **Follow-up ladder:** Tenant sharding? Resharding?<br>
 **Red flags:** Partitioning trải data qua nhiều servers tự động.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-PART-010 — `EXPERT`
@@ -129,10 +129,9 @@ First pass `DB-PART-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Migration doubles write/storage and creates consistency windows.<br>
 **Follow-up ladder:** Logical replication? Global IDs?<br>
 **Red flags:** ALTER partition key in place là trivial.<br>
-**Evidence:** Theory `NOT CREATED`; case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/time-partitioning-retention-and-archive.md); case `DB-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
 
 Khi `DB-03` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-
