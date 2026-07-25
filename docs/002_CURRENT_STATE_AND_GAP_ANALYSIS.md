@@ -32,7 +32,6 @@ flowchart TB
 Snapshot này dựa trên:
 
 - static review mã nguồn, cấu hình, tài liệu, `.http`, rules và skills;
-- dùng graphify snapshot trước migration để lần quan hệ code/tài liệu; graph cần được update sau khi structure mới ổn định;
 - chạy `./mvnw.cmd -DskipTests compile` thành công;
 - chạy `./mvnw.cmd test` thành công với đúng 1 test `contextLoads`;
 - không chạy load test, fault injection hoặc benchmark;
@@ -135,7 +134,7 @@ Không dùng nhãn `DONE` duy nhất. Mỗi capability được đánh giá theo
 - Prompt AI chung đã chuyển tới `docs/archive/2025-ai-prompts/`; workflow Codex active nằm trong `003_AI_AGENT_ENGINEERING_SYSTEM.md` và `.agents/skills/*`.
 - Business flows được giữ làm target contract nhưng có capability status; source code/test vẫn là current evidence.
 
-Archive manifest và replacement map nằm tại [Documentation Archive](archive/index.md). Graphify output hiện phản ánh topology trước migration và không được coi là source-of-truth cho đường dẫn mới cho tới lần update kế tiếp.
+Archive manifest và replacement map nằm tại [Documentation Archive](archive/index.md).
 
 ## 8. Cổng bắt đầu
 

@@ -210,4 +210,3 @@ Maturity M0–M4 được định nghĩa trong [Current Gaps](002_CURRENT_STATE_
 - Khi rename/move doc, cập nhật repository rules, project skills và link checker cùng lượt.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, cập nhật `ai/skill-catalog.md` trong cùng change.
 - `learning/index.md` phải trỏ đúng một active case và checkpoint không được đi trước evidence thực tế.
-- Graphify phải được update sau một migration lớn trước khi dùng lại như source navigation.

@@ -53,6 +53,14 @@ Quy tắc quyết định:
 - Nếu nội dung cần đọc theo concern hoặc dùng làm bằng chứng: đặt trong `docs`.
 - Nếu một thao tác phải deterministic và hay viết lại: đặt script trong skill, không mô tả bằng prose dài.
 
+### Context và token budget
+
+- Bắt đầu bằng source trực tiếp: `rg` để định vị, đọc range hẹp, mở rộng context chỉ khi câu hỏi hiện tại chưa trả lời được.
+- Không dùng generated knowledge graph hoặc full-repository context làm bước mặc định. Chỉ tạo index khi người dùng yêu cầu rõ và lợi ích đo được lớn hơn chi phí build/load.
+- Không chạy nhiều audit cùng mục tiêu. Docs-only change thông thường có tối đa một discovery pass, một edit pass và một validation/review pass.
+- Sub-agent chỉ dành cho nhánh độc lập có thể chạy song song và làm giảm tổng thời gian/context; không dùng để review lặp lại một diff nhỏ.
+- Log/output từ tool phải được lọc theo file, pattern hoặc line range; không in toàn bộ tree, diff hoặc test log nếu summary và failure lines đã đủ.
+
 ## 3. Source-of-truth map
 
 | Câu hỏi | Nguồn chuẩn | Nguồn hỗ trợ |

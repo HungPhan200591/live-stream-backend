@@ -32,7 +32,6 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 
 | Skill | Mô tả ngắn | Khi dùng | Ghi chú |
 | --- | --- | --- | --- |
-| `graphify` | Biến code/docs thành knowledge graph và hỗ trợ query/path/explain quan hệ trong codebase. | Mọi câu hỏi về codebase, kiến trúc, quan hệ file hoặc nội dung project; ưu tiên query graph có sẵn. | Graph phải được update sau migration lớn trước khi dùng làm source navigation. |
 | `mermaid-styling` | Tạo hoặc sửa Mermaid dễ đọc với layout an toàn chiều rộng và palette tương phản cao. | Bất kỳ task nào tạo hoặc chỉnh Mermaid. | Phải giữ syntax tương thích renderer mục tiêu. |
 
 ## 4. Codex system skills
@@ -56,7 +55,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Làm rõ prompt kỹ thuật | `refine-engineering-prompt` |
 | Tìm process chiếm port | `manage-local-port` |
 | Bắt đầu/tiếp tục learning case Senior Java | `run-senior-java-learning` |
-| Hiểu codebase/architecture/file relationships | `graphify` |
+| Hiểu codebase/architecture/file relationships | `rg` + source/docs trực tiếp; không dùng skill mặc định |
 | Tạo hoặc sửa Mermaid | `mermaid-styling` |
 | Tạo hoặc sửa skill | `skill-creator` |
 | Cài skill | `skill-installer` |

@@ -36,6 +36,13 @@ Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với côn
 - Redis: key, DTO, serializer và TTL: `docs/engineering/redis-guide.md`.
 - Webhook: `docs/engineering/rtmp-webhook-guide.md`.
 
+Giữ context/token theo nguyên tắc direct-first:
+
+- Dùng `rg`/`rg --files` để tìm đúng file, symbol hoặc heading rồi chỉ đọc range liên quan; không nạp toàn repository, dump diff dài hoặc dùng generated knowledge graph khi source trực tiếp đã đủ.
+- Mỗi tool call/audit phải trả lời một câu hỏi chưa được kiểm chứng. Không lặp lại search, browse, validation hoặc review chỉ để “chắc hơn” nếu evidence chưa thay đổi.
+- Với docs-only change thông thường, mặc định một lượt discovery, một lượt patch và một lượt validation gồm link/naming/diff. Không gọi thêm agent hoặc dựng index toàn codebase nếu người dùng không yêu cầu và task không có nhánh độc lập thực sự.
+- Khi đã xác minh một fact hiện hành trong cùng session, tái sử dụng nguồn/evidence đó thay vì browse lại.
+
 Business flow là target business intent. API specification chỉ liệt kê current endpoint và gap đã biết. Mã nguồn và test là bằng chứng cho hành vi hiện tại. Khi chúng mâu thuẫn, không âm thầm chọn một bên: nêu rõ độ lệch, làm theo kết quả người dùng yêu cầu và cập nhật hoặc đánh dấu tài liệu bị ảnh hưởng.
 
 ## Quy tắc làm việc
