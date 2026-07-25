@@ -1,7 +1,9 @@
 # Implementation Roadmap
 
-> **Mục đích**: Tổng quan về lộ trình implementation của Spring Boot Livestream Backend  
-> **Cập nhật**: 2025-12-18
+> **Mục đích**: Tổng quan về lộ trình implementation của Spring Boot Livestream Backend<br>
+> **Cập nhật**: 2026-07-25
+
+> **Lưu ý snapshot 2026-07-25**: Đây là roadmap coverage của feature demo, không phải roadmap maturity Senior. Phase 4 đã có implementation và phase/API docs đánh dấu hoàn thành ở mức demo. Trước Phase 5, ưu tiên Stage 0 trong [Senior Backend Interview Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
 
 ---
 
@@ -14,7 +16,7 @@ Mỗi phase được document riêng biệt để dễ theo dõi và implement:
 | **Phase 1**  | ✅ DONE     | Infrastructure setup             | [phase-1-foundation.md](phase-1-foundation.md)         |
 | **Phase 2**  | ✅ DONE     | Development simulation & testing | [phase-2-simulation.md](phase-2-simulation.md)         |
 | **Phase 3**  | ✅ DONE     | User identity & authentication   | [phase-3-authentication.md](phase-3-authentication.md) |
-| **Phase 4**  | 🔄 TODO     | Core livestream functionality    | [phase-4-streaming.md](phase-4-streaming.md)           |
+| **Phase 4**  | ✅ DEMO DONE | Core livestream functionality    | [phase-4-streaming.md](phase-4-streaming.md)           |
 | **Phase 5**  | 🔄 TODO     | Virtual economy foundation       | [phase-5-economy.md](phase-5-economy.md)               |
 | **Phase 6**  | 🔄 TODO     | Real-time community interaction  | [phase-6-realtime-chat.md](phase-6-realtime-chat.md)   |
 | **Phase 7**  | 🔄 TODO     | Monetization mechanism           | [phase-7-gifts.md](phase-7-gifts.md)                   |
@@ -28,9 +30,10 @@ Mỗi phase được document riêng biệt để dễ theo dõi và implement:
 
 ## 🎯 Current Status
 
-**Completed**: Phases 1-3  
-**Next Up**: Phase 4 (Stream Management Module)  
-**Overall Progress**: 3/12 phases (25%)
+**Feature coverage completed**: Phases 1-4
+**Engineering priority**: Senior roadmap Stage 0 (stabilization and test harness)
+**Next product feature after the gate**: Phase 5 (Economy & Transaction System)
+**Feature progress**: 4/12 phases (33%); không đại diện production maturity
 
 ---
 
@@ -111,14 +114,15 @@ graph TD
 
 ---
 
-### 🔄 Upcoming Phases
+### 🔄 Demo hardening and upcoming phases
 
-#### Phase 4: Stream Management Module (NEXT)
+#### Phase 4: Stream Management Module (DEMO DONE; HARDENING PENDING)
 
 - **Business Value**: Core livestream functionality
 - **Deliverables**: Stream CRUD, live status tracking, viewer count
 - **Use Cases Enabled**: UC-02 (Streamer Creates Livestream), UC-03 (Viewer Watches Stream)
 - **Dependencies**: Phase 3 (Authentication)
+- **Hardening**: state machine, idempotent webhook, DTO secret separation, concurrency test, pagination/N+1 và DB-Redis consistency theo Senior roadmap
 
 #### Phase 5: Economy & Transaction System
 
@@ -211,7 +215,7 @@ graph TD
 - [System Design](../system_design_livestream.md) - Technical architecture
 - [API Specification](../api_endpoints_specification.md) - Endpoint details
 - [API Roadmap](../api_roadmap.md) - API implementation order
-- [Coding Rules](../agent/rules/coding-rule.md) - Development standards
+- [Repository Rules](../../AGENTS.md) - Development standards and Agent guardrails
 
 ---
 
