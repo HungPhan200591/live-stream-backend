@@ -31,7 +31,8 @@ Số từ không tự quyết định chất lượng; các con số chỉ xác 
 | Spring | 10 | 0 | Toàn bộ core/deep-dive hiện có đã đạt teaching draft |
 | HTTP/API | 4 | 0 | Core/deep-dive có mental model, example và guided self-check |
 | Resilience | 4 | 0 | Core/deep-dive có causal loop, policy integration và guided self-check |
-| **Tổng** | **36** | **0** | Không file nào được coi là learner/evidence completed |
+| Testing | 2 | 0 | TEST-01 preview pair đạt teaching gate; harness/test evidence chưa chạy |
+| **Tổng** | **38** | **0** | Không file nào được coi là learner/evidence completed |
 
 Question banks vẫn giữ nguyên coverage/rubric. Readiness của theory không làm câu hỏi thành `ANSWERED` và không tăng checkpoint.
 
@@ -56,12 +57,12 @@ Migration đã nâng `32` file còn lại, ngoài `4` file pilot ban đầu, the
 
 - mental model do người dạy cung cấp nằm trước learner task;
 - mechanism có sequence, worked example/counterexample và causal explanation;
-- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `46` diagrams;
+- Mermaid chỉ dùng khi quan hệ khó hiểu bằng prose; toàn corpus hiện có `48` diagrams;
 - interview outline/recap và learner write-back tách riêng;
 - guided self-check có section đọc lại và answer rubric;
 - mọi status vẫn `DRAFT`, evidence vẫn `NOT RUN`.
 
-Từ đây không bulk-generate topic mới. Topic mới phải đạt `TEACHABLE_DRAFT` ngay khi được tạo hoặc trung thực gắn `OUTLINE_ONLY`; learning cursor vẫn mở từng artifact theo roadmap/checkpoint, không yêu cầu learner đọc cả corpus.
+Sau migration, cặp theory `TEST-01` được tạo theo đúng roadmap successor và đạt `TEACHABLE_DRAFT` ngay từ đầu. Không bulk-generate topic mới: mỗi topic tiếp theo phải có owner/checkpoint rõ hoặc trung thực gắn `OUTLINE_ONLY`; learning cursor vẫn mở từng artifact theo roadmap, không yêu cầu learner đọc cả corpus.
 
 ## 6. Validation cho Agent
 

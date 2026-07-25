@@ -5,8 +5,8 @@
 > Active slice: `NONE`; preview target `TEST-01 — hermetic integration-test harness and risk-based boundary`<br>
 > Related roadmap: [Stage 0 and TEST-01](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Testing and quality strategy — P0, target D3](../../../knowledge-depth-rubric.md#310-testing-và-quality-strategy--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/testing/theory/core/testing-strategy-and-hermetic-tests.md`<br>
-> Updated: `2026-07-25`
+> Related theory: [Testing strategy and hermetic tests](../theory/core/testing-strategy-and-hermetic-tests.md); [Testcontainers lifecycle deep-dive](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)<br>
+> Updated: `2026-07-26`
 
 Question bank này được chuẩn bị trước cho `TEST-01` theo yêu cầu của người học. File chỉ chứa question ladder và evaluation rubric; không chứng minh `TEST-01` đã active hoặc checkpoint hiện tại đã hoàn tất. Người học phải trả lời trước khi mở `Answer outline`. Mọi test, experiment và interview note giữ `NOT RUN`/`NOT CREATED` cho tới khi có artifact thật.
 
@@ -25,10 +25,10 @@ Level được gắn trên từng câu hỏi; không tách folder theo level.
 
 | Topic | Foundation | Senior | Architect | Expert | Theory source |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Test taxonomy và risk-based boundary | 2 | 1 | 1 | 0 | `PLANNED` |
-| Hermeticism, determinism và test data | 1 | 2 | 0 | 1 | `PLANNED` |
-| Testcontainers và infrastructure semantics | 1 | 2 | 1 | 0 | `PLANNED` |
-| CI, flakiness và release confidence | 0 | 1 | 2 | 1 | `PLANNED` |
+| Test taxonomy và risk-based boundary | 2 | 1 | 1 | 0 | [Core](../theory/core/testing-strategy-and-hermetic-tests.md) |
+| Hermeticism, determinism và test data | 1 | 2 | 0 | 1 | [Core](../theory/core/testing-strategy-and-hermetic-tests.md) |
+| Testcontainers và infrastructure semantics | 1 | 2 | 1 | 0 | [Deep-dive](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md) |
+| CI, flakiness và release confidence | 0 | 1 | 2 | 1 | [Deep-dive](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md) |
 | **Tổng** | **4** | **6** | **4** | **2** | 16 questions |
 
 ## Questions
@@ -68,8 +68,8 @@ Phân biệt unit test, slice test, integration test, contract test và end-to-e
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -111,8 +111,8 @@ Mock, stub, fake và spy khác nhau thế nào? Vì sao mock quá nhiều có th
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -154,8 +154,8 @@ Một test “hermetic” có nghĩa là gì? Hãy nêu các nguồn phụ thu�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -197,8 +197,8 @@ Testcontainers giải quyết vấn đề gì so với database in-memory hoặc
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -241,8 +241,8 @@ Bạn chọn test boundary nhỏ nhất nhưng đủ mạnh để bảo vệ m�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`; future security evidence có thể link `SEC-01`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -285,8 +285,8 @@ Thiết kế deterministic seams cho clock, UUID/ID, randomness và test data nh
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -329,8 +329,8 @@ Vì sao một integration test được bọc transaction và rollback sau mỗi
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -373,8 +373,8 @@ Container đã mở TCP port có đồng nghĩa dependency đã sẵn sàng cho 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -417,8 +417,8 @@ Bạn quyết định container lifecycle và isolation khi chạy test song son
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -461,8 +461,8 @@ Một integration test thỉnh thoảng fail trên CI nhưng pass khi rerun. B�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -506,8 +506,8 @@ Thiết kế risk-based test portfolio cho backend dùng Spring Security, Postgr
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -551,8 +551,8 @@ Thiết kế CI topology cho integration-test suite có nhiều container như t
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -596,8 +596,8 @@ Bạn thiết kế test data và schema-migration strategy nào để chứng mi
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`; future migration evidence thuộc `MIG-01/DB-04`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -641,8 +641,8 @@ Bạn định nghĩa release-confidence gate cho một team như thế nào? Cov
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -686,8 +686,8 @@ Thiết kế một deterministic test để tái hiện race hoặc distributed 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -731,8 +731,8 @@ Một test suite mất 90 phút nhưng vẫn để lọt regression nghiêm tr�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core](../theory/core/testing-strategy-and-hermetic-tests.md)
+- Deep-dive: [Lifecycle/isolation/CI failure modes](../theory/deep-dives/testcontainers-lifecycle-isolation-and-ci-failure-modes.md)
 - Learning case: `TEST-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`

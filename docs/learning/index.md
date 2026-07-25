@@ -28,7 +28,7 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) từ mục 0 đến 13; sau đó viết mục 14 và trả lời guided self-check mục 15, rồi yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
 | Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 14 và guided self-check mục 15; không sửa code |
-| Latest evidence | Quality migration đã nâng toàn bộ `36/36` theory/deep-dive hiện có thành `TEACHABLE_DRAFT` (`18` Java, `10` Spring, `4` HTTP/API, `4` Resilience), với `46` Mermaid diagrams cùng worked example, causal failure, interview outline và guided self-check. Đây chỉ là teaching readiness: learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không checkpoint/depth nào được tăng. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
+| Latest evidence | Toàn bộ `38/38` theory/deep-dive hiện có là `TEACHABLE_DRAFT` (`18` Java, `10` Spring, `4` HTTP/API, `4` Resilience, `2` Testing), với `48` Mermaid diagrams. Cặp Testing mới chuẩn bị theory cho roadmap successor `TEST-01` và đã nối question bank, nhưng không active case. Learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên cursor/checkpoint/depth không đổi. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43` |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-26` |
@@ -100,7 +100,7 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
 | Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ platform/safety-net foundation queue đóng hoặc được reschedule có reason |
-| Testing, observability và performance | Stage 0, 8 | `LEARNING BACKLOG`: TEST-01 đứng sau JDK-01 |
+| Testing, observability và performance | Stage 0, 8 | Testing core/Testcontainers deep-dive là `TEACHABLE_DRAFT`; TEST-01 vẫn đứng sau JDK-01, chưa active và evidence `NOT RUN` |
 | Resilience và distributed failure | Stage 2, 8, 10 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
 | Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
