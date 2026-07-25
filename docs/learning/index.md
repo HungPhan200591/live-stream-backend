@@ -24,10 +24,10 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
 | Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
-| Latest evidence | Core theory, deep-dive và question bank JDK-01 đã có preview `DRAFT`; learner review và mọi Java 21 compatibility/build/JFR/experiment evidence vẫn `NOT RUN` |
+| Latest evidence | Question-bank preview corpus đã phủ roadmap và capability rubric `3.1-3.24`; tất cả vẫn `DRAFT`/`UNANSWERED`/`NOT RUN` và không được tính là learning evidence. JDK-01 learner review cùng mọi Java 21 compatibility/build/JFR/experiment evidence vẫn `NOT RUN` |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
-| Updated | `2026-07-25` |
+| Updated | `2026-07-26` |
 
 Khi kết thúc mỗi session, cập nhật block này với next action đủ nhỏ để thực hiện ngay. Nếu dừng giữa phase, giữ nguyên checkpoint và ghi rõ phần còn lại.
 
