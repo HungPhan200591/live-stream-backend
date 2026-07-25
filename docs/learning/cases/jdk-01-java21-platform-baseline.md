@@ -58,9 +58,9 @@ Project build, test và chạy bằng một Java 21 baseline được khai báo,
 
 ### Reusable knowledge
 
-- Core theory: [Java 21 platform baseline](../theory/core/java/java21-platform-baseline.md) — `DRAFT`, chờ learner write-back/self-check.
-- Deep-dive: [Virtual threads, pinning và downstream backpressure](../theory/deep-dives/java/virtual-threads-and-pinning.md) — preview `DRAFT`, chưa đạt `THEORY_DEEP_DIVE` gate.
-- Question bank: [Java Interview Question Bank](../question-bank/java.md) — preview `DRAFT`, mọi câu JDK-01 chưa có evidence.
+- Core theory: [Java 21 platform baseline](../topics/java/theory/core/java21-platform-baseline.md) — `DRAFT`, chờ learner write-back/self-check.
+- Deep-dive: [Virtual threads, pinning và downstream backpressure](../topics/java/theory/deep-dives/virtual-threads-and-pinning.md) — preview `DRAFT`, chưa đạt `THEORY_DEEP_DIVE` gate.
+- Question bank: [JDK Platform Interview Question Bank](../topics/java/question-bank/jdk-platform.md) — preview `DRAFT`, mọi câu JDK-01 chưa có evidence.
 - Depth rubric: [Java language/runtime](../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3), [Concurrency](../knowledge-depth-rubric.md#34-concurrency-jmm-và-async-model--p0-target-d3), [JVM](../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3).
 
 ### Áp dụng vào case này

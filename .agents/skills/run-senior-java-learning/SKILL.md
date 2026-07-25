@@ -22,7 +22,7 @@ Chỉ một learning case chính được `ACTIVE`. Nếu roadmap, index và cas
 1. Chạy `git status` và giữ nguyên thay đổi chưa commit.
 2. Đọc `AGENTS.md`, `docs/learning/index.md` và block `Current session cursor`.
 3. Đọc active case, checkpoint hiện tại và đúng template của artifact sắp ghi.
-4. Chỉ đọc roadmap section, theory/deep-dive, question-bank, concern docs, code và test được cursor hoặc active case liên kết; không nạp toàn bộ `docs/`.
+4. Chỉ đọc roadmap section, knowledge artifact trong `topics/<domain>`, concern docs, code và test được cursor hoặc active case liên kết; không nạp toàn bộ `docs/`.
 5. Kiểm tra evidence link thực sự tồn tại trước khi coi phase trước đã hoàn thành.
 6. Tiếp tục từ `Current checkpoint`; không tự suy đoán tiến độ từ một checklist hoặc bản nháp do AI tạo.
 
@@ -61,9 +61,9 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 
 | Artifact | Owner của nội dung | Vị trí và template |
 | --- | --- | --- |
-| Core theory | Mental model, mechanism, invariant dùng lại | `docs/learning/theory/core/<domain>/<topic>.md` từ `docs/templates/theory-note-template.md` |
-| Deep-dive | Internals, failure, scale, security, cross-layer behavior | `docs/learning/theory/deep-dives/<domain>/<topic>.md` từ theory template |
-| Question bank | Câu hỏi, level, rubric, follow-up, red flags | `docs/learning/question-bank/<domain>.md` từ `docs/templates/question-bank-template.md` |
+| Core theory | Mental model, mechanism, invariant dùng lại | `docs/learning/topics/<domain>/theory/core/<topic>.md` từ `docs/templates/theory-note-template.md` |
+| Deep-dive | Internals, failure, scale, security, cross-layer behavior | `docs/learning/topics/<domain>/theory/deep-dives/<topic>.md` từ theory template |
+| Question bank | Câu hỏi, level, rubric, follow-up, red flags | `docs/learning/topics/<domain>/question-bank/<slice>.md` từ `docs/templates/question-bank-template.md` |
 | Learning case | Chi tiết riêng project, reproducer, design, implementation gate | `docs/learning/cases/<case-id>-<slug>.md` từ learning-case template |
 | Experiment | Environment, procedure, raw result, metric, interpretation | `docs/learning/experiments/<case-id>-<slug>.md` từ experiment template |
 | Interview note | Câu trả lời cá nhân đã cô đọng sau evidence | `docs/learning/interview-notes/<case-id>-<topic>.md` từ interview-note template |
@@ -73,6 +73,8 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 
 - Đưa kiến thức dự kiến dùng lại cho từ hai case vào core theory.
 - Đưa internals hoặc phân tích nâng cao, pathological/cross-layer cases vào deep-dive.
+- Chọn một `primary domain` theo capability sở hữu mental model; concern phụ được link cross-domain, không copy cùng kiến thức vào nhiều topic tree.
+- Chia question bank theo slice ổn định như `jdk-platform.md`, `language-collections.md`; không dồn toàn domain vào một file tăng vô hạn.
 - Giữ project code path và current failure trong case; không biến case thành textbook.
 - Giữ câu trả lời đầy đủ trong theory và câu trả lời cá nhân trong interview note; question bank chỉ giữ outline/rubric.
 - Link đến source of truth thay vì sao chép nội dung.

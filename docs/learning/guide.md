@@ -135,9 +135,9 @@ Xác minh evidence, khôi phục checkpoint rồi thực hiện next action nh�
 | Cách sử dụng hệ học | File guide này |
 | Đang học tới đâu | [`learning/index.md`](index.md) |
 | Phạm vi Senior Java cần cover | [`001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) |
-| Kiến thức nền dùng lại | `learning/theory/core/...` |
-| Internals/failure/scale | `learning/theory/deep-dives/...` |
-| Câu hỏi và evaluation rubric | `learning/question-bank/...` |
+| Kiến thức nền dùng lại | `learning/topics/<domain>/theory/core/...` |
+| Internals/failure/scale | `learning/topics/<domain>/theory/deep-dives/...` |
+| Câu hỏi và evaluation rubric | `learning/topics/<domain>/question-bank/<slice>.md` |
 | Failure cụ thể của project | `learning/cases/...` |
 | Số đo và raw result | `learning/experiments/...` |
 | Câu trả lời phỏng vấn cá nhân | `learning/interview-notes/...` |

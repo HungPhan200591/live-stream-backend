@@ -71,7 +71,7 @@ Quy tắc quyết định:
 | Human dùng learning system thế nào? | `docs/learning/guide.md` | `docs/learning/index.md` cursor |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
 | Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
-| Kiến thức dùng lại nằm ở đâu? | `docs/learning/theory/*` | question bank và learning cases link tới theory |
+| Kiến thức dùng lại nằm ở đâu? | `docs/learning/topics/<domain>/*` | question bank và learning cases link tới theory |
 | Code capability nào đang tồn tại? | `docs/implementation/current-implementation-map.md` | source code + tests |
 | Knowledge/case coverage nào còn thiếu? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` và `docs/learning/knowledge-depth-rubric.md` | current-state assessment |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
@@ -95,10 +95,12 @@ docs/
 │   ├── guide.md                # human quick start và prompt chuẩn
 │   ├── index.md                # entry point và session cursor
 │   ├── knowledge-depth-rubric.md # D1-D4 criteria và evidence tracker
-│   ├── theory/
-│   │   ├── core/               # mental model/mechanism/invariant dùng lại
-│   │   └── deep-dives/         # internals/failure/scale/cross-layer
-│   ├── question-bank/          # level nằm trên từng câu hỏi
+│   ├── topics/                 # knowledge domain-first cho Human/Agent
+│   │   └── <domain>/
+│   │       ├── theory/
+│   │       │   ├── core/       # mental model/mechanism/invariant dùng lại
+│   │       │   └── deep-dives/ # internals/failure/scale/cross-layer
+│   │       └── question-bank/  # chia theo slice; level nằm trên từng câu
 │   ├── cases/                  # active learning case
 │   ├── experiments/            # reproducible measurement
 │   └── interview-notes/        # debrief sau evidence
@@ -114,9 +116,10 @@ docs/
 ### Quy tắc placement
 
 - `learning/index.md`: active case, checkpoint, next action, required reading, write target và latest evidence.
-- `learning/theory/core`: mental model, mechanism, invariant và boundary dùng lại cho nhiều case.
-- `learning/theory/deep-dives`: internals, failure mode, edge case, scale/security và cross-layer interaction.
-- `learning/question-bank`: question, level, interviewer intent, answer outline, follow-up và red flags; không chứa full essay.
+- `learning/topics/<domain>/theory/core`: mental model, mechanism, invariant và boundary dùng lại cho nhiều case.
+- `learning/topics/<domain>/theory/deep-dives`: internals, failure mode, edge case, scale/security và cross-layer interaction.
+- `learning/topics/<domain>/question-bank/<slice>.md`: question, level, interviewer intent, answer outline, follow-up và red flags; không chứa full essay hoặc một file domain tăng vô hạn.
+- Knowledge chọn một primary domain; cross-domain concern được link, còn case là nơi kết nối nhiều domain với code/evidence.
 - `architecture/adr`: một quyết định có alternatives và consequences.
 - `learning/cases`: problem, invariant, current code path, reproducer, design và evidence link riêng của project; không sao chép textbook.
 - `learning/experiments`: procedure, dataset, environment, raw result và conclusion.

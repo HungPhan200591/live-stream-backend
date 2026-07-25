@@ -5,8 +5,8 @@
 > Target depth: `D3 sau reproducer/JFR evidence`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
-> Prerequisites: [Java 21 platform baseline](../../core/java/java21-platform-baseline.md)<br>
-> Related cases: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md)<br>
+> Prerequisites: [Java 21 platform baseline](../core/java21-platform-baseline.md)<br>
+> Related cases: [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md)<br>
 > Owner: `Project learner; Codex prepares canonical draft`<br>
 > Updated: `2026-07-25`
 
@@ -229,7 +229,7 @@ Endpoint, POM, pool size và command cụ thể phải nằm trong learning case
 
 | Case | Theory được áp dụng | Project detail chỉ giữ ở case |
 | --- | --- | --- |
-| [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md) | Workload selection, carrier/pinning, resource limiting, JFR và enable/defer criteria | Endpoint, POM, Spring config, Hikari size, commands và raw results |
+| [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md) | Workload selection, carrier/pinning, resource limiting, JFR và enable/defer criteria | Endpoint, POM, Spring config, Hikari size, commands và raw results |
 
 ## 12. Self-check
 

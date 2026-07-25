@@ -3,7 +3,7 @@
 > Status: `DRAFT`<br>
 > Domain owner: `java / JVM / concurrency`<br>
 > Active slice: `JDK-01 — Java 21 platform baseline and virtual-thread decision`<br>
-> Related theory: [Java 21 platform baseline](../theory/core/java/java21-platform-baseline.md), [Virtual threads and pinning](../theory/deep-dives/java/virtual-threads-and-pinning.md)<br>
+> Related theory: [Java 21 platform baseline](../theory/core/java21-platform-baseline.md), [Virtual threads and pinning](../theory/deep-dives/virtual-threads-and-pinning.md)<br>
 > Updated: `2026-07-25`
 
 Question bank chứa câu hỏi và evaluation rubric, không chứa bài luận hoàn chỉnh. `Answer outline` chỉ là chuẩn chấm; người học phải trả lời trước khi mở outline. Tests/experiment và interview note của JDK-01 vẫn chưa tồn tại, nên mọi câu giữ `UNANSWERED` hoặc `NEEDS_WORK`, không được đánh dấu `EVIDENCE_BACKED`.
@@ -23,10 +23,10 @@ Level nằm trên từng câu hỏi; không chia folder theo level.
 
 | Topic | Foundation | Senior | Architect | Expert | Theory source |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Platform/toolchain/migration | 1 | 2 | 1 | 0 | [Core](../theory/core/java/java21-platform-baseline.md) |
-| Feature lifecycle | 1 | 0 | 0 | 0 | [Core §3.2](../theory/core/java/java21-platform-baseline.md#32-final-preview-và-incubator-là-ba-compatibility-contract-khác-nhau) |
-| Virtual-thread execution/capacity | 1 | 2 | 1 | 1 | [Deep-dive](../theory/deep-dives/java/virtual-threads-and-pinning.md) |
-| Pinning/version/diagnostics | 0 | 1 | 0 | 1 | [Deep-dive §3.4-3.5](../theory/deep-dives/java/virtual-threads-and-pinning.md#34-pinning-trên-java-21) |
+| Platform/toolchain/migration | 1 | 2 | 1 | 0 | [Core](../theory/core/java21-platform-baseline.md) |
+| Feature lifecycle | 1 | 0 | 0 | 0 | [Core §3.2](../theory/core/java21-platform-baseline.md#32-final-preview-và-incubator-là-ba-compatibility-contract-khác-nhau) |
+| Virtual-thread execution/capacity | 1 | 2 | 1 | 1 | [Deep-dive](../theory/deep-dives/virtual-threads-and-pinning.md) |
+| Pinning/version/diagnostics | 0 | 1 | 0 | 1 | [Deep-dive §3.4-3.5](../theory/deep-dives/virtual-threads-and-pinning.md#34-pinning-trên-java-21) |
 | **Tổng** | **3** | **5** | **2** | **2** | 12 questions |
 
 ## Questions
@@ -66,8 +66,8 @@ Một project ghi `<java.version>21</java.version>` đã đủ để kết luậ
 
 **Evidence:**
 
-- Theory: [Core §3.1](../theory/core/java/java21-platform-baseline.md#31-platform-baseline-là-một-chuỗi-không-phải-một-con-số-trong-pom)
-- Learning case: [JDK-01](../cases/jdk-01-java21-platform-baseline.md)
+- Theory: [Core §3.1](../theory/core/java21-platform-baseline.md#31-platform-baseline-là-một-chuỗi-không-phải-một-con-số-trong-pom)
+- Learning case: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -108,7 +108,7 @@ Final, preview và incubator feature khác nhau thế nào? Java 21 là LTS có 
 
 **Evidence:**
 
-- Theory: [Core §3.2](../theory/core/java/java21-platform-baseline.md#32-final-preview-và-incubator-là-ba-compatibility-contract-khác-nhau)
+- Theory: [Core §3.2](../theory/core/java21-platform-baseline.md#32-final-preview-và-incubator-là-ba-compatibility-contract-khác-nhau)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -149,7 +149,7 @@ Virtual thread khác platform thread ở đâu, và carrier thread là gì?
 
 **Evidence:**
 
-- Theory: [Deep-dive §3.1](../theory/deep-dives/java/virtual-threads-and-pinning.md#31-virtual-thread-vẫn-là-javalangthread)
+- Theory: [Deep-dive §3.1](../theory/deep-dives/virtual-threads-and-pinning.md#31-virtual-thread-vẫn-là-javalangthread)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -192,8 +192,8 @@ Bạn sẽ nâng một Spring Boot service từ Java 17 lên Java 21 theo các g
 
 **Evidence:**
 
-- Theory: [Core §3.4](../theory/core/java/java21-platform-baseline.md#34-migration-gate-an-toàn)
-- Learning case: [JDK-01](../cases/jdk-01-java21-platform-baseline.md)
+- Theory: [Core §3.4](../theory/core/java21-platform-baseline.md#34-migration-gate-an-toàn)
+- Learning case: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -234,7 +234,7 @@ Bạn sẽ nâng một Spring Boot service từ Java 17 lên Java 21 theo các g
 
 **Evidence:**
 
-- Theory: [Core §3.1](../theory/core/java/java21-platform-baseline.md#31-platform-baseline-là-một-chuỗi-không-phải-một-con-số-trong-pom)
+- Theory: [Core §3.1](../theory/core/java21-platform-baseline.md#31-platform-baseline-là-một-chuỗi-không-phải-một-con-số-trong-pom)
 - Official: [Maven Compiler Plugin](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -276,7 +276,7 @@ Vì sao không nên pool virtual threads? Nếu database chỉ cho phép 20 conc
 
 **Evidence:**
 
-- Theory: [Deep-dive §3.3](../theory/deep-dives/java/virtual-threads-and-pinning.md#33-không-pool-virtual-threads)
+- Theory: [Deep-dive §3.3](../theory/deep-dives/virtual-threads-and-pinning.md#33-không-pool-virtual-threads)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -318,7 +318,7 @@ Pinned virtual thread trên Java 21 là gì? Khi nào nó thật sự đáng s�
 
 **Evidence:**
 
-- Theory: [Deep-dive §3.4](../theory/deep-dives/java/virtual-threads-and-pinning.md#34-pinning-trên-java-21)
+- Theory: [Deep-dive §3.4](../theory/deep-dives/virtual-threads-and-pinning.md#34-pinning-trên-java-21)
 - Official: [JEP 444](https://openjdk.org/jeps/444)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -361,8 +361,8 @@ Bật `spring.threads.virtual.enabled=true` trong Spring Boot service còn nhữ
 
 **Evidence:**
 
-- Theory: [Deep-dive §10.2](../theory/deep-dives/java/virtual-threads-and-pinning.md#102-spring-boot-mode)
-- Learning case: [JDK-01 scheduler boundary](../cases/jdk-01-java21-platform-baseline.md#4-current-baseline)
+- Theory: [Deep-dive §10.2](../theory/deep-dives/virtual-threads-and-pinning.md#102-spring-boot-mode)
+- Learning case: [JDK-01 scheduler boundary](../../../cases/jdk-01-java21-platform-baseline.md#4-current-baseline)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -404,8 +404,8 @@ Project đang Java 17/Spring Boot 3.4, Java 21 là target gần còn JDK 25 là 
 
 **Evidence:**
 
-- Theory: [Core §9](../theory/core/java/java21-platform-baseline.md#9-trade-off-matrix)
-- Learning case: [JDK-01](../cases/jdk-01-java21-platform-baseline.md)
+- Theory: [Core §9](../theory/core/java21-platform-baseline.md#9-trade-off-matrix)
+- Learning case: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -447,7 +447,7 @@ Bạn chọn Spring MVC platform threads, MVC virtual threads hay WebFlux cho m�
 
 **Evidence:**
 
-- Theory: [Deep-dive §9](../theory/deep-dives/java/virtual-threads-and-pinning.md#9-trade-off-matrix)
+- Theory: [Deep-dive §9](../theory/deep-dives/virtual-threads-and-pinning.md#9-trade-off-matrix)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -489,7 +489,7 @@ Sau khi chuyển sang virtual threads, OS thread giảm mạnh nhưng throughput
 
 **Evidence:**
 
-- Theory: [Deep-dive §3.2 và §7](../theory/deep-dives/java/virtual-threads-and-pinning.md#32-concurrency-không-phải-parallelism)
+- Theory: [Deep-dive §3.2 và §7](../theory/deep-dives/virtual-threads-and-pinning.md#32-concurrency-không-phải-parallelism)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
 
@@ -531,7 +531,7 @@ Một interview candidate nói “virtual thread bị pin bởi `synchronized`, 
 
 **Evidence:**
 
-- Theory: [Deep-dive §3.4-3.5](../theory/deep-dives/java/virtual-threads-and-pinning.md#34-pinning-trên-java-21)
+- Theory: [Deep-dive §3.4-3.5](../theory/deep-dives/virtual-threads-and-pinning.md#34-pinning-trên-java-21)
 - Official: [JEP 491](https://openjdk.org/jeps/491)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`

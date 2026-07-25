@@ -6,7 +6,7 @@
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: Java compilation/runtime fundamentals, Maven lifecycle<br>
-> Related cases: [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md)<br>
+> Related cases: [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md)<br>
 > Owner: `Project learner; Codex prepares canonical draft`<br>
 > Updated: `2026-07-25`
 
@@ -169,13 +169,13 @@ Boundary quan trọng:
 
 Core theory chỉ cần nhớ: virtual thread là `Thread` do JDK schedule lên carrier platform thread; blocking operation có thể unmount virtual thread để carrier chạy task khác. Nó tăng khả năng giữ nhiều concurrent tasks chờ I/O, không tăng CPU, connection pool hay downstream quota.
 
-Đọc [Virtual threads, pinning và downstream backpressure](../../deep-dives/java/virtual-threads-and-pinning.md) để học scheduler, mount/unmount, pinning theo JDK version, Spring Boot lifecycle, JFR và experiment design.
+Đọc [Virtual threads, pinning và downstream backpressure](../deep-dives/virtual-threads-and-pinning.md) để học scheduler, mount/unmount, pinning theo JDK version, Spring Boot lifecycle, JFR và experiment design.
 
 ## 11. Liên hệ learning case
 
 | Case | Theory được áp dụng | Project detail chỉ giữ ở case |
 | --- | --- | --- |
-| [JDK-01](../../../cases/jdk-01-java21-platform-baseline.md) | Platform layers, release classification, migration gate, virtual-thread boundary | POM Java 17, Spring Boot version, smoke test, scheduler và commands |
+| [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md) | Platform layers, release classification, migration gate, virtual-thread boundary | POM Java 17, Spring Boot version, smoke test, scheduler và commands |
 
 ## 12. Self-check
 

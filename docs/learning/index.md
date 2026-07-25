@@ -21,9 +21,9 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Active case | [JDK-01 - Java 21 platform baseline and virtual-thread decision](cases/jdk-01-java21-platform-baseline.md) |
 | Case status | `ACTIVE`; chưa có Java 21 compatibility, build hoặc runtime evidence |
 | Current checkpoint | `THEORY_CORE` |
-| Next action | Người học đọc [Java 21 platform baseline](theory/core/java/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
-| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](theory/core/java/java21-platform-baseline.md) |
-| Write target | `docs/learning/theory/core/java/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
+| Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
+| Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
+| Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
 | Latest evidence | Core theory, deep-dive và question bank JDK-01 đã có preview `DRAFT`; learner review và mọi Java 21 compatibility/build/JFR/experiment evidence vẫn `NOT RUN` |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
@@ -44,9 +44,9 @@ Khi kết thúc mỗi session, cập nhật block này với next action đủ n
 
 | Artifact | Chứa gì | Không chứa gì |
 | --- | --- | --- |
-| `theory/core` | Mental model, cơ chế, invariant và boundary nền tảng | Current code path riêng của project |
-| `theory/deep-dives` | Internals, edge case, failure mode, scale, security, cross-layer interaction | Bản sao core theory |
-| `question-bank` | Câu hỏi, level, interviewer intent, outline, follow-up và red flags | Bài luận hoặc câu trả lời cá nhân đầy đủ |
+| `topics/<domain>/theory/core` | Mental model, cơ chế, invariant và boundary nền tảng | Current code path riêng của project |
+| `topics/<domain>/theory/deep-dives` | Internals, edge case, failure mode, scale, security, cross-layer interaction | Bản sao core theory |
+| `topics/<domain>/question-bank` | Câu hỏi theo slice, level, interviewer intent, outline, follow-up và red flags | Bài luận hoặc câu trả lời cá nhân đầy đủ |
 | `cases` | Project problem, invariant, code path, reproducer, alternatives và acceptance criteria | Toàn bộ textbook dùng lại |
 | `experiments` | Environment, dataset, procedure, raw result, metric và interpretation | Claim không có số liệu hoặc lệnh tái lập |
 | `interview-notes` | Câu trả lời cá nhân sau evidence, bản 2 phút/15 phút và teach-back gaps | Output AI chưa được người học sở hữu |
@@ -114,10 +114,10 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 JDK-01 là item đầu tiên của Stage 0. Sau khi đóng, thứ tự còn lại của Stage 0 là `TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`; sau đó mới sang Stage 1 `JAVA-01 -> JVM-01 -> CON-01` theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12). Index không duy trì execution queue thứ hai. Preview pack đã được tạo để chuẩn hóa format, nhưng cursor vẫn ở `THEORY_CORE` cho tới khi learner write-back/self-check đạt gate:
 
-1. [Core theory Java 21 platform baseline](theory/core/java/java21-platform-baseline.md) — current write target.
-2. [Deep-dive virtual threads/pinning](theory/deep-dives/java/virtual-threads-and-pinning.md) — preview cho checkpoint kế tiếp.
-3. [Java question bank](question-bank/java.md) — preview cho `QUESTION_BANK`.
+1. [Core theory Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) — current write target.
+2. [Deep-dive virtual threads/pinning](topics/java/theory/deep-dives/virtual-threads-and-pinning.md) — preview cho checkpoint kế tiếp.
+3. [JDK platform question bank](topics/java/question-bank/jdk-platform.md) — preview cho `QUESTION_BANK`.
 4. Cập nhật case JDK-01, chụp baseline Maven/runtime và tạo compatibility reproducer khi người dùng yêu cầu thực thi.
 5. Chỉ sau experiment mới tạo `experiments/jdk-01-java21-compatibility-and-virtual-thread-lab.md` và `interview-notes/jdk-01-java21-platform-baseline.md`.
 
-Các path trên là routing target, không phải bằng chứng file đã tồn tại.
+File tồn tại chỉ chứng minh artifact đã được tạo; không chứng minh checkpoint hoặc depth gate đã hoàn tất.

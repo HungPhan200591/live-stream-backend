@@ -113,8 +113,8 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Redis key/TTL/serializer | `engineering/redis-guide.md`, tests, compatibility plan |
 | Webhook contract | `engineering/rtmp-webhook-guide.md`, API contract, tests |
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
-| Core/deep-dive knowledge | `learning/theory/...`; case/question bank chỉ link, không duplicate |
-| Interview question/rubric | `learning/question-bank/<domain>.md` + theory/evidence links |
+| Core/deep-dive knowledge | `learning/topics/<domain>/theory/...`; case/question bank chỉ link, không duplicate |
+| Interview question/rubric | `learning/topics/<domain>/question-bank/<slice>.md` + theory/evidence links |
 | Learning session progress | `learning/index.md` cursor + active artifact/case |
 | Learning case complete | Case file, roadmap status/maturity |
 | Experiment/interview extraction | `learning/experiments/...` raw evidence; `learning/interview-notes/...` teach-back cá nhân |
@@ -148,16 +148,18 @@ docs/
 │   ├── guide.md
 │   ├── index.md
 │   ├── knowledge-depth-rubric.md
+│   ├── topics/
+│   │   └── java/
+│   │       ├── theory/
+│   │       │   ├── core/
+│   │       │   │   └── java21-platform-baseline.md
+│   │       │   └── deep-dives/
+│   │       │       └── virtual-threads-and-pinning.md
+│   │       └── question-bank/
+│   │           └── jdk-platform.md
 │   ├── cases/
 │   │   ├── jdk-01-java21-platform-baseline.md
 │   │   └── sec-01-access-vs-refresh-token.md
-│   ├── theory/
-│   │   ├── core/java/
-│   │   │   └── java21-platform-baseline.md
-│   │   └── deep-dives/java/
-│   │       └── virtual-threads-and-pinning.md
-│   └── question-bank/
-│       └── java.md
 ├── tools/
 │   ├── codex-postgres-mcp.md
 │   ├── data-initialization.md
@@ -172,7 +174,7 @@ docs/
     └── index.md
 ```
 
-Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật. Trong `learning/`, các nhánh `theory/core/<domain>`, `theory/deep-dives/<domain>`, `question-bank`, `experiments` và `interview-notes` cũng chỉ được tạo khi có artifact đầu tiên; không scaffold cây rỗng từ coverage map.
+Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có artifact thật. Trong `learning/`, chỉ tạo `topics/<domain>/theory/core`, `topics/<domain>/theory/deep-dives`, `topics/<domain>/question-bank`, `experiments` hoặc `interview-notes` khi có artifact đầu tiên; không scaffold cây rỗng từ coverage map.
 
 ## 7. Naming convention
 
@@ -184,6 +186,8 @@ Các folder `operations/` và `architecture/adr/` chỉ được tạo khi có a
 ### Concern artifacts
 
 - Folder và file dùng English `lowercase-kebab-case`.
+- Knowledge domain dùng folder ổn định dưới `learning/topics/`, ví dụ `java`, `jvm`, `concurrency`, `spring`, `database`; chọn một primary domain và link concern phụ.
+- Core/deep-dive dùng topic slug; question bank dùng slice slug như `jdk-platform.md`, không dồn toàn domain vào một file.
 - Tên mô tả artifact, không mô tả phase: `api-contract.md`, không phải `phase-5-api.md`.
 - Directory index dùng `index.md`.
 - Template cũng dùng lowercase kebab-case.
