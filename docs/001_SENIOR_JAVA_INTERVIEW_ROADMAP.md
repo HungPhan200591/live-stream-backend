@@ -38,7 +38,7 @@ Priority dưới đây đo **độ quan trọng đối với năng lực Senior 
 | **P2 - Contextual** | Quan trọng tùy quy mô, domain hoặc platform của công ty | Biết khi nào cần, chọn/loại phương án có lý do; implementation có thể là lab nhỏ |
 | **P3 - Specialization** | Hữu ích cho vị trí/chuyên môn cụ thể, không phải baseline chung | Có vocabulary chính xác, decision criteria và biết giới hạn để không over-engineer |
 
-Độ sâu kiến thức dùng thang riêng: **D1 - nhận diện đúng**, **D2 - giải thích/so sánh**, **D3 - áp dụng, tái hiện và debug bằng evidence**, **D4 - dẫn dắt, teach-back và tiến hóa quyết định qua nhiều constraint**. Thang D1-D4 không thay maturity M0-M4 của implementation đang chạy.
+Độ sâu kiến thức dùng thang riêng: **D1 - nhận diện đúng**, **D2 - giải thích/so sánh**, **D3 - áp dụng, tái hiện và debug bằng evidence**, **D4 - dẫn dắt, teach-back và tiến hóa quyết định qua nhiều constraint**. Thang D1-D4 không thay maturity M0-M4 của implementation đang chạy. Tiêu chí tự đánh giá đầy đủ theo từng capability nằm trong [Knowledge Depth Rubric](learning/knowledge-depth-rubric.md).
 
 Quy tắc coverage: P0 phải đạt ít nhất D3; P1 nên đạt D2-D3; P2 đạt D1-D2 theo mục tiêu phỏng vấn; P3 chỉ học khi job description hoặc case thực tế yêu cầu. Một tên công nghệ không tự tạo coverage nếu chưa có câu hỏi, failure scenario và evidence.
 

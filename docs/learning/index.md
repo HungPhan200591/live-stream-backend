@@ -4,7 +4,7 @@
 > Phạm vi: Senior Java, Spring Boot, data, distributed systems và solution architecture<br>
 > Cập nhật: 2026-07-25
 
-> **Bạn là người học và chưa biết bắt đầu từ đâu?** Đọc [Hướng dẫn học và implement cùng AI Agent](guide.md), rồi dùng prompt bắt đầu chuẩn trong guide. File này chủ yếu lưu trạng thái/checkpoint cho session hiện tại.
+> **Bạn là người học và chưa biết bắt đầu từ đâu?** Đọc [Hướng dẫn học và implement cùng AI Agent](guide.md), rồi dùng prompt bắt đầu chuẩn trong guide. Dùng [Knowledge Depth Rubric](knowledge-depth-rubric.md) để biết D1-D4 cụ thể cho từng capability và tự theo dõi mình đang ở đâu. File này chủ yếu lưu trạng thái/checkpoint cho session hiện tại.
 
 Learning system nối kiến thức có thể tái sử dụng với failure thật trong project theo chu trình:
 
@@ -81,9 +81,9 @@ Question bank xuất hiện ở hai thời điểm: tạo ladder/rubric trước
 
 Level nằm trên từng câu hỏi, không chia folder theo level.
 
-## 6. Coverage map
+## 6. Coverage map và depth self-assessment
 
-[Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) sở hữu thứ tự và độ phủ. Bảng này chỉ route knowledge domain; không chứng minh đã học nếu chưa có artifact/evidence.
+[Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) sở hữu thứ tự và độ phủ. [Knowledge Depth Rubric](knowledge-depth-rubric.md) sở hữu criteria D1-D4, current-depth tracker và evidence cụ thể theo capability. Bảng này chỉ route knowledge domain; không chứng minh đã học nếu chưa có artifact/evidence.
 
 | Knowledge domain | Roadmap coverage | Trạng thái knowledge hiện tại |
 | --- | --- | --- |
