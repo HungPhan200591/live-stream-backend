@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RED-01`<br>
 > Related roadmap: [Stage 4](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-4---redis-as-a-distributed-data-structure)<br>
 > Related depth rubric: [Redis](../../../knowledge-depth-rubric.md#315-redis--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/redis/theory/core/cache-consistency-stampede-and-outage.md`<br>
+> Related theory: [Core theory](../theory/core/cache-consistency-stampede-and-outage.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RED-01`. PostgreSQL là source of truth. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Simplicity/control vs coupling/consistency.<br>
 **Follow-up ladder:** Refresh-ahead?<br>
 **Red flags:** Write-behind phù hợp mọi business mutation.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** TTL ngắn fresh hơn nhưng tăng DB load/miss.<br>
 **Follow-up ladder:** Sliding TTL? No expiry?<br>
 **Red flags:** TTL 5 phút bảo đảm eventual consistency trong 5 phút mọi failure.<br>
-**Evidence:** Theory `NOT CREATED`; project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Negative cache có stale-not-found; lock tăng wait/failure mode.<br>
 **Follow-up ladder:** Bloom filter? Hot key sharding?<br>
 **Red flags:** Tăng Redis memory chữa stampede.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Bump version tạo cold cache/memory overlap.<br>
 **Follow-up ladder:** Serializer migration? Multi-tenant key?<br>
 **Red flags:** Cache JPA entity bằng default serializer.<br>
-**Evidence:** Theory `NOT CREATED`; project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Stronger coordination tăng latency/complexity.<br>
 **Follow-up ladder:** Update cache vs delete?<br>
 **Red flags:** Delete after commit loại mọi race.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Availability read vs DB overload/stale/security correctness.<br>
 **Follow-up ladder:** Local cache? Cold-start storm?<br>
 **Red flags:** Catch Redis exception rồi mọi request query DB không giới hạn.<br>
-**Evidence:** Theory `NOT CREATED`; fault test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); fault test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Lock convenience vs partitions/clock/lease complexity; DB constraint thường safety net tốt hơn.<br>
 **Follow-up ladder:** Lease renewal? Redlock debate?<br>
 **Red flags:** DEL key khi xong bất kể owner.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Fine-grained key metrics dễ cardinality leak.<br>
 **Follow-up ladder:** Cost-adjusted hit ratio?<br>
 **Red flags:** 99% hit rate tự chứng minh cache tốt.<br>
-**Evidence:** Telemetry `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); telemetry `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Local latency/availability vs global freshness/coordination.<br>
 **Follow-up ladder:** Active-active writes? Event reorder?<br>
 **Red flags:** Global Redis cluster tự giải quyết data sovereignty/latency.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### REDIS-CACHE-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `REDIS-CACHE-001..006`; senior follow-up `007..008`; stretch `009..01
 **Required trade-offs:** Stale response vs origin survival.<br>
 **Follow-up ladder:** Which keys first? Recovery SLO?<br>
 **Red flags:** Tăng request retry để cache nóng nhanh.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/cache-consistency-stampede-and-outage.md); incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

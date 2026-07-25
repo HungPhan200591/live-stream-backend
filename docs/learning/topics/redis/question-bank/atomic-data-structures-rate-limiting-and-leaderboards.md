@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RED-01`<br>
 > Related roadmap: [Stage 4](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-4---redis-as-a-distributed-data-structure)<br>
 > Related depth rubric: [Redis](../../../knowledge-depth-rubric.md#315-redis--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/redis/theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md`<br>
+> Related theory: [Core theory](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RED-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Structure chuyên biệt nhanh nhưng migration/memory model khác.<br>
 **Follow-up ladder:** Bitmap/HLL? Per-field TTL?<br>
 **Red flags:** Mọi value nên serialize JSON String.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Server-side atomicity giảm race nhưng tăng latency blast radius.<br>
 **Follow-up ladder:** WATCH optimistic transaction?<br>
 **Red flags:** MULTI rollback từng command khi lỗi.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fairness/precision vs cost.<br>
 **Follow-up ladder:** Leaky bucket? 429 headers?<br>
 **Red flags:** INCR rồi EXPIRE hai lệnh luôn race-free.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Real-time rank nhanh nhưng source/rebuild/audit cần rõ.<br>
 **Follow-up ladder:** Top N per period? Floating score?<br>
 **Red flags:** ZSET là durable ledger.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Lua chính xác nhưng long script chặn shard và khó debug.<br>
 **Follow-up ladder:** EVALSHA/functions? Clock skew?<br>
 **Red flags:** Lua có thể gọi network/DB bên trong.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Accuracy/listability vs memory/write rate.<br>
 **Follow-up ladder:** PFCOUNT error? Shard/merge?<br>
 **Red flags:** HLL trả danh sách user unique.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Sharding tăng throughput nhưng mất atomic total/rank đơn giản.<br>
 **Follow-up ladder:** UNLINK/SCAN? Celebrity key?<br>
 **Red flags:** Thêm node tự shard một key.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Cold rebuild/load vs dual-format complexity.<br>
 **Follow-up ladder:** Cluster key tags? Serializer allowlist?<br>
 **Red flags:** FLUSHALL rồi deploy là migration.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Availability/latency vs consistency/ops cost.<br>
 **Follow-up ladder:** Cluster vs Sentinel? Multi-region?<br>
 **Red flags:** Một Redis chung cho cache, locks và security state không isolation.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RED-DS-010 — `EXPERT`
@@ -129,10 +129,9 @@ First pass `RED-DS-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Strong safety giảm availability/latency.<br>
 **Follow-up ladder:** WAIT command? Split brain?<br>
 **Red flags:** Redis replication tạo linearizability.<br>
-**Evidence:** Theory `NOT CREATED`; case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/atomic-data-structures-rate-limiting-and-leaderboards.md); case `RED-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
 
 Khi `RED-01` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-
