@@ -112,3 +112,11 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
 - Dùng `$run-senior-java-learning` để bắt đầu/tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back hoặc tạo preview learning pack chuẩn mà không vượt checkpoint/evidence gate.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, bắt buộc cập nhật `docs/ai/skill-catalog.md` trong cùng change. Skill change chưa hoàn thành nếu catalog chưa đồng bộ.
+
+## Chất lượng tài liệu học
+
+- Theory/deep-dive dành cho người chưa biết topic phải là bài giảng, không phải cheat sheet hoặc matrix keyword. Dùng `docs/templates/theory-note-template.md` và `$run-senior-java-learning` làm quality contract.
+- Agent phải dạy mental model, mechanism, ví dụ và failure trước; `LEARNER TODO` chỉ dành cho learner write-back/self-check ở cuối tài liệu.
+- Giữ tiếng Việt tự nhiên, có dấu; giữ và giải nghĩa IT English term cần thiết.
+- Table chỉ cô đọng phần đã giải thích. Với lifecycle/state/sequence/causal chain, dùng Mermaid dễ đọc theo `$mermaid-styling`.
+- Preview chưa đủ teaching content phải ghi `Teaching readiness: OUTLINE_ONLY`; không giới thiệu nó là tài liệu tự học hoặc tiếp tục sinh thêm outline trước khi nâng cấp topic active.

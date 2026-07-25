@@ -12,6 +12,13 @@
 
 AI Agent tự đọc [`docs/learning/index.md`](index.md) để biết đang học case nào, checkpoint nào và bước tiếp theo là gì. Bạn chỉ cần mở index khi muốn tự kiểm tra tiến độ.
 
+Theory có hai mức cần phân biệt:
+
+- `Teaching readiness: TEACHABLE_DRAFT`: đủ phần giảng, sơ đồ, ví dụ và guided self-check để bắt đầu học.
+- `Teaching readiness: OUTLINE_ONLY`: chỉ là bản đồ coverage/cheat sheet được tạo trước; **không dùng làm giáo trình tự học** và không được tính là đã học.
+
+Nếu file không có field readiness, hãy coi nó là `OUTLINE_ONLY` cho tới khi Agent audit theo template mới.
+
 Roadmap chỉ dùng để kiểm soát độ phủ dài hạn. Theory, question bank, case, experiment và code chỉ được mở khi checkpoint hiện tại cần chúng.
 
 Khi muốn xem các bài toán thực hành bằng ngôn ngữ nghiệp vụ, mở [Livestream Domain Use-case Catalog](use-case-catalog.md). Ví dụ: “100.000 người cùng xem một livestream”, “gift spike không double-spend”, “30.000 client reconnect sau gateway restart”. Roadmap quyết định **khi nào học**; use-case catalog nói rõ **bài toán nào sẽ được giải**, priority thực tế/phỏng vấn và difficulty của scenario đó.
@@ -55,6 +62,18 @@ Bạn không cần kể lại lịch sử chat. `Current session cursor` trong l
 
 Mỗi session chỉ nên có **một mục tiêu chính**. Không cố hoàn thành toàn bộ case trong một lượt.
 
+### Cách học một theory note mà không bị “ném câu hỏi trước khi được dạy”
+
+1. Đọc `Vì sao topic tồn tại?` để biết vấn đề cần giải quyết.
+2. Học vocabulary và `Mental model cốt lõi — phần Agent phải dạy`.
+3. Đi qua mechanism, diagram và worked examples; chưa cần thuộc.
+4. Đọc failure/misconception/trade-off để hiểu boundary của solution.
+5. Dùng phần tóm tắt để cô đọng lần đầu.
+6. Chỉ sau đó mới viết `Bài tập diễn đạt lại — phần của tôi` theo scaffold.
+7. Trả lời self-check; nếu bí, quay đúng section được chỉ dẫn thay vì đoán.
+
+`Mental model` có hai phần khác nhau: Agent phải cung cấp **mô hình cốt lõi để dạy**, còn bạn viết lại **bằng lời của mình** ở cuối tài liệu. Agent không được để một ô `LEARNER TODO` trống ở đầu bài rồi bắt bạn tự phát minh kiến thức.
+
 ## 4. Khi nào học, khi nào code?
 
 Learning flow chuẩn:
@@ -83,8 +102,11 @@ là LEARNER TODO, không tạo evidence/interview note và không đổi checkpo
 
 ```text
 Dùng $run-senior-java-learning để tiếp tục checkpoint hiện tại.
-Hãy dạy theo mental model -> mechanism -> invariant -> failure -> trade-off.
-Sau mỗi phần, hỏi tôi tự giải thích lại; đừng tự trả lời thay toàn bộ.
+Chỉ dùng theory có Teaching readiness TEACHABLE_DRAFT; nếu là OUTLINE_ONLY thì nâng cấp trước.
+Hãy dạy theo problem -> intuition -> vocabulary -> mental model -> mechanism -> worked example
+-> invariant -> causal failure -> trade-off -> application -> interview summary.
+Agent phải cung cấp đầy đủ teaching content trước; sau đó mới hỏi tôi diễn đạt lại.
+Đừng điền phần learner write-back thay tôi.
 ```
 
 ### Luyện question bank từ câu phổ biến tới câu đào sâu

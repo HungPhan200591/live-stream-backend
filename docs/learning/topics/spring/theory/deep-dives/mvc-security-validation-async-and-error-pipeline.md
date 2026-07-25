@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — tái hiện dispatch/error/async branches và chứng minh authorization + contract không drift`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [MVC pipeline core](../core/mvc-request-pipeline-validation-and-error-handling.md)<br>

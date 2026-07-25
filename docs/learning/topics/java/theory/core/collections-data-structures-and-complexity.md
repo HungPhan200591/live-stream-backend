@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — chọn cấu trúc theo invariant/access pattern, giải thích complexity và đo hot path trên workload thật`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics and generics](language-object-semantics-and-generics.md)<br>

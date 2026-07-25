@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — thiết kế bounded async pipeline có timeout/cancellation/context và tái hiện saturation`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JMM and thread safety](jmm-synchronization-and-thread-safety.md), [Java 21 virtual threads](java21-platform-baseline.md)<br>

@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `architecture`<br>
 > Target depth: `D3 — chứng minh total-order pagination, consumer compatibility và intermediary behavior bằng contract tests`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [API boundary core](../core/api-pagination-versioning-and-network-boundaries.md)<br>

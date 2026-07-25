@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `architecture`<br>
 > Target depth: `D3 — thiết kế pagination/evolution contract và kiểm chứng behavior qua proxy, retry và concurrent writes`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [HTTP semantics](http-rest-semantics-and-idempotency.md), database ordering fundamentals<br>

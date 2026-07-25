@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — chứng minh race bằng happens-before graph, stress test và lock/progress evidence`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JMM, Synchronization and Thread Safety](../core/jmm-synchronization-and-thread-safety.md)<br>

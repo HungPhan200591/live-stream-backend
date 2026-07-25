@@ -3,14 +3,21 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 sau reproducer/JFR evidence`<br>
+> Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Java 21 platform baseline](../core/java21-platform-baseline.md)<br>
 > Related cases: [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md)<br>
 > Owner: `Project learner; Codex prepares canonical draft`<br>
-> Updated: `2026-07-25`
+> Updated: `2026-07-26`
 
 Deep-dive này chỉ chứa phần tăng thêm so với core theory: scheduler, mount/unmount, pinning theo JDK version, resource limiting, Spring Boot lifecycle và diagnostic. Nó không lặp lại migration checklist Java 17 -> 21.
+
+## 0. Cách dùng tài liệu này
+
+Chỉ đọc sau khi đã hiểu [Java 21 platform baseline](../core/java21-platform-baseline.md), đặc biệt distinction giữa migration baseline và virtual-thread experiment. Tài liệu này dành cho developer đã dùng `Thread`, executor và blocking I/O nhưng chưa biết JDK schedule virtual thread như thế nào.
+
+Đọc mục 2–3 để tạo hình dung, mục 4–10 để hiểu giới hạn và diagnostic, rồi mới làm learner write-back/self-check. Thời gian đọc dự kiến 60–90 phút. Không cần nhớ tên mọi JFR event ở lần đầu; cần hiểu signal nào chứng minh pinning, downstream saturation hoặc CPU saturation.
 
 ## 1. Learning objectives
 
@@ -23,9 +30,33 @@ Sau topic này, tôi có thể:
 5. So sánh Spring MVC platform threads, MVC virtual threads và WebFlux theo workload/operations.
 6. Giải thích vì sao kết luận về pinning phải ghi rõ JDK version.
 
-## 2. Mental model bằng lời của tôi
+## 2. Mental model cốt lõi — phần Agent dạy
 
-> `LEARNER TODO` — Vẽ hoặc mô tả một request: virtual thread được tạo, mount lên carrier, chạy CPU, gọi JDBC, unmount khi chờ, remount khi có kết quả, rồi kết thúc. Chỉ ra trường hợp carrier không được giải phóng và resource nào vẫn hữu hạn.
+Platform thread có thể hình dung như một “nhân viên OS đắt tiền”. Trong mô hình thread-per-request truyền thống, mỗi request giữ một nhân viên đó cả khi chỉ đang chờ database hoặc network. Virtual thread tách **identity/lifecycle của task** khỏi **platform thread đang cung cấp CPU**.
+
+JDK tạo nhiều virtual threads nhưng chỉ mount những virtual thread đang cần chạy Java code lên một số carrier platform threads. Khi một virtual thread đi vào blocking operation được JDK hỗ trợ, nó có thể unmount; carrier được dùng cho task khác. Khi I/O sẵn sàng, virtual thread được đưa lại vào scheduler và có thể remount lên carrier khác.
+
+```mermaid
+flowchart TB
+    A["Request tạo<br/>virtual thread"] --> B["Mount lên carrier<br/>chạy Java code"]
+    B --> C["Gọi blocking I/O<br/>JDBC / HTTP / sleep"]
+    C --> D["Unmount<br/>giữ task state trên heap"]
+    D --> E["Carrier chạy<br/>virtual thread khác"]
+    E --> F["I/O sẵn sàng<br/>schedule lại"]
+    F --> G["Remount + hoàn tất<br/>virtual thread kết thúc"]
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+Điểm quan trọng nhất: virtual thread làm **việc chờ rẻ hơn**, không làm CPU, database connection hay downstream quota nhiều hơn. Nếu 10.000 requests cùng chờ Hikari pool 10 connections, virtual threads giúp JVM không cần 10.000 OS threads; database vẫn chỉ phục vụ tối đa theo connection/capacity thực tế.
+
+> **Câu cần nhớ:** Virtual thread mở rộng số task có thể chờ hiệu quả; capacity control vẫn phải đặt ở resource hữu hạn mà các task đang chờ.
 
 ## 3. Cơ chế hoạt động
 
@@ -33,14 +64,25 @@ Sau topic này, tôi có thể:
 
 Virtual thread giữ thread identity, stack trace, exception handling và `ThreadLocal` compatibility của Java thread model. Điểm khác nằm ở scheduling/cost:
 
-```text
-Nhiều virtual threads (tasks)
-        | mount / unmount
-        v
-Một số carrier platform threads
-        |
-        v
-OS scheduler -> CPU cores
+```mermaid
+flowchart TB
+    subgraph Tasks["Nhiều task độc lập"]
+        direction LR
+        V1["Virtual<br/>thread 1"]
+        V2["Virtual<br/>thread 2"]
+        V3["Virtual<br/>thread N"]
+    end
+
+    Tasks --> S["JDK scheduler<br/>mount / unmount"]
+    S --> C["Carrier platform threads<br/>số lượng hữu hạn"]
+    C --> O["OS scheduler<br/>CPU cores"]
+
+    style V1 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style V2 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style V3 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style S fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style O fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
 - Platform thread thường chiếm một OS thread trong suốt lifetime.
@@ -84,14 +126,20 @@ Trong Java 21, virtual thread không thể unmount khỏi carrier khi blocking t
 
 Pinning ngắn hoặc hiếm không tự là defect. Failure xảy ra khi pinning **thường xuyên + đủ lâu + nằm trên hot path**, làm carrier bị giữ trong lúc chờ I/O. Khi nhiều carrier cùng bị pin, runnable virtual threads phải chờ; throughput/latency có thể xấu đi dù số virtual threads lớn.
 
-```text
-virtual thread
-  -> enters synchronized
-  -> starts blocking I/O
-  -> cannot unmount on Java 21
-  -> carrier also blocks
-  -> carrier scarcity
-  -> runnable virtual threads queue
+```mermaid
+flowchart TB
+    A["Virtual thread<br/>vào synchronized"] --> B["Giữ monitor<br/>rồi gọi blocking I/O"]
+    B --> C["Java 21<br/>không unmount được"]
+    C --> D["Carrier cũng bị giữ<br/>trong lúc chờ"]
+    D --> E["Nhiều carrier bị pin<br/>trên hot path"]
+    E --> F["Runnable tasks xếp hàng<br/>p99 tăng / throughput giảm"]
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
 JDK 21 cung cấp:
@@ -115,6 +163,39 @@ Sau JDK 24:
 - contention, long critical section và blocking while holding a lock vẫn có thể là design/performance smell dù không còn pin carrier.
 
 JDK-01 target Java 21 nên lab phải dùng Java 21 semantics. JDK-02 khi đánh giá JDK 25 phải chạy lại diagnostic assumption thay vì copy conclusion.
+
+### 3.6. Worked example 1 — 10.000 task chủ yếu chờ
+
+Ví dụ dưới đây tạo một virtual thread mới cho mỗi task. `Thread.sleep` đại diện cho thời gian chờ I/O; nó không tiêu tốn CPU trong phần lớn lifetime của task.
+
+```java
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    var futures = IntStream.range(0, 10_000)
+        .mapToObj(i -> executor.submit(() -> {
+            Thread.sleep(Duration.ofSeconds(1));
+            return i;
+        }))
+        .toList();
+
+    for (var future : futures) {
+        future.get();
+    }
+}
+```
+
+Điều cần quan sát không phải “10.000 task chạy CPU cùng lúc”. Chỉ một số virtual threads mount trên carriers để chạy code; phần lớn đang unmounted trong lúc sleep. Đây là workload virtual threads có thể hỗ trợ tốt: nhiều task độc lập và phần lớn thời gian là chờ.
+
+Nếu thay `sleep` bằng tính hash nặng CPU, số task lớn không tạo thêm core. Scheduler chỉ chia cùng CPU cho nhiều runnable tasks; throughput có thể không tăng và latency có thể xấu đi.
+
+### 3.7. Worked example 2 — database chỉ có 10 connections
+
+Giả sử service nhận 2.000 request, mỗi request dùng một virtual thread và phải lấy connection từ Hikari pool size 10. Tối đa khoảng 10 request có thể dùng connection cùng lúc; phần còn lại chờ pool. Virtual threads làm waiter nhẹ hơn platform threads, nhưng không tăng database throughput.
+
+Nếu ta không giới hạn admission/deadline, queue waiter có thể tăng tới hàng nghìn. Client timeout nhưng task vẫn chờ sẽ tạo zombie work. Correct design cần pool-acquire timeout, request deadline, cancellation và có thể concurrency limiter ở trước database boundary.
+
+### 3.8. Phản ví dụ — dùng fixed virtual-thread pool để “bảo vệ DB”
+
+Fixed pool 10 virtual threads tình cờ giới hạn toàn bộ task ở 10, nhưng nó trộn execution policy với database capacity. Một task chỉ làm cache/CPU nhẹ cũng bị chặn theo DB limit. Khi flow có hai downstream với capacity khác nhau, một pool size không còn diễn đạt đúng invariant. Dùng virtual-thread-per-task cho execution và semaphore/bulkhead riêng tại từng downstream boundary làm policy rõ hơn.
 
 ## 4. Invariant và boundary
 
@@ -151,6 +232,18 @@ JDK-01 target Java 21 nên lab phải dùng Java 21 semantics. JDK-02 khi đánh
 
 ## 7. Failure modes kinh điển
 
+### Failure story 1 — carrier starvation do pinning trên Java 21
+
+Một synchronized block bảo vệ state nhỏ nhưng vô tình bao luôn HTTP call chậm. Mỗi virtual thread vào block rồi chờ network mà không unmount được trên Java 21. Khi nhiều request cùng đi qua hot path, carriers lần lượt bị giữ. CPU có thể chưa 100% nhưng runnable virtual threads vẫn xếp hàng. Evidence cần ghép `jdk.VirtualThreadPinned` stack/duration với latency và carrier/runnable behavior; chỉ thấy `synchronized` trong source chưa đủ kết luận.
+
+Mitigation là thu nhỏ critical section hoặc đổi synchronization primitive khi evidence xác nhận hot pinning. Tăng scheduler parallelism có thể trì hoãn symptom nhưng không sửa remote call nằm trong lock và có thể tăng pressure ở bottleneck khác.
+
+### Failure story 2 — bottleneck chuyển sang connection pool
+
+Sau khi bật virtual threads, service nhận được nhiều requests in-flight hơn. Database pool không đổi. Pool-acquire wait và timeout tăng, throughput database gần như phẳng, p99 request tăng. Đây không phải pinning: virtual threads có thể unmount đúng trong lúc chờ pool nhưng business vẫn không hoàn tất vì connection là resource hữu hạn. Evidence phân biệt gồm pinned-event vắng/không tương quan, pool pending/in-use saturation và DB throughput/latency.
+
+Bảng dưới cô đọng các failure sau khi đã hiểu hai story chính:
+
 | Failure | Trigger | Observable symptom | Root mechanism |
 | --- | --- | --- | --- |
 | Carrier starvation Java 21 | Blocking I/O trong hot `synchronized`/native path | p99 tăng, pinned events, CPU có thể chưa đầy | Carrier bị giữ khi virtual thread không unmount |
@@ -164,6 +257,8 @@ JDK-01 target Java 21 nên lab phải dùng Java 21 semantics. JDK-02 khi đánh
 
 ## 8. Solution patterns
 
+Các pattern bảo vệ những boundary khác nhau. Virtual-thread-per-task giảm chi phí execution/wait; semaphore hoặc bulkhead bảo vệ downstream capacity; deadline/cancellation bảo vệ time/resource budget; JFR giúp phân biệt pinning với saturation; load shedding bảo vệ hệ thống khi arrival rate vượt sustainable capacity. Không pattern nào thay thế tất cả phần còn lại.
+
 | Pattern | Bảo vệ điều gì | Giới hạn | Khi nên dùng |
 | --- | --- | --- | --- |
 | Virtual-thread-per-task | Code blocking dễ đọc với nhiều I/O wait | Không tự có backpressure | Request/task blocking I/O độc lập |
@@ -175,6 +270,8 @@ JDK-01 target Java 21 nên lab phải dùng Java 21 semantics. JDK-02 khi đánh
 | Platform-thread fallback | Rollback đơn giản | Giữ thread scarcity cũ | Library/tooling/lifecycle chưa phù hợp |
 
 ## 9. Trade-off matrix
+
+Ba execution model đều có chỗ dùng. Platform-thread MVC đơn giản và quen nhưng thread pool trở thành giới hạn concurrency. MVC + virtual threads giữ synchronous code, phù hợp blocking I/O nhưng cần explicit admission/resource limits. WebFlux có end-to-end non-blocking composition và backpressure tốt trong ecosystem phù hợp, đổi lại programming/debug/context model phức tạp hơn. Chọn theo workload và team/operations, không theo khẩu hiệu.
 
 | Option | Correctness | Complexity | Performance | Security/operability | Cost/evolution |
 | --- | --- | --- | --- | --- | --- |
@@ -225,32 +322,115 @@ Một blocking-I/O path chỉ trở thành workload đại diện khi dataset, r
 
 Endpoint, POM, pool size và command cụ thể phải nằm trong learning case/experiment, không nằm trong deep-dive reusable này.
 
+### 10.5. Diagnostic walkthrough — phân biệt ba bottleneck
+
+Khi bật virtual threads mà p99 xấu đi, không bắt đầu bằng việc “tăng số carrier”. Đi theo thứ tự:
+
+```mermaid
+flowchart TB
+    A["p99 tăng sau khi<br/>bật virtual threads"] --> B{"Pinned event<br/>tương quan hot path?"}
+    B -->|Có| C["Inspect stack + duration<br/>lock/native blocking"]
+    B -->|Không| D{"Pool / downstream<br/>đang saturation?"}
+    D -->|Có| E["Kiểm tra acquire wait<br/>limit + deadline"]
+    D -->|Không| F{"CPU / allocation<br/>đang bão hòa?"}
+    F -->|Có| G["CPU-bound hoặc<br/>memory amplification"]
+    F -->|Không| H["Kiểm tra workload<br/>context + measurement"]
+
+    style A fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style H fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+Decision tree này không tự chẩn đoán. Nó giúp chọn evidence tiếp theo: JFR stack cho pinning, pool metrics cho resource saturation, CPU/allocation/GC cho compute-memory bottleneck, và experiment controls cho benchmark sai.
+
 ## 11. Liên hệ learning case
 
 | Case | Theory được áp dụng | Project detail chỉ giữ ở case |
 | --- | --- | --- |
 | [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md) | Workload selection, carrier/pinning, resource limiting, JFR và enable/defer criteria | Endpoint, POM, Spring config, Hikari size, commands và raw results |
 
-## 12. Self-check
+## 12. Góc nhìn phỏng vấn nâng cao
+
+### Câu trả lời Senior khoảng 2 phút
+
+1. Virtual thread vẫn là `Thread`, nhưng JDK schedule nhiều virtual threads lên ít carrier platform threads.
+2. Blocking I/O được hỗ trợ có thể unmount task, giải phóng carrier.
+3. Lợi ích chính là throughput/concurrency cho workload chờ I/O, không phải làm một task nhanh hơn.
+4. CPU, DB connection và downstream quota vẫn hữu hạn; limit phải đặt tại resource boundary.
+5. Trên Java 21, frequent long blocking trong `synchronized`/native boundary có thể pin carrier; dùng JFR/stack để chứng minh.
+6. Quyết định MVC platform, MVC virtual hoặc WebFlux dựa trên workload, ecosystem, backpressure và operability.
+
+### Follow-up Architect/Expert
+
+- “Không pinning mà throughput vẫn không tăng?” — giải thích connection pool/CPU bottleneck ở mục 3.7 và 7.
+- “Tại sao không pool virtual threads?” — đọc mục 3.3 và 3.8.
+- “Câu trả lời thay đổi gì trên JDK 24/25?” — đọc mục 3.5.
+- “Làm sao chứng minh?” — dùng diagnostic walkthrough mục 10.4–10.5, không claim từ thread count.
+
+## 13. Tóm tắt cô đọng
+
+1. Virtual thread tách task identity/lifecycle khỏi carrier platform thread.
+2. Mount chạy code; unmount khi chờ operation được hỗ trợ; remount khi sẵn sàng.
+3. Nó giúp scale waiting concurrency, không tăng CPU/downstream capacity và không tự giảm latency.
+4. Không pool virtual threads; limit resource bằng semaphore/bulkhead/rate/admission policy tại boundary.
+5. Pinning Java 21 chỉ đáng sửa khi frequent + long + hot path và có JFR/stack/latency correlation.
+6. JDK 24 thay monitor-pinning behavior; version phải đi cùng mọi claim.
+7. Spring Boot flag đổi executor mode nhưng không audit custom executor, ThreadLocal, pool, timeout, cancellation hoặc lifecycle.
+8. Experiment phải giữ workload/pool/dataset/warm-up cố định và quan sát throughput, latency, error, saturation, CPU/GC cùng pinned events.
+
+## 14. Bài tập diễn đạt lại — phần của tôi
+
+Viết 10–18 câu theo scaffold:
+
+1. **Actor:** virtual thread, carrier, OS thread và resource pool là gì?
+2. **Sequence:** kể mount -> blocking -> unmount -> reschedule -> remount.
+3. **Boundary:** resource nào virtual threads làm rẻ hơn; resource nào không tăng?
+4. **Failure:** kể một pinning story và một pool-saturation story, chỉ evidence phân biệt.
+5. **Decision:** khi nào chọn MVC + virtual threads, khi nào không?
+
+> **Bài viết của tôi — `LEARNER TODO`:** được nhìn mục 13 ở lần đầu; lần thứ hai đóng file và trình bày khoảng hai phút.
+
+## 15. Self-check có hướng dẫn
 
 1. **Question:** Mô tả mount/unmount mà không dùng câu “virtual thread chạy song song vô hạn”.<br>
+   **Đọc lại nếu bí:** mục 2 và 3.1.<br>
+   **Một câu trả lời tốt phải có:** task identity, carrier, blocking wait, reschedule và CPU limit.<br>
    **My answer:** `LEARNER TODO`
 2. **Question:** Vì sao throughput có thể không tăng khi chuyển sang virtual threads dù không có pinning?<br>
+   **Đọc lại nếu bí:** mục 3.2, 3.7 và failure story 2.<br>
+   **Một câu trả lời tốt phải có:** workload CPU-bound hoặc downstream/pool bottleneck cùng signal phân biệt.<br>
    **My answer:** `LEARNER TODO`
 3. **Question:** Vì sao semaphore diễn đạt downstream capacity tốt hơn fixed virtual-thread pool?<br>
+   **Đọc lại nếu bí:** mục 3.3 và 3.8.<br>
+   **Một câu trả lời tốt phải có:** separation execution/resource policy và nhiều downstream capacity khác nhau.<br>
    **My answer:** `LEARNER TODO`
 4. **Question:** Pinning trên Java 21 có causal chain và JFR evidence nào?<br>
+   **Đọc lại nếu bí:** mục 3.4 và failure story 1.<br>
+   **Một câu trả lời tốt phải có:** blocking boundary, carrier retention, hot-path correlation, stack/duration/latency.<br>
    **My answer:** `LEARNER TODO`
 5. **Question:** Câu trả lời về `synchronized` phải thay đổi thế nào khi runtime là JDK 24/25?<br>
+   **Đọc lại nếu bí:** mục 3.5.<br>
+   **Một câu trả lời tốt phải có:** JEP 491 monitor change, native boundary và contention vẫn còn.<br>
    **My answer:** `LEARNER TODO`
 6. **Question:** Khi nào WebFlux vẫn hợp lý hơn MVC + virtual threads?<br>
+   **Đọc lại nếu bí:** mục 9.<br>
+   **Một câu trả lời tốt phải có:** streaming, end-to-end non-blocking/backpressure, ecosystem và team/operability cost.<br>
    **My answer:** `LEARNER TODO`
 7. **Question:** `spring.threads.virtual.enabled=true` chưa kiểm chứng những boundary nào?<br>
+   **Đọc lại nếu bí:** mục 10.2–10.3.<br>
+   **Một câu trả lời tốt phải có:** custom executors, pools, ThreadLocal, lifecycle, cancellation và libraries.<br>
    **My answer:** `LEARNER TODO`
 8. **Question:** Thiết kế một matrix đủ để quyết định `enabled` hoặc `deferred` cho JDK-01.<br>
+   **Đọc lại nếu bí:** mục 10.4–10.5.<br>
+   **Một câu trả lời tốt phải có:** controls, platform-vs-virtual modes, workload, metrics, failure injection và rollback.<br>
    **My answer:** `LEARNER TODO`
 
-## 13. Official references
+## 16. Official references
 
 - [JEP 444: Virtual Threads — Java 21](https://openjdk.org/jeps/444)
 - [Oracle Java 21 Core Libraries Guide — Virtual Threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html)
@@ -258,7 +438,7 @@ Endpoint, POM, pool size và command cụ thể phải nằm trong learning case
 - [JEP 491: Synchronize Virtual Threads without Pinning — JDK 24](https://openjdk.org/jeps/491)
 - [Spring Boot 3.4 — Virtual threads](https://docs.spring.io/spring-boot/3.4/reference/features/spring-application.html#features.spring-application.virtual-threads)
 
-## 14. Teach-back checklist
+## 17. Teach-back checklist
 
 - [ ] Tôi vẽ được virtual thread/carrier/OS-thread relationship.
 - [ ] Tôi phân biệt concurrency, parallelism, throughput và capacity.

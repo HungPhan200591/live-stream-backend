@@ -3,8 +3,8 @@
 > Status: `DRAFT`<br>
 > Domain owner: `java / JVM / concurrency`<br>
 > Active slice: `JDK-01 — Java 21 platform baseline and virtual-thread decision`<br>
-> Related theory: [Java 21 platform baseline](../theory/core/java21-platform-baseline.md), [Virtual threads and pinning](../theory/deep-dives/virtual-threads-and-pinning.md)<br>
-> Updated: `2026-07-25`
+> Related theory: [Java 21 platform baseline](../theory/core/java21-platform-baseline.md), [Virtual threads and pinning](../theory/deep-dives/virtual-threads-and-pinning.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
+> Updated: `2026-07-26`
 
 Question bank chứa câu hỏi và evaluation rubric, không chứa bài luận hoàn chỉnh. `Answer outline` chỉ là chuẩn chấm; người học phải trả lời trước khi mở outline. Tests/experiment và interview note của JDK-01 vẫn chưa tồn tại, nên mọi câu giữ `UNANSWERED` hoặc `NEEDS_WORK`, không được đánh dấu `EVIDENCE_BACKED`.
 

@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — dự đoán advice có chạy hay không, tái hiện self-invocation và kiểm chứng transaction boundary`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [IoC and bean lifecycle](ioc-bean-lifecycle-and-dependency-injection.md)<br>

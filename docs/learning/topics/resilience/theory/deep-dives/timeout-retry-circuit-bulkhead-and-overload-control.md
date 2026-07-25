@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `distributed-systems`<br>
 > Target depth: `D3 — thiết kế một resilience policy phối hợp và fault-test overload/recovery thay vì tuning từng annotation riêng lẻ`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Timeout core](../core/timeouts-cancellation-and-pool-exhaustion.md), [Retry core](../core/retry-backoff-jitter-and-retry-storms.md), [Circuit/bulkhead core](../core/circuit-breaker-bulkhead-and-load-shedding.md)<br>

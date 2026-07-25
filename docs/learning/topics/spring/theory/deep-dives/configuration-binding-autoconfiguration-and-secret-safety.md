@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — audit effective config/conditions và chứng minh production safety bằng startup matrix`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Configuration core](../core/configuration-and-profile-safety.md)<br>

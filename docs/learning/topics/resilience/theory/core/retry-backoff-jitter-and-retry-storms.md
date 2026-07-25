@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `distributed-systems`<br>
 > Target depth: `D3 — phân loại retryable failure, tái hiện amplification và kiểm chứng budget/backoff/jitter`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Timeouts and cancellation](timeouts-cancellation-and-pool-exhaustion.md), [HTTP idempotency](../../../api/theory/core/http-rest-semantics-and-idempotency.md)<br>

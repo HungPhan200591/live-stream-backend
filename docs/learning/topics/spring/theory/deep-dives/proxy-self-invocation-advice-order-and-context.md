@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — chứng minh invocation path, advice nesting và context handoff bằng test quan sát được`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Proxy/AOP core](../core/proxies-aop-and-transactional-boundaries.md)<br>

@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — thiết kế boundary deterministic/compatible và tái hiện lỗi exception, clock, money hoặc serialization`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics and generics](language-object-semantics-and-generics.md)<br>

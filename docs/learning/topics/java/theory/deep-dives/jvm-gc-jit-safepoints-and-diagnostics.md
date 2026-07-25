@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — phân tích JFR/GC log/profile theo causal chain và bảo vệ tuning bằng before/after evidence`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [JVM Class Loading, Bytecode and Memory](../core/jvm-class-loading-bytecode-and-memory.md)<br>

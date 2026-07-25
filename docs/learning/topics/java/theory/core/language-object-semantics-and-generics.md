@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — giải thích được type/object semantics, thiết kế value object và tái hiện lỗi equality/generics trên code thật`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Java 21 platform baseline](java21-platform-baseline.md)<br>

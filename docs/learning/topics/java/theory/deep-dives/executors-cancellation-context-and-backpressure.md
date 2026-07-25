@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — fault/load test saturation, cancellation leak và context propagation trên async path`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Executors, CompletableFuture and Concurrency Control](../core/executors-completablefuture-and-concurrency-control.md)<br>

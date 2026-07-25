@@ -12,6 +12,8 @@ Learning system nối kiến thức có thể tái sử dụng với failure th�
 
 Lý thuyết chỉ được viết đầy đủ một lần. Question bank và learning case phải link tới theory; interview note phải dựa trên evidence, không sao chép lại textbook hoặc AI output.
 
+Theory chỉ được dùng để tự học khi có `Teaching readiness: TEACHABLE_DRAFT` hoặc `LEARNER_VALIDATED`. `OUTLINE_ONLY` chỉ là coverage map/cheat sheet cần viết lại theo [theory quality audit](theory-quality-audit.md), không phải giáo trình hoàn chỉnh.
+
 [Livestream Domain Use-case Catalog](use-case-catalog.md) là nơi tra bài toán concrete như 100.000 viewers, gift spike trong sự kiện livestream, reconnect storm hoặc global ban. Roadmap vẫn sở hữu thứ tự; catalog không tự active case và không thay session cursor.
 
 ## 1. Current session cursor
@@ -23,10 +25,10 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Active case | [JDK-01 - Java 21 platform baseline and virtual-thread decision](cases/jdk-01-java21-platform-baseline.md) |
 | Case status | `ACTIVE`; chưa có Java 21 compatibility, build hoặc runtime evidence |
 | Current checkpoint | `THEORY_CORE` |
-| Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
+| Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) từ mục 0 đến 13; sau đó viết mục 14 và trả lời guided self-check mục 15, rồi yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
-| Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
-| Latest evidence | Batch 1 preview đã tạo `8` core + `8` deep-dives và link `9` Java question banks. Batch 2 preview đã tạo `10` core + `8` deep-dives cho Spring IoC/proxy/MVC/config/transaction, HTTP/API và resilience, đồng thời link `10` question banks tương ứng. Tất cả vẫn `DRAFT`; learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không được tính là checkpoint/depth đã đạt. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
+| Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 14 và guided self-check mục 15; không sửa code |
+| Latest evidence | Quality audit trên `36` theory/deep-dive phát hiện `0` Mermaid diagram và nhiều preview chỉ là outline/matrix. Đã nâng Java 21 core, Virtual Threads deep-dive và Spring IoC core/deep-dive thành `TEACHABLE_DRAFT`; `32` file còn lại được gắn trung thực `OUTLINE_ONLY` và phải migrate topic-by-topic trước khi dùng để học. Learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không checkpoint/depth nào được tăng. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-26` |
@@ -90,16 +92,16 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 
 | Knowledge domain | Roadmap coverage | Trạng thái knowledge hiện tại |
 | --- | --- | --- |
-| Java Core, JMM và concurrency | Stage 0/1 | `IN_PROGRESS`: JDK-01 active; Java 21 theory/compatibility evidence pending |
+| Java Core, JMM và concurrency | Stage 0/1 | `IN_PROGRESS`: Java 21 core + Virtual Threads deep-dive là `TEACHABLE_DRAFT`; các preview Java khác `OUTLINE_ONLY`; compatibility evidence pending |
 | Build, dependency lifecycle và CI/runtime | Stage 0/8 | `IN_PROGRESS`: JDK-01 toolchain evidence pending; JDK-02 decision chưa chạy |
-| Spring internals và transactions | Stage 2 | `PREVIEW_READY`; chưa active/học, core/deep-dive/question bank đều `DRAFT` và evidence `NOT RUN` |
-| HTTP/API semantics và compatibility | Stage 2 | `PREVIEW_READY`; chưa active/học, core/deep-dive/question bank đều `DRAFT` và evidence `NOT RUN` |
+| Spring internals và transactions | Stage 2 | IoC core/deep-dive là `TEACHABLE_DRAFT`; các Spring preview còn lại `OUTLINE_ONLY`; chưa active/học và evidence `NOT RUN` |
+| HTTP/API semantics và compatibility | Stage 2 | `OUTLINE_ONLY`; chưa đủ chuẩn tự học, chưa active và evidence `NOT RUN` |
 | PostgreSQL và data lifecycle | Stage 3, 9 | `NOT_STARTED` |
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
 | Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ platform/safety-net foundation queue đóng hoặc được reschedule có reason |
 | Testing, observability và performance | Stage 0, 8 | `LEARNING BACKLOG`: TEST-01 đứng sau JDK-01 |
-| Resilience và distributed failure | Stage 2, 8, 10 | `PREVIEW_READY` cho Stage 2; chưa active/học và evidence `NOT RUN` |
+| Resilience và distributed failure | Stage 2, 8, 10 | `OUTLINE_ONLY`; chưa đủ chuẩn tự học, chưa active và evidence `NOT RUN` |
 | Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
 | Technical leadership và delivery | Xuyên suốt/Stage 12 | `NOT_STARTED`: chỉ ghi từ review/ADR/incident/teach-back thật |
@@ -118,8 +120,8 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 JDK-01 là item đầu tiên của Stage 0. Sau khi đóng, thứ tự còn lại của Stage 0 là `TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`; sau đó mới sang Stage 1 `JAVA-01 -> JVM-01 -> CON-01` theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12). Index không duy trì execution queue thứ hai. Preview pack đã được tạo để chuẩn hóa format, nhưng cursor vẫn ở `THEORY_CORE` cho tới khi learner write-back/self-check đạt gate:
 
-1. [Core theory Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) — current write target.
-2. [Deep-dive virtual threads/pinning](topics/java/theory/deep-dives/virtual-threads-and-pinning.md) — preview cho checkpoint kế tiếp.
+1. [Core theory Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) — `TEACHABLE_DRAFT`, current write target; learner viết mục 14–15.
+2. [Deep-dive virtual threads/pinning](topics/java/theory/deep-dives/virtual-threads-and-pinning.md) — `TEACHABLE_DRAFT` cho checkpoint kế tiếp, chưa học/chưa evidence.
 3. [JDK platform question bank](topics/java/question-bank/jdk-platform.md) — preview cho `QUESTION_BANK`.
 4. Cập nhật case JDK-01, chụp baseline Maven/runtime và tạo compatibility reproducer khi người dùng yêu cầu thực thi.
 5. Chỉ sau experiment mới tạo `experiments/jdk-01-java21-compatibility-and-virtual-thread-lab.md` và `interview-notes/jdk-01-java21-platform-baseline.md`.

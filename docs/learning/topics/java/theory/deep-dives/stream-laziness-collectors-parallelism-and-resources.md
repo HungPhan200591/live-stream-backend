@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — chẩn đoán pipeline allocation/N+1/ordering và benchmark parallel decision đúng cách`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Stream API core](../core/stream-api-functional-programming-and-optional.md)<br>

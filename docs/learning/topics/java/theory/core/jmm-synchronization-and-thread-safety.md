@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — tái hiện race, chỉ ra happens-before thiếu và sửa bằng ownership/synchronization có test lặp`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics](language-object-semantics-and-generics.md), [JVM runtime](jvm-class-loading-bytecode-and-memory.md)<br>

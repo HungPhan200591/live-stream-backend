@@ -52,6 +52,8 @@ Question bank được dùng hai lần: tạo ladder và rubric tại `QUESTION_
 Khi người dùng yêu cầu rõ một **preview learning pack** để chuẩn hóa format, có thể tạo trước core theory, deep-dive và question bank trong cùng change, nhưng:
 
 - mọi artifact giữ `DRAFT`, learner section giữ `LEARNER TODO` và evidence giữ `NOT RUN`;
+- preview chỉ có coverage/outline phải ghi `Teaching readiness: OUTLINE_ONLY` và không được giới thiệu như tài liệu đủ để tự học;
+- chỉ ghi `Teaching readiness: TEACHABLE_DRAFT` sau khi đạt teaching quality gate ở mục 4;
 - cursor vẫn trỏ checkpoint sớm nhất chưa đạt, không nhảy theo số file đã tạo;
 - deep-dive/question bank là preview cho phase sau, không chứng minh phase đó hoàn tất;
 - không tạo experiment result, interview note hoặc claim depth D3/D4 trước evidence.
@@ -84,13 +86,28 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 
 ### Artifact contract bắt buộc
 
-- **Core theory:** có target depth, scope, mental model/mechanism/invariant/boundary, misconceptions, self-check, official sources; phần learner write-back không được Agent điền thay.
-- **Deep-dive:** link core theory, chỉ thêm internals, pathological/failure cases, version boundary, cross-layer/operability và experiment implication; không copy core.
+- **Core theory:** là bài giảng self-contained cho developer chưa biết topic, không phải cheat sheet. Phải đi từ problem/intuition tới vocabulary, mental model do Agent giải thích, mechanism từng bước, ít nhất hai worked examples, phản ví dụ, invariant/boundary, causal failure, application, interview outline, learner write-back và guided self-check. Phần learner write-back không được Agent điền thay.
+- **Deep-dive:** link core theory và dạy đầy đủ phần internals nâng cao; có internal sequence/state, ít nhất hai pathological/failure cases theo causal chain, version boundary, cross-layer/operability, diagnostic/experiment walkthrough và architecture trade-off. Không copy core và không thay reasoning bằng matrix.
 - **Question bank:** dùng ID ổn định `<DOMAIN>-<TOPIC>-NNN`; mỗi câu có level, target depth, interviewer intent, answer outline, trade-off/follow-up/red flags và evidence status. Outline không phải full answer.
 - **Learning case:** tiêu đề/problem statement phải mô tả actor + tải/tình huống/failure + outcome observable; chỉ giữ current project path, invariant, hypothesis, reproducer/design gate và links tới reusable knowledge. Không dùng tên công nghệ hoặc chủ đề lý thuyết làm tên case.
 - **Experiment:** được tạo `PLANNED` khi procedure/hypothesis cụ thể; raw results phải là output thật, không sinh số liệu mẫu như evidence.
 - **Interview note:** chỉ tạo sau evidence; dùng giọng người học và link claim tới test/experiment/review.
 - **Version-sensitive topic:** pin release/runtime/framework version trong claim và dùng primary/official source; ghi rõ khi behavior thay đổi giữa version.
+
+### Teaching quality gate
+
+Không coi file là `TEACHABLE_DRAFT` nếu thiếu một trong các điều sau:
+
+1. Viết tiếng Việt tự nhiên, có dấu; giữ IT English term nhưng giải nghĩa trước khi dùng dày đặc.
+2. Khái niệm mới đi theo `vấn đề -> trực giác -> định nghĩa -> cơ chế -> ví dụ -> giới hạn`.
+3. `Mental model cốt lõi` là phần Agent **cung cấp để dạy**. `LEARNER TODO` chỉ nằm sau teaching content trong `Bài tập diễn đạt lại` và self-check.
+4. Table/matrix chỉ cô đọng phần prose đã giải thích; không có section chỉ gồm keyword/table mà không có causal narrative.
+5. Topic có lifecycle, state, sequence, hierarchy hoặc causal chain phải có Mermaid diagram dễ đọc theo `$mermaid-styling`.
+6. Mỗi self-check chỉ rõ section cần đọc lại và rubric của câu trả lời tốt; không hỏi điều tài liệu chưa dạy.
+7. Có phần áp dụng thực tế/project và góc nhìn phỏng vấn, nhưng không claim evidence chưa chạy.
+8. Deep-dive phải làm người đọc hiểu “vì sao/how it fails/how to prove”, không chỉ biết tên internals.
+
+Nếu một preview cũ không đạt gate, giữ/đổi readiness thành `OUTLINE_ONLY`, nêu rõ chưa dùng để học và nâng cấp topic-by-topic theo roadmap thay vì tiếp tục sinh thêm outline.
 
 ## 5. Phân cấp câu hỏi
 

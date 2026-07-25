@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — thiết kế pipeline đúng semantics, phát hiện side effect/N+1/materialization và đo trước khi parallelize`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Collections and complexity](collections-data-structures-and-complexity.md)<br>

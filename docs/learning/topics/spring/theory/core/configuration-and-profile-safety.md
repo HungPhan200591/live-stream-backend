@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — truy nguồn property, kiểm chứng binding/validation và ngăn cấu hình dev rò sang production`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [IoC and bean lifecycle](ioc-bean-lifecycle-and-dependency-injection.md)<br>

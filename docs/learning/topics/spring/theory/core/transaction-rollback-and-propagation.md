@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — dự đoán physical transaction, tái hiện rollback/propagation anomaly và kiểm chứng crash boundary`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Spring proxies](proxies-aop-and-transactional-boundaries.md), relational transaction fundamentals<br>

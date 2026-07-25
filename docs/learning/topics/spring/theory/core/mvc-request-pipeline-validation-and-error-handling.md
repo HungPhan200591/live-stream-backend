@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — lần theo request end-to-end, tái hiện validation/error branch và kiểm chứng security/async context`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: HTTP request/response, IoC and servlet fundamentals<br>

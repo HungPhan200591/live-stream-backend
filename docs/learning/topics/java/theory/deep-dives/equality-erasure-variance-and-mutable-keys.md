@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — tái hiện contract break/heap pollution và bảo vệ API/entity/value-object boundary`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Language, Object Semantics and Generics](../core/language-object-semantics-and-generics.md)<br>

@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `architecture`<br>
 > Target depth: `D3 — thiết kế method/status/cache/idempotency contract và tái hiện ambiguous outcome/duplicate request`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: client-server networking and JSON API fundamentals<br>

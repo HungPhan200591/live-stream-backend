@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — refactor một boundary thật, giữ behavior bằng test và bảo vệ trade-off thay vì gọi tên pattern`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Object semantics and generics](language-object-semantics-and-generics.md)<br>

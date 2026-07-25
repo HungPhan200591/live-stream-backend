@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `architecture`<br>
 > Target depth: `D3 — thiết kế state machine/durable claim và fault-inject mọi commit/response boundary`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [HTTP/REST core](../core/http-rest-semantics-and-idempotency.md)<br>

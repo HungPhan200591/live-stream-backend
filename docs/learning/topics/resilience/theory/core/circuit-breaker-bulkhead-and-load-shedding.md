@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `distributed-systems`<br>
 > Target depth: `D3 — chọn isolation/overload control theo bottleneck và kiểm chứng state transition/recovery`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Timeouts and pool exhaustion](timeouts-cancellation-and-pool-exhaustion.md), [Retry storms](retry-backoff-jitter-and-retry-storms.md)<br>

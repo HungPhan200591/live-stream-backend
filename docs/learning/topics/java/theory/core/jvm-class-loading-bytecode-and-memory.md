@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — phân loại CPU/memory/class-loading failure và thu thập đúng JFR, heap hoặc thread evidence trước tuning`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Java 21 platform baseline](java21-platform-baseline.md)<br>

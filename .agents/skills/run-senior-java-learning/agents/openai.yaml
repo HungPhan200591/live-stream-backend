@@ -1,4 +1,4 @@
 interface:
   display_name: "Điều phối học Senior Java"
-  short_description: "Điều phối learning pack Senior Java có evidence"
-  default_prompt: "Dùng $run-senior-java-learning để tiếp tục checkpoint hoặc tạo learning pack chuẩn cho case ACTIVE."
+  short_description: "Dạy Senior Java từ theory dễ hiểu tới evidence"
+  default_prompt: "Dùng $run-senior-java-learning để tiếp tục checkpoint; chỉ dùng theory TEACHABLE_DRAFT, dạy đủ mental model, ví dụ và failure trước khi yêu cầu tôi write-back."

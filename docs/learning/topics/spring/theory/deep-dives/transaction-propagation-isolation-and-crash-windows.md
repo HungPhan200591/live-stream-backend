@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
 > Target depth: `D3 — dựng lịch concurrent/commit/crash và chứng minh invariant bằng integration test`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Transaction core](../core/transaction-rollback-and-propagation.md)<br>

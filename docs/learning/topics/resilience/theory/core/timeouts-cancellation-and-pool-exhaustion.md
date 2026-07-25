@@ -3,6 +3,7 @@
 > Type: `CORE`<br>
 > Domain: `distributed-systems`<br>
 > Target depth: `D3 — phân bổ deadline, tái hiện pool exhaustion và chứng minh cancellation giải phóng resource`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: HTTP client lifecycle, threads/executors and connection pools<br>

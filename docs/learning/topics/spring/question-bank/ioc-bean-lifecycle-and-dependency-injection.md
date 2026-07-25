@@ -6,7 +6,7 @@
 > Framework baseline: `Spring Boot 3.4` current project; re-check when active<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Spring](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: [IoC, Bean Lifecycle and Dependency Injection](../theory/core/ioc-bean-lifecycle-and-dependency-injection.md), [bean creation deep-dive](../theory/deep-dives/bean-creation-scopes-cycles-and-startup-conditions.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Spring IoC, Bean Lifecycle và Dependency Injection](../theory/core/ioc-bean-lifecycle-and-dependency-injection.md), [bean creation deep-dive](../theory/deep-dives/bean-creation-scopes-cycles-and-startup-conditions.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SPR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

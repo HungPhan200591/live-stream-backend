@@ -3,6 +3,7 @@
 > Type: `DEEP_DIVE`<br>
 > Domain: `java`<br>
 > Target depth: `D3 — giải thích collision/compound race/queue collapse và đo trên skewed concurrent workload`<br>
+> Teaching readiness: `OUTLINE_ONLY`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
 > Prerequisites: [Collections, Data Structures and Complexity](../core/collections-data-structures-and-complexity.md), [JMM](../core/jmm-synchronization-and-thread-safety.md)<br>
