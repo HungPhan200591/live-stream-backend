@@ -199,13 +199,15 @@ Không tạo nhiều `AGENTS.md` ngay từ đầu vì dễ tạo rule shadowing 
 
 ## 7. Skills hiện tại
 
-| Skill | Quyết định | Nâng cấp dự kiến |
-| --- | --- | --- |
-| `implement-livestream-feature` | Giữ | Thêm route tới active learning case và evidence gate |
-| `diagnose-livestream-backend` | Giữ | Thêm incident timeline, metric/trace và failure-injection route |
-| `review-livestream-change` | Giữ | Thêm maturity/learning artifact check, Kafka và replica/partition concerns |
-| `refine-engineering-prompt` | Giữ | Cho phép chuyển raw learning idea thành case spec, nhưng không thay skill thiết kế case |
-| `manage-local-port` | Giữ nguyên | Utility hẹp, deterministic, safety rule tốt |
+Inventory, mô tả và trigger canonical của project/global/system skills nằm tại [Codex Skill Catalog](ai/skill-catalog.md). Không duy trì thêm một bảng inventory cạnh tranh trong file này.
+
+Nâng cấp dự kiến của project skills:
+
+- `implement-livestream-feature`: thêm route tới active learning case và evidence gate.
+- `diagnose-livestream-backend`: thêm incident timeline, metric/trace và failure-injection route.
+- `review-livestream-change`: thêm maturity/learning artifact check, Kafka và replica/partition concerns.
+- `refine-engineering-prompt`: cho phép chuyển raw learning idea thành case spec, nhưng không thay skill thiết kế case.
+- `manage-local-port`: giữ utility hẹp, deterministic và safety-first.
 
 Mỗi skill phải giữ `SKILL.md` ngắn, trigger nằm trong frontmatter description, reference được nạp có điều kiện và không sao chép `AGENTS.md`.
 
@@ -269,8 +271,10 @@ Không tạo một skill cho mỗi công nghệ. Chỉ tạo khi workflow đã l
 4. Viết frontmatter `name` + `description` đủ rõ để trigger đúng.
 5. Giữ workflow cốt lõi trong `SKILL.md`; chi tiết lớn đặt một cấp trong `references/`.
 6. Chạy validation của skill.
-7. Forward-test bằng task thật và context tối thiểu; không cho agent đáp án dự kiến.
-8. Theo dõi false trigger, missed trigger, output drift và thời gian/token cost.
+7. Cập nhật [Codex Skill Catalog](ai/skill-catalog.md), bao gồm inventory, trigger, availability và quick routing; đây là gate bắt buộc trong cùng change.
+8. Cập nhật `AGENTS.md` và Documentation Orchestrator nếu routing của Agent thay đổi.
+9. Forward-test bằng task thật và context tối thiểu; không cho agent đáp án dự kiến.
+10. Theo dõi false trigger, missed trigger, output drift và thời gian/token cost.
 
 Skill không cần `README`, changelog hoặc quick-reference riêng. User-facing explanation thuộc docs; skill chỉ giữ những gì Agent cần để làm việc.
 

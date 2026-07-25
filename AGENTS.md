@@ -88,8 +88,10 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 
 ## Skills của dự án
 
+- Catalog canonical về tất cả project/global/system skills: `docs/ai/skill-catalog.md`.
 - Dùng `$implement-livestream-feature` để triển khai feature backend đầu-cuối.
 - Dùng `$diagnose-livestream-backend` để chẩn đoán lỗi, regression và môi trường chạy.
 - Dùng `$review-livestream-change` để review diff, commit hoặc pull request.
 - Dùng `$refine-engineering-prompt` khi cần làm rõ yêu cầu kỹ thuật thô trước khi triển khai.
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
+- Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, bắt buộc cập nhật `docs/ai/skill-catalog.md` trong cùng change. Skill change chưa hoàn thành nếu catalog chưa đồng bộ.

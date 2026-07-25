@@ -62,6 +62,7 @@ Test hiện có thể phụ thuộc PostgreSQL local. Đây là known gap, khôn
 - [Security Flow](docs/security/authorization-flow.md)
 - [Redis Guide](docs/engineering/redis-guide.md)
 - [AI Agent Engineering System](docs/003_AI_AGENT_ENGINEERING_SYSTEM.md)
+- [Codex Skill Catalog](docs/ai/skill-catalog.md)
 - Repository guardrails: [AGENTS.md](AGENTS.md)
 
 Legacy phase plans, generic prompts và design giả định đã được giữ tại [Documentation Archive](docs/archive/index.md).

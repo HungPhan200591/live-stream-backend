@@ -47,7 +47,7 @@ flowchart TB
 | Debug local PostgreSQL | [Codex PostgreSQL MCP](tools/codex-postgres-mcp.md) | P6Spy guide | Reproducer và evidence; không sửa contract âm thầm |
 | Quan sát SQL | [P6Spy Guide](tools/p6spy-sql-logging.md) | PostgreSQL learning case | Query count/plan/experiment |
 | Seed local data | [Data Initialization](tools/data-initialization.md) | Current API contract | Chỉ local fixture; không thành production behavior |
-| Làm việc với AI Agent | [AI Agent System](003_AI_AGENT_ENGINEERING_SYSTEM.md) | `PLANS.md`, skill đã trigger | Plan, verification và docs sync |
+| Làm việc với AI Agent | [AI Agent System](003_AI_AGENT_ENGINEERING_SYSTEM.md), [Skill Catalog](ai/skill-catalog.md) | `PLANS.md`, skill đã trigger | Plan, verification và docs sync |
 | Tìm lịch sử cũ | [Archive Index](archive/index.md) | File archive cụ thể | Không dùng archive làm current contract |
 
 ## 3. Protocol cho AI Agent
@@ -113,7 +113,7 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Webhook contract | `engineering/rtmp-webhook-guide.md`, API contract, tests |
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
 | Learning case complete | Case file, roadmap status/maturity |
-| Agent rule/workflow/skill | `AGENTS.md`, `003_AI_AGENT_ENGINEERING_SYSTEM.md`, skill validation |
+| Agent rule/workflow/skill | `AGENTS.md`, `003_AI_AGENT_ENGINEERING_SYSTEM.md`, `ai/skill-catalog.md`, skill validation |
 | Tài liệu bị thay thế | Chuyển `archive/`, thêm banner và cập nhật `archive/index.md` |
 
 ## 6. Taxonomy hiện tại
@@ -124,6 +124,8 @@ docs/
 ├── 001_SENIOR_JAVA_INTERVIEW_ROADMAP.md
 ├── 002_CURRENT_STATE_AND_GAP_ANALYSIS.md
 ├── 003_AI_AGENT_ENGINEERING_SYSTEM.md
+├── ai/
+│   └── skill-catalog.md
 ├── architecture/
 │   └── system-context.md
 ├── contracts/
@@ -186,4 +188,5 @@ Maturity M0–M4 được định nghĩa trong [Current Gaps](002_CURRENT_STATE_
 - Không có active filename ngoài hai convention đã định nghĩa.
 - README và `AGENTS.md` phải trỏ tới file orchestrator này.
 - Khi rename/move doc, cập nhật repository rules, project skills và link checker cùng lượt.
+- Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, cập nhật `ai/skill-catalog.md` trong cùng change.
 - Graphify phải được update sau một migration lớn trước khi dùng lại như source navigation.
