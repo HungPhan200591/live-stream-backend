@@ -5,9 +5,9 @@
 > Active slice: `NONE`; preview target `CFG-01 — dev/test/prod isolation and production fail-fast`<br>
 > Related roadmap: [Stage 0 and CFG-01](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Spring Boot](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3), [Security](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [Observability](../../../knowledge-depth-rubric.md#311-observability-reliability-và-incident-response--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/spring/theory/core/configuration-and-profile-safety.md`<br>
-> Version snapshot checked: `2026-07-25`; re-check exact Spring Boot behavior when `CFG-01` becomes active<br>
-> Updated: `2026-07-25`
+> Related theory: [Configuration and Profile Safety](../theory/core/configuration-and-profile-safety.md), [configuration/auto-configuration deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Version snapshot checked: `2026-07-26`; re-check exact Spring Boot behavior when `CFG-01` becomes active<br>
+> Updated: `2026-07-26`
 
 Question bank này được chuẩn bị trước cho `CFG-01`. Nó không sửa configuration/code, không rotate secret và không chứng minh production đã được harden. Người học trả lời trước khi mở `Answer outline`; mọi test, experiment và interview note giữ `NOT RUN`/`NOT CREATED`.
 
@@ -569,7 +569,7 @@ Application cần remote config/secret để startup, nhưng provider outage x�
 Khi `CFG-01` thực sự active:
 
 1. Pin exact Spring Boot candidate và re-check property precedence, profiles, Actuator exposure/security và config binding behavior.
-2. Tạo theory/deep-dive rồi thay marker `NOT CREATED` bằng canonical links.
+2. Đọc core/deep-dive đã link ở header; chỉ thay evidence marker sau khi learner hoàn tất và có kết quả thật.
 3. Audit actual profiles, conditional beans, defaults, diagnostic mappings và logging without printing sensitive values.
 4. Tạo production-context negative tests và fail-fast reproducer; chỉ ghi evidence từ output thật.
 5. Giữ stable IDs; protocol-specific token/webhook/stream-key questions link sang `SEC-*` thay vì làm phình `CFG-01`.

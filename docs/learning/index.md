@@ -26,7 +26,7 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md), tự viết mục 2 và trả lời mục 12 trước khi mở notes; sau đó yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
 | Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 2 và 12; không sửa code |
-| Latest evidence | Batch 1 preview đã tạo `8` core notes + `8` deep-dives cho Java language/object/generics, collections/complexity, Stream/Optional, exception/time/money/serialization, OOD, JVM và concurrency; `9` Java question banks đã link về theory source-of-truth. Tất cả vẫn `DRAFT`, learner self-check và runtime/test/JFR evidence vẫn `NOT RUN`, nên không được tính là checkpoint/depth đã đạt. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
+| Latest evidence | Batch 1 preview đã tạo `8` core + `8` deep-dives và link `9` Java question banks. Batch 2 preview đã tạo `10` core + `8` deep-dives cho Spring IoC/proxy/MVC/config/transaction, HTTP/API và resilience, đồng thời link `10` question banks tương ứng. Tất cả vẫn `DRAFT`; learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên không được tính là checkpoint/depth đã đạt. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43`; chưa scenario mới nào được active |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-26` |
@@ -92,13 +92,14 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 | --- | --- | --- |
 | Java Core, JMM và concurrency | Stage 0/1 | `IN_PROGRESS`: JDK-01 active; Java 21 theory/compatibility evidence pending |
 | Build, dependency lifecycle và CI/runtime | Stage 0/8 | `IN_PROGRESS`: JDK-01 toolchain evidence pending; JDK-02 decision chưa chạy |
-| Spring internals và transactions | Stage 2 | `NOT_STARTED` |
+| Spring internals và transactions | Stage 2 | `PREVIEW_READY`; chưa active/học, core/deep-dive/question bank đều `DRAFT` và evidence `NOT RUN` |
+| HTTP/API semantics và compatibility | Stage 2 | `PREVIEW_READY`; chưa active/học, core/deep-dive/question bank đều `DRAFT` và evidence `NOT RUN` |
 | PostgreSQL và data lifecycle | Stage 3, 9 | `NOT_STARTED` |
 | Redis và distributed state | Stage 4 | `NOT_STARTED` |
 | RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
 | Security, realtime và abuse resistance | Stage 0, 7 | `PAUSED`: SEC-01 chờ platform/safety-net foundation queue đóng hoặc được reschedule có reason |
 | Testing, observability và performance | Stage 0, 8 | `LEARNING BACKLOG`: TEST-01 đứng sau JDK-01 |
-| Resilience và distributed failure | Stage 2, 8, 10 | `NOT_STARTED` |
+| Resilience và distributed failure | Stage 2, 8, 10 | `PREVIEW_READY` cho Stage 2; chưa active/học và evidence `NOT RUN` |
 | Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
 | Solution architecture | Stage 11 | `NOT_STARTED` |
 | Technical leadership và delivery | Xuyên suốt/Stage 12 | `NOT_STARTED`: chỉ ghi từ review/ADR/incident/teach-back thật |

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `TX-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Transaction](../../../knowledge-depth-rubric.md#37-transaction-và-data-consistency--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/spring/theory/core/transaction-rollback-and-propagation.md`<br>
+> Related theory: [Transaction, Rollback and Propagation](../theory/core/transaction-rollback-and-propagation.md), [transaction/crash-window deep-dive](../theory/deep-dives/transaction-propagation-isolation-and-crash-windows.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `TX-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

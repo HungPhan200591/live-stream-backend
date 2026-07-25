@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `SPR-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Spring](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/spring/theory/core/proxies-aop-and-transactional-boundaries.md`<br>
+> Related theory: [Proxies, AOP and Transactional Boundaries](../theory/core/proxies-aop-and-transactional-boundaries.md), [proxy/advice deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SPR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

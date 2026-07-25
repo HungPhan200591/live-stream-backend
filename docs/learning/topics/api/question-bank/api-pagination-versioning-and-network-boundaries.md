@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `API-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [HTTP/API](../../../knowledge-depth-rubric.md#36-http-api-design-và-network-fundamentals--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/api/theory/core/api-pagination-versioning-and-network-boundaries.md`<br>
+> Related theory: [API Pagination, Versioning and Network Boundaries](../theory/core/api-pagination-versioning-and-network-boundaries.md), [cursor/evolution deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `API-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

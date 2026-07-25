@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RES-02`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Distributed systems](../../../knowledge-depth-rubric.md#312-distributed-systems-fundamentals--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/resilience/theory/core/retry-backoff-jitter-and-retry-storms.md`<br>
+> Related theory: [Retry, Backoff, Jitter and Retry Storms](../theory/core/retry-backoff-jitter-and-retry-storms.md), [coordinated resilience deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RES-02`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `SPR-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Spring](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/spring/theory/core/mvc-request-pipeline-validation-and-error-handling.md`<br>
+> Related theory: [MVC Request Pipeline, Validation and Error Handling](../theory/core/mvc-request-pipeline-validation-and-error-handling.md), [MVC pipeline deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SPR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -135,4 +135,3 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 ## Deferred normalization
 
 Khi `SPR-01` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-
