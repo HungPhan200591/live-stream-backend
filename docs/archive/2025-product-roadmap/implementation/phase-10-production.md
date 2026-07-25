@@ -1,5 +1,7 @@
 # Phase 10: Production Readiness & Polish
 
+> **ARCHIVED 2026-07-25** — Production concerns được đưa xuyên suốt Senior roadmap, không để thành phase cuối.
+
 > **Status**: 🔄 TODO  
 > **Dependencies**: Phase 8 (Analytics), Phase 9 (Admin)
 

@@ -1,8 +1,22 @@
 # Business Flows & Use Cases
 
-> **Mục đích**: Tài liệu mô tả các use cases nghiệp vụ, user flows, và business rules của hệ thống Livestream Platform.  
-> **Đối tượng**: Product Owners, Business Analysts, Developers, Stakeholders  
-> **Cập nhật**: 2025-12-18
+> **Trạng thái**: `TARGET BUSINESS CONTRACT`<br>
+> **Mục đích**: Mô tả use case, user flow và business invariant; không khẳng định tất cả capability đã được implement.<br>
+> **Cập nhật**: 2026-07-25
+
+### Capability status tại snapshot
+
+| Use case | Current coverage | Learning target |
+| --- | --- | --- |
+| UC-01 Authentication | M1 demo | SEC-01, SEC-02, TEST-01 |
+| UC-02 Stream lifecycle | M1 demo, chưa có state/concurrency guard | SEC-03, CON-01, TX-01 |
+| UC-03 Viewer tracking | HLL unique viewers; không có media delivery | RED-01, realtime/load labs |
+| UC-04 Chat | Chưa implement | Stage 7 realtime |
+| UC-05 Wallet/gifts | Deposit DTO mô phỏng; không persist | WAL-01, EVT-01 |
+| UC-06 Analytics | Chỉ unique-view HLL | Kafka/analytics capstone |
+| UC-07 Admin | Chưa implement | Security/operations cases |
+
+Các flow bên dưới mô tả target business journey. Bước chưa có code phải được triển khai qua learning case và cập nhật [current API contract](api_endpoints_specification.md).
 
 ---
 
@@ -540,42 +554,45 @@ stateDiagram-v2
 
 ## Cross-References
 
-### Business Flow → Technical Implementation
+### Business Flow → Architecture ownership
 
-| Business Flow | Technical Components |
-|---------------|---------------------|
-| UC-01: Authentication | JWT + Session-backed Refresh Token ([System Design](system_design_livestream.md#41-xác-thực--phân-quyền-rbac)) |
-| UC-02: Streaming | Redis Live Status + WebSocket ([System Design](system_design_livestream.md#42-quản-lý-stream-webhook-giả-lập)) |
-| UC-04: Chat | Redis Pub/Sub + RabbitMQ Persistence ([System Design](system_design_livestream.md#43-hệ-thống-chat-real-time)) |
-| UC-05: Gifts | Atomic Wallet + Async Processing ([System Design](system_design_livestream.md#44-ví--hệ-thống-tặng-quà-dòng-tiền)) |
-| UC-06: Analytics | Redis HyperLogLog + Sorted Sets ([System Design](system_design_livestream.md#45-analytics-redis-hll--sorted-sets)) |
+| Business Flow | Current/target owner |
+|---------------|----------------------|
+| UC-01: Authentication | Current JWT/session flow; [Security Flow](authorization_flow.md) |
+| UC-02: Streaming | Current stream/webhook/Redis baseline; [System Context](architecture/system-context.md) |
+| UC-03: Viewer tracking | Current HLL unique reach; concurrent viewer design is target |
+| UC-04: Chat | Target realtime capability; chưa có component owner |
+| UC-05: Gifts | Target wallet/ledger + reliable event flow |
+| UC-06: Analytics | Target Kafka/analytics capability; HLL là current partial coverage |
+| UC-07: Admin | Target security/operations capability |
 
 ### Use Case → API Endpoints
 
 | Use Case | API Endpoints |
 |----------|---------------|
-| UC-01 | [Authentication APIs](api_endpoints_specification.md#21-authentication-apiauth) |
-| UC-02 | [Stream Management APIs](api_endpoints_specification.md#23-stream-management-apistreams) |
-| UC-03 | [Stream Viewing APIs](api_endpoints_specification.md#23-stream-management-apistreams) |
-| UC-04 | [Chat APIs](api_endpoints_specification.md#24-chat-apichat) |
-| UC-05 | [Gift & Transaction APIs](api_endpoints_specification.md#25-gifts--transactions-apigifts-apitransactions) |
-| UC-06 | [Analytics APIs](api_endpoints_specification.md#26-analytics-apianalytics) |
-| UC-07 | [Admin APIs](api_endpoints_specification.md#27-admin-apiadmin) |
+| UC-01 | Current auth/user endpoints trong [API Contract](api_endpoints_specification.md#2-current-rest-contract) |
+| UC-02 | Current stream/webhook endpoints trong [API Contract](api_endpoints_specification.md#2-current-rest-contract) |
+| UC-03 | Current stream viewing/tracking endpoints; media delivery ngoài scope |
+| UC-04 | Chưa có API/WebSocket contract active |
+| UC-05 | Chỉ có development deposit simulation; gift/transaction chưa có |
+| UC-06 | Chưa có analytics API active |
+| UC-07 | Chưa có admin API active |
 
-### Use Case → Implementation Phase
+### Use Case → Senior learning track
 
-| Use Case | Implementation Phase |
-|----------|---------------------|
-| UC-01 | [Phase 3: Authentication](implementation/phase-3-authentication.md) |
-| UC-02 | [Phase 4: Stream Management](implementation/phase-4-streaming.md) |
-| UC-04 | [Phase 6: Real-time Chat](implementation/phase-6-realtime-chat.md) |
-| UC-05 | [Phase 5: Economy](implementation/phase-5-economy.md) + [Phase 7: Gifts](implementation/phase-7-gifts.md) |
-| UC-06 | [Phase 8: Analytics](implementation/phase-8-analytics.md) |
-| UC-07 | [Phase 9: Admin](implementation/phase-9-admin.md) |
+| Use Case | Learning track |
+|----------|----------------|
+| UC-01 | Stage 0 Security, Stage 2 transaction, Stage 4 Redis |
+| UC-02 | Stage 1 state/concurrency, Stage 2 transaction, Stage 3 database |
+| UC-03 | Stage 4 Redis, Stage 7 realtime, Stage 8 load/observability |
+| UC-04 | Stage 5 messaging, Stage 7 realtime/security |
+| UC-05 | Stage 1 concurrency, Stage 3 ledger, Stage 6 reliable events |
+| UC-06 | Stage 5 Kafka, Stage 8 observability, Stage 11 analytics capstone |
+| UC-07 | Stage 7 security, Stage 8 operations |
 
 ---
 
-**Next Steps**: 
-- Đọc [System Design](system_design_livestream.md) để hiểu technical architecture
-- Xem [Implementation Roadmap](implementation/000_ROADMAP.md) để theo dõi progress
-- Check [API Specification](api_endpoints_specification.md) cho endpoint details
+**Next Steps**:
+- Đọc [System Context](architecture/system-context.md) để phân biệt current và target architecture.
+- Xem [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) để chọn active case.
+- Check [API Contract](api_endpoints_specification.md) cho endpoint đang tồn tại.

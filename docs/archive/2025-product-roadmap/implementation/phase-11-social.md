@@ -1,5 +1,7 @@
 # Phase 11: Social Features (Optional)
 
+> **ARCHIVED 2026-07-25** — Optional product idea, không phải active learning case.
+
 > **Status**: 🔄 OPTIONAL  
 > **Dependencies**: Phase 4 (Streaming)
 

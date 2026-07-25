@@ -1,138 +1,45 @@
-# P6Spy SQL Logging Configuration
+# P6Spy SQL Logging
 
-## Tổng quan
+> Trạng thái: `CURRENT DEV TOOL`<br>
+> Cập nhật: 2026-07-25
 
-**P6Spy** là một JDBC proxy driver giúp log SQL statements với **actual parameter values** thay vì dấu `?`.
+P6Spy đang được cấu hình qua [pom.xml](../../pom.xml), [application.yml](../../src/main/resources/application.yml) và [spy.properties](../../src/main/resources/spy.properties). Nó giúp quan sát SQL có bind value và execution time trong local development.
 
-### ✅ Lợi ích:
-- ✨ **Thấy SQL thật** - Không còn dấu `?`, thấy được giá trị thực
-- ⏱️ **Execution time** - Biết query nào chậm
-- 🎨 **Format đẹp** - SQL được format dễ đọc
-- 🔍 **Debug dễ dàng** - Copy SQL ra chạy trực tiếp được luôn
+## Current configuration
 
-## 📝 Đã cấu hình:
-
-### 1. Dependencies ([`pom.xml`](file:///d:/Study/Project/live-stream-backend/pom.xml))
-```xml
-<dependency>
-    <groupId>p6spy</groupId>
-    <artifactId>p6spy</artifactId>
-    <version>3.9.1</version>
-</dependency>
-```
-
-### 2. Datasource ([`application.yml`](file:///d:/Study/Project/live-stream-backend/src/main/resources/application.yml))
 ```yaml
-datasource:
-  url: jdbc:p6spy:postgresql://localhost:15432/livestream
-  driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-jpa:
-  show-sql: false  # P6Spy sẽ handle logging
+spring:
+  datasource:
+    url: jdbc:p6spy:postgresql://localhost:15432/livestream
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+  jpa:
+    show-sql: false
 ```
 
-### 3. P6Spy Config ([`spy.properties`](file:///d:/Study/Project/live-stream-backend/src/main/resources/spy.properties))
-- Exclude noise (result, resultset, info, debug)
-- Custom format: timestamp | execution time | SQL with values
+Chạy ứng dụng:
 
-## 🚀 Cách sử dụng:
-
-### Rebuild và restart application:
-
-```bash
-# Stop app hiện tại (Ctrl+C)
-
-# Rebuild để download dependency
-mvn clean install -DskipTests
-
-# Chạy lại
-mvn spring-boot:run
+```powershell
+.\mvnw.cmd spring-boot:run
 ```
 
-## 📊 Kết quả mong đợi:
+`GET /api/test/sql` gọi `userRepository.findAll()` để tạo SQL quan sát; endpoint này phải chỉ tồn tại trong dev/test profile sau Stage 0.
 
-### ❌ Trước (Hibernate logging):
-```
-Hibernate: insert into user_roles (created_at, role_id, user_id) values (?, ?, ?)
-```
+## Dùng cho learning case
 
-### ✅ Sau (P6Spy logging):
-```
-2025-12-16 22:45:30.123 | ExecutionTime: 5ms | Connection: 1 | statement | 
-insert into user_roles (created_at, role_id, user_id) values 
-('2025-12-16 22:45:30.120', 1, 3)
-```
+- Đếm query để tái hiện manual N+1.
+- Quan sát transaction boundary và lock SQL.
+- Copy query sang `EXPLAIN (ANALYZE, BUFFERS)` với dataset có kiểm soát.
+- So sánh query trước/sau optimization; P6Spy log không thay benchmark.
 
-**Lưu ý:** Bạn sẽ thấy:
-- Thời gian chính xác thay vì `?`
-- Chế độ execute trong bao lâu (ExecutionTime)
-- Connection ID
-- SQL có thể copy ra chạy trực tiếp!
+## Security và production
 
-## ⚙️ Tùy chỉnh:
+- Bind value có thể chứa email, token hoặc dữ liệu nhạy cảm; không bật verbose SQL log mặc định trong production.
+- Không khẳng định overhead cố định nếu chưa benchmark workload của project.
+- Structured application log, metrics và tracing là observability khác; P6Spy không thay thế chúng.
 
-### Chỉ log slow queries (> 100ms):
-Uncomment trong [`spy.properties`](file:///d:/Study/Project/live-stream-backend/src/main/resources/spy.properties):
-```properties
-executionThreshold=100
-```
+## Troubleshooting
 
-### Log vào file thay vì console:
-```properties
-logfile=/path/to/sql.log
-```
-
-### Thêm stacktrace để biết query từ đâu:
-```properties
-stacktrace=true
-```
-
-### Hiển thị nhiều thông tin hơn:
-```properties
-# Bỏ comment dòng này
-# excludecategories=info,debug,result,resultset
-```
-
-## 🔧 Troubleshooting:
-
-### Không thấy SQL logs
-1. Kiểm tra `spy.properties` có trong `src/main/resources/`
-2. Verify URL: `jdbc:p6spy:postgresql://...`
-3. Verify driver: `com.p6spy.engine.spy.P6SpyDriver`
-4. Xem có error khi start app không
-
-### Quá nhiều logs (noise)
-Thêm vào `spy.properties`:
-```properties
-excludecategories=info,debug,result,resultset,commit,rollback
-```
-
-### Chỉ muốn log INSERT/UPDATE/DELETE
-```properties
-filter=true
-# Tạo custom filter class
-```
-
-## 📚 Tài liệu tham khảo:
-
-- [P6Spy Documentation](https://p6spy.readthedocs.io/)
-- [P6Spy GitHub](https://github.com/p6spy/p6spy)
-- [Configuration Options](https://p6spy.readthedocs.io/en/latest/configandusage.html)
-
-## 💡 Tips:
-
-1. **Development**: Enable P6Spy để debug dễ dàng
-2. **Production**: Disable hoặc chỉ log slow queries (set high threshold)
-3. **Performance**: P6Spy có overhead nhỏ (~5-10%), acceptable cho dev
-4. **Log File**: Trong production nên log ra file thay vì stdout
-
-## 🎯 Next Steps:
-
-Sau khi restart app, bạn sẽ thấy logs kiểu:
-```
-2025-12-16 22:45:30.123 | ExecutionTime: 5ms | Connection: 1 | statement | 
-select u1_0.id, u1_0.created_at, u1_0.email, u1_0.password_hash, u1_0.updated_at, u1_0.username 
-from users u1_0 
-where u1_0.username='admin'
-```
-
-**Enjoy beautiful SQL logs!** 🎉
+1. Kiểm tra P6Spy dependency và datasource prefix `jdbc:p6spy:`.
+2. Kiểm tra `spy.properties` có trên runtime classpath.
+3. Kiểm tra logger `p6spy`/`com.p6spy` trong `application.yml`.
+4. Nếu log quá nhiều, dùng category filter hoặc execution threshold trong development config.

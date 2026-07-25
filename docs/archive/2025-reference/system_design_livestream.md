@@ -1,5 +1,7 @@
 # Tài Liệu Thiết Kế Hệ Thống: Spring Boot Livestream Backend
 
+> **ARCHIVED 2026-07-25** — Design giả định mô tả nhiều capability chưa tồn tại. Dùng [System Context](../../architecture/system-context.md).
+
 ## 0. Business Context
 
 > **Đọc trước**: [Business Flows & Use Cases](business_flows.md) để hiểu nghiệp vụ trước khi đọc technical design.

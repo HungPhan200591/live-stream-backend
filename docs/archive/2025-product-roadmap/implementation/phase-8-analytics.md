@@ -1,5 +1,7 @@
 # Phase 8: Analytics & Leaderboard
 
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng Kafka/analytics cases trong [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 > **Status**: 🔄 TODO  
 > **Dependencies**: Phase 7 (Gifts)
 

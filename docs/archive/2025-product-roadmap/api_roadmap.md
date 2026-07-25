@@ -1,5 +1,7 @@
 # API Implementation Roadmap
 
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng [Current Implementation Map](../../implementation/000_ROADMAP.md) và [Senior Roadmap](../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 **Purpose**: Tổng hợp tất cả API endpoints theo thứ tự triển khai (Phase) để dễ dàng theo dõi lộ trình coding.
 
 ---

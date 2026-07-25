@@ -24,22 +24,22 @@
 Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với công việc:
 
 - Nghiệp vụ: `docs/business_flows.md`.
-- Kiến trúc hoặc mô hình dữ liệu: `docs/system_design_livestream.md`.
-- Phạm vi triển khai hiện tại: `docs/implementation/000_ROADMAP.md` và file phase liên quan.
+- Kiến trúc và capability hiện tại: `docs/architecture/system-context.md`.
+- Phạm vi triển khai hiện tại: `docs/implementation/000_ROADMAP.md`; thứ tự học và case active: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`.
 - Hợp đồng REST và quyền: `docs/api_endpoints_specification.md`.
 - Phân quyền REST/WebSocket: `docs/authorization_flow.md`.
 - Quy ước mã nguồn và ví dụ: `docs/coding_standards.md`.
 - Redis: key, DTO, serializer và TTL: `docs/redis_usage_guide.md`.
 - Webhook: `docs/concepts/webhooks.md`.
 
-Business flow và API specification là contract dự kiến. Mã nguồn và test là bằng chứng cho hành vi hiện tại. Khi chúng mâu thuẫn, không âm thầm chọn một bên: nêu rõ độ lệch, làm theo kết quả người dùng yêu cầu và cập nhật hoặc đánh dấu tài liệu bị ảnh hưởng.
+Business flow là target business intent. API specification chỉ liệt kê current endpoint và gap đã biết. Mã nguồn và test là bằng chứng cho hành vi hiện tại. Khi chúng mâu thuẫn, không âm thầm chọn một bên: nêu rõ độ lệch, làm theo kết quả người dùng yêu cầu và cập nhật hoặc đánh dấu tài liệu bị ảnh hưởng.
 
 ## Quy tắc làm việc
 
 1. Kiểm tra `git status` trước khi sửa và giữ nguyên thay đổi không liên quan của người dùng.
 2. Với yêu cầu rõ ràng, triển khai trực tiếp. Chỉ hỏi khi một quyết định còn thiếu có thể làm thay đổi đáng kể hành vi, bảo mật hoặc tương thích dữ liệu.
 3. Dùng execution plan cho thay đổi xuyên nhiều lớp hoặc rủi ro; theo `PLANS.md`.
-4. Giữ thay đổi trong phạm vi yêu cầu. Không tự ý triển khai phase roadmap kế tiếp.
+4. Giữ thay đổi trong phạm vi yêu cầu. Không tự ý triển khai learning case hoặc capability kế tiếp; legacy phase plan trong `docs/archive/` không phải backlog active.
 5. Chẩn đoán bằng bằng chứng trước khi sửa. Không che lỗi bằng catch quá rộng, tắt validation hoặc làm yếu authorization.
 6. Sau khi sửa, chạy kiểm chứng phù hợp nhỏ nhất và báo rõ kiểm tra nào chưa chạy.
 7. Giữ nguyên nguyên tắc simulation-first. Không tích hợp media server, payment provider hay dịch vụ bên ngoài thật nếu người dùng chưa yêu cầu rõ.

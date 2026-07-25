@@ -1,5 +1,7 @@
 # Phase 3: Authentication & User Management
 
+> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Security Flow](../../../authorization_flow.md) và [Current Implementation Map](../../../implementation/000_ROADMAP.md).
+
 > **Status**: ✅ COMPLETED  
 > **Dependencies**: Phase 1 (Foundation)
 

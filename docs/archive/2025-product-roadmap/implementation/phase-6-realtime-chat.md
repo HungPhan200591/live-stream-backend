@@ -1,5 +1,7 @@
 # Phase 6: Real-time Chat System
 
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng Stage 7 trong [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 > **Status**: 🔄 TODO  
 > **Dependencies**: Phase 4 (Streaming)
 

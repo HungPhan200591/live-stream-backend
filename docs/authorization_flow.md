@@ -1,442 +1,91 @@
-# Authorization Flow - Livestream Backend
+# Security và Authorization Flow
 
-> **Phiên bản**: Final (17/12/2024)
-> **Kiến trúc**: JWT + Session-backed Refresh Token
-> **Phù hợp**: Hệ thống Livestream có Donate/Withdraw
+> Trạng thái: `CURRENT + STAGE 0 TARGET`<br>
+> Cập nhật: 2026-07-25<br>
+> Bản thiết kế 2025 được lưu tại [archive](archive/2025-reference/authorization_flow.md).
 
----
-
-## Table of Contents
-
-1. [Nguyên Tắc Cốt Lõi](#1-nguyên-tắc-cốt-lõi)
-2. [Kiến Trúc 3 Tầng](#2-kiến-trúc-3-tầng)
-3. [Database Schema](#3-database-schema)
-4. [Flow Chi Tiết](#4-flow-chi-tiết)
-5. [Action Token (Money Flow)](#5-action-token-money-flow)
-6. [Redis Usage](#6-redis-usage)
-7. [Security Matrix](#7-security-matrix)
-
----
-
-## 1. Nguyên Tắc Cốt Lõi
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         NGUYÊN TẮC VÀNG                             │
-├─────────────────────────────────────────────────────────────────────┤
-│  1. SESSION LÀ NGUỒN SỰ THẬT    →  DB lưu session, không trust JWT  │
-│  2. JWT CHỈ LÀ CARRIER          →  Mang session_id đi xa            │
-│  3. TIỀN DÙNG ACTION TOKEN      →  One-time, Redis, 60s TTL         │
-│  4. KHÔNG BLOCKLIST TOKEN       →  Revoke session, không revoke JWT │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-> ❝ Big tech không "trust token", họ trust server-side state ❞
-
----
-
-## 2. Kiến Trúc 3 Tầng
+## 1. Mental model
 
 ```mermaid
-flowchart TD
-    subgraph Tokens
-        AT[Access Token<br/>JWT, 15 phút<br/>Stateless]
-        RT[Refresh Token<br/>JWT, 30 ngày<br/>Chứa session_id]
-        ActionT[Action Token<br/>Redis, 60 giây<br/>One-time]
-    end
+flowchart TB
+    C["Client<br/>credentials or token"] --> F["Security filter<br/>URL rules"]
+    F --> J["JWT validation<br/>principal"]
+    J --> M["Method security<br/>role and owner"]
+    M --> S["Service invariant<br/>transaction"]
+    S --> P["PostgreSQL<br/>source of truth"]
+    S --> R["Redis<br/>session cache"]
 
-    subgraph Storage
-        DB[(Database<br/>user_sessions<br/>SOURCE OF TRUTH)]
-        Redis[(Redis Cache<br/>Optional<br/>Hot-path)]
-    end
-
-    RT -->|Check session| DB
-    DB -.->|Cache| Redis
-    ActionT -->|Store| Redis
-
-    style AT fill:#2ecc71,color:#fff
-    style RT fill:#3498db,color:#fff
-    style ActionT fill:#e74c3c,color:#fff
-    style DB fill:#9b59b6,color:#fff
-    style Redis fill:#f39c12,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style J fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style M fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style S fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style P fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style R fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
-### Chi tiết từng tầng
+- Authentication trả lời “caller là ai”.
+- Authorization trả lời “caller được làm gì trên resource này”.
+- JWT là carrier; refresh session trong PostgreSQL mới là durable revocation state.
+- Redis chỉ tăng tốc lookup. Cache không được làm một session đã revoke sống lại.
 
-| Tầng  | Thành phần    | Đặc điểm                             | Dùng cho              |
-| ----- | ------------- | ------------------------------------ | --------------------- |
-| **1** | Access Token  | JWT, 15m, stateless, KHÔNG revoke    | View, Chat, WebSocket |
-| **2** | Refresh Token | JWT, 30d, chứa session_id → check DB | Lấy AT mới            |
-| **3** | Action Token  | Redis, 60s, one-time                 | Donate, Withdraw      |
+## 2. Current token/session flow
 
----
-
-## 3. Database Schema
+### Login và register
 
-### Bảng `user_sessions`
+1. Validate credential/input.
+2. Tạo `UserSession` trong PostgreSQL, tối đa dự kiến 5 active session/user.
+3. Cache `SessionCacheDTO` theo session expiry.
+4. Sinh access token và refresh token.
 
-```sql
-CREATE TABLE user_sessions (
-    session_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id         BIGINT NOT NULL,
-    device_id       VARCHAR(255),
-    device_name     VARCHAR(255),
-    ip_address      VARCHAR(45),
-    status          VARCHAR(20) DEFAULT 'ACTIVE',  -- ACTIVE, REVOKED
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_used_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at      TIMESTAMP NOT NULL,
+### Access request
 
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+1. `JwtAuthenticationFilter` đọc bearer token.
+2. `JwtTokenProvider` validate signature/expiry và load user details.
+3. `SecurityFilterChain` áp URL rule; `@PreAuthorize` áp role/ownership chi tiết.
 
-CREATE INDEX idx_sessions_user_id ON user_sessions(user_id);
-CREATE INDEX idx_sessions_status ON user_sessions(status);
-CREATE INDEX idx_sessions_expires ON user_sessions(expires_at);
-```
+Current gap: access và refresh token chưa được phân biệt chắc chắn bằng token type/audience trong mọi validation path.
 
-### Entity Java
+### Refresh
 
-```java
-@Entity
-@Table(name = "user_sessions")
-@Data
-@Builder
-public class UserSession {
-    @Id
-    private UUID sessionId;
-
-    @Column(nullable = false)
-    private Long userId;
-
-    private String deviceId;
-    private String deviceName;
-    private String ipAddress;
-
-    @Enumerated(EnumType.STRING)
-    private SessionStatus status = SessionStatus.ACTIVE;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime lastUsedAt;
-    private LocalDateTime expiresAt;
-
-    public enum SessionStatus {
-        ACTIVE, REVOKED
-    }
-
-    public boolean isValid() {
-        return status == SessionStatus.ACTIVE
-            && expiresAt.isAfter(LocalDateTime.now());
-    }
-}
-```
-
----
-
-## 4. Flow Chi Tiết
-
-### 4.1 LOGIN
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant DB
-    participant Redis
-
-    Client->>API: POST /api/auth/login<br/>{username, password}
-    API->>DB: Validate credentials
-    DB-->>API: User valid ✅
-
-    API->>DB: INSERT user_sessions<br/>(session_id, user_id, status=ACTIVE)
-
-    opt Có Redis Cache
-        API->>Redis: SET session:{session_id} = ACTIVE<br/>TTL = 30 days
-    end
-
-    API->>API: Generate Access Token (15m)<br/>Generate Refresh Token (30d, chứa session_id)
-
-    API-->>Client: 200 OK<br/>{accessToken, refreshToken}
-
-    Note over Client: Lưu RT trong httpOnly cookie<br/>Lưu AT trong memory
-```
-
-**Refresh Token chứa:**
-
-```json
-{
-  "sub": "user_123",
-  "session_id": "550e8400-e29b-41d4-a716-446655440000",
-  "device_id": "browser_chrome_win",
-  "exp": 1705420800
-}
-```
-
----
-
-### 4.2 REFRESH
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant Redis
-    participant DB
-
-    Note over Client: Access Token hết hạn
-
-    Client->>API: POST /api/auth/refresh<br/>{refreshToken}
-    API->>API: Verify RT signature + expiry
-
-    alt RT invalid
-        API-->>Client: 401 Unauthorized
-    else RT valid
-        API->>API: Extract session_id từ RT
+1. Parse session ID từ refresh token.
+2. Đọc cache trước; cache miss fallback PostgreSQL.
+3. Kiểm tra session active/chưa hết hạn và cập nhật `lastUsedAt`.
+4. Sinh token mới.
 
-        alt Có Redis Cache
-            API->>Redis: GET session:{session_id}
-            alt Cache hit
-                Redis-->>API: status = ACTIVE/REVOKED
-            else Cache miss
-                API->>DB: SELECT * FROM user_sessions
-                DB-->>API: Session data
-                API->>Redis: SET session:{session_id}
-            end
-        else Không có Redis
-            API->>DB: SELECT * FROM user_sessions
-            DB-->>API: Session data
-        end
-
-        alt Session REVOKED hoặc expired
-            API-->>Client: 401 Unauthorized<br/>"Session revoked"
-        else Session ACTIVE
-            API->>DB: UPDATE last_used_at
-            API->>API: Generate NEW Access Token (15m)
-            API-->>Client: 200 OK<br/>{accessToken, SAME refreshToken}
-            Note over API: ❌ KHÔNG cấp RT mới
-        end
-    end
-```
-
----
-
-### 4.3 LOGOUT
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant DB
-    participant Redis
-
-    Client->>API: POST /api/auth/logout<br/>Authorization: Bearer {accessToken}<br/>Cookie: refreshToken
-
-    API->>API: Extract session_id từ RT
-    API->>DB: UPDATE user_sessions<br/>SET status = 'REVOKED'<br/>WHERE session_id = ?
-
-    opt Có Redis Cache
-        API->>Redis: DEL session:{session_id}
-    end
-
-    API-->>Client: 200 OK "Logged out"
-
-    Note over Client: Xóa tokens ở client
-
-    Note over Client,Redis: SAU LOGOUT
-    Client->>API: POST /api/auth/refresh<br/>{old refreshToken}
-    API->>API: Extract session_id
-    API->>DB: SELECT status
-    DB-->>API: status = REVOKED
-    API-->>Client: 401 Unauthorized
-    Note over API: RT tự chết dù còn hạn!
-```
-
----
-
-### 4.4 LOGOUT ALL DEVICES
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant DB
-    participant Redis
-
-    Client->>API: POST /api/auth/logout-all<br/>Authorization: Bearer {accessToken}
-
-    API->>API: Extract user_id từ AT
-    API->>DB: UPDATE user_sessions<br/>SET status = 'REVOKED'<br/>WHERE user_id = ?
-
-    opt Có Redis Cache
-        API->>Redis: DEL session:* cho user này
-    end
-
-    API-->>Client: 200 OK "All sessions revoked"
-
-    Note over Client,Redis: Tất cả devices bị logout
-```
-
----
-
-## 5. Action Token (Money Flow)
-
-### 5.1 Tại sao cần Action Token?
-
-| Vấn đề                   | Giải pháp                     |
-| ------------------------ | ----------------------------- |
-| AT/RT leak → mất tiền?   | ❌ Không đủ, cần Action Token |
-| Replay attack donate     | Action Token one-time         |
-| Withdraw cần bảo mật cao | Action Token + OTP + 2FA      |
-
----
-
-### 5.2 DONATE Flow
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant Redis
-    participant DB
-
-    Note over Client,DB: Bước 1: Prepare
-    Client->>API: POST /payments/prepare<br/>{streamerId, amount}<br/>Authorization: Bearer {AT}
-
-    API->>API: Validate user balance
-
-    alt Amount < threshold
-        API->>Redis: SET action:donate:{uuid}<br/>{userId, amount}<br/>TTL = 60s
-        API-->>Client: 200 {actionToken, requireOTP: false}
-    else Amount >= threshold
-        API-->>Client: 200 {requireOTP: true}
-        Client->>API: POST /auth/verify-otp<br/>{otpCode}
-        API->>Redis: SET action:donate:{uuid}<br/>TTL = 60s
-        API-->>Client: 200 {actionToken}
-    end
-
-    Note over Client,DB: Bước 2: Execute
-    Client->>API: POST /payments/donate<br/>{actionToken}<br/>Authorization: Bearer {AT}
-
-    API->>Redis: GET action:donate:{uuid}
-    alt Token exists
-        Redis-->>API: {userId, amount}
-        API->>Redis: DEL action:donate:{uuid}
-        Note over API: One-time! Dùng xong xóa
-        API->>DB: Process transaction
-        API-->>Client: 200 {success}
-    else Token not found / expired
-        API-->>Client: 400 "Invalid action token"
-    end
-```
-
----
-
-### 5.3 WITHDRAW Flow
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant Redis
-    participant DB
-
-    Note over Client,DB: Bước 1: Prepare (bắt buộc 2FA + OTP)
-    Client->>API: POST /withdraw/prepare<br/>{amount}<br/>Authorization: Bearer {AT}
-
-    API->>DB: Check KYC status
-    alt KYC not verified
-        API-->>Client: 403 "KYC required"
-    else KYC verified
-        API-->>Client: 200 {require2FA: true, requireOTP: true}
-    end
-
-    Note over Client,DB: Bước 2: Verify
-    Client->>API: POST /auth/2fa-verify<br/>{2faCode, otpCode}
-    API->>Redis: SET action:withdraw:{uuid}<br/>TTL = 60s
-    API-->>Client: 200 {withdrawToken}
-
-    Note over Client,DB: Bước 3: Execute
-    Client->>API: POST /withdraw/execute<br/>{withdrawToken, bankInfo}<br/>Authorization: Bearer {AT}
-
-    API->>Redis: GET + DEL action:withdraw:{uuid}
-
-    alt Amount > manual review threshold
-        API->>DB: Queue for manual review
-        API-->>Client: 200 {status: "pending_review"}
-    else Amount <= threshold
-        API->>DB: Process withdrawal
-        API-->>Client: 200 {status: "processing"}
-    end
-```
-
----
-
-## 6. Redis Usage
-
-### Phân biệt rõ ràng
-
-| Mục đích                    | Có dùng Redis? | Key pattern                                      |
-| --------------------------- | -------------- | ------------------------------------------------ |
-| ❌ Blocklist Access Token   | KHÔNG          | -                                                |
-| ❌ Blocklist Refresh Token  | KHÔNG          | -                                                |
-| ❌ Rotate RT mỗi refresh    | KHÔNG          | -                                                |
-| ✅ Cache Session (optional) | CÓ             | `session:{session_id}`                           |
-| ✅ Action Token             | CÓ             | `action:donate:{uuid}`, `action:withdraw:{uuid}` |
-| ✅ Rate Limiting            | CÓ             | `rate:chat:{userId}`, `rate:donate:{userId}`     |
-
-### Redis Key Schema
-
-```
-# Session cache (optional, TTL = session expiry)
-session:{session_id}     → {"status": "ACTIVE", "userId": 123}
-
-# Action tokens (one-time, 60s TTL)
-action:donate:{uuid}     → {"userId": 123, "streamerId": 456, "amount": 100}
-action:withdraw:{uuid}   → {"userId": 123, "amount": 500}
-
-# Rate limiting
-rate:chat:{userId}       → count (TTL 60s, max 30/min)
-rate:donate:{userId}     → count (TTL 3600s, max 10/hour)
-```
-
----
-
-## 7. Security Matrix
-
-| Hành vi          | Access Token | Session Check | Action Token | OTP | 2FA | Manual Review |
-| ---------------- | :----------: | :-----------: | :----------: | :-: | :-: | :-----------: |
-| View stream      |      ❌      |      ❌       |      ❌      | ❌  | ❌  |      ❌       |
-| Chat             |      ✅      |      ❌       |      ❌      | ❌  | ❌  |      ❌       |
-| Update profile   |      ✅      |      ❌       |      ❌      | ❌  | ❌  |      ❌       |
-| Refresh token    |      ❌      |      ✅       |      ❌      | ❌  | ❌  |      ❌       |
-| Donate < $10     |      ✅      |      ❌       |      ✅      | ❌  | ❌  |      ❌       |
-| Donate >= $10    |      ✅      |      ❌       |      ✅      | ✅  | ❌  |      ❌       |
-| Withdraw < $100  |      ✅      |      ❌       |      ✅      | ✅  | ✅  |      ❌       |
-| Withdraw >= $100 |      ✅      |      ❌       |      ✅      | ✅  | ✅  |      ✅       |
-| Change password  |      ✅      |      ❌       |      ✅      | ✅  | ❌  |      ❌       |
-
----
-
-## 8. Tóm Tắt Cuối Cùng
-
-### Những thứ KHÔNG làm
-
-- ❌ Rotate Refresh Token mỗi lần refresh
-- ❌ Redis blocklist cho Access Token
-- ❌ Redis blocklist cho Refresh Token
-- ❌ Nhét permissions vào JWT
-- ❌ Dùng RT/AT cho money flow
-
-### Những thứ CÓ làm
-
-- ✅ Session trong DB (source of truth)
-- ✅ Logout = Revoke session trong DB
-- ✅ Action Token cho Donate/Withdraw
-- ✅ Step-up auth (OTP, 2FA) cho tiền lớn
-- ✅ Redis cache session (optional, cho scale)
-
----
-
-> 📌 **Xem thêm**: [security_best_practices.md](usage/security_best_practices.md)
-
-**End of Document**
+### Logout
+
+- Logout một device: update DB status rồi xóa `session:v1:{sessionId}`.
+- Logout all: update toàn bộ DB session nhưng hiện chưa xóa toàn bộ cache của user.
+
+## 3. Current security gaps
+
+| ID | Gap | Failure mode | Gate |
+| --- | --- | --- | --- |
+| SEC-01 | Access/refresh token type confusion | Refresh token có thể đi qua access-token path | Claim/type validation + negative tests |
+| SEC-01 | `/api/auth/**` public quá rộng | `/me` và `/logout-all` không được URL layer bảo vệ | Matcher tường minh |
+| SEC-02 | Logout-all không invalidate cache | Session đã revoke vẫn cache-hit | User-session index hoặc bounded invalidation |
+| SEC-03 | Stream key trong public DTO/log | Secret exposure | DTO theo audience + log redaction |
+| SEC-03 | Webhook shared secret tĩnh | Replay/spoof nếu secret lộ | HMAC + timestamp + event ID |
+| STAGE-0 | Dev/test endpoint trong default context | Production attack surface | Profile/conditional bean tests |
+
+## 4. Target invariants
+
+- Access token có `typ=access`; refresh token có `typ=refresh` và session ID.
+- Chỉ register/login/refresh là public trong auth group; logout policy phải được quyết định và test rõ.
+- Revoke trong PostgreSQL phải thắng mọi cache hit.
+- Role không thay ownership check; ownership không thay business invariant.
+- Authentication failure là `401`; caller hợp lệ nhưng thiếu quyền là `403`.
+- Token, password, stream key và webhook secret không được log.
+
+## 5. Action token và step-up authentication
+
+Action token, donation và withdrawal chưa được implement. Chỉ thêm chúng trong wallet/gift learning case sau khi có threat model, one-time semantics, TTL, binding tới user/action/amount và replay test. Không coi nội dung trong archive là current contract.
+
+## 6. Verification bắt buộc
+
+- Unit test cho claim/type/expiry parsing.
+- MockMvc test cho public, authenticated, role và ownership matrix.
+- Integration test cho revoke, cache hit/miss và logout-all.
+- Negative tests cho refresh token dùng làm access token và ngược lại.
+- Webhook tests cho signature sai, timestamp cũ, duplicate event và secret rotation.

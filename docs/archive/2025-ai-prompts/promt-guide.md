@@ -6,6 +6,10 @@ Mình giải thích **ngắn – đúng – dễ áp dụng** nhé 👇
 
 ---
 
+# Legacy Prompt Guide
+
+> **ARCHIVED 2026-07-25** — COSTAR prompt note chung. Workflow Codex active nằm tại [AI Agent Engineering System](../../003_AI_AGENT_ENGINEERING_SYSTEM.md).
+
 ## 🔹 1️⃣ Context (Ngữ cảnh)
 
 👉 Cung cấp **bối cảnh / thông tin nền**

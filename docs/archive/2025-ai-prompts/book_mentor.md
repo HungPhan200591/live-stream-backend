@@ -1,5 +1,7 @@
 # 📚 AI Tutor – Học sách lập trình chi tiết để hiểu sâu + nhớ lâu
 
+> **ARCHIVED 2026-07-25** — Prompt mentor chung. Workflow Codex active nằm tại [AI Agent Engineering System](../../003_AI_AGENT_ENGINEERING_SYSTEM.md).
+
 ## Context
 Tôi là lập trình viên, đang học các cuốn sách kỹ thuật như:
 - Clean Code

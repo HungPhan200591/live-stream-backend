@@ -15,6 +15,27 @@ Giữ và mở rộng nền tảng hiện có thay vì tạo một hệ thống 
 
 Vấn đề hiện tại không phải thiếu prompt. Vấn đề là chưa có source-of-truth map, case workflow và cơ chế ngăn docs/roadmap drift.
 
+## 1.1. Luồng làm việc của Agent
+
+```mermaid
+flowchart TB
+    U["Learning goal<br/>or engineering task"] --> G["AGENTS.md<br/>global guardrails"]
+    G --> K["Triggered skill<br/>specialized workflow"]
+    K --> D["Relevant docs<br/>contract and theory"]
+    D --> W["Code, test<br/>and experiment"]
+    W --> E["Evidence<br/>ADR, metric, runbook"]
+    E --> L["Learning case<br/>and interview debrief"]
+    L --> U
+
+    style U fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style K fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style W fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style L fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+```
+
 ## 2. Phân biệt bốn loại artifact
 
 | Artifact | Dùng khi | Không nên chứa |
@@ -37,10 +58,10 @@ Quy tắc quyết định:
 | Câu hỏi | Nguồn chuẩn | Nguồn hỗ trợ |
 | --- | --- | --- |
 | Business mong đợi gì? | `docs/business_flows.md` | phase docs |
-| REST contract và authorization dự kiến? | `docs/api_endpoints_specification.md` | `.http`, OpenAPI |
+| REST contract và authorization hiện tại? | `docs/api_endpoints_specification.md` và `docs/authorization_flow.md` | `.http`, OpenAPI, tests |
 | Code đang làm gì? | source code + automated tests | runtime logs |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
-| Feature nào còn thiếu? | `docs/implementation/000_ROADMAP.md` | phase files |
+| Capability nào còn thiếu? | `docs/implementation/000_ROADMAP.md` | Senior case backlog |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
 | Performance claim dựa vào đâu? | `docs/learning/experiments/*` | raw result artifact |
 | Incident xử lý thế nào? | `docs/operations/runbooks/*` | dashboard/alert |
@@ -50,7 +71,7 @@ Khi contract, code và docs mâu thuẫn, Agent phải nêu drift. Không tự c
 
 ## 4. Information architecture mục tiêu
 
-Không cần tạo toàn bộ folder ngay. Tạo theo stage để tránh empty-doc architecture.
+Đây là target tree. Những folder chưa có artifact thật chưa được tạo để tránh empty-doc architecture.
 
 ```text
 docs/
@@ -60,6 +81,9 @@ docs/
 ├── 003_AI_AGENT_ENGINEERING_SYSTEM.md
 ├── business_flows.md
 ├── api_endpoints_specification.md
+├── authorization_flow.md
+├── coding_standards.md
+├── redis_usage_guide.md
 ├── architecture/
 │   ├── system-context.md
 │   ├── module-boundaries.md
@@ -77,11 +101,13 @@ docs/
 │   ├── event-catalog.md
 │   └── observability.md
 ├── implementation/
+│   └── 000_ROADMAP.md
 ├── operations/
 │   └── runbooks/
 ├── templates/
 │   └── LEARNING_CASE_TEMPLATE.md
 └── archive/
+    └── README.md
 ```
 
 ### Quy tắc placement
@@ -281,13 +307,13 @@ Tạo eval nhỏ trước khi mở rộng skills. Mỗi scenario có input, expe
 
 ## 11. Docs migration roadmap
 
-### Iteration A - Canonical entry points (lượt hiện tại)
+### Iteration A - Canonical entry points (`COMPLETED 2026-07-25`)
 
-- Refactor docs guide.
-- Canonicalize Senior roadmap.
-- Tạo current-state assessment.
-- Tạo AI engineering system và learning-case template.
-- Ghi rõ implementation roadmap và learning roadmap là hai lớp khác nhau.
+- Đã refactor Docs Guide, README và canonical Senior roadmap.
+- Đã tạo current-state assessment, AI engineering system và learning-case template.
+- Đã thay legacy phase roadmap bằng current implementation map.
+- Đã tạo current API/security/architecture/coding/Redis docs có status rõ.
+- Đã chuyển product phases, reference trộn current/target và prompt AI cũ vào archive có replacement map.
 
 ### Iteration B - Case SEC-01/TEST-01
 

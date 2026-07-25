@@ -1,5 +1,7 @@
 # Phase 4: Module Quản lý Livestream (Streaming)
 
+> **ARCHIVED 2026-07-25** — Checklist lịch sử. Dùng [Current Implementation Map](../../../implementation/000_ROADMAP.md) và active learning cases.
+
 > **Trạng thái**: ✅ DONE  
 > **Phụ thuộc**: Phase 3 (Authentication & User Management)  
 > **Cập nhật**: 2025-12-18

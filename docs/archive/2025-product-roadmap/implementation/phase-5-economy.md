@@ -1,5 +1,7 @@
 # Phase 5: Economy & Transaction System
 
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng `WAL-01` trong [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 > **Status**: 🔄 TODO  
 > **Dependencies**: Phase 3 (Authentication)
 

@@ -1,138 +1,76 @@
-﻿# Spring Boot Livestream Backend
+# Live Stream Backend — Senior Java Interview Lab
 
-> Backend hiệu năng cao cho nền tảng Livestream
-> Java 17 | Spring Boot 3.x | PostgreSQL | Redis | RabbitMQ | WebSocket
+Project dùng domain livestream để luyện các bài toán Senior Backend bằng code, test, experiment và failure analysis. Trọng tâm là Java Core, Spring Boot, transaction, concurrency, security, PostgreSQL, Redis, messaging, observability, architecture và microservice evolution; không lấy số lượng CRUD endpoint làm mục tiêu.
 
----
+## Current baseline
 
-## Overview
-- Xây dựng backend tập trung vào performance và scalability.
-- Simulation-first: phát triển và test qua API mô phỏng, không phụ thuộc dịch vụ ngoài.
-- Mục tiêu học tập và thực hành Redis, RabbitMQ, WebSocket, concurrency.
+| Thành phần | Hiện trạng |
+| --- | --- |
+| Runtime khai báo | Java 17, Spring Boot 3.4, Maven Wrapper |
+| Durable data | PostgreSQL; Hibernate hiện còn `ddl-auto=update` |
+| Redis | Session cache, live status, HyperLogLog unique viewers |
+| Authentication | Session-backed JWT; còn P0 token/matcher/cache gaps |
+| Stream | Create/list/detail/my và RTMP start/end webhook |
+| Wallet | Deposit mô phỏng, không persist; chưa có ledger |
+| RabbitMQ | Dependency/config/test publish; chưa có business flow |
+| WebSocket | Dependency only |
+| Kafka/microservice/replica/partition | Chưa implement |
+| Testing | Một context smoke test; Stage 0 phải tạo hermetic harness |
 
-## Tech Stack
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Backend | Java 17, Spring Boot 3.x | Core application |
-| Database | PostgreSQL 16 | Primary data store |
-| Cache | Redis 7 | Caching, Pub/Sub, HyperLogLog, Sorted Sets |
-| Message Queue | RabbitMQ 3 | Async processing, event-driven |
-| Real-time | WebSocket (STOMP) | Chat, notifications |
-| API Docs | Swagger/OpenAPI | Auto-generated documentation |
+Chi tiết bằng chứng và gap: [Current State & Gap Analysis](docs/002_CURRENT_STATE_AND_GAP_ANALYSIS.md).
 
----
+## Roadmap
 
-## Quick Start
+Roadmap chuẩn là [Senior Java Interview Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). Priority hiện tại:
 
-### Prerequisites
-- Java 17+
-- Maven 3.8+
-- Docker & Docker Compose
+`SEC-01 -> TEST-01 -> SEC-02 -> CON-01 -> DB-01 -> WAL-01`
 
-### Setup & Run
+[Current Implementation Map](docs/implementation/000_ROADMAP.md) chỉ mô tả code coverage; không phải backlog cạnh tranh với learning roadmap.
 
-```bash
-# 1. Clone repository
-git clone <repository-url>
-cd live-stream-backend
+## Quick start trên Windows
 
-# 2. Start infrastructure (PostgreSQL, Redis, RabbitMQ)
-docker-compose up -d
+Yêu cầu: JDK 17, Docker Desktop và PowerShell.
 
-# 3. Run application
-mvn spring-boot:run
-
-# 4. Access Swagger UI
-open http://localhost:8080/swagger-ui.html
+```powershell
+docker compose up -d postgres redis rabbitmq
+.\mvnw.cmd spring-boot:run
 ```
 
-### Default Users (Seeded)
-| Username | Password | Role |
-|----------|----------|------|
-| `admin` | `admin123` | ROLE_ADMIN |
-| `streamer` | `streamer123` | ROLE_STREAMER |
-| `user` | `user123` | ROLE_USER |
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- PostgreSQL: `localhost:15432`
+- Redis: `localhost:16379`
+- RabbitMQ management: `http://localhost:15672`
 
----
+Configuration mặc định là development-oriented và chưa phải production profile. `/api/dev/**`, `/api/test/**`, Swagger, P6Spy và seed data phải được cô lập trong Stage 0.
+
+## Verification
+
+```powershell
+.\mvnw.cmd -DskipTests compile
+.\mvnw.cmd test
+```
+
+Test hiện có thể phụ thuộc PostgreSQL local. Đây là known gap, không phải điều kiện setup lý tưởng.
 
 ## Documentation
-- Entry cho developer: `docs/000_DOCS_GUIDE.md`
-- Codex guidance: `AGENTS.md`; reusable repository skills: `.agents/skills/`
-- Codex PostgreSQL MCP: `.codex/config.toml`; guide: `docs/codex/mcp-postgres.md`
-- Roadmap & phase: `docs/implementation/000_ROADMAP.md`
-- API & authorization: `docs/api_endpoints_specification.md`
 
----
+- [Documentation Guide](docs/000_DOCS_GUIDE.md)
+- [Senior Roadmap](docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md)
+- [System Context](docs/architecture/system-context.md)
+- [Business Flows](docs/business_flows.md)
+- [API Contract](docs/api_endpoints_specification.md)
+- [Security Flow](docs/authorization_flow.md)
+- [Redis Guide](docs/redis_usage_guide.md)
+- [AI Agent Engineering System](docs/003_AI_AGENT_ENGINEERING_SYSTEM.md)
+- Repository guardrails: [AGENTS.md](AGENTS.md)
 
-## Architecture Highlights
-- No JPA relationships: dùng entity trung gian để tránh N+1 và giảm coupling.
-- DTO-first API: không expose Entity lên controller.
-- Session-backed JWT: access token 15 phút, refresh token kiểm tra DB để revoke được.
-- Redis Pub/Sub cho chat realtime, RabbitMQ cho lưu trữ async.
-- Wallet xử lý atomic, reward streamer async để cân bằng UX và integrity.
+Legacy phase plans, generic prompts và design giả định đã được giữ tại [Documentation Archive](docs/archive/README.md).
 
----
+## Engineering constraints
 
-## Development Guidelines
-- Codex rules: `AGENTS.md`; coding examples: `docs/coding_standards.md`.
-- Workflow: Business Flows -> Phase doc -> API spec -> implement -> tạo `.http` -> verify.
-- Testing: Codex chạy các check phù hợp trước khi bàn giao và báo rõ check nào chưa chạy.
-
----
-
-## Useful Commands
-
-```bash
-# Build
-mvn clean package -DskipTests
-
-# Run tests
-mvn test
-
-# Run with profile
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-
-# Docker services
-docker-compose up -d          # Start all
-docker-compose down           # Stop all
-docker-compose logs -f redis  # View logs
-```
-
----
-
-## Project Status
-**Current Phase**: 3/12 (25% complete)
-**Next Milestone**: Phase 4 - Stream Management
-**Last Updated**: 2025-12-18
-
----
-
-## Contributing
-1. Onboarding (~2 hours)
-   - Read `docs/business_flows.md`
-   - Skim `docs/system_design_livestream.md`
-   - Review `AGENTS.md` and `docs/coding_standards.md`
-   - Check current phase in `docs/implementation/000_ROADMAP.md`
-2. Start coding
-   - Pick task from current phase
-   - Follow phase checklist
-   - Create `.http` file
-   - Submit for review
-
----
-
-## Notes
-- Simulation APIs (`/api/dev/**`) phải disable trong production.
-- Security hardening và load testing cần thiết trước khi deploy.
-
----
-
-## Support
-- Documentation entry: `docs/000_DOCS_GUIDE.md`
-- API reference: `docs/api_endpoints_specification.md`
-- Implementation guide: `docs/implementation/000_ROADMAP.md`
-- Codex rules & coding standards: `AGENTS.md`, `docs/coding_standards.md`
-
----
-
-Built for learning and performance optimization.
+- Controller mỏng, DTO-only API, service-owned transaction boundary.
+- Không dùng JPA relationship annotations; lưu foreign ID tường minh.
+- PostgreSQL là source of truth; cache/event side effect có consistency policy rõ.
+- Simulation-first cho media/payment/external integration.
+- Mọi scale/performance claim phải có workload và measurement.
+- Mọi state/money/security case phải có negative hoặc concurrency/failure test phù hợp.

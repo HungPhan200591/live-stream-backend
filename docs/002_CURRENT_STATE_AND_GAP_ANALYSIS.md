@@ -7,21 +7,32 @@
 
 Project có domain phù hợp để luyện phỏng vấn Senior Backend, nhưng implementation hiện ở mức **happy-path demo**. Giá trị lớn nhất của code hiện tại là tạo ra các điểm xuất phát thật cho bài toán security, transaction, concurrency, cache consistency, messaging và database performance.
 
-Không nên tiếp tục Phase 5-12 như một chuỗi CRUD. Trước hết cần ổn định security và test harness, sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+Legacy Phase 5-12 không còn là active backlog. Trước hết cần ổn định security và test harness, sau đó phát triển theo từng learning case trong [roadmap Senior Backend](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md). [Implementation Map](implementation/000_ROADMAP.md) chỉ ghi nhận code coverage hiện tại; phase plan cũ đã chuyển vào archive.
 
-Hai roadmap có trách nhiệm khác nhau:
+## 1.1. Khoảng cách cần thu hẹp
 
-- `docs/implementation/*`: backlog chức năng của sản phẩm demo.
-- `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`: thứ tự học và độ sâu kỹ thuật bắt buộc.
+```mermaid
+flowchart TB
+    N["Current demo<br/>happy path"] --> S["Stage 0<br/>security and test"]
+    S --> C["Correctness<br/>transaction and concurrency"]
+    C --> R["Resilience<br/>events and failures"]
+    R --> O["Operability<br/>metrics and runbooks"]
+    O --> I["Senior interview<br/>evidence"]
 
-Khi hai roadmap cạnh tranh tài nguyên, roadmap học Senior được ưu tiên.
+    style N fill:#E91E63,stroke:#fff,stroke-width:2px,color:#fff
+    style S fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style R fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style O fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style I fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+```
 
 ## 2. Phương pháp kiểm tra
 
 Snapshot này dựa trên:
 
 - static review mã nguồn, cấu hình, tài liệu, `.http`, rules và skills;
-- lập bản đồ 103 file bằng graphify: 58 file code và 45 file tài liệu;
+- dùng graphify snapshot trước migration để lần quan hệ code/tài liệu; graph cần được update sau khi structure mới ổn định;
 - chạy `./mvnw.cmd -DskipTests compile` thành công;
 - chạy `./mvnw.cmd test` thành công với đúng 1 test `contextLoads`;
 - không chạy load test, fault injection hoặc benchmark;
@@ -109,16 +120,17 @@ Không dùng nhãn `DONE` duy nhất. Mỗi capability được đánh giá theo
 - RabbitMQ/WebSocket: M0.
 - Kafka, replica, partitioning, microservice: chưa đạt M0 trong implementation.
 - Testing/observability/operations: dưới M1.
-- Docs và agent rules: M1-M2 nhưng đang có drift.
+- Docs và agent rules: canonical structure đã được dọn; cần tiếp tục giữ link/status gate tự động.
 
-## 7. Documentation drift cần sửa dần
+## 7. Documentation migration đã thực hiện
 
-- `docs/implementation/phase-4-streaming.md` và `docs/api_roadmap.md` ghi Phase 4 đã hoàn thành, trong khi README vẫn ghi Phase 3/Next Phase 4. `docs/implementation/000_ROADMAP.md` đã được sửa trong snapshot này để phân biệt demo coverage với engineering maturity.
-- `docs/000_DOCS_GUIDE.md` trỏ tới `docs/agent/rules/*` không tồn tại; rules thật hiện nằm ở `AGENTS.md` và `.agents/skills/*`.
-- Một số phase docs mô tả capability như Actuator, Flyway, WebSocket hoặc RabbitMQ nhưng code mới ở mức dependency/TODO.
-- Các prompt cũ trong `docs/usage/prompt/` hữu ích cho learning method nhưng chưa phải workflow Codex có acceptance criteria và verification.
+- README, Docs Guide, Implementation Map, API contract, security, architecture, coding và Redis docs đã được đồng bộ theo current evidence.
+- Product roadmap/API roadmap Phase 1-12 đã chuyển tới `docs/archive/2025-product-roadmap/`.
+- Reference 2025 trộn current/target đã chuyển tới `docs/archive/2025-reference/`; active docs mới có status rõ.
+- Prompt AI chung đã chuyển tới `docs/archive/2025-ai-prompts/`; workflow Codex active nằm trong `003_AI_AGENT_ENGINEERING_SYSTEM.md` và `.agents/skills/*`.
+- Business flows được giữ làm target contract nhưng có capability status; source code/test vẫn là current evidence.
 
-Không xóa docs cũ ngay. Tái phân loại chúng thành business contract, product backlog, learning reference hoặc archive; chỉ hợp nhất sau khi link đến nguồn chuẩn mới đã ổn định.
+Archive manifest và replacement map nằm tại [Documentation Archive](archive/README.md). Graphify output hiện phản ánh topology trước migration và không được coi là source-of-truth cho đường dẫn mới cho tới lần update kế tiếp.
 
 ## 8. Cổng bắt đầu
 

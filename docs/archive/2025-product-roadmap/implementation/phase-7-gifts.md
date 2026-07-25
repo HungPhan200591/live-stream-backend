@@ -1,5 +1,7 @@
 # Phase 7: Gift System & Async Processing
 
+> **ARCHIVED 2026-07-25** — Không phải active backlog. Dùng `EVT-01` trong [Senior Roadmap](../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md).
+
 > **Status**: 🔄 TODO  
 > **Dependencies**: Phase 5 (Economy), Phase 6 (Chat)
 
