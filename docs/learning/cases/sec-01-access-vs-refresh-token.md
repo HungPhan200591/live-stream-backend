@@ -7,7 +7,7 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-25`
 
-> Pause reason: SEC-01 thuộc wave W1; các item đứng trước nó trong W0 phải đóng hoặc được reschedule có reason/dependency/revisit point trong cursor trước khi re-activate. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
+> Pause reason: SEC-01 thuộc Stage 0 nhưng đứng sau `JDK-01`, `TEST-01`, `JDK-02`, `MIG-01` và `CFG-01`; các item này phải đóng hoặc được reschedule có reason/dependency/revisit point trong cursor trước khi re-activate. Không có implementation, reproducer hay experiment nào của SEC-01 đã chạy.
 
 ## Scope lock
 

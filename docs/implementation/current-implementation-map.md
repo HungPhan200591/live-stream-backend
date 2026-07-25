@@ -40,7 +40,7 @@ flowchart TB
 ## 3. Learning routing (không sở hữu cursor)
 
 - Implementation map chỉ sở hữu capability/code evidence hiện tại; không sao chép active case, checkpoint hoặc next action.
-- Full execution queue, item kind và priority lấy từ [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-hiện-tại).
+- Full execution queue, item kind và priority lấy từ [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12).
 - Active case/checkpoint/next action lấy từ [Learning System](../learning/index.md); case header sở hữu status và pause/closure reason của chính case đó.
 
 Không phục hồi Phase 5-12 thành active checklist. Business idea hữu ích từ chúng được map vào case backlog trong Senior roadmap khi case được kích hoạt.

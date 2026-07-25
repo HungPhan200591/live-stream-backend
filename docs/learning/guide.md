@@ -14,7 +14,7 @@ AI Agent tự đọc [`docs/learning/index.md`](index.md) để biết đang h�
 
 Roadmap chỉ dùng để kiểm soát độ phủ dài hạn. Theory, question bank, case, experiment và code chỉ được mở khi checkpoint hiện tại cần chúng.
 
-Bạn không tự chọn một dòng bất kỳ trong backlog catalog. [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-hiện-tại) sở hữu thứ tự mặc định; mục 6.2 phải map từng item về đúng wave. Agent luôn chọn item đầu tiên chưa đóng trong wave sớm nhất, còn `learning/index.md` chỉ giữ con trỏ của item đó.
+Bạn không tự chọn một dòng bất kỳ trong backlog catalog. [Roadmap mục 5](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#5-roadmap-theo-stage) sở hữu Stage order; [mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12) chỉ xếp item bên trong từng Stage và mục 6.2 map mỗi item về một `Primary Stage`. Agent chọn item đầu tiên chưa đóng trong Stage hiện tại; `learning/index.md` chỉ giữ con trỏ của item đó.
 
 ## 2. Prompt bắt đầu chuẩn
 

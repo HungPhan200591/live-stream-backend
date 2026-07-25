@@ -112,13 +112,17 @@ Một case không hoàn thành nếu chỉ có code. Dùng [Learning Case Templa
 
 ## 5. Roadmap theo stage
 
-Roadmap có thứ tự dependency nhưng không có deadline cố định. Mỗi lần chỉ active một learning case chính; mỗi case phải tự sở hữu test/observability evidence liên quan. `TEST-01` là ngoại lệ bootstrap một lần để tạo hermetic harness cho các case sau; `OBS-01` chỉ được active khi có một instrumentation/failure hypothesis hẹp, không phải side project dựng dashboard chung chung.
+Stage 0-12 trong mục này là **thứ tự học canonical duy nhất**. Hoàn tất exit gate của Stage hiện tại trước khi sang Stage kế tiếp; evidence đã tạo ở Stage trước được tái sử dụng, không chạy lại case chỉ để đánh dấu checklist. Mỗi lần chỉ active một learning item chính; `TEST-02` và `LEAD-01` là track tích lũy, không active như feature. `TEST-01` là bootstrap tạo hermetic harness; `OBS-01` chỉ active với instrumentation/failure hypothesis hẹp.
+
+Mỗi Stage ghi `Primary learning items` để map trực tiếp sang backlog mục 6. Item P0/P1 thuộc core path; P2/P3 chỉ được chọn theo target role/constraint và không chặn baseline Senior nếu depth rule ở mục 2.1 đã đạt bằng evidence khác.
 
 ### Stage 0 - Stabilize the laboratory
 
 **Câu hỏi trung tâm:** Làm sao biết một thay đổi đúng và có thể tái lập?
 
 **Ưu tiên đầu tiên:** đưa build/runtime về Java 21 LTS có evidence trước khi thêm implementation mới. Java 21 mở đường cho virtual threads và các capability hiện đại, nhưng virtual threads là lab/decision có measurement; không phải default configuration.
+
+**Primary learning items:** `JDK-01 -> TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`.
 
 Thực hiện:
 
@@ -130,7 +134,7 @@ Thực hiện:
 - dùng Testcontainers cho PostgreSQL, Redis và broker cần thiết;
 - khóa JDK, Maven Wrapper, plugin và dependency management/BOM trong CI; compile và test không phụ thuộc máy developer;
 - thực hành Git diff/history, conflict resolution, revert và bisect trên change nhỏ; commit phải review/rollback được;
-- hiểu dependency mediation, kiểm tra dependency convergence; tạo SBOM và dependency/CVE scan có policy xử lý finding thay vì chỉ sinh report;
+- hiểu dependency mediation và kiểm tra dependency convergence; chụp baseline dependency/CVE, còn SBOM policy và CI enforcement hoàn chỉnh ở Stage 8;
 - tạo test data builder, deterministic clock/ID seam và test naming convention;
 - thêm correlation ID và log-redaction baseline;
 - tạo ADR đầu tiên và learning case đầu tiên.
@@ -142,12 +146,14 @@ Thực hiện:
 - Các defect chặn Stage 0 đều có regression test.
 - Test chạy trên máy sạch không cần database có sẵn.
 - `ddl-auto` không âm thầm thay schema.
-- CI xuất kết quả test, SBOM và security finding; không có secret trong log.
+- CI xuất kết quả build/test và dependency baseline tái lập; không có secret trong log. SBOM/security policy đầy đủ là exit gate Stage 8.
 - Có thể giải thích dependency nào được chọn, vì sao và cách rollback một dependency upgrade lỗi.
 
 ### Stage 1 - Java Core, state và concurrency
 
 **Câu hỏi trung tâm:** Điều gì thực sự atomic và điều gì chỉ trông có vẻ atomic?
+
+**Primary learning items:** `JAVA-01 -> JVM-01 -> CON-01`.
 
 Case:
 
@@ -179,6 +185,8 @@ Java 21 là baseline target đầu tiên của project và là prerequisite trư
 
 **Câu hỏi trung tâm:** Transaction boundary thực sự nằm ở đâu?
 
+**Primary learning items:** `SPR-01 -> API-01 -> TX-01 -> RES-01 -> RES-02 -> RES-03`.
+
 Case:
 
 - IoC lifecycle, bean scope, dependency cycle, configuration properties, auto-configuration/condition và startup failure;
@@ -207,6 +215,8 @@ Case:
 
 **Câu hỏi trung tâm:** Query chậm vì dữ liệu, query shape, index hay concurrency?
 
+**Primary learning items:** `SQL-01 -> WAL-01 -> DB-01 -> DB-04`; tái sử dụng schema bootstrap từ `MIG-01`.
+
 Case:
 
 - xây wallet + immutable ledger, constraint bảo vệ balance/invariant;
@@ -233,6 +243,8 @@ Case:
 
 **Câu hỏi trung tâm:** Nếu Redis sai, chậm hoặc biến mất thì business invariant còn đúng không?
 
+**Primary learning item:** `RED-01`; tái sử dụng security/cache/transaction evidence từ `SEC-02` và `TX-01`.
+
 Case:
 
 - session cache: TTL, revoke-all, negative cache và security-sensitive validation;
@@ -253,6 +265,8 @@ Case:
 ### Stage 5 - Messaging fundamentals: RabbitMQ và Kafka
 
 **Câu hỏi trung tâm:** Queue, durable event log và business idempotency khác nhau thế nào?
+
+**Primary learning items:** `MQ-01 -> KFK-01`.
 
 Giữ RabbitMQ cho case command/work queue có ACK, retry và DLQ. Thêm Kafka cho domain-event stream cần partition ordering, consumer group, retention và replay. Trước khi giữ cả hai trong kiến trúc chính, phải có ADR chứng minh chi phí vận hành là hợp lý.
 
@@ -280,6 +294,8 @@ RabbitMQ labs:
 ### Stage 6 - Reliable event-driven workflow
 
 **Câu hỏi trung tâm:** Làm sao đóng crash window của dual write?
+
+**Primary learning item:** `EVT-01`.
 
 Capstone: gift purchase và wallet settlement.
 
@@ -310,6 +326,8 @@ Học và triển khai:
 
 **Câu hỏi trung tâm:** Realtime path bảo vệ state và tài nguyên như thế nào?
 
+**Primary learning items:** `SEC-04 -> RT-01`; tái sử dụng Stage 0 security baseline, không mở lại các case đã đóng.
+
 Case:
 
 - phân biệt authentication, authorization, delegation và federation; OAuth2/OIDC role, authorization code + PKCE, token audience/scope, key rotation và logout/revocation boundary;
@@ -337,6 +355,8 @@ Case:
 
 **Câu hỏi trung tâm:** Khi production chậm hoặc sai, bằng chứng đầu tiên nằm ở đâu?
 
+**Primary learning items:** `OBS-01 -> OPS-01`; `TEST-02` tiếp tục tích lũy evidence từ mọi Stage.
+
 Thực hiện xuyên suốt rồi chuẩn hóa tại stage này:
 
 - structured JSON log, correlation/trace ID và sampling/redaction;
@@ -363,6 +383,8 @@ Thực hiện xuyên suốt rồi chuẩn hóa tại stage này:
 ### Stage 9 - Primary/replica, partitioning và data lifecycle
 
 **Câu hỏi trung tâm:** Scale read/data mà không phá consistency như thế nào?
+
+**Primary learning items:** `DB-02 -> DB-03 -> DR-01`; tái sử dụng migration evidence từ `DB-04`.
 
 Case primary/replica:
 
@@ -398,6 +420,8 @@ Case data operations:
 
 **Câu hỏi trung tâm:** Nỗi đau nào đủ lớn để trả chi phí distributed system?
 
+**Primary learning items:** `DDD-01 -> DS-01 -> MS-01`. `MS-01` có thể kết luận **không tách service**, nhưng decision/evidence vẫn phải hoàn thành.
+
 Trước khi tách:
 
 - xác định bounded context, ubiquitous language, aggregate/invariant và transaction boundary; DDD là công cụ làm rõ model chứ không phải yêu cầu tạo đủ mọi tactical pattern;
@@ -430,6 +454,8 @@ Sau khi tách, học:
 
 Mỗi capstone phải có assumption, Little's Law/queueing hoặc capacity math phù hợp, concurrency budget, saturation/headroom, bottleneck, failure domain, consistency, security, cost và evolution path.
 
+**Primary learning item:** `ARCH-01`. `DATA-01`, `CLOUD-01` và `REACT-01` là depth extension P2 theo target role/constraint, không phải implementation mặc định.
+
 1. Livestream 100 nghìn concurrent viewers, chat fan-out và reconnect storm.
 2. Gift sale spike với wallet invariant và event backlog.
 3. Multi-region read, single-writer hoặc regional ownership; phân tích RPO/RTO.
@@ -445,6 +471,8 @@ Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 ph
 ### Stage 12 - Technical leadership và delivery
 
 Đây là track xuyên suốt, được tổng kết sau các capstone; không chờ đến cuối mới bắt đầu ghi evidence.
+
+**Primary learning track:** `LEAD-01`; Stage 12 là closure/teach-back của evidence đã tích lũy, không phải lúc bắt đầu leadership.
 
 - review một change theo correctness, security, compatibility, operability, test gap và blast radius; phân biệt blocker với suggestion;
 - viết ADR ngắn, nêu context, constraint, options, decision, consequence và trigger cần revisit;
@@ -472,83 +500,89 @@ Priority đo importance của năng lực/evidence theo mục 2.1; **không ph�
 
 Mỗi `CASE`/`LAB` vẫn đi đủ `theory -> deep-dive -> question bank -> reproducer -> decision -> implementation/experiment -> evidence -> review -> teach-back`. Chỉ tạo artifact/folder khi item được active; backlog không phải yêu cầu scaffold hàng loạt.
 
-### 6.1. Execution queue hiện tại
+### 6.1. Execution queue theo Stage 0-12
 
-Queue canonical được chia thành wave. Mặc định chỉ **item đầu tiên chưa đóng** trong wave sớm nhất chưa hoàn tất được active. Chỉ reschedule khi cursor ghi rõ reason, dependency và thời điểm quay lại; priority P0-P3 không tự thay đổi thứ tự này.
+Mục 5 sở hữu thứ tự. Trong Stage hiện tại, item đầu tiên chưa đóng ở bảng dưới là next actionable. Chỉ reschedule khi cursor ghi reason, dependency và revisit point; không dùng priority P0-P3 để tự nhảy Stage.
 
-| Wave | Sequence | Mục tiêu trước khi sang wave sau |
+| Stage | Primary item order | Gate rút gọn |
 | --- | --- | --- |
-| W0 - Java/platform foundation | `JDK-01 -> TEST-01 -> JAVA-01 -> JVM-01 -> JDK-02 decision gate -> MIG-01 -> CFG-01` | Java 21/core/JVM có evidence; build/test/schema/profile tái lập; latest-LTS decision có owner |
-| W1 - Current P0 security | `SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05` | Token, matcher, cache revocation, secret và webhook trust boundary có negative test |
-| W2 - Backend correctness | `SPR-01 -> API-01 -> CON-01 -> TX-01 -> WAL-01 -> SQL-01 -> DB-01` | Spring/HTTP/transaction/state/money/query invariant đúng trước khi tối ưu |
-| W3 - Redis và event workflow | `RED-01 -> MQ-01 -> KFK-01 -> EVT-01` | Cache degradation, broker delivery/order và outbox/inbox có failure evidence |
-| W4 - Identity và realtime | `SEC-04 -> RT-01` | OIDC/resource-server và WebSocket lifecycle được bảo vệ theo threat/resource model |
-| W5 - Resilience và operability | `RES-01 -> RES-02 -> RES-03 -> OBS-01 -> OPS-01` | Timeout/retry/saturation có telemetry, recovery và deployment evidence |
-| W6 - Data lifecycle và architecture | `DB-04 -> DR-01 -> DDD-01 -> DS-01 -> ARCH-01` | Migration/recovery/modularity/distributed/capacity decisions được bảo vệ bằng evidence |
+| 0 | `JDK-01 -> TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05` | Laboratory tái lập và current security blockers có regression evidence |
+| 1 | `JAVA-01 -> JVM-01 -> CON-01` | Java/JVM/concurrency đạt D3 trên hot path hoặc race thật |
+| 2 | `SPR-01 -> API-01 -> TX-01 -> RES-01 -> RES-02 -> RES-03` | Spring/HTTP/transaction/client-failure boundary được test |
+| 3 | `SQL-01 -> WAL-01 -> DB-01 -> DB-04` | SQL/model/index/lock/migration có dataset và before/after evidence |
+| 4 | `RED-01` | Redis degradation không phá durable/security invariant |
+| 5 | `MQ-01 -> KFK-01` | Queue/log delivery, ordering, retry và replay được phân biệt bằng experiment |
+| 6 | `EVT-01` | Outbox/inbox đóng dual-write crash window và consumer idempotent |
+| 7 | `SEC-04 -> RT-01` | OIDC/realtime lifecycle có threat model và resource protection |
+| 8 | `OBS-01 -> OPS-01` | Telemetry, incident, container/runtime và delivery/rollback evidence hoàn chỉnh |
+| 9 | `DB-02 -> DB-03 -> DR-01` | Replica/partition/restore có policy, benchmark và RPO/RTO evidence |
+| 10 | `DDD-01 -> DS-01 -> MS-01` | Module/distributed boundary và extraction decision được bảo vệ |
+| 11 | `ARCH-01` | Capacity/failure/security/cost/evolution capstone defense hoàn tất |
+| 12 | `LEAD-01` track closure | Review/ADR/postmortem/mentoring/behavioral evidence được teach-back |
 
-- `JDK-01` đứng đầu vì POM vẫn khai báo Java 17, runtime evidence từng là Java 22 và người học ưu tiên Java 21/virtual threads. Trước khi đổi baseline, case phải chụp compile/test/startup hiện tại bằng smoke test sẵn có; kết quả chỉ là M1 platform characterization, không được gọi là functional safety net.
-- `TEST-01` tạo hermetic safety net trước `JDK-02`, schema/security behavior và mọi implementation tiếp theo; không phủ nhận giới hạn evidence được chấp nhận riêng trong JDK-01 bootstrap.
-- `JDK-02` là **decision gate**, không phải nâng cấp mặc định: kết thúc bằng `MIGRATE_NOW` hoặc `TIME_BOXED_DEFERRED` có owner/revisit date. Matrix phải pin exact patch/BOM được xác minh tại lúc active; candidate tham chiếu ở snapshot này là Spring Boot 3.5.16 hoặc 4.1.0, không phải nhãn chung “3.5/4.x”. Một quyết định defer rõ ràng không được chặn các correctness case.
-- `MIG-01` làm sạch schema bootstrap bằng Flyway trên database rỗng trước các case tạo thêm durable state.
-- `CFG-01` tách dev/test controller, Swagger, seed/default secret và diagnostic logging khỏi production context bằng profile/conditional-bean/fail-fast test.
-- `JAVA-01` là owner của theory và question bank cho Java language, generics, equality/immutability, collections, Stream API, algorithm và complexity; lab chọn một hot path/data shape hiện có để đạt D3. `JDK-01` chỉ sở hữu release/toolchain/Java 21/virtual-thread slice, không thay thế `JAVA-01`.
-- `JVM-01` dùng workload từ `JDK-01`/`JAVA-01` để học allocation, GC, JIT, thread và JFR; không tạo benchmark vô mục tiêu.
-- `SEC-01` chỉ đóng token-purpose confusion; `SEC-06`, `SEC-02`, `SEC-03` và `SEC-05` lần lượt đóng public matcher, cache revocation, secret exposure và webhook replay thay vì gộp nhiều trust boundary vào một case.
-- Correctness đi trước performance: Spring/transaction boundary, state transition, DB-Redis consistency và wallet invariant đứng trước N+1/pagination.
+`TEST-02` và `LEAD-01` được cập nhật xuyên suốt; không active như feature độc lập. `DATA-01`, `CLOUD-01`, `REACT-01` là P2 extension tại Stage 11 khi target role/constraint yêu cầu. Một item có thể cung cấp evidence cho nhiều Stage, nhưng chỉ có một `Primary Stage` và không được chạy lại nếu evidence còn hợp lệ.
 
-`TEST-02` và `LEAD-01` là track tích lũy trong mọi wave, không được active độc lập. Sau W6 mới chọn item `OPTIONAL` theo job description hoặc constraint thật; item optional không được chen vào core path chỉ để tăng số keyword. Prefix `W0-W6` chỉ là thứ tự execution wave, không liên quan thang độ sâu `D1-D4`.
+Các quyết định khóa thứ tự:
 
-### 6.2. Backlog catalog map theo execution wave
+- `JDK-01` đứng đầu vì POM vẫn khai báo Java 17 và runtime evidence từng khác declared version. `TEST-01` tạo hermetic safety net trước các behavior/schema/security change tiếp theo.
+- `JDK-02` là decision gate, không phải nâng cấp mặc định; `TIME_BOXED_DEFERRED` có owner/revisit date là closure hợp lệ.
+- Stage 0 xử lý current security blockers trước khi thêm business capability; `SEC-01`, `SEC-06`, `SEC-02`, `SEC-03`, `SEC-05` giữ trust boundary riêng, không gộp thành một mega-case.
+- `JAVA-01` sở hữu theory/question bank Java language, generics, equality/immutability, collections, Stream, algorithm và complexity. `JDK-01` chỉ sở hữu release/toolchain/Java 21/virtual-thread slice.
+- Correctness đi trước performance; durable wallet/ledger và transaction boundary có trước gift/outbox, query baseline có trước replica/partition.
 
-| Wave | Lane | ID | Scope hẹp / activation rule | Kind | Priority |
+### 6.2. Backlog catalog map theo Primary Stage
+
+| Primary Stage | Lane | ID | Scope hẹp / activation rule | Kind | Priority |
 | --- | --- | --- | --- | --- | --- |
-| W0 | Foundation | [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) | Java 21 baseline, toolchain drift và virtual-thread decision | CASE/LAB | P0 |
-| W0 | Foundation | TEST-01 | One-time bootstrap: hermetic integration test bằng Testcontainers và risk-based boundary | CASE | P0 |
-| W0 | Core Java/JVM | JAVA-01 | Java language, generics, equality/immutability, collections, Stream, algorithm/complexity; lab trên hot path/data shape thật | CASE/LAB | P0 |
-| W0 | Core Java/JVM | JVM-01 | Allocation/GC/JIT/thread/JFR diagnostic trên workload từ JDK-01/JAVA-01 | LAB | P0 |
-| W0 | Foundation | JDK-02 | JDK 25 + exact supported Spring Boot/BOM candidate; migrate-now hoặc time-boxed defer | DECISION | P1 |
-| W0 | Foundation | MIG-01 | Flyway baseline và clean-database bootstrap; không gộp online migration/PITR | CASE | P0 |
-| W0 | Foundation | CFG-01 | Dev/test/prod profile isolation, public diagnostic surface, default secret và production fail-fast | CASE | P0 |
-| W1 | Security | [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion; prerequisite lấy từ execution queue/cursor | CASE | P0 |
-| W1 | Security | SEC-06 | Public/private URL matcher và method-authorization boundary | CASE | P0 |
-| W1 | Security | SEC-02 | Logout-all với stale Redis session | CASE | P0 |
-| W1 | Security | SEC-03 | Stream-key/secret exposure, audience DTO và log redaction | CASE | P0 |
-| W1 | Security | SEC-05 | Webhook HMAC, timestamp/event ID, replay và secret rotation | CASE | P0 |
-| W2 | Backend correctness | SPR-01 | Bean/proxy/AOP, request pipeline và `@Transactional` self-invocation failure | CASE/LAB | P0 |
-| W2 | Backend correctness | API-01 | HTTP semantics, idempotency và compatible API evolution; client resilience thuộc RES-01, RES-02, RES-03 | CASE/LAB | P0 |
-| W2 | Backend correctness | CON-01 | Concurrent stream state transition | CASE | P0 |
-| W2 | Backend correctness | TX-01 | DB commit vs Redis side effect và crash window | CASE | P0 |
-| W2 | Backend correctness | WAL-01 | Lost update và ledger invariant | CASE | P0 |
-| W2 | Backend correctness | SQL-01 | Join/aggregation/window/CTE, set-based DML và plan trên dataset đại diện | LAB | P0 |
-| W2 | Backend correctness | DB-01 | Manual N+1, cursor pagination và before/after query plan | CASE/LAB | P1 |
-| W3 | Data/events | RED-01 | Cache stampede và Redis outage | CASE/LAB | P1 |
-| W3 | Data/events | MQ-01 | RabbitMQ consumer crash before ACK | CASE/LAB | P1 |
-| W3 | Data/events | KFK-01 | Kafka partition key, ordering và hot partition | LAB | P1 |
-| W3 | Data/events | EVT-01 | Gift transactional outbox/inbox | CASE | P1 |
-| W4 | Identity/realtime | SEC-04 | OAuth2/OIDC/resource-server threat model, token replay/key rotation; không tự xây IdP | LAB/CAPSTONE | P0 |
-| W4 | Identity/realtime | RT-01 | WebSocket auth, reconnect, slow consumer và resource protection | CASE/LAB | P1 |
-| W5 | Reliability | RES-01 | Outbound timeout/cancellation và connection-pool exhaustion với một stub dependency | CASE/LAB | P0 |
-| W5 | Reliability | RES-02 | Retry budget, exponential backoff+jitter và retry-storm amplification | LAB | P0 |
-| W5 | Reliability | RES-03 | Circuit breaker/bulkhead, admission control và load shedding dưới saturation | LAB | P0 |
-| W5 | Operability | OBS-01 | Trace request-to-consumer, cardinality/sampling/context propagation và incident alert | CASE/LAB | P0 |
-| W5 | Operability | OPS-01 | Container probes, resource limit, graceful shutdown và rollback | CASE/LAB | P1 |
-| W6 | Data lifecycle | DB-04 | Safe online schema migration theo expand-contract | CASE/LAB | P1 |
-| W6 | Data lifecycle | DR-01 | Backup/restore/PITR, failover và RPO/RTO evidence | LAB | P1 |
-| W6 | Architecture | DDD-01 | Bounded context, aggregate invariant và modular boundary | CASE/CAPSTONE | P1 |
-| W6 | Architecture | DS-01 | Partial failure, consistency model và clock/coordination decision; resilience experiment thuộc RES-01, RES-02, RES-03 | CAPSTONE | P0 |
-| W6 | Architecture | ARCH-01 | 100k-viewer capacity, queueing, saturation và failure design | CAPSTONE | P0 |
+| 0 | Foundation | [JDK-01](learning/cases/jdk-01-java21-platform-baseline.md) | Java 21 baseline, toolchain drift và virtual-thread decision | CASE/LAB | P0 |
+| 0 | Foundation | TEST-01 | One-time bootstrap: hermetic integration test bằng Testcontainers và risk-based boundary | CASE | P0 |
+| 0 | Foundation | JDK-02 | JDK 25 + exact supported Spring Boot/BOM candidate; migrate-now hoặc time-boxed defer | DECISION | P1 |
+| 0 | Foundation | MIG-01 | Flyway baseline và clean-database bootstrap; online migration thuộc DB-04 | CASE | P0 |
+| 0 | Foundation | CFG-01 | Dev/test/prod isolation, public diagnostic surface, default secret và production fail-fast | CASE | P0 |
+| 0 | Security baseline | [SEC-01](learning/cases/sec-01-access-vs-refresh-token.md) | Access token vs refresh token confusion | CASE | P0 |
+| 0 | Security baseline | SEC-06 | Public/private URL matcher và method-authorization boundary | CASE | P0 |
+| 0 | Security baseline | SEC-02 | Logout-all với stale Redis session | CASE | P0 |
+| 0 | Security baseline | SEC-03 | Stream-key/secret exposure, audience DTO và log redaction | CASE | P0 |
+| 0 | Security baseline | SEC-05 | Webhook HMAC, timestamp/event ID, replay và secret rotation | CASE | P0 |
+| 1 | Core Java/JVM | JAVA-01 | Java language, generics, equality/immutability, collections, Stream, algorithm/complexity trên hot path thật | CASE/LAB | P0 |
+| 1 | Core Java/JVM | JVM-01 | Allocation/GC/JIT/thread/JFR diagnostic trên workload cụ thể | LAB | P0 |
+| 1 | Concurrency | CON-01 | Concurrent stream state transition và happens-before evidence | CASE | P0 |
+| 2 | Spring/API | SPR-01 | Bean/proxy/AOP, request pipeline và `@Transactional` self-invocation failure | CASE/LAB | P0 |
+| 2 | Spring/API | API-01 | HTTP semantics, idempotency, compatible API evolution và client-failure boundary | CASE/LAB | P0 |
+| 2 | Transaction | TX-01 | DB commit vs Redis side effect và crash window | CASE | P0 |
+| 2 | Reliability | RES-01 | Outbound timeout/cancellation và connection-pool exhaustion với stub dependency | CASE/LAB | P0 |
+| 2 | Reliability | RES-02 | Retry budget, exponential backoff+jitter và retry-storm amplification | LAB | P0 |
+| 2 | Reliability | RES-03 | Circuit breaker/bulkhead, admission control và load shedding dưới saturation | LAB | P0 |
+| 3 | PostgreSQL | SQL-01 | Join/aggregation/window/CTE, set-based DML và plan trên dataset đại diện | LAB | P0 |
+| 3 | PostgreSQL | WAL-01 | Lost update, durable ledger và money invariant | CASE | P0 |
+| 3 | PostgreSQL | DB-01 | Manual N+1, cursor pagination và before/after query plan | CASE/LAB | P1 |
+| 3 | PostgreSQL | DB-04 | Safe online schema migration theo expand-contract | CASE/LAB | P1 |
+| 4 | Redis | RED-01 | Cache stampede, data-structure semantics và Redis outage | CASE/LAB | P1 |
+| 5 | Messaging | MQ-01 | RabbitMQ consumer crash before ACK | CASE/LAB | P1 |
+| 5 | Messaging | KFK-01 | Kafka partition key, ordering, replay và hot partition | LAB | P1 |
+| 6 | Event workflow | EVT-01 | Gift transactional outbox/inbox và idempotent settlement | CASE | P1 |
+| 7 | Identity/realtime | SEC-04 | OAuth2/OIDC/resource-server threat model, token replay/key rotation; không tự xây IdP | LAB/CAPSTONE | P0 |
+| 7 | Identity/realtime | RT-01 | WebSocket auth, reconnect, slow consumer và resource protection | CASE/LAB | P1 |
+| 8 | Operability | OBS-01 | Trace request-to-consumer, cardinality/sampling/context propagation và incident alert | CASE/LAB | P0 |
+| 8 | Operability | OPS-01 | SBOM/CI policy, container probes/resource limit, graceful shutdown, rollout và rollback | CASE/LAB | P1 |
+| 9 | Data lifecycle | DB-02 | Replica lag và read-your-writes | LAB | P1 |
+| 9 | Data lifecycle | DB-03 | Time partitioning ledger/chat history | LAB | P1 |
+| 9 | Data lifecycle | DR-01 | Backup/restore/PITR, failover và RPO/RTO evidence | LAB | P1 |
+| 10 | Architecture | DDD-01 | Bounded context, aggregate invariant và modular boundary | CASE/CAPSTONE | P1 |
+| 10 | Architecture | DS-01 | Partial failure, consistency model và clock/coordination decision | CAPSTONE | P0 |
+| 10 | Architecture | MS-01 | Analytics service extraction scorecard; quyết định không tách là kết quả hợp lệ | CAPSTONE | P1 |
+| 11 | Architecture | ARCH-01 | 100k-viewer capacity, queueing, saturation và failure design | CAPSTONE | P0 |
 | TRACK | Cross-cutting | TEST-02 | Property/contract/concurrency/load/fault/mutation evidence tích lũy từ case thật | TRACK | P0 |
-| TRACK | Cross-cutting | LEAD-01 | Review, ADR, incident/postmortem, mentoring và behavioral evidence từ các case đã chạy | TRACK | P0 |
-| OPTIONAL | Data lifecycle | DB-02 | Replica lag và read-your-writes | LAB | P2 |
-| OPTIONAL | Data lifecycle | DB-03 | Time partitioning ledger/chat history | LAB | P2 |
-| OPTIONAL | Architecture | MS-01 | Analytics service extraction scorecard | CAPSTONE | P2 |
-| OPTIONAL | Conditional | DATA-01 | Storage/search/object-store selection theo access pattern và cost | CAPSTONE | P2 |
-| OPTIONAL | Conditional | CLOUD-01 | Kubernetes/managed service/IaC deployment decision | CAPSTONE | P2 |
-| OPTIONAL | Conditional | REACT-01 | MVC vs virtual thread vs WebFlux benchmark; chỉ khi có workload phù hợp | LAB | P2 |
+| TRACK | Cross-cutting | LEAD-01 | Review, ADR, incident/postmortem, mentoring và behavioral evidence từ case thật | TRACK | P0 |
+| P2 EXTENSION | Conditional | DATA-01 | Storage/search/object-store selection theo access pattern và cost | CAPSTONE | P2 |
+| P2 EXTENSION | Conditional | CLOUD-01 | Kubernetes/managed service/IaC deployment decision | CAPSTONE | P2 |
+| P2 EXTENSION | Conditional | REACT-01 | MVC vs virtual thread vs WebFlux benchmark; chỉ khi workload phù hợp | LAB | P2 |
 
-P0 owner mapping: Java `JDK-01/JAVA-01`; OOD `SPR-01/CON-01/DDD-01`; JVM `JDK-01/JVM-01`; concurrency `CON-01/WAL-01`; Spring `SPR-01/TX-01/SEC-01`; HTTP/network `API-01/RES-01`; transaction `TX-01/WAL-01`; security `CFG-01/SEC-*`; PostgreSQL/SQL `MIG-01/DB-01/SQL-01/WAL-01`; testing `TEST-01/TEST-02` và test gate của mọi case; observability `OBS-01`; distributed systems `RES-01/RES-02/RES-03/DS-01/EVT-01`; solution architecture `ARCH-01`; leadership `LEAD-01` và review/teach-back của mọi case. Một owner ID chỉ chứng minh coverage khi artifact đạt depth/evidence gate; tên trong backlog không tự nâng D1-D4.
+P0 owner mapping: Java `JDK-01/JAVA-01`; OOD `SPR-01/CON-01/DDD-01`; JVM `JDK-01/JVM-01`; concurrency `CON-01/WAL-01`; Spring `SPR-01/TX-01`; HTTP/network `API-01/RES-01`; transaction `TX-01/WAL-01`; security `CFG-01/SEC-*`; PostgreSQL/SQL `MIG-01/SQL-01/WAL-01`; testing `TEST-01/TEST-02` và test gate của mọi case; observability `OBS-01`; distributed systems `RES-01/RES-02/RES-03/DS-01/EVT-01`; solution architecture `ARCH-01`; leadership `LEAD-01` và review/teach-back của mọi case.
 
-Roadmap không sở hữu trạng thái động. Active case, checkpoint, prerequisite đã reschedule và next action luôn lấy từ [Learning System](learning/index.md); roadmap này sở hữu coverage, execution wave mặc định, kind và priority.
+P1 owner mapping: Redis `RED-01`; event workflow `MQ-01/KFK-01/EVT-01`; domain/modular design `DDD-01`; build/runtime/delivery `JDK-01/TEST-01/JDK-02/CFG-01/OPS-01`; data operations `MIG-01/DB-04/DB-02/DB-03/DR-01`; microservice architecture `DDD-01/DS-01/MS-01`; realtime `RT-01`. P2 extensions là `DATA-01/CLOUD-01/REACT-01`; P3 chỉ tạo item khi target role chứng minh cần.
+
+Một owner ID chỉ chứng minh coverage khi artifact đạt depth/evidence gate. Roadmap sở hữu coverage, Stage order, kind và priority; active case/checkpoint/next action luôn lấy từ [Learning System](learning/index.md).
 
 ## 7. Definition of Done cho một learning case
 

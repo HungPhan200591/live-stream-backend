@@ -112,7 +112,7 @@ Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của
 
 ## 8. Current active slice
 
-JDK-01 là item đầu tiên của wave W0. Sau khi đóng, thứ tự tiếp theo là `TEST-01 -> JAVA-01 -> JVM-01 -> JDK-02 -> MIG-01 -> CFG-01`; hoàn tất W0 mới sang W1 security và các wave sau theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-hiện-tại). Index không duy trì một execution queue thứ hai. Artifact của JDK-01 được tạo dần theo checkpoint:
+JDK-01 là item đầu tiên của Stage 0. Sau khi đóng, thứ tự còn lại của Stage 0 là `TEST-01 -> JDK-02 -> MIG-01 -> CFG-01 -> SEC-01 -> SEC-06 -> SEC-02 -> SEC-03 -> SEC-05`; sau đó mới sang Stage 1 `JAVA-01 -> JVM-01 -> CON-01` theo [Roadmap mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12). Index không duy trì execution queue thứ hai. Artifact của JDK-01 được tạo dần theo checkpoint:
 
 1. `theory/core/java/java21-platform-baseline.md`.
 2. `theory/deep-dives/java/virtual-threads-and-pinning.md`.
