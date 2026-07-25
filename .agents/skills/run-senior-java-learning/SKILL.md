@@ -10,6 +10,7 @@ Tuân thủ `AGENTS.md`. Dùng roadmap để kiểm soát độ phủ kiến th�
 ## 1. Source of truth
 
 - Dùng `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` để biết phạm vi Senior Java/Spring Boot và case ưu tiên.
+- Dùng `docs/learning/use-case-catalog.md` để chọn và đặt tên bài toán Livestream concrete; roadmap vẫn sở hữu execution order.
 - Dùng `docs/learning/index.md` làm learning entry point và session cursor.
 - Dùng learning case `ACTIVE` làm owner của problem, invariant, project code path và closure gate.
 - Dùng code, test, raw experiment result và runtime signal làm bằng chứng hành vi.
@@ -26,7 +27,7 @@ Chỉ một learning case chính được `ACTIVE`. Nếu roadmap, index và cas
 5. Kiểm tra evidence link thực sự tồn tại trước khi coi phase trước đã hoàn thành.
 6. Tiếp tục từ `Current checkpoint`; không tự suy đoán tiến độ từ một checklist hoặc bản nháp do AI tạo.
 
-Nếu chưa có active case, chọn một case có prerequisite phù hợp từ roadmap và chỉ kích hoạt sau khi ghi rõ objective, scope và next checkpoint. Không tự active nhiều case để “cover roadmap” nhanh hơn.
+Nếu chưa có active case, dùng roadmap chọn owner item có prerequisite phù hợp, sau đó chọn scenario concrete từ `docs/learning/use-case-catalog.md` và scope thành một failure slice. Chỉ kích hoạt sau khi ghi rõ objective, scope và next checkpoint. Không tự active nhiều case để “cover roadmap” nhanh hơn.
 
 ## 3. Chu trình knowledge-to-evidence
 
@@ -86,7 +87,7 @@ Không tự chuyển sang `IMPLEMENTATION` nếu request chỉ yêu cầu học 
 - **Core theory:** có target depth, scope, mental model/mechanism/invariant/boundary, misconceptions, self-check, official sources; phần learner write-back không được Agent điền thay.
 - **Deep-dive:** link core theory, chỉ thêm internals, pathological/failure cases, version boundary, cross-layer/operability và experiment implication; không copy core.
 - **Question bank:** dùng ID ổn định `<DOMAIN>-<TOPIC>-NNN`; mỗi câu có level, target depth, interviewer intent, answer outline, trade-off/follow-up/red flags và evidence status. Outline không phải full answer.
-- **Learning case:** chỉ giữ current project path, invariant, hypothesis, reproducer/design gate và links tới reusable knowledge.
+- **Learning case:** tiêu đề/problem statement phải mô tả actor + tải/tình huống/failure + outcome observable; chỉ giữ current project path, invariant, hypothesis, reproducer/design gate và links tới reusable knowledge. Không dùng tên công nghệ hoặc chủ đề lý thuyết làm tên case.
 - **Experiment:** được tạo `PLANNED` khi procedure/hypothesis cụ thể; raw results phải là output thật, không sinh số liệu mẫu như evidence.
 - **Interview note:** chỉ tạo sau evidence; dùng giọng người học và link claim tới test/experiment/review.
 - **Version-sensitive topic:** pin release/runtime/framework version trong claim và dùng primary/official source; ghi rõ khi behavior thay đổi giữa version.

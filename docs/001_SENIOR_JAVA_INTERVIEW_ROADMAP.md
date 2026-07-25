@@ -1,8 +1,9 @@
 # Roadmap Senior Java Backend Interview Lab
 
 > Canonical learning roadmap<br>
-> Cập nhật: 2026-07-25<br>
+> Cập nhật: 2026-07-26<br>
 > Hiện trạng chi tiết: [002_CURRENT_STATE_AND_GAP_ANALYSIS.md](002_CURRENT_STATE_AND_GAP_ANALYSIS.md)<br>
+> Bài toán Livestream cụ thể: [Livestream Domain Use-case Catalog](learning/use-case-catalog.md)<br>
 > Hệ thống làm việc với Codex: [003_AI_AGENT_ENGINEERING_SYSTEM.md](003_AI_AGENT_ENGINEERING_SYSTEM.md)
 
 ## 1. North star
@@ -14,7 +15,7 @@ Mục tiêu của project không phải là hoàn thành nhiều endpoint. Mục
 3. Triển khai một hoặc nhiều solution và đo được kết quả.
 4. Bảo vệ trade-off trong phỏng vấn bằng code, query plan, metric và incident evidence.
 
-Domain livestream chỉ là bối cảnh nhất quán để nối các chủ đề Java Core, Spring Boot, transaction, concurrency, security, PostgreSQL, Redis, Kafka, microservice và solution architecture.
+Domain livestream là bối cảnh nhất quán để nối các chủ đề Java Core, Spring Boot, transaction, concurrency, security, PostgreSQL, Redis, Kafka, microservice và solution architecture. Tên, scenario, invariant và output của các bài toán thực hành được chuẩn hóa trong [Livestream Domain Use-case Catalog](learning/use-case-catalog.md); không dùng tên công nghệ/lý thuyết thay cho problem statement.
 
 ## 2. Nguyên tắc điều hướng
 
@@ -456,15 +457,15 @@ Mỗi capstone phải có assumption, Little's Law/queueing hoặc capacity math
 
 **Primary learning item:** `ARCH-01`. `DATA-01`, `CLOUD-01` và `REACT-01` là depth extension P2 theo target role/constraint, không phải implementation mặc định.
 
-1. Livestream 100 nghìn concurrent viewers, chat fan-out và reconnect storm.
-2. Gift sale spike với wallet invariant và event backlog.
-3. Multi-region read, single-writer hoặc regional ownership; phân tích RPO/RTO.
-4. Hot streamer/hot partition và celebrity problem.
-5. Analytics near-real-time từ Kafka, replay và backfill.
-6. Ban user toàn hệ thống: session, cache, WebSocket, event và audit.
-7. Chọn PostgreSQL, Redis, search index, object storage hoặc columnar store theo access pattern, consistency, retention, scale, recovery, operation và cost.
-8. Thiết kế public API qua DNS/TLS/CDN/load balancer/gateway; phân tích connection, timeout, cache, quota, DDoS boundary và multi-region traffic.
-9. Chọn cloud managed service/Kubernetes/self-managed và IaC theo team capability, compliance, portability, failure domain, observability và total cost of ownership.
+1. [`LIVE-UC-01`](learning/use-case-catalog.md#live-uc-01), [`CHAT-UC-01`](learning/use-case-catalog.md#chat-uc-01) và [`RECONNECT-UC-01`](learning/use-case-catalog.md#reconnect-uc-01): xử lý 100.000 viewers, hot-room chat và reconnect storm mà không phá control plane.
+2. [`GIFT-UC-01`](learning/use-case-catalog.md#gift-uc-01) + [`EVT-UC-01`](learning/use-case-catalog.md#evt-uc-01): gift spike trong sự kiện livestream không double-spend và không mất settlement khi process chết.
+3. [`REGION-UC-01`](learning/use-case-catalog.md#region-uc-01): phục vụ nhiều region với write ownership, failover và RPO/RTO rõ.
+4. [`HOT-UC-01`](learning/use-case-catalog.md#hot-uc-01): hot streamer/hot room không hút hết tài nguyên của room khác.
+5. [`ANALYTICS-UC-01`](learning/use-case-catalog.md#analytics-uc-01): near-real-time analytics có replay/backfill nhưng không chặn transaction path.
+6. [`BAN-UC-01`](learning/use-case-catalog.md#ban-uc-01): ban user có hiệu lực qua token, session, cache, WebSocket, event và audit.
+7. Chọn PostgreSQL, Redis, search index, object storage hoặc columnar store cho workload của [`ANALYTICS-UC-01`](learning/use-case-catalog.md#analytics-uc-01) theo consistency, retention, recovery, operation và cost.
+8. [`API-UC-01`](learning/use-case-catalog.md#3-mười-use-case-supporting-để-implement-hoặc-chạy-lab): public API qua DNS/TLS/CDN/load balancer/gateway chịu bot/retry/DDoS-like traffic.
+9. Chọn cloud managed service/Kubernetes/self-managed và IaC để vận hành [`LIVE-UC-01`](learning/use-case-catalog.md#live-uc-01) hoặc [`REGION-UC-01`](learning/use-case-catalog.md#region-uc-01), không thêm platform khi chưa có constraint.
 
 Mỗi bài chuẩn bị ba phiên bản trình bày: 2 phút, 15 phút và 45 phút.
 
@@ -531,6 +532,8 @@ Các quyết định khóa thứ tự:
 - Correctness đi trước performance; durable wallet/ledger và transaction boundary có trước gift/outbox, query baseline có trước replica/partition.
 
 ### 6.2. Backlog catalog map theo Primary Stage
+
+> Bảng dưới là **learning-item catalog** để kiểm soát thứ tự, owner và evidence gate; không phải danh sách use case nghiệp vụ. Khi cần biết “sẽ giải bài toán Livestream nào”, đọc [Livestream Domain Use-case Catalog](learning/use-case-catalog.md). Khi item được active, chọn một scenario concrete trong catalog rồi scope thành learning case; không đặt tên case bằng thuật ngữ lý thuyết đơn thuần.
 
 | Primary Stage | Lane | ID | Scope hẹp / activation rule | Kind | Priority |
 | --- | --- | --- | --- | --- | --- |

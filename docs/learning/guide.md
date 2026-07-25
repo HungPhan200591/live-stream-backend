@@ -1,7 +1,7 @@
 # Hướng dẫn học và implement cùng AI Agent
 
 > Dành cho: người học sử dụng `live-stream-backend` để luyện Senior Java/Spring Boot<br>
-> Cập nhật: 2026-07-25
+> Cập nhật: 2026-07-26
 
 Đây là file duy nhất bạn cần nhớ để sử dụng learning system. Không đọc toàn bộ `docs/` và không tự chọn hàng chục tài liệu trước mỗi buổi.
 
@@ -13,6 +13,8 @@
 AI Agent tự đọc [`docs/learning/index.md`](index.md) để biết đang học case nào, checkpoint nào và bước tiếp theo là gì. Bạn chỉ cần mở index khi muốn tự kiểm tra tiến độ.
 
 Roadmap chỉ dùng để kiểm soát độ phủ dài hạn. Theory, question bank, case, experiment và code chỉ được mở khi checkpoint hiện tại cần chúng.
+
+Khi muốn xem các bài toán thực hành bằng ngôn ngữ nghiệp vụ, mở [Livestream Domain Use-case Catalog](use-case-catalog.md). Ví dụ: “100.000 người cùng xem một livestream”, “gift sale không double-spend”, “30.000 client reconnect sau gateway restart”. Roadmap quyết định **khi nào học**; use-case catalog nói rõ **bài toán nào sẽ được giải**.
 
 Bạn không tự chọn một dòng bất kỳ trong backlog catalog. [Roadmap mục 5](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#5-roadmap-theo-stage) sở hữu Stage order; [mục 6.1](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#61-execution-queue-theo-stage-0-12) chỉ xếp item bên trong từng Stage và mục 6.2 map mỗi item về một `Primary Stage`. Agent chọn item đầu tiên chưa đóng trong Stage hiện tại; `learning/index.md` chỉ giữ con trỏ của item đó.
 
@@ -136,6 +138,7 @@ Xác minh evidence, khôi phục checkpoint rồi thực hiện next action nh�
 | Cách sử dụng hệ học | File guide này |
 | Đang học tới đâu | [`learning/index.md`](index.md) |
 | Phạm vi Senior Java cần cover | [`001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) |
+| Bài toán Livestream cụ thể để thực hành/System Design | [`learning/use-case-catalog.md`](use-case-catalog.md) |
 | Kiến thức nền dùng lại | `learning/topics/<domain>/theory/core/...` |
 | Internals/failure/scale | `learning/topics/<domain>/theory/deep-dives/...` |
 | Câu hỏi và evaluation rubric | `learning/topics/<domain>/question-bank/<slice>.md` |

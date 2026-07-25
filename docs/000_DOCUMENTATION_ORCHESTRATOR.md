@@ -2,7 +2,7 @@
 
 > Trạng thái: `CANONICAL ENTRY POINT`<br>
 > Dành cho: Human, Codex và AI Agent khác<br>
-> Cập nhật: 2026-07-25
+> Cập nhật: 2026-07-26
 
 File này trả lời ba câu hỏi:
 
@@ -36,7 +36,7 @@ flowchart TB
 
 | Intent | Đọc bắt buộc | Chỉ đọc thêm khi liên quan | Output/write-back |
 | --- | --- | --- | --- |
-| Chọn case học tiếp | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) | [Implementation Map](implementation/current-implementation-map.md) | Learning case từ [template](templates/learning-case-template.md) |
+| Chọn case học tiếp | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md), [Livestream Use-case Catalog](learning/use-case-catalog.md), [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) | [Implementation Map](implementation/current-implementation-map.md) | Learning case có tên scenario concrete từ [template](templates/learning-case-template.md) |
 | Bắt đầu/tiếp tục phiên học Senior | [Learning Guide](learning/guide.md), [Learning System](learning/index.md), active case và checkpoint hiện tại | Theory/deep-dive, question bank, concern docs, code/test được checkpoint link | Knowledge artifact đúng owner, evidence và session cursor |
 | Implement feature/case | `AGENTS.md`, active case, [Coding Standards](engineering/coding-standards.md) | Business/API/security/Redis/webhook theo concern | Code, tests, OpenAPI, `.http`, case evidence |
 | Hiểu business | [Business Flows](contracts/business-flows.md) | [API Contract](contracts/api-contract.md) | Làm rõ invariant hoặc contract drift |
@@ -72,6 +72,7 @@ flowchart TB
 | REST endpoint/quyền hiện tại? | [API Contract](contracts/api-contract.md) + code/test | OpenAPI và `.http` |
 | Kiến trúc đang chạy? | [System Context](architecture/system-context.md) + runtime config | ADR target |
 | Học gì tiếp theo? | [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md) | [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md) |
+| Bài toán Livestream concrete nào dùng để thực hành? | [Livestream Use-case Catalog](learning/use-case-catalog.md) | Roadmap owner item và active learning case |
 | Agent được làm gì? | `AGENTS.md` | Skill/workflow đã trigger |
 | Vì sao chọn solution? | ADR + experiment evidence | Learning case notes |
 
@@ -90,10 +91,11 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 ### Onboarding nhanh
 
 1. [Senior Roadmap](001_SENIOR_JAVA_INTERVIEW_ROADMAP.md): biết mục tiêu học.
-2. [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md): biết code yếu ở đâu.
-3. [System Context](architecture/system-context.md): biết topology đang chạy.
-4. [Implementation Map](implementation/current-implementation-map.md): biết capability nào thực sự có.
-5. Chọn concern doc hoặc active case; không đọc archive trong onboarding.
+2. [Livestream Use-case Catalog](learning/use-case-catalog.md): biết các bài toán concrete sẽ implement/lab/design.
+3. [Current Gaps](002_CURRENT_STATE_AND_GAP_ANALYSIS.md): biết code yếu ở đâu.
+4. [System Context](architecture/system-context.md): biết topology đang chạy.
+5. [Implementation Map](implementation/current-implementation-map.md): biết capability nào thực sự có.
+6. Chọn concern doc hoặc active case; không đọc archive trong onboarding.
 
 ### Chuẩn bị một buổi học
 
@@ -115,6 +117,7 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
 | Core/deep-dive knowledge | `learning/topics/<domain>/theory/...`; case/question bank chỉ link, không duplicate |
 | Interview question/rubric | `learning/topics/<domain>/question-bank/<slice>.md` + theory/evidence links |
+| Domain scenario/use-case catalog | `learning/use-case-catalog.md`; chỉ thay đổi scenario/mapping, không ghi active status |
 | Learning session progress | `learning/index.md` cursor + active artifact/case |
 | Learning case complete | Case file, roadmap status/maturity |
 | Experiment/interview extraction | `learning/experiments/...` raw evidence; `learning/interview-notes/...` teach-back cá nhân |
@@ -147,6 +150,7 @@ docs/
 ├── learning/
 │   ├── guide.md
 │   ├── index.md
+│   ├── use-case-catalog.md
 │   ├── knowledge-depth-rubric.md
 │   ├── topics/
 │   │   └── java/

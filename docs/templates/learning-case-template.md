@@ -1,4 +1,6 @@
-# CASE-XXX: <Tên bài toán>
+# CASE-XXX: <Actor + tình huống/tải/failure + outcome cần bảo vệ>
+
+> Naming rule: dùng tên bài toán quan sát được, ví dụ `Xử lý 10.000 gift request/phút mà ví không bị trừ hai lần`. Không đặt tên `Học Kafka`, `Distributed systems` hoặc `Implement Redis`; công nghệ/lý thuyết thuộc knowledge links và alternatives.
 
 > Status: `PROPOSED | ACTIVE | PAUSED | EVIDENCE_READY | CLOSED`<br>
 > Maturity target: `M1 | M2 | M3 | M4`<br>
@@ -28,6 +30,13 @@
 - Trade-off communication:
 
 ## 2. Problem và invariant
+
+### Scenario concrete
+
+- Actor/user:
+- Trigger, workload hoặc failure:
+- User/business impact nếu xử lý sai:
+- Observable outcome cần đạt:
 
 ### Hành vi mong đợi
 

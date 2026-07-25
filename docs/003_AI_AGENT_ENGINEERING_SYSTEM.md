@@ -1,6 +1,6 @@
 # Hệ thống docs, rules, workflows và skills cho Codex
 
-> Cập nhật: 2026-07-25<br>
+> Cập nhật: 2026-07-26<br>
 > Mục tiêu: dùng AI Agent để tăng tốc việc học nhưng vẫn buộc mọi quyết định kỹ thuật phải có bằng chứng, test và phần giải thích do người học sở hữu.
 
 ## 1. Kết luận thiết kế
@@ -70,6 +70,7 @@ Quy tắc quyết định:
 | Code đang làm gì? | source code + automated tests | runtime logs |
 | Human dùng learning system thế nào? | `docs/learning/guide.md` | `docs/learning/index.md` cursor |
 | Học gì tiếp theo? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` | current-state assessment |
+| Bài toán Livestream concrete nào dùng để thực hành? | `docs/learning/use-case-catalog.md` | roadmap owner item và active learning case |
 | Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
 | Kiến thức dùng lại nằm ở đâu? | `docs/learning/topics/<domain>/*` | question bank và learning cases link tới theory |
 | Code capability nào đang tồn tại? | `docs/implementation/current-implementation-map.md` | source code + tests |
@@ -94,6 +95,7 @@ docs/
 ├── learning/
 │   ├── guide.md                # human quick start và prompt chuẩn
 │   ├── index.md                # entry point và session cursor
+│   ├── use-case-catalog.md     # scenario Livestream concrete, invariant và owner item
 │   ├── knowledge-depth-rubric.md # D1-D4 criteria và evidence tracker
 │   ├── topics/                 # knowledge domain-first cho Human/Agent
 │   │   └── <domain>/
@@ -116,6 +118,7 @@ docs/
 ### Quy tắc placement
 
 - `learning/index.md`: active case, checkpoint, next action, required reading, write target và latest evidence.
+- `learning/use-case-catalog.md`: tên/scenario bài toán Livestream concrete; không sở hữu execution order hoặc active status.
 - `learning/topics/<domain>/theory/core`: mental model, mechanism, invariant và boundary dùng lại cho nhiều case.
 - `learning/topics/<domain>/theory/deep-dives`: internals, failure mode, edge case, scale/security và cross-layer interaction.
 - `learning/topics/<domain>/question-bank/<slice>.md`: question, level, interviewer intent, answer outline, follow-up và red flags; không chứa full essay hoặc một file domain tăng vô hạn.
@@ -149,11 +152,12 @@ Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint g�
 
 ### Workflow A - Chọn learning case
 
-1. Chọn case có prerequisite đã đạt và giải một khoảng trống thật trong code.
-2. Dùng `templates/learning-case-template.md` tạo case file.
-3. Ghi câu hỏi phỏng vấn, invariant, baseline và failure cần tái hiện.
-4. Giới hạn scope để case hoàn tất trong một vertical slice.
-5. Chưa chọn implementation solution trước khi có reproducer hoặc evidence.
+1. Dùng roadmap chọn owner item có prerequisite đã đạt; dùng `learning/use-case-catalog.md` chọn scenario Livestream concrete phù hợp.
+2. Scope scenario thành một failure slice giải khoảng trống thật trong code; không active cả capstone lớn như một feature.
+3. Dùng `templates/learning-case-template.md` tạo case file với tên mô tả actor/tải/failure/outcome, ví dụ “Xử lý 30.000 client reconnect sau gateway restart”.
+4. Ghi câu hỏi phỏng vấn, invariant, baseline và failure cần tái hiện; thuật ngữ theory/technology chỉ nằm ở knowledge links hoặc alternatives.
+5. Giới hạn scope để case hoàn tất trong một vertical slice.
+6. Chưa chọn implementation solution trước khi có reproducer hoặc evidence.
 
 **Exit:** case có acceptance criteria, experiment và verification command cụ thể.
 
