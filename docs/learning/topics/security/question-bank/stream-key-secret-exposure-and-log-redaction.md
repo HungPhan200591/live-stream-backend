@@ -6,8 +6,8 @@
 > Related roadmap: [Stage 0](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Security](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [HTTP/API](../../../knowledge-depth-rubric.md#36-http-api-design-và-network-fundamentals--p0-target-d3), [Observability](../../../knowledge-depth-rubric.md#311-observability-reliability-và-incident-response--p0-target-d3)<br>
 > Related contract: [API contract — Stream](../../../../contracts/api-contract.md#stream)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/security/theory/core/secret-exposure-and-audience-boundaries.md`<br>
-> Updated: `2026-07-25`
+> Related theory: [Core theory](../theory/core/secret-exposure-and-audience-boundaries.md)<br>
+> Updated: `2026-07-26`
 
 Preview này không implement `SEC-03`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi REST/API security của vai trò backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
 
@@ -43,7 +43,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Khả năng debug và UX không được đánh đổi bằng việc trả/log secret rộng rãi.<br>
 **Follow-up ladder:** API key? Password hash? Email? Correlation ID? Secret có hết nhạy cảm sau expiry không?<br>
 **Red flags:** Chỉ password mới là dữ liệu nhạy cảm.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-002 — `FOUNDATION`
@@ -56,7 +56,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** DTO/mapping thêm code nhưng đổi lại security boundary, compatibility và testability.<br>
 **Follow-up ladder:** Projection? MapStruct? Record DTO? Versioning? N+1 do mapping?<br>
 **Red flags:** Entity và DTO chỉ khác tên class.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-003 — `FOUNDATION`
@@ -69,7 +69,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** DTO riêng tránh accidental exposure nhưng làm tăng mapping/contract maintenance.<br>
 **Follow-up ladder:** Admin có luôn thấy secret? GraphQL field auth? Mobile client compatibility?<br>
 **Red flags:** Đăng nhập rồi thì được nhận mọi field.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-004 — `FOUNDATION`
@@ -82,7 +82,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Correlation/debug utility versus re-identification và key-management risk.<br>
 **Follow-up ladder:** Salt/HMAC? Last four characters? Token fingerprint? GDPR deletion?<br>
 **Red flags:** Base64 được gọi là encryption; hash nào cũng an toàn cho low-entropy secret.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-005 — `FOUNDATION`
@@ -95,7 +95,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Log ít dữ liệu bí mật hơn có thể khó debug, nên thiết kế safe diagnostic fields từ đầu.<br>
 **Follow-up ladder:** Request/response logging middleware? Stack trace? SQL bind values? Headers?<br>
 **Red flags:** Debug level hoặc “log chỉ nội bộ” được coi là đủ an toàn.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-006 — `SENIOR`
@@ -108,7 +108,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** `@JsonIgnore` nhanh nhưng global/coarse; field null vẫn làm contract mơ hồ; DTO riêng rõ hơn nhưng thêm types.<br>
 **Follow-up ladder:** Jackson views? Projection? OpenAPI schema? Cache cũ chứa DTO nào?<br>
 **Red flags:** Set `streamKey = null` ở từng controller và tin mọi path đều nhớ.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-007 — `SENIOR`
@@ -121,7 +121,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Show-once giảm exposure nhưng cần rotation/recovery UX; always-readable owner key tăng tiện lợi và attack surface.<br>
 **Follow-up ladder:** Admin? Support staff? Key regeneration? Shared OBS device?<br>
 **Red flags:** Tách URL nhưng vẫn gọi cùng mapper chứa secret.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-008 — `SENIOR`
@@ -134,7 +134,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Central sanitizer là safety net, nhưng source-level omission mới giảm blast radius.<br>
 **Follow-up ladder:** MDC? Stack trace? Reverse proxy logs? Dead-letter payload?<br>
 **Red flags:** Chỉ grep các câu `log.info` trực tiếp.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-009 — `SENIOR`
@@ -147,7 +147,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Snapshot toàn response dễ brittle; targeted negative assertions cần duy trì cho mọi audience/path.<br>
 **Follow-up ladder:** OpenAPI test? Structured logs? Async log? Property-based secret sentinel?<br>
 **Red flags:** Chỉ assert status 200 hoặc chỉ test happy path của owner.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-010 — `SENIOR`
@@ -160,7 +160,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Hash an toàn hơn khi DB lộ nhưng không retrieve được; encryption hỗ trợ recovery nhưng cần key management.<br>
 **Follow-up ladder:** UUID đủ không? Unique constraint? Rotation grace? Compromised key?<br>
 **Red flags:** Dựa vào khó đoán của database ID hoặc chỉ mã hóa Base64.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-011 — `SENIOR`
@@ -173,7 +173,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Annotation tiện nhưng dễ tạo policy phân tán; DTO riêng rõ ownership hơn.<br>
 **Follow-up ladder:** `@JsonIgnore`? Record? Deserialization? Actuator env/configprops?<br>
 **Red flags:** Tin rằng private field không thể bị Jackson/log framework đọc.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-012 — `ARCHITECT`
@@ -186,7 +186,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Zero-overlap rotation an toàn hơn nhưng dễ gián đoạn; grace window tăng exposure.<br>
 **Follow-up ladder:** Fleet rollout? Offline encoder? Break-glass? Tenant isolation?<br>
 **Red flags:** Rotation chỉ là generate key mới, không xử lý key cũ/consumer.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-013 — `ARCHITECT`
@@ -199,7 +199,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Central policy dễ rollout nhưng không hiểu semantics và secret có thể đã đi qua memory/network trước khi redact.<br>
 **Follow-up ladder:** Schema registry cho logs? Sampling? Cost? Third-party APM?<br>
 **Red flags:** Một regex toàn cục được coi là đảm bảo không leak.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-014 — `ARCHITECT`
@@ -212,7 +212,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Kiểm soát nhiều lớp tăng cost; ưu tiên theo likelihood × impact và blast radius.<br>
 **Follow-up ladder:** Insider threat? Tenant boundary? Backup restore? Data retention?<br>
 **Red flags:** Threat model chỉ kiểm controller endpoint.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-015 — `EXPERT`
@@ -225,7 +225,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Xóa log ngay có thể phá evidence; giữ log tăng exposure nên cần restricted legal/security handling.<br>
 **Follow-up ladder:** Không biết key nào lộ? Backup immutable? Customer notification? Credential stuffing?<br>
 **Red flags:** Chỉ xóa một log line hoặc chỉ deploy redaction mà không rotate credential.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SECRET-016 — `EXPERT`
@@ -238,7 +238,7 @@ Current code dùng một `StreamDTO` chứa `streamKey` cho public, owner và we
 **Required trade-offs:** Compatibility không được giữ secret ở public response vô thời hạn; emergency cutoff có thể chấp nhận client breakage theo severity.<br>
 **Follow-up ladder:** CDN cache? OpenAPI SDK? Blue-green? Rollback có reintroduce leak không?<br>
 **Red flags:** Giữ field public “temporary” không deadline hoặc rollback về phiên bản leak.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/secret-exposure-and-audience-boundaries.md); case `SEC-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

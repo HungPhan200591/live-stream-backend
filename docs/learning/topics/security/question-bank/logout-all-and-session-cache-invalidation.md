@@ -5,8 +5,8 @@
 > Active slice: `NONE`; preview target `SEC-02 — logout-all with stale Redis session`<br>
 > Related roadmap: [Stage 0](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Security](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [Redis](../../../knowledge-depth-rubric.md#315-redis--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/security/theory/core/session-revocation-and-cache-consistency.md`<br>
-> Updated: `2026-07-25`
+> Related theory: [Core theory](../theory/core/session-revocation-and-cache-consistency.md)<br>
+> Updated: `2026-07-26`
 
 Preview này không implement logout, không active case và không tạo evidence. PostgreSQL là authority; Redis chỉ là cache. Mọi câu giữ `UNANSWERED`, test `NOT RUN`. `Interview likelihood` là heuristic trong topic JWT/session, không phải tỷ lệ thị trường đã đo.
 
@@ -38,7 +38,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Immediate revocation cần state lookup/invalidation; short TTL chỉ giới hạn exposure.<br>
 **Follow-up ladder:** TTL có thay revoke không? Multi-device UX? Global logout SLO? Multi-region boundary?<br>
 **Red flags:** Chỉ xóa token phía client.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-002 — `FOUNDATION`
@@ -51,7 +51,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Cache tăng availability/latency nhưng thêm consistency risk.<br>
 **Follow-up ladder:** Redis restart? DB down? Negative cache? Revocation version?<br>
 **Red flags:** Redis hit luôn được tin.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-003 — `SENIOR`
@@ -64,7 +64,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Index tăng write/cleanup cost nhưng làm invalidation bounded.<br>
 **Follow-up ladder:** Index set TTL? Session limit? Partial delete? Orphan keys?<br>
 **Red flags:** `FLUSHALL`, `KEYS session:*` production.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-004 — `SENIOR`
@@ -77,7 +77,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** DB check strengthens correctness but costs latency/load.<br>
 **Follow-up ladder:** Retry ownership? Outbox? Revocation SLO? Redis partition?<br>
 **Red flags:** Swallow delete exception and declare logout complete.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-005 — `SENIOR`
@@ -90,7 +90,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Real Redis/PostgreSQL tests chậm hơn nhưng mock không chứng minh serialization/TTL/failure semantics.<br>
 **Follow-up ladder:** Deterministic clock? Parallel refresh? Retry assertion? Cleanup isolation?<br>
 **Red flags:** Chỉ verify `delete()` được gọi.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-006 — `SENIOR`
@@ -103,7 +103,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Locks simplify ordering but contend; optimistic version needs safe conflict behavior.<br>
 **Follow-up ladder:** Token signed before commit? Retry? User-wide version? Barrier test?<br>
 **Red flags:** “Request đến trước thắng” không định nghĩa commit order.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-007 — `ARCHITECT`
@@ -116,7 +116,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Stronger immediate control versus request latency and auth-service blast radius.<br>
 **Follow-up ladder:** Epoch in token? Cache epoch? Multi-device selective logout? Region lag?<br>
 **Red flags:** Chọn theo “Redis nhanh” không capacity/failure model.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-008 — `ARCHITECT`
@@ -129,7 +129,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Rich audit aids incident response but increases sensitive-data/retention cost.<br>
 **Follow-up ladder:** Alert threshold? Audit access? Sampling? False positive?<br>
 **Red flags:** User/session ID làm metric label không giới hạn.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-009 — `EXPERT`
@@ -142,7 +142,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Cross-region synchronous revoke lowers exposure but hurts availability/latency.<br>
 **Follow-up ladder:** Partition policy? Replay? Clock versus sequence? Region recovery?<br>
 **Red flags:** Pub/Sub delivery được giả định exactly-once.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-010 — `EXPERT`
@@ -156,7 +156,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Diagnostic metadata phải đủ causal nhưng không lộ credential/PII.<br>
 **Follow-up ladder:** Timeline authority? Clock skew? Read replica? Incident containment?<br>
 **Red flags:** Flush Redis như “fix”; không kiểm tra URL/auth filter path.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-011 — `FOUNDATION`
@@ -169,7 +169,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Stateless validation nhanh/độc lập nhưng khó immediate revocation; stateful check tăng control và dependency.<br>
 **Follow-up ladder:** Access TTL bao lâu? Denylist TTL? Key rotation có phải logout không?<br>
 **Red flags:** “Xóa JWT trên server” dù server không lưu token.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-012 — `FOUNDATION`
@@ -182,7 +182,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Short access TTL giảm exposure nhưng tăng refresh traffic; immediate access revoke tăng lookup cost.<br>
 **Follow-up ladder:** Logout một device? Logout-all? Password change?<br>
 **Red flags:** Access và refresh token được xử lý giống hệt nhau.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-013 — `SENIOR`
@@ -195,7 +195,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Granularity và immediate consistency đổi lấy state, latency và operational cost.<br>
 **Follow-up ladder:** Multi-device? Compromised token? Region outage? Cleanup?<br>
 **Red flags:** Một giải pháp được tuyên bố tốt nhất cho mọi threat model.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-014 — `FOUNDATION`
@@ -208,7 +208,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Delete-on-write đơn giản nhưng có miss; update cache giảm miss nhưng tăng race/dual-write risk.<br>
 **Follow-up ladder:** TTL có đủ không? Write-through? Cache stampede?<br>
 **Red flags:** Coi TTL là consistency guarantee tức thời.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-015 — `SENIOR`
@@ -221,7 +221,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Chính xác theo token đổi lấy memory, lookup latency và Redis availability dependency.<br>
 **Follow-up ladder:** Estimate memory? Redis down? False logout? Key format?<br>
 **Red flags:** Blacklist không TTL hoặc lưu vĩnh viễn.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-SESSION-016 — `SENIOR`
@@ -234,7 +234,7 @@ Preview này không implement logout, không active case và không tạo eviden
 **Required trade-offs:** Security/correctness versus availability và database overload.<br>
 **Follow-up ladder:** Circuit breaker? Rate limit fallback? DB cũng down? SLO?<br>
 **Red flags:** Luôn fail-open vì availability hoặc luôn retry vô hạn.<br>
-**Evidence:** Theory `NOT CREATED`; case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/session-revocation-and-cache-consistency.md); case `SEC-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
