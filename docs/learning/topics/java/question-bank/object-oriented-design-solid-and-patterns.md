@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `JAVA-01`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [OOD/refactoring](../../../knowledge-depth-rubric.md#32-object-oriented-design-và-refactoring--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/core/object-oriented-design-solid-and-patterns.md`<br>
+> Related theory: [Object-Oriented Design, SOLID and Patterns](../theory/core/object-oriented-design-solid-and-patterns.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `JAVA-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -135,4 +135,3 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 ## Deferred normalization
 
 Khi `JAVA-01` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-

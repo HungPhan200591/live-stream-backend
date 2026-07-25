@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; later-LTS migration policy belongs to `JDK-02`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3), [Object-oriented design](../../../knowledge-depth-rubric.md#32-object-oriented-design-và-refactoring--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/core/language-object-semantics-and-generics.md`<br>
+> Related theory: [Language, Object Semantics and Generics](../theory/core/language-object-semantics-and-generics.md), [equality/erasure deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-25`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.

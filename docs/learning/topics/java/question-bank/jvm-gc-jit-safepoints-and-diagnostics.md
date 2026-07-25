@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [JVM runtime](../../../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md`<br>
+> Related theory: [JVM Class Loading, Bytecode and Memory](../theory/core/jvm-class-loading-bytecode-and-memory.md), [GC/JIT/JFR deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.

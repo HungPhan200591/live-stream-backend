@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; implementation details are not API guarantees unless stated<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language, collections, algorithm and complexity](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/core/collections-data-structures-and-complexity.md`<br>
+> Related theory: [Collections, Data Structures and Complexity](../theory/core/collections-data-structures-and-complexity.md), [collection internals deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.

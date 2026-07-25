@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Concurrency/JMM](../../../knowledge-depth-rubric.md#34-concurrency-jmm-và-async-model--p0-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/core/jmm-synchronization-and-thread-safety.md`<br>
+> Related theory: [JMM, Synchronization and Thread Safety](../theory/core/jmm-synchronization-and-thread-safety.md), [happens-before deep-dive](../theory/deep-dives/jmm-happens-before-publication-and-locking.md) — `DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
