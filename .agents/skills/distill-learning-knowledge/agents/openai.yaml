@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cô đọng kiến thức học"
+  short_description: "Lưu kiến thức vào đúng learning artifact"
+  default_prompt: "Dùng $distill-learning-knowledge để phân loại và lưu khái niệm vừa được giải thích, không tự đổi checkpoint."

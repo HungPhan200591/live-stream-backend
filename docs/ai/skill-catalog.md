@@ -12,10 +12,10 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 
 | Scope | Vị trí | Số lượng | Ý nghĩa |
 | --- | --- | ---: | --- |
-| Project | `.agents/skills/` | 7 | Workflow riêng của `live-stream-backend` |
+| Project | `.agents/skills/` | 8 | Workflow riêng của `live-stream-backend` |
 | User global | `$CODEX_HOME/skills/` | 2 | Skill dùng được giữa nhiều repository |
 | Codex system | `$CODEX_HOME/skills/.system/` | 6 | Skill do môi trường Codex cung cấp |
-| **Tổng cài đặt** |  | **15** | 14 skill được expose trong session hiện tại; `review-agent` chỉ được cài trên filesystem |
+| **Tổng cài đặt** |  | **16** | 15 skill được expose trong session hiện tại; `review-agent` chỉ được cài trên filesystem |
 
 ## 2. Project skills
 
@@ -28,6 +28,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | [`manage-local-port`](../../.agents/skills/manage-local-port/SKILL.md) | Tìm process sở hữu TCP port trên Windows và giải phóng port an toàn. | Port local bị chiếm, cần xác định hoặc dừng đúng process. | Debug network/application không liên quan ownership của local port. |
 | [`run-senior-java-learning`](../../.agents/skills/run-senior-java-learning/SKILL.md) | Điều phối knowledge-to-evidence domain-first, chọn scenario concrete theo owner/use-case priority/difficulty mà không nhảy Stage, và áp content/reference gate từ theory template + quality audit. | Bắt đầu/tiếp tục topic hoặc case, chọn bài toán Livestream để thực hành, tạo/audit learning pack hoặc luyện từ foundation tới Senior/Architect/Expert dựa trên project evidence. | Bug fix, feature implementation hoặc review độc lập không có learning objective. |
 | [`audit-learning-theory`](../../.agents/skills/audit-learning-theory/SKILL.md) | Audit read-only theory `CORE`/`DEEP_DIVE` theo teaching gate, self-check coverage và language/depth review. | Hỏi tài liệu đã đủ để tự học/trả lời câu hỏi chưa, cần verdict readiness hoặc gap cụ thể. | Muốn triển khai case/code, tạo runtime evidence hoặc tự điền learner write-back. |
+| [`distill-learning-knowledge`](../../.agents/skills/distill-learning-knowledge/SKILL.md) | Phân loại và cô đọng kiến thức vừa làm rõ vào đúng theory/case/question/evidence artifact. | Muốn lưu khái niệm, misconception, failure chain hoặc trade-off mà không tạo duplicate hay evidence giả. | Chỉ cần giải thích thoáng qua, triển khai code hoặc tự điền learner write-back. |
 
 ## 3. User-global skills
 
@@ -57,6 +58,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Tìm process chiếm port | `manage-local-port` |
 | Bắt đầu/tiếp tục case hoặc tạo learning pack Senior Java | `run-senior-java-learning` |
 | Đánh giá theory core/deep-dive có đủ để tự học/trả lời self-check | `audit-learning-theory` |
+| Cô đọng kiến thức vừa làm rõ vào đúng learning artifact | `distill-learning-knowledge` |
 | Hiểu codebase/architecture/file relationships | `rg` + source/docs trực tiếp; không dùng skill mặc định |
 | Tạo hoặc sửa Mermaid | `mermaid-styling` |
 | Tạo hoặc sửa skill | `skill-creator` |
