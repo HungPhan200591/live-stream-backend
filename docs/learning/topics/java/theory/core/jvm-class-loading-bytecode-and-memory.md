@@ -29,12 +29,12 @@ JVM biến class bytes thành class identity, xác minh/link/init rồi thực t
 
 ```mermaid
 flowchart TB
-    C["Class bytes"] --> L["Load, link, initialize"]
-    L --> B["Bytecode execution"]
+    C["Byte của class"] --> L["Load, link, initialize"]
+    L --> B["Thực thi bytecode"]
     B --> J["Profile và JIT compile"]
-    B --> S["Thread stack frames"]
-    B --> H["Heap objects"]
-    H --> G["GC theo reachability"]
+    B --> S["Frame trên thread stack"]
+    B --> H["Object trên heap"]
+    H --> G["GC theo khả năng truy cập"]
     style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style L fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff

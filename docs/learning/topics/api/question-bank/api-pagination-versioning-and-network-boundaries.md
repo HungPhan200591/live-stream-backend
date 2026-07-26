@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `API-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [HTTP/API](../../../knowledge-depth-rubric.md#36-http-api-design-và-network-fundamentals--p0-target-d3)<br>
-> Related theory: [API Pagination, Versioning and Network Boundaries](../theory/core/api-pagination-versioning-and-network-boundaries.md), [cursor/evolution deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core](../theory/core/api-pagination-versioning-and-network-boundaries.md) · [Deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md) — DRAFT, evidence NOT RUN<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `API-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** UX page-number vs scale/consistency.<br>
 **Follow-up ladder:** Total count? Backward cursor?<br>
 **Red flags:** Cursor chỉ là base64 của offset nên giải quyết mọi vấn đề.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Thêm ID vào cursor lộ implementation nếu không encode/version.<br>
 **Follow-up ladder:** Timestamps trùng? Null? Sort descending?<br>
 **Red flags:** `ORDER BY created_at` luôn deterministic.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Tương thích dài hạn làm contract cồng kềnh.<br>
 **Follow-up ladder:** Enum value mới? Default changed?<br>
 **Red flags:** JSON có field mới luôn không breaking.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Nhiều hop tăng policy/observability nhưng thêm latency/failure modes.<br>
 **Follow-up ladder:** HTTP/2 multiplexing? TLS termination?<br>
 **Red flags:** Network time chỉ là thời gian controller.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Stateless cursor dễ scale nhưng rotation/evolution phức tạp.<br>
 **Follow-up ladder:** Snapshot consistency? Key rotation?<br>
 **Red flags:** Decode client cursor rồi ghép SQL trực tiếp.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Song song nhiều version tăng test/ops/security cost.<br>
 **Follow-up ladder:** Sunset header? Internal API?<br>
 **Red flags:** Version mỗi lần thêm field.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Proxy-aware config cần topology chính xác; sai fail-open rất nguy hiểm.<br>
 **Follow-up ladder:** Host header attack? RFC 7239?<br>
 **Red flags:** Header có prefix X nên đáng tin.<br>
-**Evidence:** Theory `NOT CREATED`; security test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); security test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Consumer-driven contracts tăng confidence nhưng có governance/maintenance cost.<br>
 **Follow-up ladder:** Unknown consumers? Mobile clients?<br>
 **Red flags:** Gửi email deprecation là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; project contract `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); project contract `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Stability tăng trust nhưng làm chậm semantic cleanup.<br>
 **Follow-up ladder:** Emergency breaking change? Regional rollout?<br>
 **Red flags:** Giữ mọi version vĩnh viễn.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-EVOL-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `API-EVOL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Snapshot consistency cần transaction/state retention và có thể không scale cho session dài.<br>
 **Follow-up ladder:** CDC watermark? Delete tombstone?<br>
 **Red flags:** Opaque cursor tự đảm bảo snapshot.<br>
-**Evidence:** Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/api-pagination-versioning-and-network-boundaries.md) + [deep-dive](../theory/deep-dives/cursor-pagination-compatible-evolution-and-proxy-boundaries.md); Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

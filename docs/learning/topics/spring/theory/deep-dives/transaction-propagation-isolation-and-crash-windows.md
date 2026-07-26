@@ -1,4 +1,4 @@
-# Transaction Propagation, Isolation and Crash Windows
+# Transaction propagation, isolation và các cửa sổ crash
 
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
@@ -17,10 +17,10 @@ Vẽ ba lớp chồng nhau: logical method scopes, physical connections/transact
 
 ```mermaid
 flowchart TB
-    L["Logical scopes<br/>REQUIRED / REQUIRES_NEW"] --> P["Physical tx<br/>connection, savepoint"]
-    P --> C["DB commit hoặc rollback"]
+    L["Scope logic<br/>REQUIRED / REQUIRES_NEW"] --> P["Transaction vật lý<br/>connection, savepoint"]
+    P --> C["Database<br/>commit hoặc rollback"]
     C --> E["Broker / cache / HTTP"]
-    C --> X["Crash window<br/>outcome ambiguous"]
+    C --> X["Cửa sổ crash<br/>kết quả không chắc chắn"]
     style L fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style P fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style C fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -80,6 +80,34 @@ Không có experiment nào đã chạy; evidence `NOT RUN`.
 | DB state + event intent | Transactional outbox |
 | Cache freshness | Version/TTL/invalidation/reconciliation |
 | External payment + local ledger | Idempotency + state machine + reconciliation |
+
+### 5.1. Pathology walkthrough — `REQUIRES_NEW` tự làm cạn pool
+
+Mỗi outer transaction giữ connection A rồi gọi inner `REQUIRES_NEW`, suspend A và chờ connection B. Với pool 10 và 10 outer requests đồng thời, tất cả 10 connections có thể bị giữ, không ai lấy được B. Đây là pool starvation do propagation, không nhất thiết database row deadlock. Evidence cần pool active/pending/acquire timeout và thread stacks; tăng pool chỉ dời ngưỡng nếu nested concurrency không bounded.
+
+Option gồm bỏ nested transaction, tách durable work qua outbox, reserve pool capacity có tính toán hoặc bound caller concurrency. Inner commit độc lập cũng có semantic cost: outer rollback không undo effect inner.
+
+### 5.2. Pathology walkthrough — `REQUIRED` inner bị catch nhưng outer vẫn rollback
+
+Inner cùng physical transaction ném runtime exception và đánh rollback-only. Outer catch exception rồi trả success logic; lúc commit framework ném `UnexpectedRollbackException`. Cách sửa không phải catch rộng, mà xác định failure taxonomy/transaction owner: cho failure propagate, đổi business result trước khi mark rollback, hoặc tách boundary thật nếu independent effect hợp lệ. Test assert final DB state và thrown outcome, không chỉ method return trước commit.
+
+### 5.3. Pathology walkthrough — external success/local rollback
+
+Trong DB transaction, service gọi payment provider thành công rồi insert ledger fail/deadlock. Database rollback nhưng charge ngoài không rollback. Giữ transaction lâu hơn còn tăng locks/pool pressure. Dùng operation state/idempotency key, provider status và reconciliation/compensation; không tuyên bố atomicity qua `@Transactional`.
+
+Ngược lại DB commit rồi publish/cache update có crash gap. Outbox bảo vệ event intent; cache dùng version/invalidation/rebuild; response loss dùng idempotency/status. Mỗi boundary có recovery owner riêng.
+
+### 5.4. Reproducer/evidence details
+
+Propagation test ghi physical connection/transaction IDs và commit/rollback combinations. Pool test dùng barriers để giữ outers trước inner acquire. Isolation test chạy two-connection histories với exact PostgreSQL isolation. Crash test đặt deterministic faultpoints before/after DB commit, publish/cache/response rồi inspect durable states after restart. Pin Spring proxy/rollback rules, JPA flush mode, pool và PostgreSQL version. Evidence `NOT RUN`.
+
+### 5.5. Phân biệt bốn thời điểm thường bị gọi chung là “đã ghi DB”
+
+Entity thay đổi trong persistence context chưa chắc đã phát SQL. `flush` đẩy SQL xuống connection nhưng transaction vẫn có thể rollback. Database commit mới làm thay đổi bền vững theo transaction; response gửi thành công lại là mốc khác mà client quan sát. Vì vậy log “insert executed” trước commit không chứng minh nghiệp vụ đã hoàn tất, còn client timeout sau commit không chứng minh nghiệp vụ thất bại. Khi debug, phải gắn timeline vào transaction ID và các mốc flush/commit/response.
+
+Isolation cũng không thay thế invariant proof. Ví dụ hai gift cùng đọc balance rồi ghi lại có thể lost update ở một access pattern, trong khi `UPDATE wallet SET balance=balance-? WHERE balance>=?` với kiểm row count tạo linearization point rõ hơn. Invariant trải nhiều row có thể cần lock order, constraint hoặc isolation mạnh hơn. Reproducer phải dùng hai connection thật và barrier đúng sau read/trước write; một unit test gọi service tuần tự không chạm failure mechanism.
+
+Với mỗi dual-write, hãy chỉ ra owner phục hồi. Database + outbox cùng transaction do database bảo vệ; relay có thể publish trùng nên consumer giữ inbox/idempotency. Cache update sau commit có stale window nên cần version/TTL/invalidation và đường rebuild. Remote provider thành công nhưng local rollback cần operation state, tra status và reconciliation. Không có một propagation setting chung giải quyết cả ba ranh giới.
 
 ## 6. Interview outline, recap và learner write-back
 

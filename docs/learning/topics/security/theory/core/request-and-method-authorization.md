@@ -1,4 +1,4 @@
-# Request và Method Authorization Boundaries
+# Ranh giới phân quyền ở request và method
 
 > Type: `CORE`<br>
 > Domain: `security`<br>
@@ -18,7 +18,7 @@ Authentication trả lời “caller là ai”; authorization trả lời “pri
 
 Một matcher rộng như `/api/auth/** permitAll` có thể vô tình public `/me` hoặc `/logout-all`. Ngược lại, URL rule `authenticated()` chỉ chứng minh có principal, không chứng minh caller sở hữu `streamId`. Chỉ `@PreAuthorize("hasRole('USER')")` vẫn có Broken Object Level Authorization nếu user A sửa resource của user B. Security cần nhiều gates có trách nhiệm khác nhau và deny by default.
 
-## 1. Learning objectives và vocabulary
+## 1. Mục tiêu học và từ vựng
 
 Sau bài này, bạn có thể:
 
@@ -30,7 +30,7 @@ Sau bài này, bạn có thể:
 
 **RBAC** cấp quyền theo role. **Ownership** kiểm tra quan hệ principal–resource. **ABAC** dùng thuộc tính principal/resource/context như tenant, status, time, risk. **BOLA/IDOR** là caller truy cập object không thuộc quyền bằng cách đổi identifier. **BFLA** là gọi function/endpoint ngoài quyền role. **Deny by default** nghĩa chỉ explicit public/allowed paths được qua. **Confused deputy** là component có quyền cao bị caller lợi dụng để làm thay. **TOCTOU** là state đổi giữa time-of-check và time-of-use.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -56,7 +56,7 @@ flowchart TB
 
 URL layer coarse-grained chặn attack surface sớm. Method/resource layer bảo vệ use case kể cả khi được gọi từ controller khác. Service invariant kiểm tra state hiện tại trong transaction, ví dụ stream còn thuộc owner và chưa ended/banned. Câu cần nhớ: **role không thay ownership; ownership không thay business invariant; URL matcher không thay method policy**.
 
-## 3. Request authorization
+## 3. Phân quyền ở tầng request
 
 Security filter chain phải explicit public allowlist: login/register/refresh và public read endpoints theo contract, không dùng prefix rộng chỉ vì cùng controller. Rule ordering quan trọng vì matcher đầu phù hợp có thể quyết định. Cuối chain dùng authenticated/deny rule rõ; dev/test/Swagger endpoints phải profile/policy riêng, không trôi vào production.
 
@@ -64,7 +64,7 @@ HTTP method thuộc authorization identity: `GET /streams/{id}` có thể public
 
 Authentication missing/invalid trả 401 và challenge phù hợp; principal hợp lệ nhưng policy deny trả 403. Với resource existence nhạy cảm, API có thể trả 404 để giảm enumeration, nhưng internal audit vẫn phân biệt và contract phải nhất quán.
 
-## 4. Method, ownership và service invariant
+## 4. Phân quyền ở method, ownership và invariant của service
 
 Method security (`@PreAuthorize` hoặc centralized authorization manager) diễn tả action/role/scope gần use case. Không dựa vào controller-only checks nếu service được scheduler/message listener/internal method gọi. Tuy nhiên Spring proxy-based method security có self-invocation/proxy boundary; exact behavior phải hiểu và test ở public bean boundary, không chỉ unit gọi method trực tiếp.
 
@@ -72,7 +72,7 @@ Ownership không nên “load rồi compare username” rải khắp controllers
 
 Role hierarchy chỉ mô tả quyền role, không tự cấp mọi object. Admin override phải explicit, audited và tránh accidental global bypass. Multi-tenant identity phải bao gồm tenant scope; global object ID unique không thay tenant authorization.
 
-## 5. Worked examples
+## 5. Ví dụ phân tích từng bước
 
 ### 5.1. `/api/auth/** permitAll`
 
@@ -90,7 +90,7 @@ HTTP endpoint kiểm quyền rồi publish command chỉ chứa `streamId`; cons
 
 UI ẩn nút DELETE với non-admin nhưng endpoint chỉ kiểm authenticated. Attacker gọi trực tiếp. Client UX không phải enforcement; server negative test là bằng chứng.
 
-## 6. Invariants, failure modes và trade-offs
+## 6. Invariant, các kiểu hỏng và đánh đổi
 
 - Public routes là allowlist nhỏ có owner; route mới không tự public theo prefix.
 - Mọi mutation xác minh action + resource relationship + current state tại server.
@@ -102,11 +102,11 @@ UI ẩn nút DELETE với non-admin nhưng endpoint chỉ kiểm authenticated. 
 
 Central policy component tăng nhất quán/audit nhưng có coupling/data-loading cost. Query-scoped authorization hiệu quả và chống accidental over-read nhưng policy phức tạp có thể khó diễn đạt. Annotation dễ đọc nhưng expression dài/duplicate trở nên khó review. Chọn một owner và giữ service invariant, không dồn mọi logic vào SpEL.
 
-## 7. WebSocket và cross-protocol boundary
+## 7. WebSocket và ranh giới giữa các giao thức
 
 HTTP handshake authenticated chưa tự authorize mọi STOMP destination. CONNECT xác thực principal; SUBSCRIBE kiểm quyền đọc topic/resource; SEND kiểm quyền action và payload; ban/mute/revoke phải được re-evaluate theo policy/TTL/event. Destination chứa user-supplied ID cần ownership/room membership. Reconnect không được hồi sinh session revoked. Topic này sẽ có realtime deep-dive riêng; nguyên tắc ở đây là mỗi protocol entry point đều cần identity/action/resource gate.
 
-## 8. Áp dụng vào project và verification
+## 8. Áp dụng vào dự án và cách kiểm chứng
 
 Khi `SEC-06` active, inventory exact paths/methods từ `SecurityConfig`, controllers và API contract. Lập matrix `{anonymous,user,owner,non-owner,moderator,admin} × {read,create,update,delete}`; chạy MockMvc cho 401/403/404/success và service tests cho ownership/state. Thêm alternate-entry tests nếu service được consumer/WebSocket gọi. Hiện chưa thay matcher và evidence `NOT RUN`.
 
@@ -127,7 +127,7 @@ Khi `SEC-06` active, inventory exact paths/methods từ `SecurityConfig`, contro
 - Async/WebSocket đổi trust boundary nên phải authorize riêng.
 - Negative matrix là evidence chính.
 
-## 11. Bài tập và self-check
+## 11. Bài tập và tự kiểm tra
 
 > **Bài viết của tôi — `LEARNER TODO`:** chọn update livestream, mô tả identity/action/resource/state gates, 401/403/404 và ba negative tests.
 
@@ -148,7 +148,7 @@ Khi `SEC-06` active, inventory exact paths/methods từ `SecurityConfig`, contro
    **Một câu trả lời tốt phải có:** anonymous/invalid, owner/non-owner, roles, methods/routes, status/body non-disclosure và alternate entry.<br>
    **My answer:** `LEARNER TODO`
 
-## 12. Official references và teach-back
+## 12. Nguồn chính thức và trình bày lại
 
 - [Spring Security — Authorization](https://docs.spring.io/spring-security/reference/servlet/authorization/index.html)
 - [Spring Security — Method Security](https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html)

@@ -29,12 +29,12 @@ MVC là pipeline chuyển HTTP bytes thành typed application call rồi chuyể
 
 ```mermaid
 flowchart TB
-    H["HTTP request"] --> F["Filters + Security"]
+    H["HTTP request"] --> F["Filter + Security"]
     F --> D["DispatcherServlet"]
-    D --> R["Handler mapping +<br/>argument resolution"]
-    R --> V["Binding + validation"]
+    D --> R["Tìm handler +<br/>phân giải argument"]
+    R --> V["Binding + kiểm tra dữ liệu"]
     V --> C["Controller → service"]
-    C --> O["Return converter<br/>hoặc exception resolver"]
+    C --> O["Chuyển đổi kết quả<br/>hoặc xử lý exception"]
     style H fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style D fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -98,6 +98,14 @@ Mỗi response lỗi nên có stable machine code, safe message/field violations
 ## 8. Interview answer outline
 
 Đi end-to-end qua filter/security, dispatcher, mapping/adapter, argument resolution/validation, controller/service và resolver/converter. Phân loại lỗi theo owner/status, giải thích validation vs invariant, rồi nêu async context/cancellation và test matrix.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — malformed JSON:** conversion/argument resolution fail trước controller; global resolver maps stable `400` envelope, no stack/SQL/token và no service side effect. Controller try/catch không phải owner branch này.
+
+**Worked example gần project — ownership:** authenticated user gọi stream khác owner; URL rule cho broad role, method/service check ownership/state. Contract chọn `403` hoặc masked `404` nhất quán và negative test assert database/outbox không đổi.
+
+**Phản ví dụ:** controller catch `Exception` rồi luôn trả `400`. Authentication/authorization/conflict/server bugs bị che, monitoring/retry sai và response-committed/async branches vẫn không được xử lý đúng.
 
 ## 9. Tóm tắt và learner write-back
 

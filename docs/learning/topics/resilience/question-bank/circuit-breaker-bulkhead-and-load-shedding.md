@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RES-03`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Distributed systems](../../../knowledge-depth-rubric.md#312-distributed-systems-fundamentals--p0-target-d3)<br>
-> Related theory: [Circuit Breaker, Bulkhead and Load Shedding](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md), [coordinated resilience deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) · [Deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md) — DRAFT, evidence NOT RUN<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RES-03`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Mở breaker giảm load nhưng từ chối request có thể đã thành công.<br>
 **Follow-up ladder:** Count/time window? Slow-call threshold?<br>
 **Red flags:** Breaker thay thế timeout.<br>
-**Evidence:** Theory `NOT CREATED`; case `RES-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); case `RES-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Isolation tốt hơn nhưng giảm pooling efficiency và cần sizing.<br>
 **Follow-up ladder:** Virtual threads thay đổi gì?<br>
 **Red flags:** Mỗi request một pool.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Shed sớm giữ latency cho accepted traffic nhưng giảm availability tức thời.<br>
 **Follow-up ladder:** 429 vs 503? Retry-After?<br>
 **Red flags:** Queue vô hạn tốt hơn reject.<br>
-**Evidence:** Theory `NOT CREATED`; case `RES-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); case `RES-03 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** UX liên tục vs correctness/trust.<br>
 **Follow-up ladder:** Cache fallback? Feature disable?<br>
 **Red flags:** Catch mọi exception trả empty list.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Nhạy mở sớm nhưng flapping; chậm bảo vệ thì saturation lan rộng.<br>
 **Follow-up ladder:** Per-instance vs shared state?<br>
 **Red flags:** Copy threshold 50% cho mọi service.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Order thay metric, capacity và breaker sampling.<br>
 **Follow-up ladder:** Retry có tính từng failure vào breaker?<br>
 **Red flags:** Chỉ cần annotations, order không quan trọng.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Force-close khôi phục traffic nhưng có thể tái tạo cascade.<br>
 **Follow-up ladder:** Config drift giữa instances?<br>
 **Red flags:** Restart app để reset breaker là recovery plan.<br>
-**Evidence:** Theory `NOT CREATED`; incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Reserved capacity có thể idle trong bình thường nhưng bảo đảm critical workload.<br>
 **Follow-up ladder:** VIP traffic ethics? Queue discipline?<br>
 **Red flags:** First-come-first-served luôn công bằng.<br>
-**Evidence:** Design `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); Design `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Availability của read vs overload DB; accept command vs delayed visibility.<br>
 **Follow-up ladder:** WebSocket fan-out? Operator kill switch?<br>
 **Red flags:** Một fallback empty response cho mọi dependency.<br>
-**Evidence:** Project context `EXISTS`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); Project context `EXISTS`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-CB-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `RES-CB-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Local breaker đơn giản/resilient; shared state nhất quán nhưng tạo dependency mới.<br>
 **Follow-up ladder:** New instance cold start? Autoscaling?<br>
 **Red flags:** Đồng bộ breaker qua Redis luôn tốt hơn.<br>
-**Evidence:** Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/circuit-breaker-bulkhead-and-load-shedding.md) + [deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md); Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

@@ -19,7 +19,7 @@
 
 1. Lập concurrency/queue/deadline budget từ arrival rate, service time và downstream limits.
 2. Phân tích cancellation/deadline khi work đã tạo side effect hoặc API không interruptible.
-3. Bảo vệ trace/security/MDC/transaction context qua async boundary.
+3. Giữ đúng trace, security context, MDC và transaction context khi công việc đi qua ranh giới bất đồng bộ.
 
 ## 2. Mental model do người dạy cung cấp
 
@@ -27,10 +27,10 @@ Concurrency là số work đang nợ hệ thống; queue là phần chưa bắt 
 
 ```mermaid
 flowchart TB
-    R["Request deadline"] --> Q["Queue wait"]
-    Q --> W["Running work"]
-    W --> D["Remote side effect"]
-    R --> T["Response timeout"]
+    R["Deadline của request"] --> Q["Thời gian chờ queue"]
+    Q --> W["Công việc đang chạy"]
+    W --> D["Side effect ở remote"]
+    R --> T["Response bị timeout"]
     T --> Z["Zombie work nếu<br/>không cancel/cleanup"]
     D --> Z
     style R fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
@@ -71,29 +71,29 @@ Database transaction thường thread-bound; chạy repository work trong arbitr
 
 | Failure | Trigger | Symptom | Root mechanism |
 | --- | --- | --- | --- |
-| Queue debt | Sustained overload | p99 rises long after spike | Old tasks wait |
-| Zombie work | Caller timeout, task continues | Resource/duplicate side effect | Cancellation not propagated |
-| Retry amplification | Timeout -> retries while original runs | Arrival multiplies | No budget/idempotency |
-| Common-pool interference | Blocking/default async stages | Unrelated CF/parallel stream slow | Shared pool saturation |
-| Context bleed | Thread-local not cleared | Wrong trace/user in logs | Pooled thread reuse |
-| Shutdown loss/hang | No ownership/drain deadline | Deploy stalls or drops tasks | Executor lifecycle undefined |
+| Nợ trong hàng đợi | Tải vào cao hơn tốc độ xử lý kéo dài | p99 còn cao lâu sau khi spike kết thúc | Task cũ phải chờ quá lâu |
+| Công việc “zombie” | Caller đã timeout nhưng task vẫn chạy | Tốn tài nguyên hoặc tạo side effect trùng | Cancellation không truyền xuống dưới |
+| Retry khuếch đại | Request cũ còn chạy nhưng caller đã retry | Lưu lượng vào nhân lên | Thiếu deadline budget hoặc idempotency |
+| Nhiễu từ common pool | Stage mặc định chạy blocking I/O | `CompletableFuture`/parallel stream không liên quan cùng chậm | Shared pool bão hòa |
+| Rò context | Không xóa `ThreadLocal` sau task | Log mang nhầm trace hoặc user | Tái sử dụng pooled thread |
+| Mất task hoặc treo khi shutdown | Không có owner và thời hạn drain | Deploy bị treo hoặc bỏ task | Lifecycle executor không rõ ràng |
 
 ## 7. Experiment implication
 
-1. Stub downstream latency/error; increase arrival until first saturation, record queue age/reject/p99/recovery.
-2. Timeout caller, then verify whether downstream work/side effect continues.
-3. Compare platform bounded pool, virtual thread + semaphore and alternative async model under same downstream permits.
-4. Verify trace/security context present and cleared; inject cancellation/shutdown.
-5. Evidence remains `NOT RUN`; expected results are hypotheses only.
+1. Dùng stub tạo latency/lỗi ở downstream; tăng tốc độ request tới khi một tài nguyên đầu tiên bão hòa, rồi ghi tuổi task trong queue, số lần reject, p99 và thời gian phục hồi.
+2. Cho caller timeout, sau đó kiểm tra công việc downstream hoặc side effect có còn tiếp tục hay không.
+3. So sánh bounded pool dùng platform thread, virtual thread kèm semaphore và mô hình async khác dưới cùng số permit downstream.
+4. Xác minh trace/security context được truyền đúng rồi được xóa; chèn cancellation và shutdown.
+5. Evidence vẫn `NOT RUN`; mọi kết quả dự kiến hiện chỉ là giả thuyết.
 
 ## 8. Trade-off matrix
 
 | Option | Capacity control | Cancellation | Context/operability | Complexity |
 | --- | --- | --- | --- | --- |
-| Unbounded async | None | Weak | Hidden | Low until incident |
-| Bounded pool/queue | Worker + queue | Interrupt/cooperative | Familiar metrics | Medium |
-| Virtual threads + semaphore | Resource permits explicit | Cooperative | Thread dumps many but readable | Medium |
-| Reactive end-to-end | Demand/backpressure operators | Subscription cancellation | Needs instrumentation discipline | High |
+| Async không giới hạn | Không có | Yếu | Bão hòa bị che khuất | Thấp cho tới khi có incident |
+| Pool/queue có giới hạn | Giới hạn worker và queue | Interrupt hoặc hợp tác | Metric quen thuộc | Trung bình |
+| Virtual thread + semaphore | Permit tài nguyên được khai báo rõ | Hủy theo kiểu hợp tác | Thread dump nhiều nhưng vẫn lần theo được | Trung bình |
+| Reactive end-to-end | Operator truyền demand/backpressure | Hủy subscription | Cần kỷ luật instrumentation | Cao |
 
 ## 9. Liên hệ case
 
@@ -102,6 +102,12 @@ Database transaction thường thread-bound; chạy repository work trong arbitr
 | `RECONNECT-UC-01` | Admission/deadline/retry amplification | 30k reconnect lab |
 | `LIVE-UC-01` | Concurrency/headroom/downstream budget | Capacity workload |
 | `DEPLOY-UC-01` | Drain/shutdown/cancellation | Rolling-deploy rehearsal |
+
+### Vì sao lỗi thường xuất hiện chậm sau khi spike đã hết?
+
+Giả sử executor có 100 worker nhưng queue không giới hạn. Trong một phút, hệ thống nhận 1.000 task/giây trong khi downstream chỉ xử lý được 700 task/giây. Mỗi giây queue tăng thêm 300 task. Khi traffic trở lại 500 task/giây, dashboard request rate trông đã bình thường nhưng hàng chục nghìn task cũ vẫn xếp hàng. Latency p99 tiếp tục tăng, caller timeout rồi retry, làm queue lại phình ra. Đây là chuỗi `quá tải -> nợ queue -> timeout -> retry -> quá tải nặng hơn`, không phải chỉ là “thread chạy chậm”.
+
+Evidence cần nối được bốn mốc: tốc độ arrival, tuổi task lâu nhất trong queue, thời gian chờ permit/connection downstream và số task vẫn chạy sau khi caller đã hủy. Mitigation có thể là queue hữu hạn kèm reject/load shedding, deadline truyền xuống dưới, retry budget và idempotency cho side effect. Tăng số thread mà không tăng capacity downstream chỉ làm nhiều task cùng chờ database hoặc HTTP connection hơn.
 
 ## 10. Interview answer outline
 

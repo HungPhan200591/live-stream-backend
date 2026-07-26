@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `WAL-01`<br>
 > Related roadmap: [Stage 3](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL/SQL](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/ledger-lost-update-and-money-invariants.md)<br>
+> Related theory: [Core theory](../theory/core/ledger-lost-update-and-money-invariants.md) · [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `WAL-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Minor units nhanh/đơn giản nhưng currency scale khác nhau; decimal linh hoạt nhưng cần canonicalization.<br>
 **Follow-up ladder:** `equals` vs `compareTo` BigDecimal?<br>
 **Red flags:** Làm tròn ở response là đủ.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); case `WAL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); case `WAL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Auditability/replay vs storage/query complexity.<br>
 **Follow-up ladder:** Double-entry? Reversal?<br>
 **Red flags:** Append-only nghĩa không cần constraint.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); case `WAL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); case `WAL-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Optimistic retry vs pessimistic blocking.<br>
 **Follow-up ladder:** JPA dirty checking có ngăn không?<br>
 **Red flags:** `@Transactional` mặc định tự serialize mọi writer.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Constraint chặt tăng safety nhưng migration/business exception cần quản lý.<br>
 **Follow-up ladder:** Pending/available balance? Fees?<br>
 **Red flags:** Chỉ validate ở controller.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Key retention/storage vs duplicate protection horizon.<br>
 **Follow-up ladder:** Crash after commit before response?<br>
 **Red flags:** Check tồn tại rồi insert không unique constraint.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Row locking đơn giản nhưng hot account giới hạn throughput.<br>
 **Follow-up ladder:** Atomic conditional updates? Sharding?<br>
 **Red flags:** Lock source rồi destination theo request order.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** History đầy đủ làm query/current state phức tạp hơn.<br>
 **Follow-up ladder:** Correction vs reversal? Chargeback?<br>
 **Red flags:** Sửa amount cũ để balance đúng.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Full scan chính xác nhưng đắt; incremental cần trustworthy checkpoints.<br>
 **Follow-up ladder:** Online reconciliation? Backfill versioning?<br>
 **Red flags:** Cron set balance bằng SUM mà không audit.<br>
-**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Central ledger consistency vs organizational/scaling coupling.<br>
 **Follow-up ladder:** Multi-region writes? Regulatory retention?<br>
 **Red flags:** Mỗi service tự tính “balance đúng” riêng.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### LEDGER-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `LEDGER-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Freeze writes bảo vệ correctness nhưng ảnh hưởng availability/business.<br>
 **Follow-up ladder:** Customer communication? Replay safety?<br>
 **Red flags:** Chạy SQL update trực tiếp rồi xóa dấu vết.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/ledger-lost-update-and-money-invariants.md) + [Deep-dive](../theory/deep-dives/ledger-linearization-idempotency-and-reconciliation.md); Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

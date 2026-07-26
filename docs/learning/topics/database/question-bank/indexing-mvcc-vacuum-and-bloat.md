@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DB-01`<br>
 > Related roadmap: [Stage 3](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/indexing-mvcc-vacuum-and-bloat.md)<br>
+> Related theory: [Core theory](../theory/core/indexing-mvcc-vacuum-and-bloat.md) · [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DB-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Read latency vs write/storage/vacuum cost.<br>
 **Follow-up ladder:** LIKE prefix? Expression index?<br>
 **Red flags:** Có index nghĩa query chắc dùng.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Wide indexes cover reads but amplify writes/cache footprint.<br>
 **Follow-up ladder:** Skip scan/version? Sort direction?<br>
 **Red flags:** Luôn đặt column selectivity cao nhất trước.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Smaller/faster reads vs workload-specific maintenance and semantics.<br>
 **Follow-up ladder:** Index-only scan visibility map?<br>
 **Red flags:** INCLUDE columns participate in uniqueness.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** MVCC read concurrency vs bloat/maintenance IO.<br>
 **Follow-up ladder:** Autovacuum thresholds? Wraparound?<br>
 **Red flags:** Vacuum shrinks table file every time.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Index may hide bad model and increase write cost.<br>
 **Follow-up ladder:** Extended statistics? Heap fetches?<br>
 **Red flags:** Seq scan trong plan luôn là root cause.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Kill frees resources but rolls back work and may retry storm.<br>
 **Follow-up ladder:** Idle in transaction? Replication slot?<br>
 **Red flags:** Autovacuum mạnh hơn luôn vượt qua old snapshot.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Write optimization consumes disk/cache.<br>
 **Follow-up ladder:** Why index on status hurts HOT?<br>
 **Red flags:** HOT means update never writes WAL.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Lower blocking takes longer/more IO and failure handling.<br>
 **Follow-up ladder:** REINDEX CONCURRENTLY? Duplicate indexes?<br>
 **Red flags:** CREATE INDEX nhanh ở staging nên an toàn prod.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Central limits prevent sprawl but teams need exception path.<br>
 **Follow-up ladder:** Per-tenant skew? Hypothetical index?<br>
 **Red flags:** Tự động tạo index theo mọi slow query.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-INDEX-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `DB-INDEX-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Plan stability vs adaptability as data evolves.<br>
 **Follow-up ladder:** Prepared statements? Correlated columns?<br>
 **Red flags:** Pin plan là fix dài hạn tốt nhất.<br>
-**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/indexing-mvcc-vacuum-and-bloat.md) + [Deep-dive](../theory/deep-dives/mvcc-snapshot-bloat-and-vacuum-emergency.md); case `DB-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

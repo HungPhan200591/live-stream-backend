@@ -78,18 +78,18 @@ Double-checked locking chỉ hợp lệ khi instance reference là `volatile`: c
 
 ## 6. Reproducer design
 
-1. Use latch/barrier/phaser to align reads/writes and loop many iterations.
-2. Separate invariant checker from worker; record seed/interleaving summary when possible.
-3. For deadlock, acquire locks in controlled opposite order and assert via thread dump/deadlock detector with timeout.
-4. For DB/multi-node race, Java barrier only starts requests; durable invariant evidence must come from DB result/constraint.
-5. Do not claim “race fixed” from one green run; define repeat/stress bound. Evidence is `NOT RUN`.
+1. Dùng latch, barrier hoặc phaser để ép các bước đọc/ghi gặp nhau đúng điểm, rồi lặp nhiều lần.
+2. Tách bộ kiểm invariant khỏi worker; ghi seed và tóm tắt interleaving khi có thể.
+3. Với deadlock, cho hai thread lấy lock theo thứ tự ngược có kiểm soát; dùng thread dump hoặc deadlock detector với timeout để assert.
+4. Với race ở database/nhiều node, Java barrier chỉ đồng bộ thời điểm gửi request; bằng chứng bền vững phải đến từ kết quả hoặc constraint của database.
+5. Không tuyên bố “đã sửa race” từ một lần chạy xanh; phải nêu số lần lặp và giới hạn stress. Evidence hiện vẫn `NOT RUN`.
 
 ## 7. Cross-layer interaction
 
-- Spring singleton beans are shared; request-local assumption must be explicit.
-- `@Transactional` coordinates database state, not arbitrary Java shared memory before/after callback.
-- Redis/database/message broker each add their own consistency/atomicity boundary.
-- Virtual threads change thread cost, not JMM rules or lock contention.
+- Spring singleton bean được dùng chung giữa request; dữ liệu chỉ thuộc request phải được biểu diễn tường minh thay vì lưu vào field mutable.
+- `@Transactional` điều phối trạng thái database, không tự tạo happens-before cho mọi Java shared memory trước/sau callback.
+- Redis, database và message broker mỗi hệ thống có ranh giới atomicity/consistency riêng; Java lock trong một JVM không khóa được node khác.
+- Virtual thread thay đổi chi phí tạo thread, không thay quy tắc JMM hoặc loại bỏ lock contention.
 
 ## 8. Trade-off matrix
 
@@ -107,6 +107,12 @@ Double-checked locking chỉ hợp lệ khi instance reference là `volatile`: c
 | --- | --- | --- |
 | `STREAM-UC-01` | Transition linearization/DB boundary | Race test |
 | `GIFT-UC-01` | Lost update/multi-field money invariant | Concurrent ledger test |
+
+### Đọc một failure theo chuỗi nhân quả
+
+Giả sử singleton service giữ `HashMap` mutable làm cache tạm. Thread A put object rồi thread B đọc mà không qua volatile, lock hoặc concurrent collection. Việc “A chạy trước theo log” không tạo happens-before; compiler, CPU cache và timing có thể khiến B quan sát state cũ hoặc object chưa được publication an toàn. Triệu chứng thường hiếm, biến mất khi debug và tăng khi tải cao. Evidence phải gồm reproducer có barrier, state cuối, thread dump/JFR nếu có contention và chính xác primitive đồng bộ đã dùng. Mitigation là confinement/immutability hoặc publication qua primitive có quy tắc happens-before rõ ràng.
+
+Một failure khác là giữ lock trong lúc gọi HTTP. Downstream chậm làm thread đầu giữ lock lâu; các thread sau xếp hàng, chiếm request/connection resource và timeout. Retry tạo thêm waiter, dẫn tới convoy và pool exhaustion. Thread dump sẽ cho nhiều thread `BLOCKED` cùng monitor, trace cho thấy remote call nằm trong critical section. Mitigation là rút I/O khỏi lock, khóa state nhỏ nhất, đặt deadline và bảo vệ invariant bằng version/conditional update nếu cần. Tăng thread không giải quyết quyền sở hữu lock duy nhất.
 | `VIEWCOUNT-UC-01` | LongAdder/exact-vs-approximate | Load/reconciliation |
 
 ## 10. Interview answer outline

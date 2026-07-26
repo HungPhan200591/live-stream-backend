@@ -29,10 +29,10 @@ Stream là một **bản mô tả đường ống xử lý**, chưa phải kết
 
 ```mermaid
 flowchart TB
-    S["Source<br/>collection, file, query"] --> I["Intermediate stages<br/>map, filter, sorted"]
-    I --> T["Terminal demand<br/>findFirst, collect, reduce"]
-    T --> R["Traverse source<br/>và tạo result"]
-    I --> B["Có thể buffer<br/>hoặc giữ resource"]
+    S["Nguồn dữ liệu<br/>collection, file, query"] --> I["Stage trung gian<br/>map, filter, sorted"]
+    I --> T["Terminal operation<br/>findFirst, collect, reduce"]
+    T --> R["Duyệt nguồn<br/>và tạo kết quả"]
+    I --> B["Có thể buffer<br/>hoặc giữ tài nguyên"]
     style S fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style I fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style T fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff

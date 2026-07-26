@@ -1,4 +1,4 @@
-# Configuration Binding, Auto-configuration and Secret Safety
+# Configuration binding, auto-configuration và an toàn secret
 
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
@@ -17,11 +17,11 @@ Audit config bằng provenance graph: canonical key, candidates, winning origin,
 
 ```mermaid
 flowchart TB
-    K["Canonical key"] --> P["Candidate sources<br/>+ precedence"]
-    P --> W["Winning origin<br/>value redacted"]
-    W --> B["Typed bind +<br/>cross-field validation"]
-    B --> C["Condition outcome"]
-    C --> G["Bean graph / capability"]
+    K["Tên key chuẩn"] --> P["Các nguồn có thể cấp<br/>+ thứ tự ưu tiên"]
+    P --> W["Nguồn thắng<br/>giá trị đã che"]
+    W --> B["Bind đúng kiểu<br/>validate nhiều field"]
+    B --> C["Kết quả condition"]
+    C --> G["Bean graph<br/>capability thực tế"]
     style K fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style P fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style W fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -75,7 +75,40 @@ Evidence `NOT RUN`; bảng là acceptance plan.
 | Restart rollout | Immutable process config | Deployment latency |
 | Central secret/config service | Rotation/audit | Bootstrap dependency |
 
-## 6. Interview outline, recap và learner write-back
+### 5.1. Pathology A — typo tạo fallback hợp lệ nhưng sai
+
+Deployment đặt `PAYMENT_TIMEOUT_MS`, trong khi canonical key bind là `payment.timeout`. Binding class có default 30 giây nên startup xanh, nhưng production giữ connections quá lâu. Search YAML không thấy nguyên nhân vì winning input đến từ environment và typo bị bỏ qua. Guard đúng cần typed `@ConfigurationProperties`, validation/range, policy cho unknown/deprecated keys và startup diagnostic chỉ log key/origin—not secret value.
+
+Evidence matrix có ba branches: missing required key phải fail; valid override phải bind đúng origin/unit; unknown/typo phải fail hoặc tạo signal theo policy. Test không được chỉ instantiate POJO vì bỏ qua real relaxed binding/property-source precedence.
+
+### 5.2. Pathology B — dependency upgrade silently đổi bean graph
+
+Upgrade starter thêm class vào classpath hoặc đổi condition ordering. Một user bean khiến `@ConditionalOnMissingBean` default back off, hoặc capability trước disabled nay bật với unsafe default. Source application không đổi nhưng actuator/security/executor surface thay. Condition report dùng để chẩn đoán, còn regression test assert capability/bean outcome và forbidden exposure, không snapshot mọi dòng report dễ brittle.
+
+Chạy startup matrix với optional class present/absent, property enabled/disabled/invalid và user override. Pin Spring Boot baseline vì condition names/defaults có thể thay theo version.
+
+### 5.3. Pathology C — secret rotation làm một nửa fleet không verify được
+
+Signer bắt đầu dùng key K2 ngay khi verifier pods khác chỉ biết K1. Requests hợp lệ fail ngẫu nhiên theo route. Rotation protocol cần key ID/version, publish/verify overlap `K1 + K2`, chuyển signer sang K2, quan sát, rồi retire K1 sau token/webhook retry horizon. Rollback giữ K1 trong overlap. Missing provider hoặc placeholder ở auth path phải fail closed/startup, không dùng default secret.
+
+### 5.4. Diagnostic/experiment walkthrough
+
+1. Ghi canonical key, type/unit/default/criticality và allowed sources.
+2. Chạy real application context theo environment matrix, capture redacted winning origin và condition outcome.
+3. Inject missing/invalid/unknown/profile-forbidden cases; assert startup/capability behavior và safe message.
+4. Upgrade candidate dependency, diff capability surface và security exposure—not just config files.
+5. Diễn tập rotation overlap/rollback với key IDs, không log material; assert old/new verify window.
+6. Ghi exact Boot/config-provider versions. Evidence `NOT RUN` cho tới khi matrix chạy.
+
+### 5.5. Cách lần từ một triệu chứng production về nguồn cấu hình
+
+Khi production dùng timeout khác dự kiến, đừng bắt đầu bằng việc sửa YAML. Hãy lần theo chuỗi: tên property chuẩn → tất cả property source → nguồn thắng theo precedence → giá trị sau relaxed binding/chuyển đơn vị → validation → condition → bean đang thật sự được tạo. Ví dụ `PAYMENT_TIMEOUT=30` có thể được bind thành 30 mili-giây hoặc 30 giây tùy kiểu field và cách viết; một default hợp lệ có thể che việc environment variable sai tên. Log an toàn chỉ nên ghi key, origin, kiểu và key version, không ghi secret value.
+
+Với auto-configuration, cần hỏi capability nào đã thay đổi chứ không chỉ bean nào xuất hiện. Một dependency mới thêm class vào classpath có thể làm condition match, tạo scheduler hoặc endpoint ngoài dự kiến. Ngược lại, một user bean vô tình làm default back off và bỏ mất timeout/retry chuẩn. Regression test nên assert capability quan sát được — endpoint có bị expose, authentication có fail closed, executor có bound — thay vì snapshot toàn bộ condition report vốn dễ đổi giữa patch version.
+
+Version boundary phải pin Spring Boot, Spring Framework và config/secret provider. Khi nâng phiên bản, chạy lại ma trận `missing/invalid/valid/unknown` cùng `class present/absent`, `bean override/no override` và rotation `K1 -> K1+K2 -> K2`. Chỉ khi raw startup outcome, health/metric và log đã redact được lưu lại mới có evidence; nội dung ở đây vẫn là kế hoạch `NOT RUN`.
+
+## 6. Dàn ý phỏng vấn, tóm tắt và phần người học viết lại
 
 Trình bày provenance→binding→validation→condition→capability, rồi production guard và rotation. Nêu startup failure-injection matrix và dependency-upgrade regression test.
 

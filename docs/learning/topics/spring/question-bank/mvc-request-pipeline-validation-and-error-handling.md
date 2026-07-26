@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `SPR-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Spring](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: [MVC Request Pipeline, Validation and Error Handling](../theory/core/mvc-request-pipeline-validation-and-error-handling.md), [MVC pipeline deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md), [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SPR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Mỗi extension point mạnh nhưng sai layer làm control flow khó hiểu.<br>
 **Follow-up ladder:** Security filter ở đâu? Async dispatch chạy lại filter không?<br>
 **Red flags:** Request đi thẳng vào controller.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Đặt concern quá thấp thiếu context, quá cao bỏ sót path.<br>
 **Follow-up ladder:** OncePerRequestFilter? Response body advice?<br>
 **Red flags:** Ba cơ chế thay thế nhau hoàn toàn.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** DTO explicit an toàn hơn binding trực tiếp entity nhưng thêm mapping.<br>
 **Follow-up ladder:** 415 vs 400? Content negotiation?<br>
 **Red flags:** Jackson tự bind an toàn mọi field của entity.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Validation lặp có chủ đích ở trust boundaries nhưng tránh copy rule mâu thuẫn.<br>
 **Follow-up ladder:** Validation groups? Cross-field rule?<br>
 **Red flags:** `@Valid` thay thế service rule.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Chi tiết giúp client nhưng tăng coupling/security exposure.<br>
 **Follow-up ladder:** Problem Details? Handler ordering?<br>
 **Red flags:** Catch `Exception` trong từng controller và trả 200.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Observability đầy đủ vs memory/PII/latency.<br>
 **Follow-up ladder:** Async/large upload? Compression?<br>
 **Red flags:** Gọi `getInputStream()` để log không ảnh hưởng downstream.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Một log/request đơn giản nhưng async lifecycle cần state.<br>
 **Follow-up ladder:** MDC leak? DeferredResult timeout?<br>
 **Red flags:** Filter chắc chắn chỉ chạy một lần.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Full context confidence cao nhưng chậm; slice cần import wiring đúng.<br>
 **Follow-up ladder:** Standalone MockMvc thiếu gì?<br>
 **Red flags:** Unit test controller chứng minh security chain.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Global consistency vs local autonomy/upgrade blast radius.<br>
 **Follow-up ladder:** Starter nội bộ? Multi-tenancy context?<br>
 **Red flags:** Một mega ControllerAdvice biết mọi domain.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-MVC-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `SPR-MVC-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Streaming giảm memory/latency nhưng không thể đổi HTTP status sau commit.<br>
 **Follow-up ladder:** SSE/WebSocket khác gì? Client disconnect?<br>
 **Red flags:** Global handler luôn sửa được response.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/mvc-request-pipeline-validation-and-error-handling.md) · [Deep-dive](../theory/deep-dives/mvc-security-validation-async-and-error-pipeline.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

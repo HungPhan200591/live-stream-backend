@@ -1,4 +1,4 @@
-# Expand–Contract Schema Migration
+# Thay đổi schema an toàn theo mô hình expand–contract
 
 > Type: `CORE`<br>
 > Domain: `database`<br>
@@ -15,13 +15,13 @@
 
 Trong rolling deployment, version cũ và mới cùng truy cập một schema. Rename/drop/`NOT NULL` ngay có thể làm một nửa fleet lỗi. Expand–contract chia thay đổi thành các trạng thái mà mỗi trạng thái đều tương thích. Đây không chỉ là chuỗi DDL: code read/write, backfill, validation, observability và rollback đều thuộc protocol.
 
-## 1. Learning objectives và từ vựng
+## 1. Mục tiêu học và từ vựng
 
 **Expand** thêm cấu trúc/capability tương thích. **Backfill** chuyển dữ liệu cũ theo batch, resumable. **Dual write/read** là bridge tạm thời; phải có owner và removal date. **Validate** chứng minh invariant trên toàn dữ liệu. **Contract** xóa cấu trúc cũ chỉ khi không còn reader/writer. **Rollback** deployment thường là roll-forward-compatible code; đảo DDL/data có thể không an toàn.
 
 Sau bài này, bạn thiết kế được migration nhiều release, chỉ ra compatibility matrix, lock/rewrite risk, backfill watermark và exit criteria.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -41,9 +41,9 @@ flowchart TB
 
 Câu cần nhớ: **mỗi bước phải deploy/rollback độc lập trong khi version lân cận vẫn chạy**.
 
-## 3. Cơ chế và worked examples
+## 3. Cơ chế và ví dụ phân tích từng bước
 
-### 3.1. Rename `display_name` thành `creator_name`
+### 3.1. Đổi tên `display_name` thành `creator_name`
 
 Không rename trực tiếp. Release A thêm nullable `creator_name`. Release B ghi cả hai, đọc new rồi fallback old; retry/upsert phải không làm hai cột drift. Backfill rows cũ theo primary-key ranges, commit từng batch, ghi watermark/rows/error và throttle theo replica lag/load. Validate `creator_name` tương ứng rule. Release C đọc new only; sau khi mọi old binary/job bị loại và safety window qua, add constraint nếu cần rồi drop old ở release D.
 
@@ -51,11 +51,11 @@ Không rename trực tiếp. Release A thêm nullable `creator_name`. Release B 
 
 Thêm cột nullable với default/application behavior tương thích; deploy writer điền giá trị; backfill; kiểm tra không còn null; thêm/validate constraint theo cách giảm lock phù hợp PostgreSQL version; cuối cùng code mới có thể giả định invariant. “Một migration thêm NOT NULL DEFAULT cho bảng lớn” có thể giữ lock/rewrite hoặc tạo load lớn tùy version/expression; phải test exact DDL trên production-like PostgreSQL 15.
 
-### 3.3. Phản ví dụ dual write không có reconciliation
+### 3.3. Phản ví dụ: ghi kép nhưng không đối soát
 
 Code ghi old thành công rồi new fail vì chúng ở khác transaction/service; read fallback che drift. Khi switch new-only, dữ liệu mất. Bridge phải cùng owner transaction khi có thể, metric mismatch và reconciliation query; nếu cross-system thì cần event/outbox/repair protocol.
 
-## 4. Failure modes, boundaries và trade-offs
+## 4. Các kiểu hỏng, ranh giới và đánh đổi
 
 - DDL lock chờ transaction cũ rồi chặn queue phía sau; đặt lock timeout, quan sát blockers và tách DDL khỏi peak.
 - Backfill một transaction khổng lồ tạo WAL, bloat, replica lag và rollback lâu. Batch nhỏ, resumable, adaptive throttle.
@@ -70,7 +70,7 @@ Khi `DB-04` active, tạo compatibility matrix `{old code,new code} × {old,expa
 
 **30 giây:** “Expand–contract giữ old/new code tương thích qua rolling deploy: thêm schema additive, bridge read/write, backfill resumable, validate, switch traffic rồi mới drop sau safety window. Rollback chủ yếu là code compatible/roll forward; backfill và destructive DDL cần recovery riêng.”
 
-## 6. Tóm tắt, bài tập và self-check
+## 6. Tóm tắt, bài tập và tự kiểm tra
 
 - Schema migration là distributed protocol giữa binaries, jobs và database.
 - Additive change đi trước assumption mới.
@@ -94,7 +94,7 @@ Khi `DB-04` active, tạo compatibility matrix `{old code,new code} × {old,expa
    **Một câu trả lời tốt phải có:** no old consumers/writers, validated data, new path stable, safety window và recovery plan.<br>
    **My answer:** `LEARNER TODO`
 
-## 7. Official references và teach-back
+## 7. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — ALTER TABLE](https://www.postgresql.org/docs/15/sql-altertable.html)
 - [PostgreSQL 15 — Explicit Locking](https://www.postgresql.org/docs/15/explicit-locking.html)
@@ -103,4 +103,3 @@ Khi `DB-04` active, tạo compatibility matrix `{old code,new code} × {old,expa
 - [ ] Tôi giải thích DDL/backfill operational risk.
 - [ ] Tôi có validation và contract exit criteria.
 - [ ] Tôi phân biệt rollback code với data reversal.
-

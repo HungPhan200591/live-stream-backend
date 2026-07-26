@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RES-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Distributed systems](../../../knowledge-depth-rubric.md#312-distributed-systems-fundamentals--p0-target-d3)<br>
-> Related theory: [Timeouts, Cancellation and Pool Exhaustion](../theory/core/timeouts-cancellation-and-pool-exhaustion.md), [coordinated resilience deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) · [Deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md) — DRAFT, evidence NOT RUN<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RES-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Ngắn fail-fast nhưng false timeout; dài giữ resource và tăng tail latency.<br>
 **Follow-up ladder:** DNS/TLS timeout? Idle timeout?<br>
 **Red flags:** Chỉ cấu hình client read timeout là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; case `RES-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); case `RES-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Aggressive cancellation tiết kiệm resource nhưng cần cleanup/idempotency.<br>
 **Follow-up ladder:** Thread interrupt? HTTP disconnect?<br>
 **Red flags:** Future timeout tự kill thread và rollback remote side effect.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Queue nhỏ reject sớm; queue lớn hấp thụ burst nhưng tăng latency.<br>
 **Follow-up ladder:** Little's Law? Caller-runs?<br>
 **Red flags:** Tăng pool/queue luôn tăng throughput.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Cardinality chi tiết hỗ trợ debug nhưng tăng telemetry cost.<br>
 **Follow-up ladder:** Coordinated omission? SLO percentile?<br>
 **Red flags:** Average 100 ms nghĩa mọi request nhanh.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Budget cứng ổn định tail nhưng có thể giảm success khi dependency jitter.<br>
 **Follow-up ladder:** Clock skew? Parallel fan-out?<br>
 **Red flags:** Mỗi downstream đặt 30s dù request budget 2s.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Tăng pool có thể chuyển overload sang DB.<br>
 **Follow-up ladder:** Hikari leak detection? Virtual threads?<br>
 **Red flags:** Thấy pending là tăng max pool ngay.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Cancellation cooperative không bảo đảm tức thời với blocking/non-interruptible code.<br>
 **Follow-up ladder:** `InterruptedException` handling? CompletableFuture cancel?<br>
 **Red flags:** Catch interrupt rồi bỏ qua.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Synthetic test repeatable nhưng không phản ánh traffic mix đầy đủ.<br>
 **Follow-up ladder:** Open vs closed model? Soak test?<br>
 **Red flags:** Chỉ báo requests/second trung bình.<br>
-**Evidence:** Experiment plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); Experiment plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Rejection bảo vệ hệ thống nhưng cần product policy cho request nào bị từ chối.<br>
 **Follow-up ladder:** Multi-tenant noisy neighbor? Brownout?<br>
 **Red flags:** Autoscaling thay thế backpressure.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-TIME-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `RES-TIME-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fail-fast giảm completion rate tức thời để giữ system recoverable.<br>
 **Follow-up ladder:** Evidence đầu tiên? Drain strategy?<br>
 **Red flags:** Root cause duy nhất là CPU app cao.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/timeouts-cancellation-and-pool-exhaustion.md) + [deep-dive](../theory/deep-dives/deadline-cancellation-pool-queue-and-thread-exhaustion.md); Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

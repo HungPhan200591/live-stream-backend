@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `MQ-01`<br>
 > Related roadmap: [Stage 5](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-5---messaging-fundamentals-rabbitmq-và-kafka)<br>
 > Related depth rubric: [Messaging](../../../knowledge-depth-rubric.md#316-rabbitmq-kafka-và-event-driven-workflow--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/messaging/theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md`<br>
+> Related theory: [Core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) · [Deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `MQ-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Flexible routing tăng topology/governance complexity.<br>
 **Follow-up ladder:** Default exchange? Competing consumers?<br>
 **Red flags:** Producer gửi thẳng consumer.<br>
-**Evidence:** Theory `NOT CREATED`; case `MQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); case `MQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Early ack tăng throughput nhưng mất message; late ack tăng duplicate/redelivery.<br>
 **Follow-up ladder:** Multiple ack? Consumer crash?<br>
 **Red flags:** Ack ngay khi nhận để tránh duplicate.<br>
-**Evidence:** Theory `NOT CREATED`; case `MQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); case `MQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** At-least-once ưu tiên durability đổi dedup cost.<br>
 **Follow-up ladder:** Redelivered flag đáng tin tới đâu?<br>
 **Red flags:** Durable queue + manual ack = exactly-once.<br>
-**Evidence:** Theory `NOT CREATED`; case `RMQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); case `RMQ-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Durability/confirm giảm throughput/tăng latency.<br>
 **Follow-up ladder:** Mandatory flag? Quorum queue?<br>
 **Red flags:** Persistent flag một mình chống mọi loss.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Inbox storage/cleanup vs duplicate safety horizon.<br>
 **Follow-up ladder:** External side effect? Bloom filter?<br>
 **Red flags:** In-memory Set dedupe production.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Retry tăng recovery nhưng trì hoãn queue và khuếch đại load.<br>
 **Follow-up ladder:** TTL/DLX cycle? Error headers?<br>
 **Red flags:** Nack requeue=true vô hạn.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Throughput vs fairness/failure blast radius.<br>
 **Follow-up ladder:** Per-consumer/channel QoS?<br>
 **Red flags:** Max prefetch luôn tốt nhất.<br>
-**Evidence:** Theory `NOT CREATED`; load test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); load test `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Reliability đổi polling/CDC, latency và ops complexity.<br>
 **Follow-up ladder:** Multiple relay workers? Ordering?<br>
 **Red flags:** Publish trong `@Transactional` là atomic với DB.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Governance giảm coupling rủi ro nhưng tăng coordination.<br>
 **Follow-up ladder:** Event notification vs event-carried state?<br>
 **Red flags:** Dùng chung một queue cho mọi consumer.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RMQ-DEL-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `RMQ-DEL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Tăng consumers có thể làm DB sập nhanh hơn.<br>
 **Follow-up ladder:** Quorum disk alarm? Hot routing key?<br>
 **Red flags:** Consumer CPU thấp nên chắc thiếu CPU.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/rabbitmq-delivery-ack-retry-and-idempotency.md) + [deep-dive](../theory/deep-dives/rabbitmq-ack-redelivery-dlx-and-consumer-recovery.md); incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

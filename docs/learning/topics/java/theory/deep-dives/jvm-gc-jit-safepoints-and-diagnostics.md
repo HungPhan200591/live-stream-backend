@@ -29,12 +29,12 @@ Application threads (mutators) allocate và thay đổi graph; GC dùng CPU/band
 
 ```mermaid
 flowchart TB
-    A["Mutator allocate"] --> G["Reachability graph"]
-    G --> L["Live set phải giữ"]
-    G --> D["Dead objects reclaim"]
-    L --> P["GC CPU / pause / bandwidth"]
+    A["Ứng dụng cấp phát"] --> G["Đồ thị object có thể truy cập"]
+    G --> L["Live set phải giữ lại"]
+    G --> D["Object chết được thu hồi"]
+    L --> P["Chi phí GC<br/>CPU / pause / bandwidth"]
     A --> J["Profile → JIT compile"]
-    J --> X["Assumption đổi → deopt"]
+    J --> X["Giả định đổi → deopt"]
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style G fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style L fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -84,10 +84,10 @@ Ví dụ: p99 tăng cùng allocation rate nhưng used-after-GC phẳng cho thấ
 
 ## 7. Experiment implication
 
-1. Fix workload/version/CPU/RAM, record warm-up and steady state separately.
-2. Capture JFR with allocation, GC pause, thread/lock and CPU events; use GC log only for question it answers.
-3. Change one variable; compare throughput/p50/p99/allocation/live-set/CPU/recovery.
-4. Preserve raw recording/log path; no numbers generated in docs. Current evidence `NOT RUN`.
+1. Cố định workload, phiên bản, CPU và RAM; ghi warm-up tách khỏi steady state.
+2. Thu JFR với event allocation, GC pause, thread/lock và CPU; chỉ dùng GC log cho câu hỏi mà nó thật sự trả lời được.
+3. Mỗi lần chỉ thay một biến; so throughput, p50/p99, allocation, live set, CPU và thời gian phục hồi.
+4. Giữ đường dẫn recording/log thô; không sinh số liệu minh họa rồi gọi là evidence. Evidence hiện vẫn `NOT RUN`.
 
 ## 8. Trade-off matrix
 
@@ -105,6 +105,14 @@ Ví dụ: p99 tăng cùng allocation rate nhưng used-after-GC phẳng cho thấ
 | `JVM-UC-01` | Allocation/GC/JIT diagnostic | JFR/workload |
 | `LIVE-UC-01` | Thread/heap/headroom capacity | 100k simulation |
 | `CHAT-UC-01` | Buffer/slow-consumer retention | Load/queue evidence |
+
+### Pathology A — tăng heap che retention leak trong thời gian ngắn
+
+Một cache không có giới hạn giữ object theo session đã hết hạn. Sau mỗi chu kỳ tải, `used-after-GC` — lượng heap còn lại sau collection — tăng dần. Tăng Xmx làm khoảng cách giữa các lần Full GC dài hơn nên incident có vẻ biến mất, nhưng live set vẫn tăng và cuối cùng container chạm giới hạn. Allocation rate cao chưa đủ kết luận leak; evidence quyết định là đường live set sau GC, class histogram và dominator/retained path chỉ ra owner giữ object. Mitigation phải đóng lifecycle hoặc đặt bound/eviction đúng, rồi chạy lại cùng workload để live set trở về plateau.
+
+### Pathology B — p99 tăng do safepoint nhưng GC pause thấp
+
+Dashboard GC chỉ hiển thị pause collection thấp, nhưng request p99 vẫn có các nhịp dừng đồng loạt. JFR cho thấy safepoint khác GC hoặc deoptimization/class loading trong warm-up; thread dump lấy ngẫu nhiên có thể bỏ lỡ. Chuỗi điều tra là căn timeline trace với JFR safepoint/JIT/lock/CPU, tách warm-up khỏi steady state và kiểm OS CPU steal. Mitigation phụ thuộc owner: làm ấm code path, giảm allocation/class churn, sửa contention hoặc capacity. Đổi collector khi chưa xác định pause owner chỉ chuyển trade-off và có thể tăng CPU.
 
 ## 10. Interview answer outline
 

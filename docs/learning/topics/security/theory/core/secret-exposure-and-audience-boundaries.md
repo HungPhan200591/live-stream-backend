@@ -1,4 +1,4 @@
-# Secret Exposure, Audience DTO và Log Redaction
+# Lộ secret, DTO theo đối tượng sử dụng và che dữ liệu nhạy cảm trong log
 
 > Type: `CORE`<br>
 > Domain: `security`<br>
@@ -11,13 +11,13 @@
 > Owner: `Project learner; Codex teaches, learner writes back`<br>
 > Updated: `2026-07-26`
 
-## 0. Vấn đề và objectives
+## 0. Vấn đề và mục tiêu học
 
 Secret thường không lộ vì crypto bị phá mà vì cùng entity/DTO/log payload được tái sử dụng sai audience. Stream key dành cho ingest owner có thể xuất hiện trong public livestream response, exception, access log, trace attribute hoặc support screenshot. Khi đã vào log/analytics, xóa và xác định người đã đọc khó hơn rotate một database value.
 
 Sau bài này, bạn phân loại secret/PII, thiết kế audience-specific DTO, redaction allowlist, storage/rotation lifecycle và incident response. Đây là preview `SEC-03`; chưa audit runtime logs hay sửa DTO.
 
-## 1. Vocabulary và mental model
+## 1. Từ vựng và mô hình tư duy
 
 **Secret** cấp authority nếu bị sở hữu: password, bearer token, refresh token, stream key, webhook signing key, private key. **Sensitive data** có thể gây hại dù không trực tiếp cấp quyền: PII, internal IDs, risk signals. **Audience boundary** xác định consumer được phép thấy field nào. **Data minimization** chỉ thu/trả/log dữ liệu cần thiết. **Redaction** loại/biến đổi sensitive fields trước sink. **Rotation** thay credential và thu hồi old credential theo overlap plan. **Secret zero** là credential ban đầu để workload lấy secrets khác.
 
@@ -39,13 +39,13 @@ flowchart TB
 
 Câu cần nhớ: **secret safety là lifecycle xuyên source, memory, API, log, backup và rotation; `@JsonIgnore` chỉ bảo vệ một serialization path**.
 
-## 2. Audience-specific design
+## 2. Thiết kế dữ liệu theo đúng đối tượng sử dụng
 
 JPA entity không phải API contract. Public `StreamSummaryDTO` chỉ có title/status/creator-safe fields. Owner ingest DTO có stream key nếu action thật sự cần, qua authenticated owner endpoint và có thể chỉ hiển thị khi rotate/create. Admin DTO cũng không mặc định được thấy secret plaintext; admin thường cần trạng thái/last-rotated, không cần credential.
 
 Mapping explicit theo audience an toàn hơn dùng một giant DTO với conditional null. Mass assignment cũng là chiều vào: request DTO không nhận `ownerId`, `role`, `streamKey` hoặc internal state nếu caller không được điều khiển. Serializer annotations là defense phụ; projection/query nên tránh load secret khi không cần để giảm memory/log/debug exposure.
 
-## 3. Storage, generation và comparison
+## 3. Lưu trữ, sinh và so sánh secret
 
 Secret phải sinh bằng cryptographically secure random với entropy đủ, không dùng timestamp/UUID yếu theo assumption. Password lưu adaptive salted hash; token/API key có thể lưu hash/HMAC verifier nếu chỉ cần compare và plaintext chỉ trả một lần. Một số integration secret cần recover plaintext để ký outbound request, khi đó encrypt at rest với key management/access audit thay vì hash.
 
@@ -53,7 +53,7 @@ Config secrets không hard-code trong source, image hay default production confi
 
 Comparison dùng constant-time primitive khi attacker quan sát timing có ý nghĩa. Không tự viết crypto. Key ID/version tách metadata không nhạy khỏi secret bytes.
 
-## 4. Logging và telemetry
+## 4. Log và telemetry
 
 Ưu tiên allowlist fields thay blacklist tên `password`: secrets có thể mang tên `token`, `authorization`, `cookie`, `streamKey`, `signature`, nested headers hoặc raw body. Log correlation ID, actor ID đã policy, action, result và error code; không log full request/response theo default.
 
@@ -61,7 +61,7 @@ Redaction phải xảy ra trước formatter/exporter, áp dụng logs, traces, 
 
 Hash secret để log vẫn nguy hiểm: stable fingerprint cho phép correlation/dictionary và có thể bị coi sensitive. Nếu cần điều tra token instance, dùng server-generated non-secret ID/JTI hoặc keyed short fingerprint với retention/access policy rõ.
 
-## 5. Worked examples
+## 5. Ví dụ phân tích từng bước
 
 ### 5.1. Public livestream DTO lộ stream key
 
@@ -75,11 +75,11 @@ Auth filter catch parse error và log full `Authorization` header. Log aggregato
 
 Stream key version K1 đang dùng. Tạo K2, owner nhận qua secure channel; trong bounded overlap ingest validator chấp nhận K1/K2 và audit version; client chuyển K2; quan sát K1 không còn dùng; revoke K1. Nếu compromise nghiêm trọng, bỏ overlap và chấp nhận reconnect. Rotation plan phải nói rollback, expiry và old-copy destruction.
 
-### 5.4. Phản ví dụ masking response
+### 5.4. Phản ví dụ: chỉ che response
 
 API trả `abcd****wxyz`. Prefix/suffix có thể đủ correlation/bruteforce khi entropy thấp; hơn nữa nó xác nhận secret exists. Chỉ trả metadata cần thiết hoặc one-time value, không masking theo thói quen.
 
-## 6. Invariants, failure modes và trade-offs
+## 6. Invariant, các kiểu hỏng và đánh đổi
 
 - Public/non-owner response không chứa stream key, token, internal secret hay credential-derived material.
 - Secret không xuất hiện trong logs/traces/metrics/errors/OpenAPI examples/fixtures.
@@ -91,13 +91,13 @@ Failure: generic reflection logger serialize request DTO → secret leaks; centr
 
 Separate DTOs tăng boilerplate nhưng tạo compile/review boundary. Dynamic field filtering ít files nhưng dễ fail-open. Encrypt reversible secrets hỗ trợ use nhưng cần key management; hash giảm breach impact nhưng không recover. Chọn theo operation.
 
-## 7. Project application và phỏng vấn
+## 7. Áp dụng vào dự án và phỏng vấn
 
 Khi `SEC-03` active, inventory entity→DTO→OpenAPI→log/trace paths; test public/owner/admin audiences; capture logs của success/error; rotate disposable stream key và verify old rejection. Không dùng production secrets và không lưu sample secret trong docs.
 
 **30 giây:** “Tôi phân loại secret theo authority và thiết kế DTO theo audience, không trả entity. Logging dùng allowlist và redact trước mọi sink; `@JsonIgnore` chỉ là defense phụ. Secret được sinh an toàn, storage theo need-to-recover, rotation có version/overlap/revoke. Khi lộ phải rotate và audit mọi copy, không chỉ xóa log line.”
 
-## 8. Tóm tắt, learner và self-check
+## 8. Tóm tắt, bài tập và tự kiểm tra
 
 - Secret exposure thường là data-flow/audience bug.
 - DTO theo audience bảo vệ cả accidental future fields.
@@ -121,7 +121,7 @@ Khi `SEC-03` active, inventory entity→DTO→OpenAPI→log/trace paths; test pu
    **Một câu trả lời tốt phải có:** revoke/rotate, scope/readers/retention/copies, evidence preservation, redaction fix và regression test.<br>
    **My answer:** `LEARNER TODO`
 
-## 9. Official references và teach-back
+## 9. Nguồn chính thức và trình bày lại
 
 - [OWASP — Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
 - [OWASP — Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)
@@ -129,4 +129,3 @@ Khi `SEC-03` active, inventory entity→DTO→OpenAPI→log/trace paths; test pu
 - [ ] Tôi map được secret lifecycle và audiences.
 - [ ] Tôi thiết kế DTO/redaction fail-safe.
 - [ ] Tôi biết exposure/rotation evidence vẫn `NOT RUN`.
-

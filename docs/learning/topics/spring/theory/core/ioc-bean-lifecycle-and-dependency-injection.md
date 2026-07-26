@@ -87,12 +87,12 @@ Hãy hình dung Spring container như một **object graph builder có lifecycle
 
 ```mermaid
 flowchart TB
-    C["Configuration metadata<br/>component + @Bean + properties"] --> D["Bean definitions<br/>công thức tạo object"]
-    D --> G["Dependency graph<br/>ai cần ai"]
-    G --> I["Create + inject<br/>bean instances"]
-    I --> P["Post-process<br/>có thể tạo proxy"]
-    P --> R["Ready beans<br/>application phục vụ request"]
-    R --> X["Context shutdown<br/>stop + destroy callbacks"]
+    C["Metadata cấu hình<br/>component + @Bean + property"] --> D["Bean definition<br/>công thức tạo object"]
+    D --> G["Đồ thị dependency<br/>ai cần ai"]
+    G --> I["Tạo + inject<br/>các bean instance"]
+    I --> P["Hậu xử lý<br/>có thể tạo proxy"]
+    P --> R["Bean sẵn sàng<br/>ứng dụng phục vụ request"]
+    R --> X["Đóng context<br/>stop + destroy callback"]
 
     style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style D fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
@@ -165,12 +165,12 @@ Lifecycle đầy đủ có nhiều hook; core cần nhớ sequence khái niệm 
 
 ```mermaid
 flowchart TB
-    A["Instantiate<br/>constructor / factory"] --> B["Populate dependencies<br/>setter + fields nếu có"]
-    B --> C["Aware callbacks<br/>bean name / context..."]
-    C --> D["Before initialization<br/>BeanPostProcessor"]
-    D --> E["Init callbacks<br/>@PostConstruct / init"]
-    E --> F["After initialization<br/>có thể trả proxy"]
-    F --> G["Bean ready<br/>publish theo scope"]
+    A["Tạo instance<br/>constructor / factory"] --> B["Gắn dependency<br/>setter + field nếu có"]
+    B --> C["Aware callback<br/>bean name / context..."]
+    C --> D["Trước initialization<br/>BeanPostProcessor"]
+    D --> E["Callback khởi tạo<br/>@PostConstruct / init"]
+    E --> F["Sau initialization<br/>có thể trả proxy"]
+    F --> G["Bean sẵn sàng<br/>publish theo scope"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff

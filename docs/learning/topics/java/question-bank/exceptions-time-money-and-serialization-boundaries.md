@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; later-LTS migration policy belongs to `JDK-02`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language, collections, algorithm and complexity](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3)<br>
-> Related theory: [Exceptions, Time, Money and Serialization Boundaries](../theory/core/exceptions-time-money-and-serialization-boundaries.md), [compatibility deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md), [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
@@ -47,7 +47,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Checked làm failure explicit nhưng gây propagation/boilerplate; unchecked giữ API gọn nhưng cần documentation/central handling tốt.<br>
 **Follow-up ladder:** `IOException`? Validation error? Spring rollback default? Library API?<br>
 **Red flags:** Checked luôn dành cho business error hoặc unchecked không cần document.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-002 — `FOUNDATION`
@@ -60,7 +60,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Top-level containment có thể bảo vệ process/request boundary nhưng không được nuốt fatal/cancellation signals.<br>
 **Follow-up ladder:** `OutOfMemoryError`? `StackOverflowError`? `InterruptedException`?<br>
 **Red flags:** Catch `Throwable` rồi log và tiếp tục mọi operation.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-003 — `FOUNDATION`
@@ -73,7 +73,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Finally phù hợp cleanup chung, nhưng try-with-resources an toàn/rõ hơn cho closeable resources.<br>
 **Follow-up ladder:** Finally không chạy khi nào? Catch order? Rethrow?<br>
 **Red flags:** Finally được đảm bảo chạy trong mọi tình huống kể cả process halt/crash.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-004 — `FOUNDATION`
@@ -86,7 +86,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Deterministic cleanup bảo vệ connection/file; abstraction trả lazy stream có thể chuyển close responsibility cho caller.<br>
 **Follow-up ladder:** `Closeable` vs `AutoCloseable`? Multiple resources? Suppressed retrieval?<br>
 **Red flags:** Garbage collector sẽ đóng file/DB connection kịp thời.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-005 — `FOUNDATION`
@@ -99,7 +99,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Legacy integration cần conversion boundary; không trộn types/timezones ngầm xuyên domain.<br>
 **Follow-up ladder:** Convert Date↔Instant? Formatter cache? JDBC mapping?<br>
 **Red flags:** `LocalDateTime` là replacement đúng cho mọi `Date` use case.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-006 — `FOUNDATION`
@@ -112,7 +112,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Instant dễ compare/audit; local/zoned cần cho lịch business và DST semantics.<br>
 **Follow-up ladder:** Birthday? Meeting? CreatedAt? Scheduled local midnight?<br>
 **Red flags:** LocalDateTime luôn là UTC vì server cấu hình UTC.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-007 — `FOUNDATION`
@@ -125,7 +125,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Chỉ lưu UTC đơn giản cho audit nhưng mất intended civil-time rule nếu schedule tương lai.<br>
 **Follow-up ladder:** Client timezone? tzdb update? Serialize zone?<br>
 **Red flags:** Time zone chỉ là offset có tên.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-008 — `FOUNDATION`
@@ -138,7 +138,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** BigDecimal chính xác/configurable nhưng chậm và verbose hơn primitive; correctness tiền ưu tiên hơn micro-speed.<br>
 **Follow-up ladder:** Minor units long? Currency? RoundingMode? Database numeric?<br>
 **Red flags:** Làm tròn double ở cuối là đủ cho mọi phép tính tiền.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-009 — `FOUNDATION`
@@ -151,7 +151,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Canonical scale đơn giản equality nhưng phải theo currency/business rule, không `stripTrailingZeros` mù quáng ở mọi boundary.<br>
 **Follow-up ladder:** TreeSet vs HashSet? Division? Rounding required exception?<br>
 **Red flags:** `compareTo == 0` luôn đồng nghĩa `equals` cho BigDecimal.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-010 — `FOUNDATION`
@@ -164,7 +164,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Native tiện trong Java-only legacy nhưng coupling/risk cao; explicit DTO JSON interoperable nhưng cần mapping/schema evolution.<br>
 **Follow-up ladder:** `Serializable` marker? Transient? Polymorphic JSON? Unknown fields?<br>
 **Red flags:** JSON an toàn tự động vì đọc được bằng mắt.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-011 — `SENIOR`
@@ -177,7 +177,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Abstraction bảo vệ API nhưng quá nhiều wrapper làm stack/cause khó đọc.<br>
 **Follow-up ladder:** SQL exception? 404 vs 409? Error code? Retry metadata?<br>
 **Red flags:** `throw new BusinessException(e.getMessage())` làm mất cause hoặc trả stack trace cho client.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-012 — `SENIOR`
@@ -190,7 +190,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Graceful degradation tăng availability nhưng chỉ hợp lệ khi fallback không phá security/business invariant.<br>
 **Follow-up ladder:** User lookup down? Invalid token? Redis timeout? InterruptedException?<br>
 **Red flags:** Catch broad là an toàn vì request không bị 500.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-013 — `SENIOR`
@@ -203,7 +203,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Giữ causal chain tăng diagnostic value; response/log vẫn phải redact sensitive details.<br>
 **Follow-up ladder:** Multiple close failures? Manual finally khác gì? Custom AutoCloseable?<br>
 **Red flags:** Close exception luôn thay exception gốc hoặc hoàn toàn bị mất.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-014 — `SENIOR`
@@ -216,7 +216,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Retry tăng recovery chance nhưng khuếch đại load/duplicate nếu classification sai.<br>
 **Follow-up ladder:** Timeout sau commit? Backoff/jitter? Deadlock? Rate limit?<br>
 **Red flags:** Retry mọi RuntimeException ba lần.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-015 — `SENIOR`
@@ -229,7 +229,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Dependency thêm wiring nhưng loại flaky test và hidden temporal coupling.<br>
 **Follow-up ladder:** Scheduler test? Token expiry? DB clock? Multiple services?<br>
 **Red flags:** Mock static now hoặc chèn sleep để test expiry.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-016 — `SENIOR`
@@ -242,7 +242,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Lưu next instant đơn giản runtime nhưng cần recompute đúng khi rule/schedule thay đổi.<br>
 **Follow-up ladder:** Monthly billing? tzdb update? Cron? Duplicate execution?<br>
 **Red flags:** Cộng 24 giờ luôn bằng cùng giờ ngày mai.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-017 — `SENIOR`
@@ -255,7 +255,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Chuẩn UTC instant dễ compare; giữ zone/local intent thêm fields nhưng cần cho schedule/audit display.<br>
 **Follow-up ladder:** PostgreSQL `timestamp` vs `timestamptz`? Precision? Client locale?<br>
 **Red flags:** Thêm chữ `Z` vào LocalDateTime mà không convert instant.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-018 — `SENIOR`
@@ -268,7 +268,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Localized input thân thiện nhưng ambiguous; canonical input dễ validate/interoperate.<br>
 **Follow-up ladder:** Turkish case mapping? Currency fraction digits? Decimal comma?<br>
 **Red flags:** UTF-8 giải quyết luôn locale/timezone semantics.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-019 — `SENIOR`
@@ -281,7 +281,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Minor-unit integer đơn giản cho fixed-scale currency; BigDecimal linh hoạt cho multi-scale nhưng policy phức tạp hơn.<br>
 **Follow-up ladder:** JPY/KWD? FX rate? Allocation remainder? Database constraint?<br>
 **Red flags:** Một global scale=2 và HALF_UP cho mọi currency/use case.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-020 — `SENIOR`
@@ -294,7 +294,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Ignore unknown tăng forward tolerance nhưng có thể che typo/security field; strict mode tốt cho internal validation nhưng cần rollout coordination.<br>
 **Follow-up ladder:** Enum value mới? Required field? Cache TTL? Polymorphic type ID?<br>
 **Red flags:** JSON schemaless nên mọi thay đổi compatible.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-021 — `SENIOR`
@@ -307,7 +307,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Native serialization tiện trong trusted/short-lived legacy use nhưng migration/interoperability/security kém.<br>
 **Follow-up ladder:** `transient`? Custom readObject? ObjectInputFilter? Session storage?<br>
 **Red flags:** Chỉ thêm fixed `serialVersionUID` là giải quyết version/security.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-022 — `ARCHITECT`
@@ -320,7 +320,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Shared contract/schema giảm drift nhưng shared code library có thể coupling rollout; conformance tests linh hoạt hơn.<br>
 **Follow-up ladder:** Region clock skew? FX version? Event replay? Database precision?<br>
 **Red flags:** Đồng bộ timezone server và một utility jar là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-023 — `ARCHITECT`
@@ -333,7 +333,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Dual formats tăng storage/code/consistency cost nhưng giảm big-bang risk.<br>
 **Follow-up ladder:** Poison message? Long cache TTL? Enum evolution? Reprocessing history?<br>
 **Red flags:** Deploy producer mới trước rồi xử lý consumer failure sau.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-BOUNDARY-024 — `EXPERT`
@@ -346,7 +346,7 @@ Current code gọi `LocalDateTime.now()` trực tiếp ở session/stream/cache 
 **Required trade-offs:** Monotonic đo duration đúng nhưng không map calendar/audit; wall clock cần cho human/event time nhưng không là total order tin cậy.<br>
 **Follow-up ladder:** Deadline propagation? Clock skew window? Lease expiry? Test fake clock?<br>
 **Red flags:** `currentTimeMillis` luôn tăng hoặc timestamp đủ tạo global ordering.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/exceptions-time-money-and-serialization-boundaries.md) · [Deep-dive](../theory/deep-dives/time-money-and-serialization-compatibility.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

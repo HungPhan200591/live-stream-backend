@@ -27,11 +27,11 @@ Hash table là một routing table trong memory: hash không tìm trực tiếp 
 
 ```mermaid
 flowchart TB
-    K["Key"] --> H["hash và spread"]
-    H --> I["index vào bucket"]
-    I --> B["scan chain hoặc tree bin"]
-    B --> E["equals xác nhận key"]
-    E --> V["value hoặc miss"]
+    K["Khóa đầu vào"] --> H["Tính hash và spread"]
+    H --> I["Chọn bucket theo index"]
+    I --> B["Duyệt chain hoặc tree bin"]
+    B --> E["equals xác nhận đúng key"]
+    E --> V["Trả value hoặc không thấy"]
     style K fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style H fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style I fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -42,10 +42,10 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    A["Arrival rate λ"] --> Q["Bounded queue<br/>latency debt"]
-    Q --> S["Service rate μ"]
+    A["Tốc độ đến λ"] --> Q["Queue hữu hạn<br/>nợ latency"]
+    Q --> S["Tốc độ xử lý μ"]
     Q --> P["Khi đầy:<br/>block, reject hoặc drop"]
-    S --> M["Đo throughput,<br/>queue age, recovery"]
+    S --> M["Đo throughput,<br/>tuổi queue, phục hồi"]
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style Q fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
     style S fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff

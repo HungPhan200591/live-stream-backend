@@ -1,4 +1,4 @@
-# Idempotency, Ambiguous Outcomes and Conditional Requests
+# Idempotency, kết quả không chắc chắn và conditional request
 
 > Type: `DEEP_DIVE`<br>
 > Domain: `architecture`<br>
@@ -13,7 +13,7 @@
 
 ## 0. Mental model và cách học
 
-Idempotency là recovery protocol cho điều client không quan sát được. Vẽ state machine cùng DB commit/response points; tại mỗi crash, hỏi owner mới có thể tiếp quản mà old owner không commit muộn hay không. So riêng với conditional request: một bên dedup command, một bên bảo vệ observed resource version.
+Idempotency là một recovery protocol — giao thức phục hồi — cho tình huống client không biết server đã làm tới đâu. Hãy đặt state machine cạnh các mốc database commit và gửi response. Ở mỗi điểm crash, cần hỏi worker mới có thể tiếp quản mà worker cũ không quay lại commit muộn hay không. Đừng trộn nó với conditional request: idempotency chống xử lý trùng một command logic, còn conditional request bảo vệ phiên bản resource mà client đã quan sát.
 
 ```mermaid
 flowchart TB
@@ -35,28 +35,28 @@ Client quan sát timeout/disconnect chỉ biết không nhận được response
 
 Một idempotency record thực tế thường có scoped key, request fingerprint, state, owner/lease/version, result reference/response metadata, timestamps và expiry. Atomic insert/unique constraint elects one owner. Concurrent duplicate either waits/polls, gets an in-progress response, or retrieves completed outcome according to contract.
 
-`FAILED` cần taxonomy: permanent validation failure có thể replay stable result; transient/infrastructure failure có thể cho takeover/retry; unknown crash state phải reconcile với business record. TTL must exceed realistic retry/offline window or business identity must remain protected elsewhere.
+Trạng thái `FAILED` cần được phân loại. Lỗi validation vĩnh viễn có thể trả lại cùng kết quả ổn định; lỗi hạ tầng tạm thời có thể cho phép tiếp quản hoặc retry; trạng thái không rõ do crash phải đối soát với bản ghi nghiệp vụ. TTL phải dài hơn cửa sổ retry/offline thực tế, hoặc danh tính nghiệp vụ phải được bảo vệ bền vững ở nơi khác để record hết hạn không mở lại cửa sổ xử lý trùng.
 
-## 2. State machine and invariants
+## 2. State machine và các invariant
 
 Worked example: worker A giữ lease 10 giây rồi bị pause; worker B takeover sau expiry. Nếu A tỉnh lại và vẫn có quyền update, cả hai có thể commit. Fencing token tăng dần phải được durable business write kiểm tra (`token >= current`) để old owner bị từ chối. Lease time đơn lẻ không tạo exclusive ownership khi process/network pause.
 
-`ABSENT -> IN_PROGRESS -> COMPLETED` là đường chính. Lease expiry/takeover không được tạo hai owners cùng commit; fencing/version hoặc DB transaction may be needed. Business row và idempotency outcome tốt nhất commit cùng durable transaction khi cùng database.
+`ABSENT -> IN_PROGRESS -> COMPLETED` là luồng thành công chính. Việc lease hết hạn và worker khác tiếp quản không được tạo ra hai owner cùng có quyền commit; cần fencing token, version check hoặc transaction database tùy thiết kế. Khi bản ghi nghiệp vụ và kết quả idempotency cùng nằm trong một database, commit chúng trong cùng transaction thường tạo ranh giới nguyên tử dễ hiểu nhất.
 
 Invariants:
 
-1. Same scoped key + same fingerprint has at most one committed business effect.
-2. Same key + different fingerprint is a conflict/security signal.
-3. Completed result remains authorized for current caller and contract version.
-4. Cleanup never removes the only durable duplicate guard too early.
+1. Cùng key trong cùng phạm vi và cùng fingerprint chỉ được có tối đa một business effect đã commit.
+2. Cùng key nhưng fingerprint khác là xung đột và có thể là tín hiệu lạm dụng.
+3. Khi phát lại kết quả đã hoàn tất, caller hiện tại vẫn phải có quyền và hiểu đúng phiên bản hợp đồng.
+4. Cleanup không được xóa lớp bảo vệ chống trùng bền vững duy nhất quá sớm.
 
 ## 3. Conditional requests
 
 Ví dụ client đọc resource ETag `v7`, gửi `If-Match: v7`; server chỉ update nếu current vẫn v7, nếu không trả precondition failure. Nó ngăn lost overwrite từ stale view. Hai POST command khác delivery nhưng cùng logical gift vẫn cần idempotency identity; ETag không tự biết chúng là duplicate.
 
-`ETag`/`If-Match` can express optimistic precondition for resource state; a failed precondition prevents overwriting a version the client did not observe. It solves concurrent resource update, not arbitrary duplicate command unless command semantics map cleanly to resource replacement/version.
+`ETag`/`If-Match` biểu diễn điều kiện optimistic concurrency cho trạng thái resource. Nếu version đã đổi kể từ lần client đọc, precondition thất bại và server từ chối ghi đè lên dữ liệu mới. Cơ chế này xử lý cập nhật đồng thời trên một resource, không tự nhận biết hai lần gửi của một command bất kỳ, trừ khi command thật sự tương ứng với việc thay thế một resource có version.
 
-Weak versus strong validators and intermediary/cache behavior matter. Validator generation must change whenever representation semantics requiring freshness change; avoid exposing sensitive internal version/state unnecessarily.
+`Strong validator` yêu cầu representation tương đương từng byte theo quy tắc HTTP; `weak validator` chỉ nói nội dung có ý nghĩa tương đương cho mục đích cache. Cách cache/proxy xử lý chúng là một phần của thiết kế. Validator phải thay đổi khi ngữ nghĩa cần độ mới thay đổi, đồng thời không nên để lộ version hoặc trạng thái nội bộ nhạy cảm nếu client không cần biết.
 
 ## 4. Fault matrix
 
@@ -71,7 +71,7 @@ Weak versus strong validators and intermediary/cache behavior matter. Validator 
 
 Chưa fault injection nào được chạy; evidence `NOT RUN`.
 
-## 5. Trade-off matrix
+## 5. Bảng đánh đổi
 
 | Storage/design | Correctness | Operability |
 | --- | --- | --- |
@@ -81,7 +81,31 @@ Chưa fault injection nào được chạy; evidence `NOT RUN`.
 | Full response replay | Stable client outcome | PII/size/version retention |
 | Result reference replay | Smaller | Reconstruct/auth/version logic |
 
-## 6. Interview outline, recap và learner write-back
+### 5.1. Pathology A — lease hết hạn nhưng owner cũ vẫn commit
+
+Worker A claim key với lease 10 giây rồi bị GC pause. B thấy lease expired và takeover. A tỉnh lại; nếu durable write chỉ kiểm key chứ không kiểm generation/fencing token, cả A và B có thể effect. Monotonic token phải được business write/transition enforce để stale owner bị từ chối. Lease chỉ nói thời gian, không tạo quyền độc quyền khi clock/process pause.
+
+### 5.2. Pathology B — full response replay lộ dữ liệu hoặc contract cũ
+
+Idempotency table lưu nguyên response gồm PII/auth-dependent fields. Sau vài ngày caller permission đổi hoặc API schema mới, replay bytes cũ có thể leak/không parse. Result reference nhỏ hơn nhưng phải re-authorize và reconstruct stable outcome; full replay cần encryption/access/retention/version policy. Same key phải scoped actor/tenant và fingerprint canonical payload, không chỉ raw header global.
+
+### 5.3. Pathology C — cleanup mở lại duplicate window
+
+TTL 24 giờ nhưng mobile client offline retry sau ba ngày. Record biến mất, natural business row không unique theo operation, effect chạy lại. Cleanup phải dựa retry/offline/provider/audit horizon và có durable natural/business identity hoặc archived duplicate guard. Table-growth cost là operability concern, không phải lý do xóa correctness state sớm.
+
+### 5.4. Thí nghiệm chèn lỗi và cách diễn giải
+
+Đặt các điểm chèn lỗi có kiểm soát ở trước khi claim, sau claim, trước/sau business commit và trước khi serialize response/kết quả. Chạy hai request đồng thời với cùng key/cùng payload rồi cùng key/khác payload; dừng owner lâu hơn lease để kiểm tra fencing; cho record hết hạn rồi retry. Assertion phải chứng minh chỉ có một business effect, kết quả trả lại ổn định hoặc xung đột đúng, replay vẫn kiểm quyền và trạng thái cũ có thể phục hồi. `If-Match` được test riêng bằng hai client cùng cập nhật từ version đã đọc. Evidence vẫn `NOT RUN`; khi chạy thật phải cố định DB isolation, timeout/retry của proxy và baseline serializer.
+
+### 5.5. Walkthrough phục hồi khi record kẹt ở `IN_PROGRESS`
+
+Giả sử worker claim key rồi crash trước business commit. Request retry nhìn thấy `IN_PROGRESS` đã quá lease. Trước khi tiếp quản, worker mới phải phân biệt “nghiệp vụ chưa xảy ra” với “đã commit nhưng record kết quả chưa cập nhật”. Nếu business row có operation ID duy nhất, nó có thể tra và hoàn tất record; nếu không có durable identity, tự chạy lại có nguy cơ tạo side effect trùng. Đây là lý do state `UNKNOWN` cần reconciliation chứ không chỉ đổi thành `FAILED`.
+
+Nếu worker cũ chỉ bị pause và quay lại sau takeover, lease hết hạn chưa đủ tước quyền commit. Fencing token tăng dần phải được kiểm tại durable write; write mang token cũ bị từ chối. Evidence gồm generation của hai owner, row count/unique constraint, business effect cuối và outcome mà hai caller nhận. Chỉ test TTL trên Redis mà không kiểm write bền vững không chứng minh fencing.
+
+Khi lưu full response để replay, cần xét authorization hiện tại, PII, schema version và retention. Khi chỉ lưu result reference, server phải tái dựng response ổn định nhưng có thể re-authorize. Cả hai lựa chọn đều cần contract cho cleanup và key rotation. Raw fault result chưa chạy nên mọi kết luận tại đây vẫn là thiết kế `NOT RUN`.
+
+## 6. Dàn ý phỏng vấn, tóm tắt và phần người học viết lại
 
 Kể ambiguous states, durable record/state/fingerprint, atomic claim và fencing. Nêu TTL cleanup window, authorization/result replay, fault matrix và contrast `If-Match`.
 

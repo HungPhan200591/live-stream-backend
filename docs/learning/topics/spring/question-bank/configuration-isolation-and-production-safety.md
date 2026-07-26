@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target `CFG-01 — dev/test/prod isolation and production fail-fast`<br>
 > Related roadmap: [Stage 0 and CFG-01](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Spring Boot](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3), [Security](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [Observability](../../../knowledge-depth-rubric.md#311-observability-reliability-và-incident-response--p0-target-d3)<br>
-> Related theory: [Configuration and Profile Safety](../theory/core/configuration-and-profile-safety.md), [configuration/auto-configuration deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/configuration-and-profile-safety.md), [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Version snapshot checked: `2026-07-26`; re-check exact Spring Boot behavior when `CFG-01` becomes active<br>
 > Updated: `2026-07-26`
 
@@ -30,10 +30,10 @@ Question bank này được chuẩn bị trước cho `CFG-01`. Nó không sửa
 
 | Topic | Foundation | Senior | Architect | Expert | Theory source |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Externalized config, precedence và profiles | 2 | 1 | 1 | 1 | `PLANNED` |
-| Secrets, defaults và fail-fast validation | 1 | 1 | 1 | 1 | `PLANNED` |
-| Dev/test surface, Actuator và logging | 0 | 2 | 0 | 0 | `PLANNED` |
-| Rollout, drift và operational governance | 0 | 0 | 1 | 0 | `PLANNED` |
+| Externalized config, precedence và profiles | 2 | 1 | 1 | 1 | [Core](../theory/core/configuration-and-profile-safety.md) / [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) |
+| Secrets, defaults và fail-fast validation | 1 | 1 | 1 | 1 | [Core](../theory/core/configuration-and-profile-safety.md) / [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) |
+| Dev/test surface, Actuator và logging | 0 | 2 | 0 | 0 | [Core](../theory/core/configuration-and-profile-safety.md) / [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) |
+| Rollout, drift và operational governance | 0 | 0 | 1 | 0 | [Core](../theory/core/configuration-and-profile-safety.md) / [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md) |
 | **Tổng** | **3** | **4** | **3** | **2** | 12 questions |
 
 ## Questions
@@ -73,8 +73,8 @@ Spring Boot externalized configuration giải quyết vấn đề gì? Vì sao c
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -116,8 +116,8 @@ Spring profile là gì và không phải là gì? Vì sao profile không tự tr
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -159,8 +159,8 @@ Phân biệt non-secret configuration, secret reference và secret value. Vì sa
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -203,8 +203,8 @@ Thiết kế `@ConfigurationProperties` và validation để production fail-fas
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -247,8 +247,8 @@ Bạn chứng minh dev/test controller, seed data, default user và Swagger khô
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -291,8 +291,8 @@ Actuator `health`, `env`, `configprops`, `mappings`, `loggers`, heap/thread dump
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -335,8 +335,8 @@ Configuration và logging tương tác thế nào để token/password/SQL param
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -379,8 +379,8 @@ Thiết kế environment configuration contract để cùng artifact được pr
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -423,8 +423,8 @@ Thiết kế secret lifecycle cho database, JWT/webhook hoặc broker credential
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -467,8 +467,8 @@ Một config change không đổi code vẫn có thể cần canary và rollback
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -511,8 +511,8 @@ Attacker hoặc deployment mistake có thể inject high-precedence config để
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -556,8 +556,8 @@ Application cần remote config/secret để startup, nhưng provider outage x�
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/configuration-and-profile-safety.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/configuration-binding-autoconfiguration-and-secret-safety.md)
 - Learning case: `CFG-01 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`

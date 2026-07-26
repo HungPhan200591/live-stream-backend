@@ -1,4 +1,4 @@
-# Ledger, Lost Update và Money Invariants
+# Ledger, lost update và các invariant về tiền
 
 > Type: `CORE`<br>
 > Domain: `database`<br>
@@ -15,7 +15,7 @@
 
 Balance là snapshot tiện đọc; ledger là lịch sử business effects có thể audit. Nếu chỉ `balance -= amount`, retry có thể trừ hai lần, concurrent writes có thể mất update, và incident không biết tiền đi đâu. Bài này dạy invariant trước schema. Đây là learning design cho gift/wallet simulation; không phải implementation hoặc bằng chứng tài chính production.
 
-## 1. Invariants và từ vựng
+## 1. Invariant và từ vựng
 
 **Ledger entry** là một effect bất biến sau khi posted; sửa sai bằng compensating entry, không edit lịch sử. **Idempotency key** định danh một logical command trong scope actor/operation. **Double-entry** ghi debit/credit cân bằng; tổng postings của một transaction bằng zero trong cùng currency/unit. **Available balance** và **book balance** có thể khác khi có holds/pending. Tiền dùng integer minor unit hoặc decimal có scale/rounding policy rõ, không dùng binary floating point.
 
@@ -27,7 +27,7 @@ Các invariant tối thiểu:
 4. Mọi effect truy vết được từ command/idempotency identity.
 5. Event downstream không được biến thành effect tiền mới nếu replay.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -49,7 +49,7 @@ flowchart TB
 
 Câu cần nhớ: **idempotency bảo vệ command identity, constraint/transaction bảo vệ money invariant, ledger bảo vệ auditability**.
 
-## 3. Cơ chế và worked examples
+## 3. Cơ chế và ví dụ phân tích từng bước
 
 Request mang key K trong scope `(sender, operation)`. Database unique constraint claim K. Nếu lần đầu, transaction conditional-debit wallet, append ledger postings, update materialized balance nếu có và append outbox. Nếu duplicate, trả lại outcome đã lưu; không “chạy lại rồi hy vọng balance giống”. Cùng key nhưng payload khác phải conflict, vì reuse identity cho intent khác là bug/client abuse.
 
@@ -67,7 +67,7 @@ Một gift 10 coins có thể debit sender wallet 10, credit creator receivable 
 
 Phản ví dụ: publish `GiftSent`, consumer trừ wallet. Broker redelivery chạy lại handler và trừ hai lần. Messaging at-least-once yêu cầu consumer dedup/business unique key; broker ack không phải money invariant.
 
-## 4. Boundaries, failure modes và decisions
+## 4. Ranh giới, các kiểu hỏng và quyết định
 
 Unique idempotency key không đủ nếu ledger insert và balance update ở transactions khác. Transaction không đủ nếu key được check bằng `SELECT` rồi insert không có unique constraint. Ledger immutable không có nghĩa không thể sửa sai: append reversal liên kết original, giữ audit trail.
 
@@ -75,7 +75,7 @@ Hot wallet row tạo contention. Alternatives gồm serialize per wallet, shard 
 
 Reconciliation so sánh independently-derived values: ledger sum với balance snapshot, outbox published state với broker/consumer effect, external statement nếu có. Alert phải chỉ ra invariant delta và repair procedure. “Exactly once” không nên là lời hứa end-to-end; thiết kế thực tế là at-least-once delivery + idempotent effect + reconciliation.
 
-## 5. Áp dụng, experiment và phỏng vấn
+## 5. Áp dụng, thí nghiệm và phỏng vấn
 
 Khi `WAL-01` active, chạy 2–100 concurrent same/different keys, inject timeout sau commit, replay event và kiểm tra: unique business effects, non-negative policy, balanced postings, stable retry response. Record SQL constraints, final ledger/balance/outbox; hiện `NOT RUN`.
 
@@ -83,7 +83,7 @@ Khi `WAL-01` active, chạy 2–100 concurrent same/different keys, inject timeo
 
 Architect follow-up: multi-currency, holds, reversal/refund, hot account, retention/privacy, restore/reconciliation after DR.
 
-## 6. Tóm tắt, bài tập và self-check
+## 6. Tóm tắt, bài tập và tự kiểm tra
 
 - Money bắt đầu từ invariant và identity, không từ controller.
 - Application pre-check không chống race; constraint/conditional write mới chống tại owner boundary.
@@ -107,7 +107,7 @@ Architect follow-up: multi-currency, holds, reversal/refund, hot account, retent
    **Một câu trả lời tốt phải có:** failure injection, durable key/outcome, concurrent retries, ledger/balance assertions và event replay.<br>
    **My answer:** `LEARNER TODO`
 
-## 7. Official references và teach-back
+## 7. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Constraints](https://www.postgresql.org/docs/15/ddl-constraints.html)
 - [PostgreSQL 15 — Transaction Isolation](https://www.postgresql.org/docs/15/transaction-iso.html)

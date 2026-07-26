@@ -17,13 +17,13 @@ JPA cho phép thao tác object, nhưng database vẫn nhận SQL và trả rows.
 
 N+1 không phải “JPA chậm” chung chung. Nó xảy ra khi một query lấy N owner rồi code kích hoạt thêm query cho từng owner. Fetch join có thể giảm round-trip nhưng join collection làm nhân rows, phá pagination hoặc dùng nhiều memory. Senior không tìm một annotation dùng mọi nơi; họ thiết kế query theo use case và output shape.
 
-## 1. Learning objectives và từ vựng
+## 1. Mục tiêu học và từ vựng
 
 Bạn cần hiểu: **persistence context** giữ identity map và managed state trong một unit of work; **dirty checking** so sánh managed state để sinh write khi flush; **flush** đồng bộ pending changes thành SQL nhưng chưa nhất thiết commit; **fetch plan** quyết định dữ liệu nào được load bằng SQL nào; **projection** lấy đúng shape DTO/scalar; **pagination** giới hạn tập kết quả theo total order.
 
 Sau bài này, bạn có thể giải thích N+1 bằng causal chain, phân biệt entity graph/fetch join/batch/projection, tránh collection-fetch pagination và đọc SQL/plan thay vì chỉ đo method time.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -59,7 +59,7 @@ Các lựa chọn fetch:
 
 Pagination có hai nhóm. Offset dễ dùng nhưng DB vẫn phải bỏ qua nhiều rows và page có thể drift khi concurrent inserts. Keyset/seek dùng last ordered key, nhanh/ổn định hơn ở page sâu nhưng không jump tùy ý và cần total order cùng index phù hợp. Dù loại nào, collection fetch join với pageable rất nguy hiểm: SQL rows là product owner×children, trong khi page cần tính theo owner. Pattern an toàn là page owner IDs trước, sau đó query detail theo IDs; giữ lại thứ tự page trong application/query.
 
-## 4. Worked examples
+## 4. Ví dụ phân tích từng bước
 
 ### 4.1. N+1 tối thiểu
 
@@ -80,7 +80,7 @@ Không load `List<Gift>` cho mỗi stream để gọi `size()`. Query page strea
 
 `select s from Stream s join fetch s.gifts` với `Pageable` có thể duplicate owner rows, khiến Hibernate de-duplicate trong memory hoặc pagination không còn theo owner. Symptom là warning, page thiếu/thừa, memory spike. Chứng minh bằng SQL log/statistics và row count; sửa bằng two-step ID pagination hoặc dedicated projection.
 
-## 5. Invariants và boundaries
+## 5. Invariant và ranh giới
 
 1. Query list phải có upper bound và total ordering.
 2. Một use case phải biết tối đa bao nhiêu SQL và rows theo input size; nếu SQL tăng tuyến tính theo N owner, đó là risk N+1.
@@ -88,7 +88,7 @@ Không load `List<Gift>` cho mỗi stream để gọi `size()`. Query page strea
 4. Entity write model không mặc định là API read model; projection là lựa chọn thiết kế, không phải workaround.
 5. `EXPLAIN` của SQL thật với bind values/data distribution mới nói về database cost; Hibernate statistics chỉ cho ORM-side signal.
 
-## 6. Failure modes và trade-offs
+## 6. Các kiểu hỏng và đánh đổi
 
 N+1: list size tăng → lazy access phát N query → network/parse/plan latency cộng dồn → endpoint p95 tăng. Evidence: statement count scaling 10/100/1000, trace spans, SQL log có kiểm soát. Mitigation phụ thuộc output: projection, fetch join, batch fetch hoặc explicit bulk query.
 
@@ -96,7 +96,7 @@ Unexpected flush: managed entity bị sửa → query tiếp theo yêu cầu flu
 
 Large page: offset 500000 → DB scan/sort/bỏ qua nhiều rows → latency tăng và data drift. Keyset giảm cost nhưng API phải mang cursor và sort key immutable/stable. Count query cũng có thể đắt; nếu UI không cần exact total, dùng `Slice`/has-next là trade-off hợp lý.
 
-## 7. Áp dụng vào project và experiment
+## 7. Áp dụng vào dự án và thí nghiệm
 
 Khi `DB-01` active, chọn endpoint list có repository/JPA path thật. Capture: số statements, SQL normalized, rows, plan `ANALYZE BUFFERS`, heap/time ở page sizes, và correctness khi có ties/concurrent insert. So sánh baseline với projection/two-step pagination trên cùng fixture. Hiện tất cả signal này `NOT RUN`; không thêm association để minh họa.
 
@@ -116,7 +116,7 @@ Khi `DB-01` active, chọn endpoint list có repository/JPA path thật. Capture
 - Flush không phải commit; exception có thể xuất hiện ở query kế tiếp.
 - Đếm query, rows, loops và buffers trước khi kết luận.
 
-## 10. Bài tập và self-check
+## 10. Bài tập và tự kiểm tra
 
 > **Bài viết của tôi — `LEARNER TODO`:** mô tả một endpoint list từ output shape tới SQL, plan, materialization; chỉ ra N+1 risk và lựa chọn sửa.
 
@@ -133,7 +133,7 @@ Khi `DB-01` active, chọn endpoint list có repository/JPA path thật. Capture
    **Một câu trả lời tốt phải có:** scalable fixture, statement/row count, plan/buffers, latency và correctness.<br>
    **My answer:** `LEARNER TODO`
 
-## 11. Official references và teach-back
+## 11. Nguồn chính thức và trình bày lại
 
 - [Hibernate ORM 6.6 User Guide — fetching, batching and pagination](https://docs.jboss.org/hibernate/orm/6.6/userguide/html_single/Hibernate_User_Guide.html)
 - [PostgreSQL 15 — Using EXPLAIN](https://www.postgresql.org/docs/15/using-explain.html)
@@ -142,4 +142,3 @@ Khi `DB-01` active, chọn endpoint list có repository/JPA path thật. Capture
 - [ ] Tôi giải thích được flush khác commit.
 - [ ] Tôi thiết kế list query không N+1 và page ổn định.
 - [ ] Tôi không bịa performance evidence.
-

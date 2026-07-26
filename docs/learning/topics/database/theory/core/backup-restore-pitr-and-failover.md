@@ -1,4 +1,4 @@
-# Backup, Restore, PITR và Failover
+# Sao lưu, khôi phục, PITR và failover
 
 > Type: `CORE`<br>
 > Domain: `database`<br>
@@ -11,13 +11,13 @@
 > Owner: `Project learner; Codex teaches, learner writes back`<br>
 > Updated: `2026-07-26`
 
-## 0. Vấn đề và objectives
+## 0. Vấn đề và mục tiêu học
 
 Backup job xanh không có nghĩa khôi phục được. Recovery cần dữ liệu, WAL, schema/config, secrets/keys, runbook, capacity và validation. **RPO** là mức dữ liệu có thể mất tính theo thời điểm; **RTO** là thời gian khôi phục service ở mức chấp nhận. PITR khôi phục cluster tới một thời điểm/transaction trước lỗi bằng base backup + WAL archive. Failover đổi primary đang phục vụ; restore tạo lại state từ backup. Hai bài toán liên quan nhưng không giống nhau.
 
 Sau bài này, bạn phân biệt logical/physical backup, PITR/failover, thiết kế drill và xác minh business invariants sau recovery.
 
-## 1. Mental model
+## 1. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -47,21 +47,21 @@ PITR: lấy base backup trước target, restore config, replay archived WAL t�
 
 Failover sang standby thường nhanh hơn restore nhưng RPO phụ thuộc sync/async và replay state. Fencing, client connection refresh, retry/idempotency và replica rebuild là phần của runbook. Backup phải ở failure domain khác cluster/account/region theo threat model; encryption vô nghĩa nếu recovery mất key.
 
-## 3. Worked examples
+## 3. Ví dụ phân tích từng bước
 
-### 3.1. Accidental delete lúc 10:15
+### 3.1. Xóa nhầm dữ liệu lúc 10:15
 
 Không restore đè production ngay. Dựng isolated cluster từ base backup, replay WAL tới ngay trước transaction delete, validate row/invariants, rồi chọn recovery: promote full cluster hoặc trích xuất/reconcile records vào live system. Nếu live system tiếp tục nhận write sau 10:15, full rewind sẽ mất writes mới; selective recovery phức tạp nhưng giảm loss. Stakeholder phải quyết định dựa RPO/business conflicts.
 
-### 3.2. Primary host mất
+### 3.2. Máy primary ngừng hoạt động
 
 Xác định primary thật sự dead/fenced, kiểm tra standby replay/lag, promote, đổi routing, run smoke/invariant checks và monitor error/retry storm. Database port mở chưa đủ: auth, sequences, extensions, app compatibility, outbox/consumer offsets và cache state cần xem. Ghi actual RTO và estimated/verified RPO.
 
-### 3.3. Phản ví dụ untested backup
+### 3.3. Phản ví dụ: backup chưa từng restore thử
 
 Nightly upload thành công nhưng retention lifecycle xóa WAL trước base backup window; lúc restore thiếu segment. Symptom chỉ xuất hiện khi disaster. Prevention là automated restore verification, WAL continuity/age alerts và recovery catalog liên kết base backup với required WAL range.
 
-## 4. Invariants, failure modes và trade-offs
+## 4. Invariant, các kiểu hỏng và đánh đổi
 
 - Recovery artifact phải có checksum, encryption/key owner, retention và restore compatibility.
 - RPO/RTO phải đo bằng drill ở data size/capacity đại diện.
@@ -71,7 +71,7 @@ Nightly upload thành công nhưng retention lifecycle xóa WAL trước base ba
 
 Frequent full backups giảm dependency chain nhưng tốn I/O/storage; incremental/WAL-efficient hơn nhưng restore phức tạp. Multi-region giảm site failure nhưng tăng cost/latency/operational risk. Logical export hữu ích object-level recovery; physical+WAL tốt cho cluster PITR. Strategy thường kết hợp theo threat model.
 
-## 5. Áp dụng, phỏng vấn và self-check
+## 5. Áp dụng, phỏng vấn và tự kiểm tra
 
 Khi `DR-01` active, định nghĩa threat scenarios, RPO/RTO, tạo backup/PITR trong môi trường disposable, inject delete/corruption/primary loss, đo từng phase và verify representative project invariants. Không xóa volume/drop schema trong batch docs này; evidence `NOT RUN`.
 
@@ -92,7 +92,7 @@ Khi `DR-01` active, định nghĩa threat scenarios, RPO/RTO, tạo backup/PITR 
    **Một câu trả lời tốt phải có:** isolated restore, target selection, full rewind loss, selective reconciliation và stakeholder decision.<br>
    **My answer:** `LEARNER TODO`
 
-## 6. Official references và teach-back
+## 6. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Backup and Restore](https://www.postgresql.org/docs/15/backup.html)
 - [PostgreSQL 15 — Continuous Archiving and PITR](https://www.postgresql.org/docs/15/continuous-archiving.html)
@@ -101,4 +101,3 @@ Khi `DR-01` active, định nghĩa threat scenarios, RPO/RTO, tạo backup/PITR 
 - [ ] Tôi nối artifact, WAL, key/config và failure domain.
 - [ ] Tôi định nghĩa validation sau recovery.
 - [ ] Tôi chỉ claim RPO/RTO sau drill.
-

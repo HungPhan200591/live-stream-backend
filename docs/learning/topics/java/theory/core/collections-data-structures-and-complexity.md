@@ -29,9 +29,9 @@ Hãy coi data structure như một **index nằm trong memory**. Dữ liệu log
 
 ```mermaid
 flowchart TB
-    A["Business invariant<br/>unique, ordered, bounded?"] --> B["Access pattern<br/>lookup, range, top-K?"]
-    B --> C["Representation<br/>array, hash, tree, heap"]
-    C --> D["Cost model<br/>time, memory, allocation"]
+    A["Invariant nghiệp vụ<br/>duy nhất, có thứ tự, hữu hạn?"] --> B["Mẫu truy cập<br/>lookup, range, top-K?"]
+    B --> C["Cấu trúc biểu diễn<br/>array, hash, tree, heap"]
+    C --> D["Mô hình chi phí<br/>thời gian, memory, allocation"]
     D --> E["Boundary thực tế<br/>DB, network, concurrency"]
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff

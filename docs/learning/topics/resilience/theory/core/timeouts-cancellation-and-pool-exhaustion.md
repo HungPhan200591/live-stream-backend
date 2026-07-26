@@ -11,7 +11,7 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
-Source canonical cho [timeout question bank](../../question-bank/timeouts-cancellation-and-pool-exhaustion.md).
+Đây là tài liệu nguồn canonical cho [timeout question bank](../../question-bank/timeouts-cancellation-and-pool-exhaustion.md).
 
 ## 0. Cách học file này
 
@@ -91,6 +91,14 @@ Caller timeout 200 ms nhưng DB query chạy 10 giây và giữ connection. Resp
 - [Timeout, retry, circuit, bulkhead and overload control](../deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md).
 - `RECONNECT-UC-01`: reconnect surge, handshake/downstream budgets.
 - `API-UC-01`: client/gateway/server timeout alignment.
+
+## 7.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — remaining deadline:** request budget 2 giây; pool acquire mất 500 ms, downstream chỉ nhận remaining budget trừ cleanup, không fresh 2 giây. Nếu remaining quá nhỏ, reject trước khi bắt đầu work chắc chắn muộn.
+
+**Worked example gần project — write timeout:** gift commit nhưng response/caller timeout. Cancellation cooperative không undo; stable idempotency key/status/reconciliation giải unknown outcome, còn resource release nằm trong `finally`.
+
+**Phản ví dụ:** dependency chậm nên tăng connection/thread pool vô hạn. Owner capacity không tăng; contention/queue/tail/retry nặng hơn. Pool/queue là admission policy có max/wait/overflow/metrics, không kho chứa overload.
 
 ## 8. Interview outline, recap và learner write-back
 

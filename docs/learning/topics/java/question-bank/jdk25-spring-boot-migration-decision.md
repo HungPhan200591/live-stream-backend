@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target `JDK-02 — JDK 25 plus exact Spring Boot/BOM candidate decision`<br>
 > Related roadmap: [Stage 0 and JDK-02](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [JVM runtime](../../../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3), [Spring Boot](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3), [Build and CI/CD](../../../knowledge-depth-rubric.md#318-git-linux-container-build-và-cicd--p1-target-d2-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/java/theory/core/jdk-platform-migration-strategy.md`<br>
+> Related theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md), [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Version snapshot checked: `2026-07-25`; must be re-checked when `JDK-02` becomes active<br>
 > Updated: `2026-07-25`
 
@@ -35,10 +35,10 @@ Level được gắn trên từng câu hỏi; không tách folder theo level.
 
 | Topic | Foundation | Senior | Architect | Expert | Theory source |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Release, support và compatibility vocabulary | 2 | 1 | 1 | 0 | `PLANNED` |
-| JDK migration, tools và behavioral drift | 1 | 2 | 0 | 1 | `PLANNED` |
-| Spring Boot/BOM/ecosystem candidate | 1 | 2 | 1 | 0 | `PLANNED` |
-| Decision gate, rollout và rollback | 0 | 1 | 2 | 1 | `PLANNED` |
+| Release, support và compatibility vocabulary | 2 | 1 | 1 | 0 | [Core](../theory/core/jdk-platform-migration-strategy.md) / [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md) |
+| JDK migration, tools và behavioral drift | 1 | 2 | 0 | 1 | [Core](../theory/core/jdk-platform-migration-strategy.md) / [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md) |
+| Spring Boot/BOM/ecosystem candidate | 1 | 2 | 1 | 0 | [Core](../theory/core/jdk-platform-migration-strategy.md) / [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md) |
+| Decision gate, rollout và rollback | 0 | 1 | 2 | 1 | [Core](../theory/core/jdk-platform-migration-strategy.md) / [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md) |
 | **Tổng** | **4** | **6** | **4** | **2** | 16 questions |
 
 ## Questions
@@ -78,8 +78,8 @@ JDK 25 là một Java SE release, còn “LTS” là cam kết của ai? Vì sao
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -121,8 +121,8 @@ Phân biệt build JDK, compiler `--release`, test runtime và production runtim
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -164,8 +164,8 @@ Final, preview, incubator và experimental feature trong JDK 25 có compatibilit
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -207,8 +207,8 @@ Spring Boot công bố “compatible up to Java 25” chứng minh điều gì, 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -251,8 +251,8 @@ Thiết kế compatibility matrix tối thiểu cho migration từ Java 21 sang 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -295,8 +295,8 @@ Vì sao Oracle khuyến nghị thử chạy application trên JDK mới trước
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -339,8 +339,8 @@ Vì sao Oracle khuyến nghị thử chạy application trên JDK mới trước
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -383,8 +383,8 @@ Spring Boot parent/BOM, Maven dependency mediation và explicit dependency versi
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -427,8 +427,8 @@ Bạn chọn nâng từ Spring Boot 3.4 sang 3.5 hay đồng thời sang major 4
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -471,8 +471,8 @@ Một migration compile và startup thành công vẫn có thể tạo behaviora
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -516,8 +516,8 @@ So sánh candidate “Java 25 + Spring Boot 3.5.x” với “Java 25 + Spring B
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -560,8 +560,8 @@ Thiết kế build, test và rollout strategy để tránh CI dùng JDK 25 nhưn
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -605,8 +605,8 @@ Rollback một JDK/Spring Boot migration gồm những gì ngoài việc deploy 
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -649,8 +649,8 @@ Một quyết định `TIME_BOXED_DEFERRED` cần những trường nào để l
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -694,8 +694,8 @@ Trong rolling deployment có cả Java 21 và Java 25 instances, những cross-v
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -739,8 +739,8 @@ Static analysis, framework support matrix và test suite đều xanh nhưng prod
 
 **Evidence:**
 
-- Theory: `NOT CREATED`
-- Deep-dive: `NOT CREATED`
+- Theory: [Core theory](../theory/core/jdk-platform-migration-strategy.md)
+- Deep-dive: [Deep-dive](../theory/deep-dives/java21-to-java25-lts-compatibility-and-rollout.md)
 - Learning case: `JDK-02 NOT CREATED`
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`

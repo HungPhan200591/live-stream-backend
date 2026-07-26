@@ -35,11 +35,11 @@ Hãy hình dung source code phải đi qua một **đường ống có nhiều c
 
 ```mermaid
 flowchart TB
-    A["Máy build<br/>JDK thực thi Maven"] --> B["Compiler contract<br/>language + API + bytecode"]
-    B --> C["Build ecosystem<br/>plugin + processor + agent"]
-    C --> D["Test và startup<br/>trên runtime đã pin"]
-    D --> E["Container / production<br/>JDK distribution + patch"]
-    E --> F["Evidence<br/>version + test + rollback"]
+    A["Máy build<br/>JDK thực thi Maven"] --> B["Hợp đồng compiler<br/>language + API + bytecode"]
+    B --> C["Hệ sinh thái build<br/>plugin + processor + agent"]
+    C --> D["Test và khởi động<br/>trên runtime đã pin"]
+    D --> E["Container / production<br/>bản phân phối + patch JDK"]
+    E --> F["Bằng chứng<br/>version + test + rollback"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
@@ -105,12 +105,12 @@ JDK-01 chỉ sở hữu platform/toolchain/Java 21/virtual-thread slice. Java la
 
 ```mermaid
 flowchart TB
-    A["1. Inventory<br/>JDK + build ecosystem"] --> B["2. Baseline Java 17<br/>version + test + startup"]
+    A["1. Kiểm kê<br/>JDK + hệ sinh thái build"] --> B["2. Baseline Java 17<br/>version + test + khởi động"]
     B --> C["3. Pin Java 21<br/>build + release + runtime"]
-    C --> D["4. Compatibility gate<br/>compile + test + startup"]
-    D --> E["5. Runtime risks<br/>agent + reflection + serialization"]
-    E --> F["6. Rollback gate<br/>artifact + runtime image"]
-    F --> G["7. Experiment riêng<br/>virtual threads"]
+    C --> D["4. Gate tương thích<br/>compile + test + khởi động"]
+    D --> E["5. Rủi ro runtime<br/>agent + reflection + serializer"]
+    E --> F["6. Gate rollback<br/>artifact + runtime image"]
+    F --> G["7. Thí nghiệm riêng<br/>virtual thread"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#009688,stroke:#fff,stroke-width:2px,color:#fff

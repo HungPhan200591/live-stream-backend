@@ -1,4 +1,4 @@
-# Proxy Self-invocation, Advice Order and Context
+# Self-invocation qua proxy, thứ tự advice và context
 
 > Type: `DEEP_DIVE`<br>
 > Domain: `spring`<br>
@@ -17,11 +17,11 @@ Viết advice như ngoặc lồng: outer chạy before, gọi inner, rồi chạ
 
 ```mermaid
 flowchart TB
-    C["Caller"] --> R["Retry advice"]
-    R --> T["Transaction advice"]
-    T --> M["Target method"]
-    M --> T2["Commit / rollback"]
-    T2 --> R2["Retry decision"]
+    C["Caller gọi proxy"] --> R["Advice retry"]
+    R --> T["Advice transaction"]
+    T --> M["Method đích"]
+    M --> T2["Commit hoặc rollback"]
+    T2 --> R2["Quyết định retry"]
     style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style R fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style T fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -78,6 +78,30 @@ Evidence hiện `NOT RUN`; sequence trên là kế hoạch, không phải kết 
 | Durable post-commit effect | Outbox/transaction synchronization có failure design |
 | Async context | Explicit capture/restore/clear |
 | Complex advice ordering | Explicit decorators + integration tests |
+
+### 6.1. Pathology walkthrough — self-call làm `REQUIRES_NEW` biến mất
+
+Public `settleGift()` trên target gọi `this.writeAudit()`, method sau có `REQUIRES_NEW`. Invocation không quay qua proxy nên advisor không mở transaction mới; audit cùng transaction outer và rollback theo outer. Class/proxy-name inspection không đủ. Integration test gọi external proxy và self-call variants, assert physical transaction/connection hoặc commit outcomes. Refactor boundary sang collaborator bean hoặc dùng explicit transaction template khi semantics cần rõ; không tự inject proxy chỉ để chữa mọi self-call.
+
+### 6.2. Pathology walkthrough — retry/transaction order làm attempt hai chạy trong doomed transaction
+
+Nếu transaction advice bọc ngoài retry, attempt một đánh transaction rollback-only; attempt hai có thể chạy tiếp nhưng outer commit ném `UnexpectedRollbackException`. Retry outer + transaction inner tạo transaction mới mỗi attempt. Tuy nhiên order đúng còn phụ thuộc operation/idempotency và exception mapping. Test inject transient failure attempt một, success attempt hai, assert transaction IDs, domain effects và logical-operation versus attempt metrics.
+
+### 6.3. Pathology walkthrough — cached hit bypass scope/authorization assumption
+
+Cache key chỉ chứa resource ID, trong khi result phụ thuộc tenant/subject permission. Nếu cache advice chạy trước authorization hoặc cache public method trả dữ liệu đã scoped cho user khác, hit path leak cross-tenant. Key/scope, advice order và invariant phải explicit; security negative test phải chạy cả miss và hit. Cache không được coi là harmless performance decorator.
+
+### 6.4. Async context/failure proof
+
+Submit task trước outer commit có thể đọc state chưa visible hoặc chạy dù outer rollback; process crash sau commit/trước submit làm task mất. Durable required effect dùng outbox, không bare `@Async`. Với non-durable async, capture allowed trace/security context, restore/clear trong `finally`, không propagate transaction resource. Test task kế tiếp để phát hiện context leak và kill around commit/submit. Pin Spring/AOP/proxy mode/executor version; evidence `NOT RUN`.
+
+### 6.5. Từ annotation đến hành vi runtime: chuỗi cần chứng minh
+
+Annotation chỉ là metadata. Hành vi runtime xuất hiện theo chuỗi: object do container tạo → bean được bọc bởi proxy có advisor phù hợp → caller giữ reference tới proxy → method call match pointcut → interceptor mở context/resource → target chạy → interceptor xử lý kết quả hoặc exception. Chỉ cần một mắt xích bị bỏ qua — object tạo bằng `new`, self-call qua `this`, method không thể intercept hoặc reference được lấy quá sớm — annotation vẫn hiện trong source nhưng advice không chạy.
+
+Diagnostic nên ghi target class, loại proxy, danh sách advisor và call path, nhưng kết luận phải dựa vào outcome. Với transaction, assert dữ liệu rollback/commit và transaction identity; với retry, assert số attempt và số transaction; với security, assert cả response lẫn không có side effect; với cache, chạy negative test trên cả miss và hit; với async, assert context được xóa ở task kế. Cách này bền hơn việc kiểm tên class chứa `$$SpringCGLIB$$` vì implementation proxy có thể đổi theo version.
+
+Ranh giới phiên bản gồm Spring Framework/AOP, proxy mode, advisor order, executor và thư viện retry/cache. Khi upgrade, chạy lại hai advice order với failure được chèn ở attempt đầu. Nếu outcome khác, đó là drift semantics cần xử lý, không nên thêm annotation hoặc `@Order` theo phỏng đoán.
 
 ## 7. Interview outline, recap và learner write-back
 

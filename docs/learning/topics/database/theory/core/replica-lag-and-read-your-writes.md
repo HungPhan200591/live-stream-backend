@@ -11,13 +11,13 @@
 > Owner: `Project learner; Codex teaches, learner writes back`<br>
 > Updated: `2026-07-26`
 
-## 0. Vấn đề và objectives
+## 0. Vấn đề và mục tiêu học
 
 Read replica tăng read capacity và isolation workload, nhưng replication bất đồng bộ tạo khoảng thời gian primary đã commit còn replica chưa replay. User vừa đổi title rồi refresh có thể thấy title cũ. “Eventual consistency” không phải câu trả lời UX; senior phải chọn consistency theo operation, đo lag nhiều chiều và có degradation/failover rule.
 
 Bạn cần phân biệt write/flush/replay lag, read-your-writes (RYW), monotonic reads, synchronous replication trade-off và promotion data-loss boundary.
 
-## 1. Mental model
+## 1. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -35,7 +35,7 @@ flowchart TB
 
 Câu cần nhớ: **commit acknowledgement và replica visibility là hai mốc khác nhau; routing phải mang consistency intent**.
 
-## 2. Cơ chế và patterns
+## 2. Cơ chế và các mẫu thiết kế
 
 Primary ghi WAL; standby nhận, ghi/flush và replay. Byte lag không trực tiếp bằng seconds: write rate thay đổi. Replay timestamp cũng không phản ánh tốt khi không có traffic. Theo dõi LSN positions, time, queue và user-visible staleness.
 
@@ -48,7 +48,7 @@ RYW patterns:
 
 Synchronous replication có thể chờ standby ở configured level trước ack, giảm data-loss window nhưng tăng write latency/availability coupling. Nó không tự khiến mọi load-balanced read có session semantics và vẫn cần topology/failure policy.
 
-## 3. Worked examples và failure modes
+## 3. Ví dụ phân tích và các kiểu hỏng
 
 Creator update stream title commit ở primary; redirect GET ngẫu nhiên tới lagging replica trả old title. Fix phù hợp có thể là response chứa updated representation, primary pin cho creator journey hoặc LSN-aware routing. Sleep 500 ms là đoán và fail khi lag spike.
 
@@ -58,7 +58,7 @@ Replica replay có thể chậm vì I/O, long-running query/conflict, network ho
 
 Failover: async standby có thể chưa nhận/replay WAL đã ack ở primary; promotion có RPO > 0. Client retries có thể tạo duplicate nếu old outcome unknown. Fencing ngăn old primary quay lại nhận write (split brain). Sau promotion cần xác minh timeline, data/invariants và reconfigure replicas, không chỉ thấy port mở.
 
-## 4. Invariants và trade-offs
+## 4. Invariant và đánh đổi
 
 - Mỗi read path tuyên bố consistency class và fallback.
 - User không quan sát state quay ngược trong cùng critical journey nếu product yêu cầu monotonicity.
@@ -67,7 +67,7 @@ Failover: async standby có thể chưa nhận/replay WAL đã ack ở primary; 
 
 Primary pin dễ triển khai nhưng giảm scale; LSN token chính xác hơn nhưng coupling DB semantics; sync replica giảm RPO nhưng ảnh hưởng p99/availability. Chọn theo business loss, read volume và topology.
 
-## 5. Áp dụng, phỏng vấn và self-check
+## 5. Áp dụng, phỏng vấn và tự kiểm tra
 
 Khi `DB-02` active, tạo delayed replica, đo commit→replay, chạy write-followed-by-read với các routing strategies, inject replica loss/promotion và ghi stale rate/p99/RPO. Hiện topology/evidence `NOT RUN`.
 
@@ -88,7 +88,7 @@ Khi `DB-02` active, tạo delayed replica, đo commit→replay, chạy write-fol
    **Một câu trả lời tốt phải có:** RPO/timeline, fencing, routing, retries/idempotency, invariants và replica rebuild.<br>
    **My answer:** `LEARNER TODO`
 
-## 6. Official references và teach-back
+## 6. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Warm Standby](https://www.postgresql.org/docs/15/warm-standby.html)
 - [PostgreSQL 15 — Monitoring Replication](https://www.postgresql.org/docs/15/monitoring-stats.html#MONITORING-PG-STAT-REPLICATION-VIEW)
@@ -97,4 +97,3 @@ Khi `DB-02` active, tạo delayed replica, đo commit→replay, chạy write-fol
 - [ ] Tôi phân loại strong và stale-tolerant reads.
 - [ ] Tôi thiết kế lag fallback không overload primary.
 - [ ] Tôi nối failover tới RPO và fencing.
-

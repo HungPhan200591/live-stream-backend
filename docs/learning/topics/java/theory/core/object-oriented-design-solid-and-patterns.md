@@ -29,11 +29,11 @@ Object/module là một **boundary sở hữu quyết định**. Nó nhận comm
 
 ```mermaid
 flowchart TB
-    C["Caller gửi intent"] --> A["Public behavior/API"]
-    A --> I["Invariant owner"]
-    I --> S["Valid state transition"]
-    I --> R["Reject invalid transition"]
-    S --> E["Persist hoặc emit effect"]
+    C["Caller gửi ý định"] --> A["Hành vi/API công khai"]
+    A --> I["Owner của invariant"]
+    I --> S["Chuyển trạng thái hợp lệ"]
+    I --> R["Từ chối chuyển trạng thái sai"]
+    S --> E["Lưu hoặc phát side effect"]
     style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style A fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style I fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff

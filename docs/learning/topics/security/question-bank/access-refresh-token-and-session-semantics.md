@@ -1,4 +1,4 @@
-# Security Interview Question Bank — Access, Refresh and Session Semantics
+# Ngân hàng câu hỏi phỏng vấn Security — access token, refresh token và ngữ nghĩa session
 
 > Status: `DRAFT`<br>
 > Domain owner: `security / identity / session`<br>
@@ -6,7 +6,7 @@
 > Related roadmap: [Stage 0 and SEC-01](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)<br>
 > Related depth rubric: [Security and identity](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/token-purpose-and-session-semantics.md)<br>
+> Related theory: [Core theory](../theory/core/token-purpose-and-session-semantics.md); [Deep-dive](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)<br>
 > Standards snapshot checked: `2026-07-25`<br>
 > Updated: `2026-07-26`
 
@@ -75,7 +75,7 @@ Access token và refresh token khác nhau về purpose, recipient, lifetime và 
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -118,7 +118,7 @@ JWT signature hợp lệ và chưa hết hạn đã đủ để authenticate/aut
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -161,7 +161,7 @@ JWT signature hợp lệ và chưa hết hạn đã đủ để authenticate/aut
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -205,7 +205,7 @@ Thiết kế mutually exclusive validation rules để access path luôn từ ch
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -249,7 +249,7 @@ Bạn thiết kế refresh-token rotation và reuse detection thế nào? Hai re
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -292,7 +292,7 @@ Refresh validation đọc Redis trước rồi fallback PostgreSQL. Làm sao b�
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -335,7 +335,7 @@ Thiết kế HTTP negative-test matrix và error/logging contract cho invalid, e
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -379,7 +379,7 @@ Chọn storage/transport cho access và refresh token trên browser, mobile và 
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -422,7 +422,7 @@ Thiết kế signing-key và token-profile rotation trong multi-instance deploym
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -465,7 +465,7 @@ Thiết kế signing-key và token-profile rotation trong multi-instance deploym
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -509,7 +509,7 @@ Refresh, logout và logout-all chạy đồng thời. Hãy phát biểu formal i
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`
@@ -553,7 +553,7 @@ Nhiều services/issuers dùng JWT khác mục đích: access, refresh, ID token
 **Evidence:**
 
 - Theory: [Core](../theory/core/token-purpose-and-session-semantics.md)
-- Deep-dive: `NOT CREATED`
+- Deep-dive: [JWT validation, key rotation and refresh reuse](../theory/deep-dives/jwt-validation-key-rotation-and-refresh-reuse.md)
 - Learning case: [SEC-01](../../../cases/sec-01-access-vs-refresh-token.md)
 - Tests/experiment: `NOT RUN`
 - Interview note: `NOT CREATED`

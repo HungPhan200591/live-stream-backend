@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `API-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [HTTP/API](../../../knowledge-depth-rubric.md#36-http-api-design-và-network-fundamentals--p0-target-d3)<br>
-> Related theory: [HTTP, REST Semantics and Idempotency](../theory/core/http-rest-semantics-and-idempotency.md), [idempotency deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core](../theory/core/http-rest-semantics-and-idempotency.md) · [Deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md) — DRAFT, evidence NOT RUN<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `API-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Idempotency giúp retry nhưng cần state/key/retention.<br>
 **Follow-up ladder:** PATCH có idempotent không? DELETE lần hai trả gì?<br>
 **Red flags:** Idempotent nghĩa mọi response giống hệt.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** CRUD purity đơn giản nhưng command endpoint có thể diễn đạt invariant rõ hơn.<br>
 **Follow-up ladder:** JSON Merge Patch vs JSON Patch? Upsert?<br>
 **Red flags:** Chọn verb theo method service.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** 202 giảm blocking nhưng bắt buộc lifecycle/observability.<br>
 **Follow-up ladder:** 200 cho create có sai? Polling interval?<br>
 **Red flags:** 202 nghĩa công việc chắc chắn thành công.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Error precision hỗ trợ client nhưng có thể lộ resource/security signal.<br>
 **Follow-up ladder:** Duplicate key? Stale version? Problem Details?<br>
 **Red flags:** Mọi business error trả 400/500.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Retention dài an toàn hơn nhưng tốn storage/privacy; DB unique mạnh hơn cache-only.<br>
 **Follow-up ladder:** Concurrent duplicates? Crash sau commit?<br>
 **Red flags:** Chỉ dùng UUID client mà không persist/compare payload.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-006 — `SENIOR`
@@ -85,18 +85,18 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Synchronous certainty không thể bảo đảm qua network failure; cần explicit operation state.<br>
 **Follow-up ladder:** Nếu response chưa lưu? Exactly-once?<br>
 **Red flags:** Timeout thì luôn gửi request mới với key mới.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-007 — `SENIOR`
 **Question:** ETag và conditional request ngăn lost update/cache race ra sao?<br>
 **Target depth:** `D2-D3` · **Interview likelihood:** `MEDIUM` · **Question type:** `COMMON_SCENARIO`<br>
-**Interviewer evaluates:** `If-Match`, `If-None-Match`, version representation.<br>
+**Interviewer evaluates:** Cách dùng `If-Match`, `If-None-Match` và biểu diễn version của resource.<br>
 **Answer outline:** Server phát ETag/version; update kèm If-Match chỉ chạy nếu version còn khớp, ngược lại 412; GET If-None-Match có thể 304. ETag phải gắn đúng representation/variant.<br>
 **Required trade-offs:** Optimistic concurrency tăng round trip/conflict handling nhưng tránh silent overwrite.<br>
 **Follow-up ladder:** Weak vs strong ETag? 409 vs 412?<br>
 **Red flags:** Last-write-wins luôn an toàn.<br>
-**Evidence:** Theory `NOT CREATED`; case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); case `API-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Message chi tiết giúp UX nhưng tăng leakage/coupling/localization burden.<br>
 **Follow-up ladder:** RFC Problem Details? Retryability field?<br>
 **Red flags:** Trả exception message trực tiếp.<br>
-**Evidence:** Theory `NOT CREATED`; project contract `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); project contract `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Central policy dễ dùng nhưng state consistency thuộc từng service.<br>
 **Follow-up ladder:** Multi-region? GDPR retention?<br>
 **Red flags:** Load balancer dedupe tạo exactly-once.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### API-HTTP-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `API-HTTP-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Atomic DB design đơn giản hơn distributed store nhưng có contention/retention.<br>
 **Follow-up ladder:** Lease expiry? Poison key? Side effect ngoài DB?<br>
 **Red flags:** Redis SETNX một mình đóng mọi crash window.<br>
-**Evidence:** Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/http-rest-semantics-and-idempotency.md) + [deep-dive](../theory/deep-dives/idempotency-ambiguous-outcomes-and-conditional-requests.md); Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

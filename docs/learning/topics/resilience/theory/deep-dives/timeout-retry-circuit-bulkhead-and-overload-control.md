@@ -33,15 +33,15 @@ flowchart TB
 
 ## 1. One policy, not independent knobs
 
-A useful order is admission/concurrency control before scarce work, then bounded pool acquisition, per-attempt timeout/cancellation, retry policy within total deadline, circuit observation/fail-fast and semantically safe fallback. Exact decorator order depends on whether breaker counts attempts or logical calls and whether bulkhead permit spans retries; choose and test it explicitly.
+Thứ tự hợp lý là admission/concurrency control trước resource khan hiếm, sau đó pool acquisition hữu hạn, timeout/cancellation cho từng attempt, retry nằm trong total deadline, circuit quan sát rồi fail-fast và cuối cùng fallback an toàn theo semantics. Thứ tự decorator cụ thể phụ thuộc breaker đếm từng attempt hay logical call và permit bulkhead có bao trùm retry không; phải chọn và test tường minh.
 
-Budget must satisfy client deadline: queue + each attempt + backoff + response margin. Maximum attempts and concurrency imply offered load. If base traffic is near capacity, even one retry can prevent recovery. Breaker only reacts after samples; proactive admission/bulkhead protects capacity before it opens.
+Budget phải nằm trong client deadline: thời gian queue cộng mỗi attempt, backoff và response margin. Maximum attempt nhân concurrency tạo offered load. Nếu base traffic đã sát capacity, chỉ một retry cũng có thể ngăn recovery. Breaker chỉ phản ứng sau khi có sample; admission/bulkhead chủ động bảo vệ capacity trước khi breaker mở.
 
 ## 2. Overload feedback loop
 
-Downstream slows → in-flight duration rises → pools/queues fill → requests wait and time out → callers retry → offered load rises → downstream slows further. Unbounded queues hide the first rejection while increasing memory and stale work. Recovery can repeat the loop when synchronized retries or half-open probes flood a cold dependency.
+Chuỗi collapse là: downstream chậm → thời gian in-flight tăng → pool/queue đầy → request chờ rồi timeout → caller retry → offered load tăng → downstream chậm hơn. Queue vô hạn che rejection đầu tiên nhưng tăng memory và stale work. Khi dependency vừa hồi phục, retry đồng bộ hoặc quá nhiều half-open probe có thể lặp lại vòng này.
 
-Controls break different edges:
+Mỗi control cắt một cạnh khác nhau trong vòng lỗi:
 
 - Deadline/cancellation bounds wasted duration.
 - Retry budget/jitter bounds extra arrivals and synchronization.
@@ -53,9 +53,9 @@ Worked example: base load 900 req/s trên capacity 1.000 req/s. Chỉ 20% reques
 
 ## 3. Sizing and signals
 
-Use measured service time, arrival rate, connection/thread limits and target utilization; do not copy pool sizes. Observe logical request rate, attempt rate, queue/acquire wait, in-use capacity, timeout by phase, cancellation completion, breaker state, rejected/fallback count, downstream latency/error and recovery time.
+Dùng service time và arrival rate đã đo, giới hạn connection/thread và target utilization; không copy pool size. Quan sát logical request rate, attempt rate, queue/acquire wait, capacity đang dùng, timeout theo phase, cancellation completion, breaker state, số reject/fallback, downstream latency/error và recovery time.
 
-Breaker minimum sample, window and thresholds need traffic awareness. Low-volume endpoints may stay closed without enough samples or react slowly; high-volume global keys may overreact to one tenant/partition. Slow-call signal can open before hard failures but must align with actual deadline/SLO.
+Minimum sample, window và threshold của breaker phải hiểu traffic. Endpoint ít tải có thể thiếu sample nên phản ứng chậm; global key tải cao có thể phản ứng quá mức vì một tenant/partition. Slow-call signal giúp mở trước hard failure nhưng phải khớp deadline/SLO thật.
 
 ## 4. Fault scenarios
 
@@ -68,7 +68,7 @@ Breaker minimum sample, window and thresholds need traffic awareness. Low-volume
 | Dependency recovery | Bounded probes/ramp, no second surge |
 | Caller cancellation | Downstream/task/permit/connection released |
 
-No experiment has run; evidence `NOT RUN`.
+Chưa có experiment nào được chạy; evidence vẫn `NOT RUN`.
 
 ## 5. Fallback correctness
 

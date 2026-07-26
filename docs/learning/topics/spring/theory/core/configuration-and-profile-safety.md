@@ -29,11 +29,11 @@ Configuration là input của bean graph. Nhiều property sources cạnh tranh 
 
 ```mermaid
 flowchart TB
-    S["Files, env, CLI,<br/>secret reference"] --> E["Environment + precedence"]
-    E --> B["Typed binding"]
+    S["File, env, CLI,<br/>tham chiếu secret"] --> E["Environment + thứ tự ưu tiên"]
+    E --> B["Binding có kiểu"]
     B --> V["Validation / fail-fast"]
-    E --> C["Auto-config conditions"]
-    V --> G["Application bean graph"]
+    E --> C["Condition của auto-config"]
+    V --> G["Bean graph của ứng dụng"]
     C --> G
     style S fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style E fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
@@ -97,6 +97,14 @@ Dev seed endpoint hoặc default password không nên chỉ dựa vào “thư�
 ## 8. Interview answer outline
 
 Mô tả source→precedence→Environment→typed bind/validate→conditional graph; phân biệt profile, property source và condition. Nêu redacted origin diagnosis, fail-fast vs optional degradation và startup matrix dev/test/prod.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — typed timeout:** bind connect/read timeout thành typed duration, validate positive/cross-field budget và fail startup khi required. Effective origin được quan sát nhưng secret value redacted.
+
+**Worked example gần project — production guard:** prod startup rejects dev/test profile, default JWT/webhook secret, exposed debug endpoint và destructive schema config. Optional analytics có thể disable observable; auth/signing capability phải fail closed.
+
+**Phản ví dụ:** đặt safe value trong `application-prod.yml` rồi tin nó thắng. Environment/command line/test override có precedence cao hơn; typo có thể fallback default. Phải audit canonical key, winning origin, binding/validation và bean/capability outcome.
 
 ## 9. Tóm tắt và learner write-back
 

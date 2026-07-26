@@ -1,4 +1,4 @@
-# Session Revocation và Cache Consistency
+# Thu hồi session và giữ cache nhất quán
 
 > Type: `CORE`<br>
 > Domain: `security`<br>
@@ -17,13 +17,13 @@ Session-backed refresh token chỉ an toàn nếu `REVOKED` trong durable store 
 
 Revocation là thay đổi security state trước expiry. Logout-one thu hồi một session/device; logout-all thu hồi toàn bộ sessions của user; global epoch/credential change có thể thu hồi một lớp credentials. TTL chỉ giới hạn stale window, không chứng minh revoke tức thì. Cache availability không được ưu tiên hơn security invariant.
 
-## 1. Objectives và vocabulary
+## 1. Mục tiêu học và từ vựng
 
 Bạn cần phân biệt **durable session record**, **session cache**, **user-session index**, **revocation epoch/version**, **positive/negative cache**, **invalidation lag** và **fail-open/fail-closed**. Sau bài này, bạn thiết kế được key ownership, logout-all algorithm, concurrent refresh/revoke handling và negative matrix cache hit/miss/down.
 
 PostgreSQL là authority cho session status. Redis là derived state để giảm lookup. User-session index ánh xạ user tới active session IDs để bounded invalidation; index này cũng là cache và có thể thiếu. Revocation epoch là monotonic version trên user/session; token/cache mang observed epoch và bị reject nếu nhỏ hơn current authoritative epoch.
 
-## 2. Mental model
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -48,7 +48,7 @@ flowchart TB
 
 Cache hit không phải security proof vĩnh viễn. Proof phải gắn version/freshness/policy. Revoke commit đi trước invalidation; crash giữa hai bước cần durable delivery, TTL hoặc authoritative recheck để residual window không vô hạn. Câu cần nhớ: **revocation state có một durable owner; cache chỉ được tăng tốc quyết định mà không đảo ngược owner**.
 
-## 3. Cơ chế lifecycle
+## 3. Cơ chế vòng đời session
 
 Login tạo session ID ngẫu nhiên, user/device metadata, status `ACTIVE`, expiry và optional token-family/version. Chỉ sau commit mới populate cache typed DTO với TTL không vượt session expiry. Refresh validator kiểm token purpose, session identity và current durable/cache policy rồi mới phát token.
 
@@ -58,7 +58,7 @@ DB commit + cache invalidation không atomic. Best-effort after-commit có crash
 
 Concurrent refresh và logout cần serialization rule. Nếu refresh đọc `ACTIVE`, logout commit, rồi refresh phát token, token mới có thể sống sau revoke. Giải pháp: lock/version/conditional update session trong transaction; phát token chỉ từ state/version đã thắng, hoặc token mang session epoch mà later validation từ chối. Exact design phụ thuộc access-token revocation policy.
 
-## 4. Worked examples
+## 4. Ví dụ phân tích từng bước
 
 ### 4.1. Stale cache sau logout-all
 
@@ -76,7 +76,7 @@ Dùng barrier: refresh đọc active nhưng tạm dừng; revoke commit; refresh
 
 TTL 30 giây vẫn cho attacker 30 giây refresh nếu cache stale; expiry đồng loạt còn tăng DB load. TTL là safety bound và capacity decision, không thay invalidation/version/recheck.
 
-## 5. Invariants, failure modes và trade-offs
+## 5. Invariant, các kiểu hỏng và đánh đổi
 
 - Durable `REVOKED` không bao giờ trở lại `ACTIVE` vì cache rebuild.
 - Logout-all bao phủ mọi active session tại linearization point đã định.
@@ -88,13 +88,13 @@ Failure chains: incomplete session index → bỏ sót key → stale refresh; in
 
 Per-session lookup chính xác nhưng thêm DB/cache cost. User epoch thu hồi nhanh toàn user nhưng role/password change làm mọi device logout và request cần current epoch. Short access TTL giảm revoke window nhưng tăng refresh traffic. Introspection mạnh hơn nhưng thêm central dependency. Chọn theo threat model/SLO.
 
-## 6. Project application và phỏng vấn
+## 6. Áp dụng vào dự án và phỏng vấn
 
 Khi `SEC-02` active: inventory session keys; tạo stale cache fixture; test logout-one/all với cache hit/miss/down, concurrent refresh, invalidation failure/retry và event reorder. Metrics: revoke-to-deny latency, stale-cache rejection, invalidation failure/backlog, DB fallback admitted/rejected. Không dùng `FLUSHALL`.
 
 **30 giây:** “PostgreSQL sở hữu session revocation; Redis chỉ là derived cache. Logout commit `REVOKED`/epoch trước, rồi invalidation có retry/repair. Cache hit phải gắn version/freshness, Redis down không fail-open. Tôi test stale key cố ý và race refresh-versus-revoke, không chỉ happy logout.”
 
-## 7. Tóm tắt, learner write-back và self-check
+## 7. Tóm tắt, bài tập diễn đạt lại và tự kiểm tra
 
 - Revocation là security state transition, không phải chỉ delete cache.
 - TTL bound stale time nhưng không bảo đảm immediate logout.
@@ -118,7 +118,7 @@ Khi `SEC-02` active: inventory session keys; tạo stale cache fixture; test log
    **Một câu trả lời tốt phải có:** barrier interleaving, linearization/version, abort/reject và final evidence.<br>
    **My answer:** `LEARNER TODO`
 
-## 8. Official references và teach-back
+## 8. Nguồn chính thức và trình bày lại
 
 - [Spring Security — Session Management](https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html)
 - [OWASP — Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)

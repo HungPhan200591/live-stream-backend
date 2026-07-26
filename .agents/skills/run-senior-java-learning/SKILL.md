@@ -107,6 +107,17 @@ Không coi file là `TEACHABLE_DRAFT` nếu thiếu một trong các điều sau
 7. Có phần áp dụng thực tế/project và góc nhìn phỏng vấn, nhưng không claim evidence chưa chạy.
 8. Deep-dive phải làm người đọc hiểu “vì sao/how it fails/how to prove”, không chỉ biết tên internals.
 
+### Language và depth review bắt buộc
+
+Trước khi gắn hoặc giữ `TEACHABLE_DRAFT`, Agent phải thực hiện một lượt đọc riêng chỉ để kiểm tra khả năng tự học, không gộp lượt này với kiểm link/metadata:
+
+1. Đọc từng đoạn như một developer Việt chưa biết topic. Phần lập luận phải là câu tiếng Việt đầy đủ chủ ngữ/ngữ cảnh; không chấp nhận kiểu ghi chú điện tín như `First inspect...`, `Fix owner...`, `Common: A, B, C` hoặc chuỗi English noun nối bằng dấu `/`.
+2. Chỉ giữ nguyên English cho tên API/type/command/metric và term ngành cần thiết. Lần đầu xuất hiện phải có nghĩa tiếng Việt hoặc một câu giải thích trực giác; các động từ nối reasoning như “kiểm tra”, “phân biệt”, “dẫn tới”, “chứng minh”, “khắc phục” phải viết bằng tiếng Việt.
+3. Với mỗi deep-dive, chọn ít nhất hai failure quan trọng và đọc liền mạch từ trạng thái ban đầu tới residual risk. Nếu người đọc phải tự suy ra một mắt xích giữa trigger, internal state, symptom, evidence và mitigation thì nội dung chưa đạt.
+4. Tự hỏi sau mỗi section: “Người chưa biết có kể lại được cơ chế bằng lời của họ không?”. Nếu chỉ có table, bullet keyword, command hoặc term mà chưa có prose dạy nền, phải viết bổ sung hoặc hạ readiness xuống `OUTLINE_ONLY`.
+5. Word count chỉ dùng để tìm file đáng nghi. Một deep-dive dưới heuristic của template cần được kiểm thủ công và ghi lý do nếu vẫn đạt; không padding và không dùng số từ để tuyên bố pass.
+6. Khi learner phản hồi “khó hiểu”, feedback đó mở lại quality gate. Phải rút claim audit pass, sửa theo đoạn/topic và chỉ phục hồi claim sau một lượt audit chéo độc lập.
+
 Nếu một preview cũ không đạt gate, giữ/đổi readiness thành `OUTLINE_ONLY`, nêu rõ chưa dùng để học và nâng cấp topic-by-topic theo roadmap thay vì tiếp tục sinh thêm outline.
 
 ## 5. Phân cấp câu hỏi
@@ -136,7 +147,7 @@ Trước khi bàn giao:
 4. Chỉ cập nhật roadmap/maturity khi evidence gate tương ứng đã tồn tại.
 5. Báo verification đã chạy, chưa chạy và điều người học phải tự teach-back.
 
-6. Với docs-only learning pack, validate tối thiểu: frontmatter/status, stable question IDs, relative links/anchors, không có evidence giả, cursor vẫn ở earliest incomplete checkpoint và `git diff --check`.
+6. Với docs-only learning pack, validate tối thiểu: frontmatter/status, stable question IDs, relative links/anchors, không có evidence giả, cursor vẫn ở earliest incomplete checkpoint, lượt đọc language/depth riêng và `git diff --check`.
 
 Nếu session dừng giữa checkpoint, giữ nguyên checkpoint và ghi next action cụ thể; không nhảy phase để tạo cảm giác tiến bộ.
 

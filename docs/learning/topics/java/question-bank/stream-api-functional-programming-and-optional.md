@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; later-LTS migration policy belongs to `JDK-02`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language, collections, algorithm and complexity](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3)<br>
-> Related theory: [Stream API, Functional Programming and Optional](../theory/core/stream-api-functional-programming-and-optional.md), [Stream internals deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/stream-api-functional-programming-and-optional.md), [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
@@ -47,7 +47,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Lambda giảm boilerplate nhưng lambda dài/có nhiều state làm code khó đọc/debug hơn named method/class.<br>
 **Follow-up ladder:** Anonymous class khác gì? `this` trong lambda? Checked exception?<br>
 **Red flags:** Lambda là object/function độc lập không cần target type.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-002 — `FOUNDATION`
@@ -60,7 +60,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Standard interfaces interoperable nhưng custom domain interface có thể diễn đạt checked exception/semantic name tốt hơn.<br>
 **Follow-up ladder:** `BiFunction`? Primitive specializations? Composition order?<br>
 **Red flags:** Consumer được dùng cho pure transformation hoặc Supplier nhận input.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-003 — `FOUNDATION`
@@ -73,7 +73,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Pure/stateless lambda dễ compose/parallelize; captured mutable state thuận tiện nhưng tăng coupling/race risk.<br>
 **Follow-up ladder:** Instance field? Loop variable? AtomicInteger workaround có nên dùng?<br>
 **Red flags:** Effectively final làm object được capture immutable.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-004 — `FOUNDATION`
@@ -86,7 +86,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Pipeline declarative/composable nhưng có thể che allocation/I/O/complexity nếu source không rõ.<br>
 **Follow-up ladder:** Infinite stream? Reuse? Closeable stream? Parallel?<br>
 **Red flags:** Đổi `List` sang `Stream` tự giảm memory hoặc database rows.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-005 — `FOUNDATION`
@@ -99,7 +99,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Laziness cho short-circuit/fusion nhưng side-effect/debug timing khó đoán nếu mental model sai.<br>
 **Follow-up ladder:** Không có terminal thì gì xảy ra? `peek`? `sorted().limit()`?<br>
 **Red flags:** Mỗi intermediate operation tạo ngay một collection đầy đủ.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-006 — `FOUNDATION`
@@ -112,7 +112,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** FlatMap diễn đạt composition tốt nhưng pipeline quá nested có thể khó đọc hơn explicit loop/method.<br>
 **Follow-up ladder:** `mapMulti`? Null mapper result? `Optional.flatMap`?<br>
 **Red flags:** FlatMap chỉ là map nhanh hơn hoặc flatten mọi cấp lồng nhau.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-007 — `FOUNDATION`
@@ -125,7 +125,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Immutable reduction rõ correctness nhưng copy-heavy cho mutable containers; `collect` phù hợp mutable reduction hơn.<br>
 **Follow-up ladder:** Sum? String concatenation? `BigDecimal`? Floating point?<br>
 **Red flags:** Dùng mutable list làm identity rồi mutate trong `reduce`.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-008 — `FOUNDATION`
@@ -138,7 +138,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Explicit absence tăng clarity nhưng dùng tràn lan ở field/parameter/DTO làm API/serialization/framework phức tạp.<br>
 **Follow-up ladder:** Empty vs error? `orElse` vs `orElseGet`? Optional collection?<br>
 **Red flags:** Optional loại bỏ hoàn toàn `NullPointerException` hoặc dùng `Optional.of(nullable)`.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-009 — `FOUNDATION`
@@ -151,7 +151,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Ngắn gọn khi intent hiển nhiên; không dùng nếu che receiver/argument mapping.<br>
 **Follow-up ladder:** `Type::instanceMethod` nhận receiver thế nào? Constructor reference?<br>
 **Red flags:** Method reference luôn nhanh hơn lambda ở runtime.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-010 — `SENIOR`
@@ -164,7 +164,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Collect giảm copying nhưng collector contract phức tạp hơn khi parallel.<br>
 **Follow-up ladder:** Three-arg reduce? `collectingAndThen`? Parallel combiner?<br>
 **Red flags:** Hai API hoàn toàn tương đương, chọn cái ngắn hơn.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-011 — `SENIOR`
@@ -177,7 +177,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** One-pass collection tiện nhưng có thể materialize lớn; database aggregation phù hợp hơn nếu source/query đủ lớn.<br>
 **Follow-up ladder:** Preserve order? Concurrent collector? Null key/value? Duplicate roles?<br>
 **Red flags:** Duplicate key exception được sửa bằng `(a,b)->a` không có invariant.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-012 — `SENIOR`
@@ -190,7 +190,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Immutable result bảo vệ ownership nhưng caller cần copy nếu mutation là requirement.<br>
 **Follow-up ladder:** `List.copyOf`? Null element? Serialization? Encounter order?<br>
 **Red flags:** `Collectors.toList()` được đảm bảo luôn là mutable `ArrayList`.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-013 — `SENIOR`
@@ -203,7 +203,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Pure pipeline dễ test nhưng đôi lúc explicit loop/transactional batch rõ side effect hơn.<br>
 **Follow-up ladder:** Logging trong `peek`? Atomic counter? DB call trong map?<br>
 **Red flags:** Dùng synchronized list trong parallel stream rồi coi pipeline đúng/nhanh.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-014 — `SENIOR`
@@ -216,7 +216,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Lazy exposure giảm upfront work nhưng chuyển lifecycle/error responsibility cho caller.<br>
 **Follow-up ladder:** Try-with-resources? Supplier<Stream>? Repository Stream?<br>
 **Red flags:** Cache một Stream để nhiều request cùng consume.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-015 — `SENIOR`
@@ -229,7 +229,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Reorder để performance chỉ hợp lệ khi không đổi result/side effects.<br>
 **Follow-up ladder:** `distinct` infinite? `takeWhile`? Ordered parallel limit?<br>
 **Red flags:** JVM tự reorder mọi operation tối ưu như SQL planner.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-016 — `SENIOR`
@@ -242,7 +242,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Determinism/order có coordination cost; bỏ order chỉ khi contract không cần.<br>
 **Follow-up ladder:** `unordered()`? Set source? Collector order? API response?<br>
 **Red flags:** Parallel stream luôn trả result khác thứ tự hoặc `findAny` luôn nhanh hơn.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-017 — `SENIOR`
@@ -255,7 +255,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Optional explicit cho caller Java nhưng không luôn phù hợp wire/persistence boundary.<br>
 **Follow-up ladder:** Repository Optional? `orElse` eager? 404 vs empty?<br>
 **Red flags:** Mọi nullable value đều bọc Optional, kể cả field và constructor arg.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-018 — `SENIOR`
@@ -268,7 +268,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Wrapper giúp compose standard APIs nhưng thay checked contract; explicit loop đôi khi rõ partial-failure policy hơn.<br>
 **Follow-up ladder:** Batch continue-on-error? Sneaky throw? Error aggregation?<br>
 **Red flags:** Catch `Exception` trong map rồi log và bỏ element không có business policy.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-019 — `SENIOR`
@@ -281,7 +281,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Loop có thể nhanh/rõ hơn hot numeric path; Stream thường tăng readability cho transformation business thông thường.<br>
 **Follow-up ladder:** `mapToLong`? JIT escape analysis? JMH warm-up? GC metric?<br>
 **Red flags:** Stream luôn chậm hoặc luôn được JVM tối ưu bằng loop.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-020 — `SENIOR`
@@ -294,7 +294,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Throughput tiềm năng đổi lấy scheduling/merge overhead, contention và khó kiểm soát resource/isolation.<br>
 **Follow-up ladder:** Common pool? Blocking DB call? Custom pool? Virtual thread?<br>
 **Red flags:** Chỉ đổi `.stream()` thành `.parallelStream()` để dùng nhiều core.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-021 — `ARCHITECT`
@@ -307,7 +307,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Per-request parallelism giảm single-request latency nhưng có thể phá total throughput/fairness dưới load.<br>
 **Follow-up ladder:** Nested parallelism? Container CPU quota? Backpressure? Shutdown?<br>
 **Red flags:** Máy có N cores nên mọi request được dùng N threads.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-022 — `ARCHITECT`
@@ -320,7 +320,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Cursor streaming giảm heap nhưng giữ DB connection/transaction lâu; pagination/batch thường vận hành dễ hơn.<br>
 **Follow-up ladder:** Lazy relation? Open Session in View? Backpressure? Error giữa stream?<br>
 **Red flags:** Stream API tự push `filter/map` thành SQL như LINQ provider.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-STREAM-023 — `EXPERT`
@@ -333,7 +333,7 @@ Current services dùng `.toList()` để map entity sang DTO, `Collectors.toSet(
 **Required trade-offs:** Custom collector có thể tránh intermediate allocation nhưng correctness burden cao; compose standard collectors thường an toàn hơn.<br>
 **Follow-up ladder:** Concurrent source? Encounter order? Mutable identity? Property test?<br>
 **Red flags:** Gắn `CONCURRENT` chỉ vì accumulator collection thread-safe.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/stream-api-functional-programming-and-optional.md) · [Deep-dive](../theory/deep-dives/stream-laziness-collectors-parallelism-and-resources.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

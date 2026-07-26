@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `RES-02`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Distributed systems](../../../knowledge-depth-rubric.md#312-distributed-systems-fundamentals--p0-target-d3)<br>
-> Related theory: [Retry, Backoff, Jitter and Retry Storms](../theory/core/retry-backoff-jitter-and-retry-storms.md), [coordinated resilience deep-dive](../theory/deep-dives/timeout-retry-circuit-bulkhead-and-overload-control.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core](../theory/core/retry-backoff-jitter-and-retry-storms.md) · [Deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md) — DRAFT, evidence NOT RUN<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `RES-02`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Retry tăng availability nhưng tăng latency/load/duplicate risk.<br>
 **Follow-up ladder:** 429/Retry-After? 404?<br>
 **Red flags:** Retry mọi exception.<br>
-**Evidence:** Theory `NOT CREATED`; case `RES-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); case `RES-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Backoff dài giảm load nhưng kéo tail/user wait.<br>
 **Follow-up ladder:** Full/equal/decorrelated jitter?<br>
 **Red flags:** Fixed delay cho fleet lớn là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Dedup state thêm storage/TTL nhưng biến ambiguous retry thành recoverable.<br>
 **Follow-up ladder:** Message redelivery? Payment?<br>
 **Red flags:** POST không bao giờ retry được.<br>
-**Evidence:** Theory `NOT CREATED`; case `RES-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); case `RES-02 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Budget thấp bỏ lỡ transient recovery; cao gây storm.<br>
 **Follow-up ladder:** Token bucket? Per-tenant?<br>
 **Red flags:** Ba lần retry luôn an toàn.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Retry gần dependency hiểu lỗi; retry ngoài có end-to-end context.<br>
 **Follow-up ladder:** Hedging? Service mesh retry?<br>
 **Red flags:** Mỗi layer retry độc lập để “an toàn hơn”.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Retry cải thiện success nhưng contention cao có thể livelock.<br>
 **Follow-up ladder:** Proxy order với `@Transactional`?<br>
 **Red flags:** Retry statement cuối trong transaction rollback-only.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Chi tiết tốt cho RCA nhưng label không bounded phá telemetry backend.<br>
 **Follow-up ladder:** Retry success có luôn tốt?<br>
 **Red flags:** Chỉ log exception cuối.<br>
-**Evidence:** Theory `NOT CREATED`; telemetry `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); telemetry `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Fake time nhanh nhưng cần ít test thật để kiểm wiring.<br>
 **Follow-up ladder:** Property-based test?<br>
 **Red flags:** Unit test thật sự sleep nhiều giây.<br>
-**Evidence:** Test plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); Test plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Central standard ngăn footgun nhưng policy cứng không hiểu domain.<br>
 **Follow-up ladder:** Kill switch? Config rollout?<br>
 **Red flags:** Một annotation retry giống nhau cho mọi call.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### RES-RETRY-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `RES-RETRY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Drop requests ngắn hạn để khôi phục sustainable throughput.<br>
 **Follow-up ladder:** Retry-after dynamic? Brownout?<br>
 **Red flags:** Scale clients để retry nhanh hơn.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/retry-backoff-jitter-and-retry-storms.md) + [deep-dive](../theory/deep-dives/retry-amplification-idempotency-and-recovery-budget.md); Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

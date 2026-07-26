@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Concurrency/JMM](../../../knowledge-depth-rubric.md#34-concurrency-jmm-và-async-model--p0-target-d3)<br>
-> Related theory: [Executors, CompletableFuture and Concurrency Control](../theory/core/executors-completablefuture-and-concurrency-control.md), [saturation/cancellation deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md), [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -34,11 +34,11 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Interview likelihood:** `HIGH` — async Java foundation.<br>
 **Question type:** `COMMON_CORE`<br>
 **Interviewer evaluates:** Result/exception/cancellation và composition.<br>
-**Answer outline:** Runnable no result/checked throw contract; Callable returns/throws; Future is handle for result/cancel/block; CompletableFuture adds completion and stage composition.<br>
+**Answer outline:** `Runnable` không trả kết quả và không khai báo checked exception; `Callable` trả kết quả hoặc ném exception; `Future` là handle để chờ/lấy kết quả hoặc hủy; `CompletableFuture` bổ sung cách hoàn tất và ghép nhiều stage.<br>
 **Required trade-offs:** Composition giảm blocking nhưng error/cancellation/context semantics phức tạp.<br>
 **Follow-up ladder:** `get` vs `join`? CompletionStage?<br>
 **Red flags:** CompletableFuture tự tạo thread cho mỗi stage.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-002 — `FOUNDATION`
@@ -51,7 +51,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Pool bảo vệ resources nhưng queue ẩn latency nếu unbounded.<br>
 **Follow-up ladder:** `shutdown` vs `shutdownNow`? Await termination?<br>
 **Red flags:** Fixed pool tự tạo backpressure.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-003 — `FOUNDATION`
@@ -60,11 +60,11 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Interview likelihood:** `HIGH` — ThreadPoolExecutor classic.<br>
 **Question type:** `COMMON_CORE`<br>
 **Interviewer evaluates:** Queue-first growth semantics và overload behavior.<br>
-**Answer outline:** Pool grows to core, then queues, then toward max only when queue cannot accept; saturation invokes rejection. Exact behavior depends queue type; bounds/metrics/rejection are part of correctness.<br>
+**Answer outline:** Pool tăng đến core size, sau đó đưa task vào queue; chỉ tăng tiếp tới max khi queue không nhận thêm. Khi cả worker và queue đều hết chỗ, rejection policy chạy. Hành vi chính xác phụ thuộc loại queue; giới hạn, metric và cách reject là một phần của correctness.<br>
 **Required trade-offs:** Large queue smooth burst nhưng tăng latency/memory; more threads increase contention/downstream load.<br>
 **Follow-up ladder:** CallerRuns? SynchronousQueue? Prestart?<br>
 **Red flags:** Max pool size luôn được dùng dù queue unbounded.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-004 — `FOUNDATION`
@@ -77,7 +77,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Implicit executor/thread execution dễ gây blocking/starvation; pass owned executor where isolation matters.<br>
 **Follow-up ladder:** `allOf`? `anyOf`? Thread of callback?<br>
 **Red flags:** Async suffix nghĩa là non-blocking I/O tự động.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-005 — `SENIOR`
@@ -90,7 +90,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Recovery fallback tăng availability nhưng có thể che partial failure/stale data.<br>
 **Follow-up ladder:** `get` wrapper? Interrupt? OrTimeout?<br>
 **Red flags:** Cancel future chắc chắn rollback side effect.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-006 — `SENIOR`
@@ -103,7 +103,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** More concurrency giảm wait idle nhưng gây saturation/context switching/downstream collapse.<br>
 **Follow-up ladder:** Little's Law? Container cores? DB pool?<br>
 **Red flags:** Threads = requests hoặc cores×2 cho mọi workload.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-007 — `SENIOR`
@@ -116,7 +116,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Automatic propagation tiện nhưng tăng hidden coupling/security surface.<br>
 **Follow-up ladder:** Virtual thread? InheritableThreadLocal? Trace context?<br>
 **Red flags:** ThreadLocal là request-local theo mặc định.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-008 — `SENIOR`
@@ -129,7 +129,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Simplicity, throughput, memory, cancellation và operational familiarity.<br>
 **Follow-up ladder:** CPU work? synchronized pinning? JDBC?<br>
 **Red flags:** Virtual threads bỏ nhu cầu rate limit/pool DB.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-009 — `ARCHITECT`
@@ -138,11 +138,11 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Interview likelihood:** `LOW` — architecture stretch.<br>
 **Question type:** `ARCHITECT_STRETCH`<br>
 **Interviewer evaluates:** Isolation, queue bounds, deadlines, shutdown và metrics.<br>
-**Answer outline:** Separate workload/failure domains; bind concurrency to CPU/downstream; bounded queues/rejection/deadline/cancel; expose active/queued/rejected/age; graceful drain; no shared common pool accidental.<br>
+**Answer outline:** Tách executor theo workload/failure domain; gắn concurrency với CPU hoặc capacity downstream; dùng queue hữu hạn, rejection, deadline và cancellation; expose số active/queued/rejected cùng queue age; drain có thời hạn khi shutdown; không vô tình dùng chung common pool.<br>
 **Required trade-offs:** More pools isolate but waste capacity/complex operations.<br>
 **Follow-up ladder:** Bulkhead? Priority? Autoscaling?<br>
 **Red flags:** Một global executor cho mọi workload.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### CON-EXEC-010 — `EXPERT`
@@ -155,7 +155,7 @@ Preview only; không active/implement `CON-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Larger pool masks cycle, not proof of correctness.<br>
 **Follow-up ladder:** Common ForkJoin compensation? Recursive tasks? Timeout?<br>
 **Red flags:** Chỉ tăng max threads.<br>
-**Evidence:** Theory `NOT CREATED`; case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/executors-completablefuture-and-concurrency-control.md) · [Deep-dive](../theory/deep-dives/executors-cancellation-context-and-backpressure.md); case `CON-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `EVT-01`<br>
 > Related roadmap: [Stage 6](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-6---reliable-event-driven-workflow)<br>
 > Related depth rubric: [Event workflow](../../../knowledge-depth-rubric.md#316-rabbitmq-kafka-và-event-driven-workflow--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/messaging/theory/core/outbox-inbox-saga-and-event-contracts.md`<br>
+> Related theory: [Core](../theory/core/outbox-inbox-saga-and-event-contracts.md) · [Deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `EVT-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Coordination tăng reliability nhưng thêm lag/storage/ops.<br>
 **Follow-up ladder:** 2PC khi nào? After-commit đủ không?<br>
 **Red flags:** `@Transactional` bao luôn broker.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Polling đơn giản nhưng latency/load; CDC mạnh hơn nhưng ops phức tạp.<br>
 **Follow-up ladder:** Claim nhiều workers? Ordering?<br>
 **Red flags:** Outbox tạo exactly-once tự động.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Retention dài tốn storage; ngắn giới hạn dedup horizon.<br>
 **Follow-up ladder:** Concurrent duplicate? Poison payload?<br>
 **Red flags:** In-memory cache đủ cho dedup.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Availability/autonomy vs temporary inconsistency/complex recovery.<br>
 **Follow-up ladder:** Orchestration vs choreography?<br>
 **Red flags:** Compensation luôn khôi phục đúng trạng thái ban đầu.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Extra writes/latency vs financial correctness.<br>
 **Follow-up ladder:** Crash sau debit? Duplicate notification?<br>
 **Red flags:** Broker message ID một mình bảo vệ wallet.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Strict order giảm parallelism và hot-key scale.<br>
 **Follow-up ladder:** Global order có cần? Gap timeout?<br>
 **Red flags:** Timestamp đủ làm total order.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Compatibility giữ legacy debt; versioning tăng topic/handler complexity.<br>
 **Follow-up ladder:** Enum evolution? Upcaster?<br>
 **Red flags:** JSON schema pass nghĩa semantic compatible.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fast recovery vs re-trigger side effects/PII exposure.<br>
 **Follow-up ladder:** Poison message repair? Replay ordering?<br>
 **Red flags:** Bấm requeue toàn DLQ là runbook.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-009 — `ARCHITECT`
@@ -118,21 +118,20 @@ First pass `EVT-REL-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Decoupling teams vs governance/observability cost.<br>
 **Follow-up ladder:** Event catalog? Shared library?<br>
 **Red flags:** Broker uptime là đủ chứng minh workflow healthy.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### EVT-REL-010 — `EXPERT`
 **Question:** Kill process tại từng crash point và chứng minh durable intent/no double-spend thế nào?<br>
 **Target depth:** `D4` · **Interview likelihood:** `LOW` · **Question type:** `EXPERT_DIAGNOSTIC`<br>
 **Interviewer evaluates:** Failure matrix, linearization point và evidence.<br>
-**Answer outline:** Enumerate before/after API idempotency claim, DB commit, relay publish/confirm/mark, consumer commit/ACK; inject kill, restart/replay, assert ledger conservation/unique gift/inbox and trace lineage.<br>
+**Answer outline:** Liệt kê điểm trước/sau khi API claim idempotency, database commit, relay publish/confirm/mark và consumer commit/ACK; chèn process kill, restart/replay; assert ledger được bảo toàn, gift/inbox duy nhất và trace lineage đầy đủ.<br>
 **Required trade-offs:** Exhaustive fault lab tốn thời gian nhưng khóa invariant critical.<br>
 **Follow-up ladder:** Network partition vs process kill? Jepsen-like limit?<br>
 **Red flags:** Một happy-path integration test chứng minh mọi crash window.<br>
-**Evidence:** Theory `NOT CREATED`; case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/outbox-inbox-saga-and-event-contracts.md) + [deep-dive](../theory/deep-dives/outbox-relay-inbox-saga-compensation-and-schema-evolution.md); case `EVT-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization
 
 Khi `EVT-01` active, link theory/case và gắn evidence thật; không đổi/reuse stable IDs.
-

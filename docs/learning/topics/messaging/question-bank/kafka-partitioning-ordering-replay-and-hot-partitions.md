@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `KFK-01`<br>
 > Related roadmap: [Stage 5](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-5---messaging-fundamentals-rabbitmq-và-kafka)<br>
 > Related depth rubric: [Messaging](../../../knowledge-depth-rubric.md#316-rabbitmq-kafka-và-event-driven-workflow--p1-target-d3)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/messaging/theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md`<br>
+> Related theory: [Core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) · [Deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `KFK-01`; Kafka là comparison/roadmap topic, không thêm dependency. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Nhiều partition tăng parallelism nhưng metadata/rebalance/order complexity.<br>
 **Follow-up ladder:** Leader/follower? ISR?<br>
 **Red flags:** Offset là global sequence toàn topic.<br>
-**Evidence:** Theory `NOT CREATED`; case `KFK-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); case `KFK-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Strong per-key order giới hạn parallelism cho hot key.<br>
 **Follow-up ladder:** Retry làm reorder? Add partitions?<br>
 **Red flags:** Kafka đảm bảo thứ tự toàn topic.<br>
-**Evidence:** Theory `NOT CREATED`; case `KFK-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); case `KFK-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Throughput batch vs replay granularity.<br>
 **Follow-up ladder:** Auto commit? Sync/async commit?<br>
 **Red flags:** Manual commit tạo exactly-once DB effect.<br>
-**Evidence:** Theory `NOT CREATED`; case `KAFKA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); case `KAFKA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Retention dài hỗ trợ recovery/audit nhưng tăng storage/privacy.<br>
 **Follow-up ladder:** Tombstone retention? Earliest/latest?<br>
 **Red flags:** Compacted topic chỉ chứa đúng một record/key mọi lúc.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Locality/order vs hotspot/parallelism.<br>
 **Follow-up ladder:** Null key? Changing partition count?<br>
 **Red flags:** Random UUID luôn là key tốt.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** More consumers không giúp nếu partitions ít hoặc downstream saturated.<br>
 **Follow-up ladder:** Lag zero nhưng event chậm?<br>
 **Red flags:** Tổng lag cao luôn do thiếu consumers.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** EOS tăng coordination/latency/config discipline.<br>
 **Follow-up ladder:** Transactional ID fencing? `read_committed`?<br>
 **Red flags:** Kafka EOS làm toàn enterprise exactly-once.<br>
-**Evidence:** Theory `NOT CREATED`; design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Online replay nhanh nhưng tranh capacity và có duplicate risk.<br>
 **Follow-up ladder:** Schema evolution old events?<br>
 **Red flags:** Reset offset production group trong giờ cao điểm.<br>
-**Evidence:** Theory `NOT CREATED`; replay plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); replay plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Kafka replay/scale vs partition/schema/operations; Rabbit routing simplicity vs long replay model.<br>
 **Follow-up ladder:** Dùng cả hai? Migration cost?<br>
 **Red flags:** Kafka luôn thay thế RabbitMQ vì scale hơn.<br>
-**Evidence:** Current project RabbitMQ `EXISTS`; Kafka dependency `NOT ADDED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); current project RabbitMQ `EXISTS`; Kafka dependency `NOT ADDED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### KAFKA-CORE-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `KAFKA-CORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Repartition tăng throughput nhưng mất simple per-entity order và gây state migration.<br>
 **Follow-up ladder:** Heavy hitter detection? Add partitions effect?<br>
 **Red flags:** Thêm partitions tự di chuyển/giải quyết existing hot key.<br>
-**Evidence:** Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/kafka-partitioning-ordering-replay-and-hot-partitions.md) + [deep-dive](../theory/deep-dives/kafka-rebalance-offsets-hot-partitions-and-exactly-once-boundaries.md); reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

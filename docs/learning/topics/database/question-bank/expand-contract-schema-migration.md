@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DB-04`<br>
 > Related roadmap: [Stage 3](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-3---postgresql-model-index-và-query-engineering)<br>
 > Related depth rubric: [PostgreSQL/SQL](../../../knowledge-depth-rubric.md#39-postgresql-sql-và-data-modeling--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/expand-contract-schema-migration.md)<br>
+> Related theory: [Core theory](../theory/core/expand-contract-schema-migration.md) · [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DB-04`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Nhiều bước chậm hơn nhưng giảm downtime/rollback risk.<br>
 **Follow-up ladder:** Rollback code sau contract?<br>
 **Red flags:** Rename/drop column và deploy app cùng lúc.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); case `DB-04 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); case `DB-04 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Immutable migrations tạo file nhiều nhưng audit/reproducibility tốt.<br>
 **Follow-up ladder:** Baseline? Out-of-order?<br>
 **Red flags:** Edit migration production đã chạy.<br>
-**Evidence:** Existing Flyway bank `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); Existing Flyway bank `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Backfill dài tăng operational work nhưng tránh long lock/rewrite.<br>
 **Follow-up ladder:** Default rewrite behavior? Check NOT VALID?<br>
 **Red flags:** Một ALTER và hy vọng maintenance window đủ.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Timeout bảo vệ traffic nhưng migration cần retry/orchestration.<br>
 **Follow-up ladder:** Concurrent index? Transactional DDL?<br>
 **Red flags:** Estimated execution 100ms nên không thể outage.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Dual-write có inconsistency window; trigger atomic hơn nhưng logic ẩn/temporary.<br>
 **Follow-up ladder:** Source of truth trong transition?<br>
 **Red flags:** COALESCE hai cột vĩnh viễn.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); migration plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); migration plan `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Nhanh hoàn tất vs replication lag/lock/IO impact.<br>
 **Follow-up ladder:** Concurrent writes? Vacuum bloat?<br>
 **Red flags:** Một UPDATE toàn bảng trong peak traffic.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Concurrent giảm blocking nhưng lâu/tốn IO và có failure cleanup.<br>
 **Follow-up ladder:** Partial/covering index?<br>
 **Red flags:** Index tồn tại nghĩa planner sẽ dùng.<br>
-**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Upgrade matrix tốn CI nhưng bắt lỗi production-only.<br>
 **Follow-up ladder:** Snapshot per release? Roll-forward recovery?<br>
 **Red flags:** H2 create-drop chứng minh PostgreSQL migration.<br>
-**Evidence:** Existing migration bank `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); Existing migration bank `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Governance giảm velocity cục bộ nhưng ngăn blast radius.<br>
 **Follow-up ladder:** Emergency migration? Tenant schemas?<br>
 **Red flags:** Shared DB nên ai cũng ALTER tùy ý.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DB-MIG-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `DB-MIG-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Fast rollback code vs data already written in new shape.<br>
 **Follow-up ladder:** Invalid index cleanup? Replication lag?<br>
 **Red flags:** Down migration tự động trong production.<br>
-**Evidence:** Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/expand-contract-schema-migration.md) + [Deep-dive](../theory/deep-dives/expand-contract-backfill-dual-write-and-rollback-safety.md); Incident drill `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

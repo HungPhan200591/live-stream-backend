@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; implementation details are not API guarantees unless stated<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language, collections, algorithm and complexity](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3)<br>
-> Related theory: [Collections, Data Structures and Complexity](../theory/core/collections-data-structures-and-complexity.md), [collection internals deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/collections-data-structures-and-complexity.md), [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
@@ -47,7 +47,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Stronger semantics như order/sort/concurrency thường thêm CPU hoặc memory cost.<br>
 **Follow-up ladder:** Null? Iteration order? Duplicate key? Immutable variants?<br>
 **Red flags:** Chọn `List` cho mọi thứ rồi tự deduplicate/search tuyến tính.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-002 — `FOUNDATION`
@@ -60,7 +60,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Array ít abstraction/overhead hơn; `ArrayList` tiện mutation/API nhưng có spare capacity, resize và boxing.<br>
 **Follow-up ladder:** Covariance? Generic array? `toArray`? Initial capacity?<br>
 **Red flags:** `ArrayList` là linked list hoặc mọi add luôn O(1) worst-case.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-003 — `FOUNDATION`
@@ -73,7 +73,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Linked structure hữu ích khi có node reference/iterator và mutation pattern phù hợp; Big-O không đủ để chọn.<br>
 **Follow-up ladder:** Queue nên dùng gì? Insert đầu? Memory per element? Benchmark?<br>
 **Red flags:** `LinkedList` insert luôn O(1) dù phải tìm index O(n).<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-004 — `FOUNDATION`
@@ -86,7 +86,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Tốc độ lookup đổi lấy memory overhead, unordered contract và dependency vào stable `equals/hashCode`.<br>
 **Follow-up ladder:** Null key? Resize? Collision? Mutable key? Tree bin?<br>
 **Red flags:** Hash code là index duy nhất hoặc collision nghĩa là mất dữ liệu cũ.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-005 — `FOUNDATION`
@@ -99,7 +99,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Membership average O(1) nhưng không đảm bảo sort/order; `LinkedHashSet`/`TreeSet` thêm order cost.<br>
 **Follow-up ladder:** Mutable element? Null? `TreeSet` uniqueness? Iteration order?<br>
 **Red flags:** Set tự so mọi phần tử với nhau O(n) cho mỗi add.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-006 — `FOUNDATION`
@@ -112,7 +112,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Ordered/sorted structures thêm memory hoặc log-time cost; hash map không có order contract để API dựa vào.<br>
 **Follow-up ladder:** Custom comparator? LRU? Range query? Null key?<br>
 **Red flags:** Dựa vào iteration order quan sát được của `HashMap`.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-007 — `FOUNDATION`
@@ -125,7 +125,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Heap hỗ trợ head priority tốt nhưng arbitrary search/remove không O(log n); deque không tự sort.<br>
 **Follow-up ladder:** `offer` vs `add`? `poll` vs `remove`? Bounded queue? Max heap?<br>
 **Red flags:** Iterating `PriorityQueue` sẽ luôn ra thứ tự sorted.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-008 — `FOUNDATION`
@@ -138,7 +138,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Natural order tiện nhưng coupling; comparator explicit linh hoạt hơn.<br>
 **Follow-up ladder:** Null handling? Stable sort? Chaining? Subtraction overflow?<br>
 **Red flags:** Comparator trả boolean hoặc dùng `a - b` cho mọi integer range.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-009 — `FOUNDATION`
@@ -151,7 +151,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Complexity loại bỏ constants/hardware; lựa chọn production còn cần memory, locality, contention và measurement.<br>
 **Follow-up ladder:** O(n+m)? Space complexity? Nested loops có luôn O(n²)?<br>
 **Red flags:** O(1) luôn nhanh hơn O(n) cho mọi input hoặc amortized nghĩa là mỗi operation O(1).<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-010 — `SENIOR`
@@ -164,7 +164,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Dư capacity giảm resize/collision nhưng tăng memory/GC footprint.<br>
 **Follow-up ladder:** Constructor capacity có bằng max entries? Treeification? Poor hash? Benchmark?<br>
 **Red flags:** Pin internal constants như API guarantee hoặc luôn đặt capacity cực lớn.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-011 — `SENIOR`
@@ -177,7 +177,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Copy/filter dễ reasoning nhưng thêm memory; in-place iterator mutation tiết kiệm hơn nhưng API hạn chế.<br>
 **Follow-up ladder:** Set value có structural không? Enhanced for? Snapshot iterator? Multi-thread?<br>
 **Red flags:** Catch `ConcurrentModificationException` rồi retry hoặc coi exception luôn do nhiều thread.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-012 — `SENIOR`
@@ -190,7 +190,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Copy bảo vệ invariant nhưng tốn O(n) time/memory; live view ít copy nhưng temporal coupling.<br>
 **Follow-up ladder:** `List.copyOf`? Null? Mutable element? Serialization?<br>
 **Red flags:** `Collections.unmodifiableList` làm backing list immutable.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-013 — `SENIOR`
@@ -203,7 +203,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Concurrent map thêm coordination/semantic constraints; immutable snapshot hoặc actor ownership có thể đơn giản hơn.<br>
 **Follow-up ladder:** Null key/value? `computeIfAbsent` side effect? Size under writes? JMM visibility?<br>
 **Red flags:** `containsKey` rồi `put` được coi atomic vì map concurrent.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-014 — `SENIOR`
@@ -216,7 +216,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Hash set thêm overhead/không order; với tập rất nhỏ chênh lệch performance có thể không đáng kể nhưng semantics vẫn quan trọng.<br>
 **Follow-up ladder:** EnumSet? Stable response order? Case normalization? Authorization cache?<br>
 **Red flags:** Chọn Set chỉ vì O(1) mà bỏ qua stable order/API output.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-015 — `SENIOR`
@@ -229,7 +229,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Hashing dùng memory và average assumptions; sorting ổn định hơn về worst reasoning nhưng chậm hơn và có mutation/copy cost.<br>
 **Follow-up ladder:** Duplicate numbers? Overflow? Return all pairs? Streaming input?<br>
 **Red flags:** Nói O(n) mà bên trong vẫn scan list cho mỗi element.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-016 — `SENIOR`
@@ -242,7 +242,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Heap tiết kiệm time/memory cho k nhỏ nhưng code/constant phức tạp hơn sort.<br>
 **Follow-up ladder:** Kth largest? Streaming? Ties? Comparator? Quickselect?<br>
 **Red flags:** Dùng max-heap chứa toàn bộ n rồi vẫn gọi là O(k) memory.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-017 — `SENIOR`
@@ -255,7 +255,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Entry-count bound đơn giản nhưng không phản ánh memory weight; global lock dễ đúng nhưng contention.<br>
 **Follow-up ladder:** TTL vs LRU? Concurrent access? Eviction callback? Cache library?<br>
 **Red flags:** Unbounded map được gọi là cache hoặc tự build thay thư viện mà không có requirement.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-018 — `SENIOR`
@@ -268,7 +268,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** BFS frontier có thể tốn memory; recursive DFS có stack-overflow risk trên graph sâu.<br>
 **Follow-up ladder:** Tree không visited? Directed cycle? Weighted shortest path? Iterative DFS?<br>
 **Red flags:** DFS luôn dùng ít memory hoặc BFS giải weighted shortest path bất kỳ.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-019 — `SENIOR`
@@ -281,7 +281,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** In-memory xử lý linh hoạt nhưng không bounded; DB pushdown giảm transfer nhưng tăng query/index responsibility.<br>
 **Follow-up ladder:** Cursor pagination? Backpressure? `Stream` có giảm memory tự động? GC evidence?<br>
 **Red flags:** Đổi sang Stream API rồi tuyên bố complexity/memory đã tối ưu.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-020 — `ARCHITECT`
@@ -294,7 +294,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Stable sort/order tốn compute/index nhưng giúp deterministic clients/tests; unspecified order linh hoạt hơn nhưng client không được dựa vào.<br>
 **Follow-up ladder:** Set serialize thành gì? Versioning? Snapshot vs live view? Deterministic signature?<br>
 **Red flags:** Trả mutable internal collection hoặc coi implementation iteration order là contract.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-021 — `ARCHITECT`
@@ -307,7 +307,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Local cache giảm latency nhưng duplicate memory/stale state mỗi instance; distributed cache thêm network/failure/serialization cost.<br>
 **Follow-up ladder:** Hot key? Stampede? GC pressure? Rolling deploy? Tenant quota?<br>
 **Red flags:** `ConcurrentHashMap` unbounded được coi là production cache.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-COLL-022 — `EXPERT`
@@ -320,7 +320,7 @@ Current authentication path chuyển role relations từ `List` sang `Set` để
 **Required trade-offs:** Stronger/randomized hash hoặc sorted map có CPU/compatibility cost; input limits thường là defense thực dụng hơn tuning internals.<br>
 **Follow-up ladder:** Comparable keys? Expensive `equals`? HashDoS? JFR/profile evidence?<br>
 **Red flags:** Treeification biến mọi `HashMap` operation thành guaranteed O(log n) hoặc collision không còn đáng quan tâm.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/collections-data-structures-and-complexity.md) · [Deep-dive](../theory/deep-dives/hash-tables-concurrent-collections-and-bounded-queues.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

@@ -27,12 +27,12 @@ Terminal operation tạo demand kéo phần tử từ source qua chuỗi stage. 
 
 ```mermaid
 flowchart TB
-    A["Source spliterator"] --> B["Chia partition"]
+    A["Spliterator của nguồn"] --> B["Chia thành các partition"]
     B --> C1["accumulate phần 1"]
     B --> C2["accumulate phần 2"]
     C1 --> D["combine associative"]
     C2 --> D
-    D --> E["finish result"]
+    D --> E["Hoàn tất kết quả"]
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style C1 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -80,16 +80,16 @@ Các failure có cùng mẫu: abstraction làm chi phí bị ẩn. `distinct` gi
 
 ## 5. Cross-layer interaction
 
-- Stream abstraction can hide repository/network call inside mapper; query count/trace must reveal N+1.
+- Stream có thể che lời gọi repository/network trong mapper; phải dùng query count hoặc trace để phát hiện N+1.
 - `.toList()` returns unmodifiable list in modern JDK contract; mutability expectation must be explicit.
-- Parallel stream/common pool competes with `CompletableFuture` default async work.
-- Reactor/Reactive Streams backpressure is different model; Java Stream is pull/traversal and usually finite/synchronous.
+- Parallel stream dùng common pool và có thể tranh worker với `CompletableFuture` chạy async mặc định.
+- Backpressure của Reactor/Reactive Streams là mô hình khác; Java Stream duyệt theo kiểu pull và thường hữu hạn, đồng bộ.
 
 ## 6. Experiment implication
 
-1. Benchmark loop vs sequential vs parallel with JMH, multiple data sizes and CPU cost; isolate I/O.
+1. Dùng JMH so loop, sequential stream và parallel stream ở nhiều kích thước dữ liệu/chi phí CPU; tách I/O khỏi benchmark.
 2. Count DB calls/allocation/materialized size for project mapping pipeline.
-3. Test collector sequential and parallel with randomized partitioning/order.
+3. Test collector ở chế độ sequential và parallel với partition/thứ tự được xáo trộn.
 4. Verify resource close on success/failure/short-circuit. Evidence remains `NOT RUN`.
 
 ## 7. Trade-off matrix
@@ -109,11 +109,31 @@ Các failure có cùng mẫu: abstraction làm chi phí bị ẩn. `distinct` gi
 | `ANALYTICS-UC-01` | Associative projection/replay | Event workload |
 | `NOTIFY-UC-01` | Batch/filter without shared side effect | Fan-out load |
 
-## 9. Interview answer outline
+### 8.1. Pathology — stream giữ JDBC resource lâu hơn transaction
+
+Repository trả về một `Stream<Entity>` đọc lười từ result set. Service trả stream ra controller hoặc giữ để xử lý sau, nhưng transaction đã kết thúc khi method return. Terminal operation chạy muộn sẽ gặp connection/result set đã đóng; trường hợp khác còn giữ connection suốt lúc client xử lý chậm. Triệu chứng có thể là lỗi lazy initialization, pool pending tăng hoặc connection leak warning chứ không nằm ngay ở dòng tạo stream.
+
+Cách chứng minh là ghi thời điểm mở/đóng transaction và connection, đặt terminal operation cả bên trong lẫn ngoài boundary rồi kiểm pool metric. Mitigation là materialize một tập có bound trong transaction, xử lý stream trong callback sở hữu resource, hoặc dùng `try-with-resources`. Không trả lazy ORM stream qua ranh giới layer khi owner đóng resource không còn rõ.
+
+### 8.2. Pathology — collector đúng ở sequential nhưng sai khi parallel
+
+Một collector dùng container mutable chung, `combiner` trả nhầm một phía hoặc khai báo `CONCURRENT` dù accumulator không thread-safe. Sequential luôn xanh vì chỉ có một container; parallel chia dữ liệu thành nhiều partition, combine theo cây và có thể đổi thứ tự, làm mất hoặc lặp phần tử. Thêm `synchronized` vào accumulator có thể tránh race nhưng không sửa identity/associativity sai và thường làm mất lợi ích parallel.
+
+Test phải chạy nhiều partition/thứ tự, so với kết quả tham chiếu và kiểm các luật: supplier tạo identity rỗng; accumulator thêm một phần tử; combiner kết hợp hai partial result không làm mất dữ liệu; finisher giữ đúng contract. Với collector phụ thuộc encounter order, không khai báo `UNORDERED`. Evidence chỉ có giá trị trên đúng JDK, kích thước và spliterator; hiện vẫn `NOT RUN`.
+
+### 8.3. Pathology — parallel stream làm nghẽn common pool
+
+Mapper tưởng là CPU-bound nhưng bên trong gọi repository/HTTP. Worker của common `ForkJoinPool` bị block; các parallel stream và `CompletableFuture` mặc định khác trong process cùng thiếu worker. p99 tăng ở endpoint không liên quan, trong khi CPU chưa đầy. Thread dump cho thấy common-pool worker chờ I/O; trace/query count làm lộ lời gọi ẩn. Mitigation là đưa I/O ra khỏi stream, batch ở database, dùng executor thuộc sở hữu rõ hoặc giữ sequential flow. Tăng parallelism toàn cục có thể khuếch đại tải xuống database.
+
+### 8.4. Quy trình đo để không kết luận “parallel nhanh hơn” sai
+
+Benchmark phải tách dữ liệu in-memory và I/O, warm-up JIT, dùng JMH thay vì `System.nanoTime` một lần, thử nhiều kích thước và chi phí mỗi phần tử. Ghi CPU core/container quota, JDK, collector, ordering và allocation. So loop, sequential và parallel bằng cùng kết quả đúng trước khi so throughput. Với workload server, còn phải đo ảnh hưởng lên common pool và request p99 khác, không chỉ thời gian một tác vụ cô lập.
+
+## 9. Dàn ý trả lời phỏng vấn
 
 Trả lời từ execution model: terminal demand kéo source; stateless stages có thể fuse, stateful stages buffer; parallel execution cần splittable source và associative collector; common pool không phù hợp mặc định cho blocking request work; resource-backed stream phải đóng trong owner scope. Kèm counterexample average-of-averages hoặc JPA stream vượt transaction.
 
-## 10. Tóm tắt và learner write-back
+## 10. Tóm tắt và phần người học viết lại
 
 - Collector contract là algebraic correctness, không chỉ thread safety.
 - `parallel()` đổi execution strategy, không sửa algorithm hay I/O boundary.

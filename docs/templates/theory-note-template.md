@@ -26,6 +26,9 @@ Nói rõ tài liệu dành cho ai, cần đọc theo thứ tự nào, mất kho�
 Theory là **bài giảng canonical**, không phải outline, glossary dump hoặc cheat sheet. Agent phải cung cấp đủ kiến thức trước khi yêu cầu learner trả lời.
 
 1. Viết tiếng Việt tự nhiên, có dấu. Giữ IT English term quen thuộc như `bean`, `proxy`, `transaction`, `happens-before`; giải nghĩa khi xuất hiện lần đầu.
+   - Giữ nguyên tên class/API/lệnh/metric, ví dụ `ThreadLocal`, `jcmd`, `p99`.
+   - Viết quan hệ nguyên nhân, hành động và kết luận bằng tiếng Việt: “quota CPU đã cạn nên thread phải chờ”, không viết `CPU quota exhausted, runnable work waits`.
+   - Tránh câu điện tín và danh sách noun phrase như `Contain lower concurrency/payload/buffer, stop retry`. Hãy nói rõ ai làm gì, nhằm bảo vệ invariant nào và rủi ro nào còn lại.
 2. Mỗi khái niệm mới đi theo nhịp: **vấn đề -> trực giác -> định nghĩa -> cơ chế -> ví dụ -> giới hạn**.
 3. Không đặt ba hoặc nhiều thuật ngữ chưa giải nghĩa trong cùng một câu.
 4. Table/matrix chỉ dùng để **cô đọng sau khi đã giải thích**. Không dùng table thay cho causal explanation.
@@ -35,6 +38,7 @@ Theory là **bài giảng canonical**, không phải outline, glossary dump ho�
 8. Không dùng `LEARNER TODO` thay cho phần giảng. Marker này chỉ xuất hiện trong phần learner write-back/self-check **sau** toàn bộ teaching content.
 9. Mỗi self-check chỉ rõ kiến thức nằm ở section nào và rubric của một câu trả lời tốt; không đưa đáp án thuộc lòng hoàn chỉnh.
 10. Không padding để đạt word count. Heuristic thông thường: core khoảng 1.500–3.500 từ, deep-dive khoảng 1.800–4.000 từ; topic phức tạp có thể dài hơn nếu cấu trúc vẫn rõ.
+11. Trước khi bàn giao, đọc riêng một lượt chỉ để kiểm ngôn ngữ và chiều sâu. Link, heading, diagram và word count đều không bù được một đoạn mà người chưa biết phải tự đoán causal chain.
 
 ---
 
@@ -235,6 +239,8 @@ Phân tích lifecycle/state/algorithm/data structure đến mức target depth. 
 4. symptom quan sát được;
 5. evidence phân biệt nó với nguyên nhân gần giống;
 6. mitigation và residual risk.
+
+Không được nén sáu bước trên thành một hàng table. Mỗi case cần ít nhất một đoạn prose liền mạch để người đọc thấy vì sao bước trước tạo ra bước sau; table chỉ được đặt sau phần giải thích để ôn nhanh.
 
 ## 5. Cross-layer và version boundary
 

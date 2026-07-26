@@ -1,4 +1,4 @@
-# Redis Atomic Data Structures, Rate Limiting và Leaderboards
+# Cấu trúc dữ liệu nguyên tử trong Redis, rate limiting và leaderboard
 
 > Type: `CORE`<br>
 > Domain: `redis`<br>
@@ -24,7 +24,7 @@ Nếu serialize mọi thứ thành JSON String, application phải read-modify-w
 
 Điểm mạnh Redis là server thực hiện operation gần dữ liệu với semantics chuyên biệt. Điểm yếu là một key/shard có finite CPU/memory/network, replication/failover không mặc định linearizable, và dữ liệu ephemeral cần owner/rebuild policy. Senior phải bảo vệ business meaning, không chỉ biết command name.
 
-## 2. Learning objectives
+## 2. Mục tiêu học
 
 Sau bài này, bạn có thể:
 
@@ -35,7 +35,7 @@ Sau bài này, bạn có thể:
 5. Chẩn đoán hot/large key, rolling serialization change và cluster slot/topology boundary.
 6. Giải thích replication/failover có thể làm mất recent ephemeral coordination state và invariant nào cần durable owner/fencing.
 
-## 3. Từ vựng và data structures
+## 3. Từ vựng và cấu trúc dữ liệu
 
 **String** giữ bytes/scalar, dùng cho cached JSON, counter, bitmap-compatible value hoặc lease token. Atomic `INCR` tránh client-side read-modify-write, nhưng lifecycle/overflow/key scope vẫn cần rule.
 
@@ -49,7 +49,7 @@ Sau bài này, bạn có thể:
 
 **Hot key** nhận tỷ lệ lớn operations/bytes trên một shard. **Large key** có nhiều members/bytes làm command, transfer, delete, persistence hoặc failover đắt. Một key vừa có thể hot vừa large nhưng hai vấn đề cần signal khác nhau.
 
-## 4. Mental model cốt lõi
+## 4. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -83,7 +83,7 @@ Redis xử lý một command trên server theo atomic command semantics: client 
 
 Chọn đơn giản nhất: một built-in atomic command trước; optimistic transaction khi composition nhỏ và conflicts hiếm; Lua/Function cho atomic state transition có bounded work. Không dùng script để loop unbounded members hoặc thay business transaction ở PostgreSQL.
 
-## 6. Rate limiting algorithms
+## 6. Các thuật toán giới hạn tần suất
 
 ### 6.1. Fixed window
 
@@ -101,9 +101,9 @@ State gồm tokens còn lại và last-refill time. Mỗi request tính tokens m
 
 Distributed rate limiter luôn có outage policy. Fail-open tăng availability nhưng attacker có window; fail-closed có thể chặn legitimate traffic. Có thể local emergency limiter + bounded central failure policy, nhưng global limit sẽ approximate. Security/cost-critical operation cần stakeholder chấp nhận explicit semantics.
 
-## 7. Worked examples
+## 7. Ví dụ phân tích từng bước
 
-### 7.1. Atomic fixed-window limiter
+### 7.1. Fixed-window limiter nguyên tử
 
 Conceptual script:
 
@@ -117,13 +117,13 @@ return {current <= tonumber(ARGV[2]), current}
 
 Script minh họa update+expiry không bị client interleaving. Production script còn phải validate `ARGV`, define reset/remaining, bound key namespace, handle cluster slot và test first-hit/last-hit/over-limit/expiry/concurrency. Đây chưa phải code project và chưa benchmark.
 
-### 7.2. Current viewers bằng ZSET heartbeat
+### 7.2. Đếm người xem hiện tại bằng ZSET heartbeat
 
 Key `stream:{42}:viewers:v1`; member là stable viewer/session identity; score là server-observed lastSeen milliseconds. Heartbeat dùng `ZADD`; query current count remove/read members có score cũ hơn `now-activeWindow`, rồi `ZCOUNT` active range. Cleanup và count cần atomic/bounded sequence nếu exact same instant matters. Key có TTL sau stream end/crash safety; hot stream có write amplification nên heartbeat interval, batching/sampling và shard strategy cần capacity test.
 
 Nếu disconnect event bị mất, viewer tự biến mất khi heartbeat cũ qua window. Đổi lại count luôn trễ khoảng window và network jitter có thể tạo false leave/rejoin. Product phải gọi đây là estimated current viewers, không tuyệt đối exact.
 
-### 7.3. Unique viewers bằng HLL
+### 7.3. Đếm gần đúng người xem duy nhất bằng HLL
 
 `PFADD stream:{42}:unique:v1 viewerIdentity`; `PFCOUNT` trả approximate cardinality. Memory không tăng tuyến tính như Set ở cùng mức, phù hợp unique reach lớn. Không thể lấy danh sách viewers, xóa một member hoặc dùng nó làm billing/audit exact. HLL có thể merge các buckets/partitions theo command semantics; identity privacy/retention vẫn cần policy.
 
@@ -137,7 +137,7 @@ Rebuild cần snapshot/watermark hoặc idempotent event replay để không dou
 
 Worker A acquire `SET lock tokenA NX PX 5000`, pause 8 giây; lease expire. Worker B acquire tokenB và xử lý. A tỉnh lại và vẫn ghi downstream. Compare-and-delete bảo đảm A không xóa lock của B, nhưng không ngăn stale A side effect. Correctness-critical resource cần fencing token monotonic mà downstream reject token cũ, hoặc durable DB version/constraint. Redis lease chủ yếu điều phối; nó không tự sở hữu invariant.
 
-## 8. Invariants và boundaries
+## 8. Invariant và ranh giới
 
 1. Rate-limit update và expiry thuộc cùng atomic transition; không có immortal key do partial sequence.
 2. Current viewer và unique viewer có definitions khác; dashboard/API phải gọi đúng metric.
@@ -149,7 +149,7 @@ Worker A acquire `SET lock tokenA NX PX 5000`, pause 8 giây; lease expire. Work
 
 Boundary persistence: RDB snapshot/AOF thay đổi recovery window và latency/ops cost, nhưng không biến Redis thành PostgreSQL ledger. Boundary replication: primary acknowledgement có thể đi trước replica nhận write; promotion có thể mất key/token/counter gần nhất. Boundary eviction: key có TTL vẫn có thể bị evict theo maxmemory policy. Boundary clock: rate/heartbeat phụ thuộc time semantics và skew; test phải kiểm soát time source.
 
-## 9. Failure modes theo causal chain
+## 9. Các kiểu hỏng theo chuỗi nguyên nhân
 
 ### 9.1. Hot ZSET trên celebrity stream
 
@@ -167,13 +167,13 @@ New deployment thay JSON/schema/score meaning trong cùng namespace → old/new 
 
 Primary ACK increment/lease nhưng replica chưa nhận → primary fail → replica promote không có state → request vượt limit hoặc second owner acquire. `WAIT` có thể tăng xác suất replicas acknowledge nhưng không tự tạo strict durable/linearizable guarantee qua mọi partition/failover. Mitigation dựa risk: accept bounded window, fail closed, local secondary guard, durable owner/fencing và fault-injection quantification.
 
-## 10. Solution patterns và trade-offs
+## 10. Các mẫu giải pháp và đánh đổi
 
 Set exact/listable nhưng memory tuyến tính; HLL memory bounded nhưng approximate/non-listable. ZSET cho ordering/time range nhưng hot-key cost. Lua cho atomic composition nhưng tăng server blocking/debug/version governance. Client pipeline tăng throughput nhưng không correctness. Redis Cluster tăng aggregate capacity nhưng một key vẫn một slot; bucketing tăng capacity nhưng mất simple global atomicity.
 
 Persistence/replica tăng recoverability nhưng tăng I/O/latency/ops và vẫn phải define RPO. Separate Redis deployments cho cache, security coordination và rate state tăng cost nhưng tạo resource/failure isolation. Một shared instance đơn giản lúc nhỏ nhưng expiry storm hoặc hot key có thể ảnh hưởng mọi feature.
 
-## 11. Áp dụng vào project và experiment
+## 11. Áp dụng vào dự án và thí nghiệm
 
 Khi `RED-01` active, đối chiếu [Redis key catalog](../../../../../engineering/redis-guide.md): current code đang dùng HLL `stream:{streamId}:viewers` nhưng guide đã ghi nó là unique reach, không phải concurrent count. Candidate lab nên:
 
@@ -226,7 +226,7 @@ Lấy một bài toán: current viewers dùng ZSET heartbeat, giải thích last
 
 > **Bài viết của tôi — `LEARNER TODO`:** viết 12–18 câu cho một use case, rồi trình bày lại không nhìn tài liệu.
 
-## 15. Self-check có hướng dẫn
+## 15. Tự kiểm tra có hướng dẫn
 
 1. **Question:** Pipeline, MULTI/EXEC, WATCH và Lua khác nhau về mục tiêu/atomicity thế nào?<br>
    **Đọc lại nếu bí:** mục 5.<br>
@@ -245,7 +245,7 @@ Lấy một bài toán: current viewers dùng ZSET heartbeat, giải thích last
    **Một câu trả lời tốt phải có:** async replication/promotion window, stale owner/duplicate acquire, fencing/durable invariant, explicit fail-open/closed và injected evidence.<br>
    **My answer:** `LEARNER TODO`
 
-## 16. Official references
+## 16. Nguồn chính thức
 
 - [Redis — Data types](https://redis.io/docs/latest/develop/data-types/)
 - [Redis — Transactions](https://redis.io/docs/latest/develop/using-commands/transactions/)
@@ -256,7 +256,7 @@ Lấy một bài toán: current viewers dùng ZSET heartbeat, giải thích last
 
 Exact command/features/topology behavior phải re-check theo runtime captured vì project chưa pin Redis image.
 
-## 17. Teach-back checklist
+## 17. Checklist trình bày lại
 
 - [ ] Tôi chọn structure từ operations/cardinality chứ không từ thói quen.
 - [ ] Tôi phân biệt command atomicity, pipeline, MULTI/WATCH và Lua.
@@ -265,4 +265,3 @@ Exact command/features/topology behavior phải re-check theo runtime captured v
 - [ ] Tôi giải thích hot key và cluster-slot boundary.
 - [ ] Tôi bảo vệ critical invariant bằng durable owner/fencing thay vì chỉ lease.
 - [ ] Tôi biết mọi benchmark/failover evidence vẫn `NOT RUN`.
-

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `SPR-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Spring](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: [Proxies, AOP and Transactional Boundaries](../theory/core/proxies-aop-and-transactional-boundaries.md), [proxy/advice deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md), [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `SPR-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Giảm lặp nhưng làm control flow khó thấy.<br>
 **Follow-up ladder:** AspectJ khác gì? Around advice có rủi ro gì?<br>
 **Red flags:** AOP là cách thay thế mọi decorator/business service.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Interface rõ contract; class proxy tiện nhưng gắn với inheritance/proxy limitations.<br>
 **Follow-up ladder:** Spring chọn loại nào? `proxyTargetClass`?<br>
 **Red flags:** CGLIB sao chép business object thành object độc lập.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Declarative transaction gọn nhưng boundary không hiện rõ tại call site.<br>
 **Follow-up ladder:** TransactionSynchronizationManager? Reactive transaction?<br>
 **Red flags:** JVM tự hiểu `@Transactional`.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Mở method chỉ để proxy làm yếu encapsulation; nên đặt boundary ở public service contract.<br>
 **Follow-up ladder:** Interface default method? AspectJ weaving?<br>
 **Red flags:** Gắn annotation ở đâu cũng chạy.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Tách service thêm abstraction nhưng làm transaction contract quan sát được.<br>
 **Follow-up ladder:** Test nào chứng minh? `REQUIRES_NEW` có chạy không?<br>
 **Red flags:** Thêm annotation thứ hai là đủ.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Central advice nhất quán nhưng composition tạo emergent behavior.<br>
 **Follow-up ladder:** Retry ngoài hay trong transaction? Exception translation ở đâu?<br>
 **Red flags:** Order không quan trọng vì annotations độc lập.<br>
-**Evidence:** Theory `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Debug logging hữu ích nhưng phải giới hạn noise/secret.<br>
 **Follow-up ladder:** Checked exception? Test transaction che kết quả?<br>
 **Red flags:** Sửa bằng `rollbackFor=Throwable` trước khi tìm call path.<br>
-**Evidence:** Theory `NOT CREATED`; reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Annotation composition nhanh nhưng lifecycle khó kiểm soát.<br>
 **Follow-up ladder:** SecurityContext propagation? Cache eviction rollback?<br>
 **Red flags:** Mọi context tự đi theo async thread.<br>
-**Evidence:** Theory `NOT CREATED`; case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); case `SPR-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Platform convention tăng consistency nhưng giảm local autonomy.<br>
 **Follow-up ladder:** Library hay sidecar/gateway? Rollout/versioning?<br>
 **Red flags:** Một global aspect bắt mọi method.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SPR-PROXY-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `SPR-PROXY-001..006`; senior follow-up `007..008`; stretch `009..010`
 **Required trade-offs:** Extension hooks mạnh nhưng nhạy framework upgrade.<br>
 **Follow-up ladder:** Ultimate target class? Double proxy? Native image?<br>
 **Red flags:** Unwrap proxy tùy tiện trong business code.<br>
-**Evidence:** Reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/proxies-aop-and-transactional-boundaries.md) · [Deep-dive](../theory/deep-dives/proxy-self-invocation-advice-order-and-context.md); Reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

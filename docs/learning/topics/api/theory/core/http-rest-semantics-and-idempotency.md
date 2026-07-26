@@ -1,4 +1,4 @@
-# HTTP, REST Semantics and Idempotency
+# Ngữ nghĩa HTTP/REST và tính idempotent
 
 > Type: `CORE`<br>
 > Domain: `architecture`<br>
@@ -6,7 +6,7 @@
 > Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
-> Prerequisites: client-server networking and JSON API fundamentals<br>
+> Prerequisites: kiến thức nền về mạng client-server và JSON API<br>
 > Related cases: [`GIFT-UC-01`](../../../../use-case-catalog.md#gift-uc-01), [`FOLLOW-UC-01`](../../../../use-case-catalog.md#31-foundation-và-senior-cases)<br>
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
@@ -17,24 +17,24 @@ Source canonical cho [HTTP/REST question bank](../../question-bank/http-rest-sem
 
 Theo một command từ client qua timeout, server commit và retry. Tách ba lớp: HTTP method semantics, business effect và cơ chế dedup durable. “Idempotent” chỉ có meaning khi nói rõ identity, scope, payload, concurrent claims và crash point.
 
-## 1. Learning objectives
+## 1. Mục tiêu học
 
-1. Dùng method, status, representation, header và cache/conditional semantics đúng contract.
-2. Phân biệt safe, idempotent protocol semantics với business deduplication.
-3. Thiết kế idempotency key cho command có side effect dưới retry/concurrency/crash.
+1. Dùng HTTP method, status, representation, header và cache/conditional request đúng hợp đồng.
+2. Phân biệt `safe`, `idempotent` ở tầng giao thức với việc chống xử lý trùng ở tầng nghiệp vụ.
+3. Thiết kế idempotency key cho command có side effect khi xảy ra retry, xử lý đồng thời hoặc process bị crash.
 
 ## 2. Mental model do người dạy cung cấp
 
-Mạng chỉ cho client biết response đã nhận, không cho biết server chắc chắn chưa làm. Sau timeout, outcome có thể là chưa nhận request, đang chạy, đã commit nhưng mất response hoặc đã fail. Idempotency record biến nhiều delivery attempts của cùng logical command thành một state machine có durable outcome.
+Mạng chỉ giúp client biết nó có nhận được response hay không; timeout không chứng minh server chưa thực hiện nghiệp vụ. Sau timeout, request có thể chưa tới server, đang chạy, đã rollback, hoặc đã commit nhưng response bị mất. `Idempotency record` là bản ghi bền vững gom nhiều lần gửi của cùng một command logic vào một state machine, nhờ đó lần retry có thể tra lại kết quả thay vì tạo side effect mới.
 
 ```mermaid
 flowchart TB
-    R["Request + key + fingerprint"] --> C["Atomic claim"]
+    R["Request + key + fingerprint"] --> C["Claim nguyên tử"]
     C --> I["IN_PROGRESS"]
-    I --> B["Business commit"]
-    B --> D["COMPLETED + stable result"]
-    B --> X["Response lost<br/>ambiguous to client"]
-    X --> Q["Retry same key<br/>returns/reconciles outcome"]
+    I --> B["Commit nghiệp vụ"]
+    B --> D["COMPLETED<br/>kết quả ổn định"]
+    B --> X["Mất response<br/>client không biết kết quả"]
+    X --> Q["Retry cùng key<br/>tra hoặc đối soát kết quả"]
     style R fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style C fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style I fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -46,11 +46,11 @@ flowchart TB
 
 ## 3. Cơ chế cốt lõi
 
-HTTP method mang semantics cho intermediary/client: safe method không yêu cầu thay đổi state do client; idempotent method có intended effect tương đương sau nhiều identical requests. Điều đó không có nghĩa server không log/charge internal cost, và không tự bảo vệ một `POST` business command khỏi duplicate.
+HTTP method truyền đạt ý nghĩa cho client và thành phần trung gian. `Safe method` là thao tác mà client không yêu cầu thay đổi trạng thái nghiệp vụ. `Idempotent method` có hiệu ứng được mong đợi tương đương dù cùng request được gửi một hay nhiều lần. Điều này không cấm server ghi log hoặc tiêu tốn tài nguyên, và cũng không tự động chống trùng cho một `POST` tạo nghiệp vụ mới.
 
-Status code diễn đạt outcome của protocol: validation, authentication, authorization, absence, conflict, precondition, rate limit và server failure không nên collapse thành `200` với cờ lỗi. Representation/version/media type là contract; header như `ETag`, `If-Match`, cache controls và retry hints ảnh hưởng concurrency/intermediary behavior.
+Status code diễn đạt kết quả ở tầng giao thức. Lỗi validation, chưa xác thực, không đủ quyền, không tìm thấy, xung đột, sai điều kiện tiên quyết, vượt giới hạn và lỗi server không nên bị gom thành `200` kèm một cờ lỗi. Representation, phiên bản và media type đều thuộc hợp đồng. Các header như `ETag`, `If-Match`, cache control và gợi ý retry ảnh hưởng trực tiếp đến xử lý đồng thời và hành vi của proxy/cache.
 
-Idempotency key cần scope theo actor/operation, request fingerprint, atomic claim/result storage, trạng thái in-progress/completed/failed, TTL và conflict rule nếu cùng key khác payload. Server phải trả lại outcome ổn định hoặc chỉ rõ retry semantics; check-then-insert không atomic sẽ race.
+Idempotency key phải được giới hạn theo actor và loại thao tác, đi kèm `request fingerprint` (dấu vân tay của payload) để phát hiện cùng key nhưng nội dung khác. Việc nhận quyền xử lý và lưu kết quả phải có tính nguyên tử, với các trạng thái như đang xử lý, hoàn tất hoặc thất bại, cùng TTL và quy tắc xung đột. Mẫu “kiểm tra rồi mới insert” bằng hai thao tác rời rạc sẽ tạo race condition: hai request cùng thấy chưa có bản ghi và đều chạy nghiệp vụ.
 
 ### Worked example — gift command
 
@@ -79,7 +79,7 @@ Hai request đồng thời cùng `(userId, operation, key)` phải tranh một u
 | Cache semantics sai | Shared cache chứa private response | Data leak/stale response |
 | Status collapse | Mọi lỗi thành `200` | Client/retry/monitor hiểu sai |
 
-## 6. Trade-off matrix
+## 6. Bảng đánh đổi
 
 | Option | Guarantee | Cost/risk |
 | --- | --- | --- |
@@ -95,9 +95,17 @@ Hai request đồng thời cùng `(userId, operation, key)` phải tranh một u
 - `GIFT-UC-01`: payment/gift command và ledger side effect.
 - `FOLLOW-UC-01`: duplicate follow/unfollow/retry semantics.
 
-## 8. Interview answer outline
+## 8. Dàn ý trả lời phỏng vấn
 
 Phân biệt safe/idempotent/retryable, kể ambiguous-outcome timeline và idempotency state machine. Nêu atomic claim, scope/fingerprint, stable result, TTL, authorization và crash/reconciliation. Tránh claim exactly-once end-to-end.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — conditional update:** client đọc ETag `v7`, gửi `If-Match: v7`; server chỉ update nếu version hiện tại còn v7, nếu không trả precondition failure. Cơ chế bảo vệ stale overwrite nhưng không nhận diện hai deliveries của cùng một POST command.
+
+**Worked example gần project — response loss sau commit:** gift đã commit nhưng response bị drop. Cùng idempotency key + payload fingerprint cho phép retry lấy outcome cũ; key mới là intent mới và có thể double debit. Status code transport không tự nói operation failed.
+
+**Phản ví dụ:** trả `200` cho mọi outcome với field `success=false` làm cache/proxy/client retry khó reason, đồng thời coi POST là an toàn chỉ vì handler thường nhanh. HTTP method/status và business recovery contract phải nhất quán.
 
 ## 9. Tóm tắt và learner write-back
 
@@ -114,7 +122,7 @@ Phân biệt safe/idempotent/retryable, kể ambiguous-outcome timeline và idem
 2. **Question:** Record tối thiểu gồm gì?<br>**Đọc lại nếu bí:** diagram, example, mục 4–6.<br>**Rubric:** scoped identity, fingerprint, status, result/error, timestamps/TTL, atomic uniqueness.<br>**My answer:** `LEARNER TODO`
 3. **Question:** Timeout sau commit xử lý ra sao?<br>**Đọc lại nếu bí:** mental model và failure modes.<br>**Rubric:** retry/status lookup/reconciliation, stable outcome, no absolute exactly-once claim.<br>**My answer:** `LEARNER TODO`
 
-## 11. Official references
+## 11. Nguồn chính thức
 
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [RFC 9111 — HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111.html)

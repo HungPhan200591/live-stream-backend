@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `JAVA-01`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [OOD/refactoring](../../../knowledge-depth-rubric.md#32-object-oriented-design-và-refactoring--p0-target-d3)<br>
-> Related theory: [Object-Oriented Design, SOLID and Patterns](../theory/core/object-oriented-design-solid-and-patterns.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md), [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `JAVA-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** API chặt tăng safety nhưng có thể tăng số method/domain type.<br>
 **Follow-up ladder:** Anemic model có luôn xấu? Package-private dùng khi nào?<br>
 **Red flags:** Getter/setter cho mọi field được coi là encapsulation.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Composition thêm object/wiring; inheritance ngắn nhưng dễ fragile base class.<br>
 **Follow-up ladder:** Template Method vs Strategy? Final class?<br>
 **Red flags:** Luôn dùng inheritance để tái sử dụng code.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Thêm interface khắp nơi có thể tạo abstraction rỗng.<br>
 **Follow-up ladder:** Afferent/efferent coupling? Package-by-feature?<br>
 **Red flags:** Nhiều class nhỏ tự động là low coupling.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Tách quá mức tăng indirection và cognitive load.<br>
 **Follow-up ladder:** Ví dụ vi phạm LSP? DIP có cần DI framework?<br>
 **Red flags:** Một class chỉ được có một method.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Refactor lớn sạch hơn nhưng tăng regression; incremental seam dễ rollback.<br>
 **Follow-up ladder:** God service hay orchestration service?<br>
 **Red flags:** Đếm số dòng rồi chia đều class.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Pattern làm intent rõ nhưng thêm types/wiring.<br>
 **Follow-up ladder:** Proxy khác Decorator? Enum state machine đủ khi nào?<br>
 **Red flags:** Gắn pattern để CV đẹp dù chỉ có một implementation.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Contract chặt giảm flexibility của subtype.<br>
 **Follow-up ladder:** Rectangle-square? Repository specialization?<br>
 **Red flags:** Compile được nghĩa là substitutable.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Giữ behavior cũ có thể giữ cả bug nên phải phân loại intended behavior.<br>
 **Follow-up ladder:** Golden master? Mutation test?<br>
 **Red flags:** Code đẹp hơn là bằng chứng correctness.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Boundary mạnh giảm accidental coupling nhưng tăng duplication/coordination.<br>
 **Follow-up ladder:** Conway's Law? Shared kernel?<br>
 **Red flags:** Vẽ package diagram là đủ tạo modularity.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### OOD-DES-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `OOD-DES-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Giữ abstraction sai tốn cognitive load; xóa sớm có migration cost.<br>
 **Follow-up ladder:** Rule of three? Anti-corruption layer lifetime?<br>
 **Red flags:** Mọi abstraction phải giữ vĩnh viễn vì OCP.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/object-oriented-design-solid-and-patterns.md) · [Deep-dive](../theory/deep-dives/ood-substitutability-boundaries-and-pattern-overengineering.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

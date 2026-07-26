@@ -1,4 +1,4 @@
-# Token Purpose, Access/Refresh Token và Session Semantics
+# Mục đích của token, access/refresh token và ngữ nghĩa session
 
 > Type: `CORE`<br>
 > Domain: `security`<br>
@@ -22,7 +22,7 @@ JWT có signature đúng và chưa hết hạn vẫn có thể không hợp lệ
 
 Access token và refresh token thường đều là bearer credentials nhưng có mục đích và blast radius khác nhau. Access token ngắn hạn đi tới resource server để dựng principal. Refresh token dài hạn hơn, chỉ đi tới token endpoint để xin access token mới và thường gắn durable session/rotation state. Nếu cùng parser chỉ hỏi signature+expiry, refresh token có thể bị nâng nhầm thành access credential. Client “không nên làm vậy” không phải security control.
 
-## 2. Learning objectives và vocabulary
+## 2. Mục tiêu học và từ vựng
 
 Sau bài này, bạn có thể:
 
@@ -34,7 +34,7 @@ Sau bài này, bạn có thể:
 
 **Bearer credential** nghĩa ai sở hữu token có thể trình nó; token không tự chứng minh sender. **JOSE header `typ`** là type hint cho object, khác application claim mô tả purpose. **Issuer (`iss`)** là authority phát hành. **Audience (`aud`)** là recipient dự kiến. **Subject (`sub`)** là principal identity. **Purpose/token use** nói credential dùng ở flow nào. **Session binding** nối refresh credential với server-side session. **Revocation** làm credential/session mất hiệu lực trước expiry. **Rotation** phát refresh token mới và làm token cũ mất quyền tiếp tục family. **Replay** là dùng lại credential/message đã hợp lệ trước đó.
 
-## 3. Mental model cốt lõi
+## 3. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -76,13 +76,13 @@ Access validator yêu cầu `purpose=ACCESS`, audience resource server và lifet
 
 Refresh validator yêu cầu `purpose=REFRESH`, đúng issuer/audience và session/token identity. PostgreSQL session là durable owner: active, chưa expiry/revoke, đúng user/device/family. Rotation tốt phát token mới và đánh dấu old token used/replaced trong một atomic transition; reuse old token có thể revoke family hoặc trigger risk response. Nếu response mất sau commit, retry semantics phải được thiết kế để không vô tình coi legitimate retry là theft hoặc phát song song vô hạn.
 
-## 5. Session lifecycle và threat boundaries
+## 5. Vòng đời session và ranh giới mối đe dọa
 
 Login tạo session record rồi credentials. Logout-one revoke session tương ứng; logout-all revoke mọi session/user. Redis có thể cache session nhưng stale `ACTIVE` không được thắng durable `REVOKED`. Password reset, role change hoặc suspected compromise có thể tăng user/session epoch để invalidate credentials theo policy. Access tokens hiện hữu có thể sống tới expiry nếu không check epoch mỗi request; lựa chọn này đổi latency, availability và revocation window.
 
 Token storage cũng thuộc threat model. Browser refresh token thường hợp hơn trong Secure/HttpOnly/SameSite cookie với CSRF design; access token trong JavaScript memory giảm persistence nhưng vẫn chịu XSS. Mobile/native dùng secure OS storage. Không đưa bearer token vào URL, analytics hoặc logs. TLS là bắt buộc nhưng không sửa token-purpose confusion.
 
-## 6. Worked examples
+## 6. Ví dụ phân tích từng bước
 
 ### 6.1. Refresh token đi qua access filter
 
@@ -100,7 +100,7 @@ Deploy validator mới fail-closed ngay có thể logout mọi user; cho missing
 
 Access/refresh dùng keys khác nhưng mọi endpoint verifier thử cả hai keys; token refresh vẫn được accept. Separate keys giảm blast radius chỉ khi verifier/key resolver bị giới hạn theo boundary. Ngược lại, cùng key vẫn có thể an toàn hơn baseline nếu purpose/audience được enforce, dù compromise blast radius lớn hơn. Defense in depth không thay semantic validation.
 
-## 7. Invariants và failure modes
+## 7. Invariant và các kiểu hỏng
 
 - Chỉ access-purpose credential mới dựng principal ở resource path.
 - Refresh credential chỉ dùng tại refresh endpoint và phải có active durable session.
@@ -110,13 +110,13 @@ Access/refresh dùng keys khác nhưng mọi endpoint verifier thử cả hai ke
 
 **Generic validator reuse:** convenient boolean → callers quên expected semantics → cross-use credential → privilege window. Evidence bằng test matrix từng token×path. **Key rotation race:** issuer ký key mới trước verifier rollout → valid users nhận 401. Evidence bằng mixed-version/key-set test; mitigation publish verifier keys trước signer switch và giữ retiring key đủ lifetime. **Refresh replay:** token bị đánh cắp và legitimate client cùng dùng → nếu không rotation/reuse state, attacker duy trì session. Evidence bằng concurrent/repeated refresh test và final family state.
 
-## 8. Trade-offs và architecture decisions
+## 8. Đánh đổi và quyết định kiến trúc
 
 JWT access token giảm per-request session lookup nhưng revocation kém tức thì. Opaque access token/introspection tăng central dependency nhưng policy/revocation tập trung. JWT refresh tiện self-contained parsing nhưng vẫn cần session/rotation state; opaque random refresh token lưu hash thường giảm exposed claims và dễ model one-time identity. Asymmetric keys/JWKS tách signer/verifier tốt cho nhiều services; vận hành rotation/phân phối keys phức tạp hơn shared secret.
 
 Không tự xây authorization server khi federation, consent, multiple clients, standards compliance và mature rotation trở thành requirement; dùng proven IdP/authorization server. Custom project flow vẫn hữu ích để học boundaries nhưng phải được mô tả đúng giới hạn.
 
-## 9. Áp dụng vào project và evidence plan
+## 9. Áp dụng vào dự án và kế hoạch tạo bằng chứng
 
 `SEC-01` đã ghi baseline: current filter và refresh service dùng generic signature+expiry validation. Khi roadmap tới case, tạo unit matrix cho claims và MockMvc reproducer refresh-as-access/access-as-refresh trước khi sửa; verify no principal on failure, 401 mapping, no token logs và legacy policy. Không triển khai trong preview này.
 
@@ -140,7 +140,7 @@ Không tự xây authorization server khi federation, consent, multiple clients,
 
 > **Bài viết của tôi — `LEARNER TODO`:** viết 12–18 câu kể access path và refresh path, các gates khác nhau, một cross-use failure và rollout claim/key an toàn.
 
-## 13. Self-check có hướng dẫn
+## 13. Tự kiểm tra có hướng dẫn
 
 1. **Question:** JWT signature đúng còn thiếu những validation nào?<br>
    **Đọc lại nếu bí:** mục 3–4.<br>
@@ -159,7 +159,7 @@ Không tự xây authorization server khi federation, consent, multiple clients,
    **Một câu trả lời tốt phải có:** issuer-first, observation, bounded compatibility, deadline, strict gate và negative telemetry.<br>
    **My answer:** `LEARNER TODO`
 
-## 14. Official references và teach-back
+## 14. Nguồn chính thức và trình bày lại
 
 - [RFC 7519 — JSON Web Token](https://www.rfc-editor.org/rfc/rfc7519)
 - [RFC 8725 — JWT Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725)

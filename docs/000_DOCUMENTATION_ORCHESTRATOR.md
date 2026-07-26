@@ -103,7 +103,9 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 2. Agent đọc [Learning System](learning/index.md), active case, đúng template và các artifact được checkpoint link.
 3. Tiếp tục bằng `$run-senior-java-learning`; không tự nhảy qua evidence gate.
 4. Chỉ đọc current code path/concern docs khi checkpoint đã tới case hoặc reproducer.
-5. Kết thúc bằng cách ghi artifact đúng owner và cập nhật cursor cho session sau.
+5. Khi tạo hoặc nâng readiness theory/deep-dive, kiểm [Theory/Deep-dive Quality Audit](learning/theory-quality-audit.md); word count/file count không thay content gate.
+6. Chạy một lượt language/depth review riêng: prose phải là tiếng Việt tự nhiên, English term được giải nghĩa, và mỗi failure có causal chain đọc liền mạch; kiểm link/metadata không thay được lượt đọc này.
+7. Kết thúc bằng cách ghi artifact đúng owner và cập nhật cursor cho session sau.
 
 ## 5. Write-back routing
 
@@ -116,6 +118,7 @@ Nếu code và contract khác nhau, Agent phải báo cả `CURRENT` và `TARGET
 | Webhook contract | `engineering/rtmp-webhook-guide.md`, API contract, tests |
 | Capability implementation | `implementation/current-implementation-map.md` + evidence link |
 | Core/deep-dive knowledge | `learning/topics/<domain>/theory/...`; case/question bank chỉ link, không duplicate |
+| Theory/deep-dive readiness hoặc reference integrity | `learning/theory-quality-audit.md`; cập nhật counts/gate sau corpus audit, không thay learner/runtime evidence |
 | Interview question/rubric | `learning/topics/<domain>/question-bank/<slice>.md` + theory/evidence links |
 | Domain scenario/use-case catalog | `learning/use-case-catalog.md`; quản lý scenario, use-case priority/difficulty và owner coverage, không ghi active status/execution order |
 | Learning session progress | `learning/index.md` cursor + active artifact/case |

@@ -31,6 +31,7 @@ Không đọc toàn bộ tài liệu. Chỉ đọc nguồn phù hợp với côn
 - Kiến trúc và capability hiện tại: `docs/architecture/system-context.md`.
 - Phạm vi code hiện tại: `docs/implementation/current-implementation-map.md`; coverage, priority và execution order: `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md`; scenario Livestream concrete: `docs/learning/use-case-catalog.md`; active case/checkpoint: `docs/learning/index.md`.
 - Khi bắt đầu hoặc tiếp tục học: `docs/learning/index.md`, active case và đúng knowledge artifact dưới `docs/learning/topics/<domain>/` được checkpoint link.
+- Khi tạo/audit theory hoặc deep-dive: `docs/templates/theory-note-template.md` là content contract; `docs/learning/theory-quality-audit.md` là readiness/reference audit. Không dùng số file hoặc word count thay cho teaching gate.
 - Hợp đồng REST và quyền: `docs/contracts/api-contract.md`.
 - Phân quyền REST/WebSocket: `docs/security/authorization-flow.md`.
 - Quy ước mã nguồn và ví dụ: `docs/engineering/coding-standards.md`.
@@ -118,5 +119,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Theory/deep-dive dành cho người chưa biết topic phải là bài giảng, không phải cheat sheet hoặc matrix keyword. Dùng `docs/templates/theory-note-template.md` và `$run-senior-java-learning` làm quality contract.
 - Agent phải dạy mental model, mechanism, ví dụ và failure trước; `LEARNER TODO` chỉ dành cho learner write-back/self-check ở cuối tài liệu.
 - Giữ tiếng Việt tự nhiên, có dấu; giữ và giải nghĩa IT English term cần thiết.
+- Một câu chỉ nên giữ English term khi đó là tên API, type, lệnh, metric hoặc thuật ngữ ngành quen dùng. Phần nối ý, nguyên nhân, hậu quả và hướng dẫn phải viết bằng tiếng Việt; không viết kiểu `First inspect...`, `Fix owner...`, `failure/pathology chain...` rồi coi đó là tiếng Việt.
+- Sau khi tạo hoặc sửa theory, phải đọc lại như một developer Việt chưa biết topic: mọi đoạn phải trả lời được “điều gì xảy ra, vì sao, nhìn bằng bằng chứng nào và xử lý ra sao”. File còn đoạn điện tín, chuỗi keyword hoặc bảng chưa được giải thích phải giữ `OUTLINE_ONLY` hoặc tiếp tục sửa, dù đã đủ heading/link/word count.
 - Table chỉ cô đọng phần đã giải thích. Với lifecycle/state/sequence/causal chain, dùng Mermaid dễ đọc theo `$mermaid-styling`.
 - Preview chưa đủ teaching content phải ghi `Teaching readiness: OUTLINE_ONLY`; không giới thiệu nó là tài liệu tự học hoặc tiếp tục sinh thêm outline trước khi nâng cấp topic active.

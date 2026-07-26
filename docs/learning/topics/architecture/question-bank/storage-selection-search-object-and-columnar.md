@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `DATA-01`<br>
 > Related roadmap: [Stage 11 extensions](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-11---solution-architecture-capstones)<br>
 > Related depth rubric: [Storage selection](../../../knowledge-depth-rubric.md#322-storage-selection-ngoài-rdbms--p2-target-d1-d2)<br>
-> Related theory: `NOT CREATED`; planned target `docs/learning/topics/architecture/theory/core/storage-selection-search-object-and-columnar.md`<br>
+> Related theory: [Core](../theory/core/storage-selection-search-object-and-columnar.md) · [Deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `DATA-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,73 +30,73 @@ First pass `DATA-STORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** More specialized fit improves workload but adds data copies/ops.<br>
 **Follow-up ladder:** Data residency? Multi-tenancy?<br>
 **Red flags:** Chọn database theo độ phổ biến.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-002 — `FOUNDATION`
 **Question:** RDBMS, key-value, document và wide-column stores khác nhau ở model/query nào?<br>
 **Target depth:** `D1-D2` · **Interview likelihood:** `HIGH` · **Question type:** `COMMON_CORE`<br>
 **Interviewer evaluates:** Relational constraints/joins vs key/document/partition access.<br>
-**Answer outline:** RDBMS for transactions/relations/ad-hoc SQL; KV for known key/simple values; document for aggregate-shaped flexible data; wide-column for massive partition-key/range workloads. Products vary.<br>
+**Answer outline:** RDBMS phù hợp transaction, quan hệ và ad-hoc SQL; key-value phù hợp key đã biết và value đơn giản; document store hợp dữ liệu linh hoạt theo aggregate; wide-column hợp workload cực lớn theo partition key/range. Phải đánh giá từng sản phẩm cụ thể.<br>
 **Required trade-offs:** Schema/query flexibility vs predictable scale/consistency.<br>
 **Follow-up ladder:** Secondary indexes?<br>
 **Red flags:** NoSQL nghĩa schema-less và infinitely scalable.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-003 — `FOUNDATION`
 **Question:** Search index khác source-of-truth database thế nào?<br>
 **Target depth:** `D1-D2` · **Interview likelihood:** `HIGH` · **Question type:** `COMMON_CORE`<br>
 **Interviewer evaluates:** Inverted index/relevance and derived projection.<br>
-**Answer outline:** Search optimizes token/text/filter/ranking and may be eventually updated; authoritative writes/invariants stay DB, index rebuildable with version/checkpoint and deletion handling.<br>
+**Answer outline:** Search engine tối ưu token, full-text, filter và ranking, thường được cập nhật eventually consistent. Write có thẩm quyền và invariant ở database; index phải rebuild được bằng version/checkpoint và xử lý delete.<br>
 **Required trade-offs:** Search UX/latency vs freshness/dual-write/ops.<br>
 **Follow-up ladder:** Autocomplete? Vector search?<br>
 **Red flags:** Elasticsearch nên giữ wallet balance.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-004 — `FOUNDATION`
 **Question:** Object storage và columnar analytics store phù hợp dữ liệu nào?<br>
 **Target depth:** `D1-D2` · **Interview likelihood:** `HIGH` · **Question type:** `COMMON_CORE`<br>
 **Interviewer evaluates:** Large immutable blobs vs scan/aggregate columns.<br>
-**Answer outline:** Object store for media/files/backups with metadata/lifecycle; columnar systems compress/scan selected columns for analytics, not OLTP row updates. Keep ownership/catalog/retention.<br>
+**Answer outline:** Object store dành cho media/file/backup cùng metadata và lifecycle; columnar store nén và scan cột chọn lọc cho analytics, không dành cho update row kiểu OLTP. Giữ rõ ownership, catalog và retention.<br>
 **Required trade-offs:** Low storage/query cost vs retrieval latency/consistency/tooling.<br>
 **Follow-up ladder:** Data lake/table format?<br>
 **Red flags:** Lưu video blob trực tiếp PostgreSQL luôn tốt hơn.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-005 — `SENIOR`
 **Question:** Thiết kế PostgreSQL source + search projection không mất/duplicate update thế nào?<br>
 **Target depth:** `D2-D3` · **Interview likelihood:** `HIGH` · **Question type:** `COMMON_SCENARIO`<br>
 **Interviewer evaluates:** Outbox/CDC, version and rebuild.<br>
-**Answer outline:** Commit entity+outbox, project idempotently by entity version, handle delete tombstone, monitor lag/DLQ, full rebuild into new index then alias cutover/checksum.<br>
+**Answer outline:** Commit entity cùng outbox; project idempotent theo entity version; xử lý delete tombstone; theo dõi lag/DLQ; full rebuild vào index mới rồi alias cutover và checksum.<br>
 **Required trade-offs:** Fresh synchronous index vs durable async lag.<br>
 **Follow-up ladder:** Reindex while writes continue?<br>
 **Red flags:** Try/catch save DB rồi call search đủ.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-006 — `SENIOR`
 **Question:** Storage decision matrix cần tính total cost gì ngoài license?<br>
 **Target depth:** `D2-D3` · **Interview likelihood:** `HIGH` · **Question type:** `COMMON_SCENARIO`<br>
 **Interviewer evaluates:** Compute/storage/IO/egress, people, backups and migration.<br>
-**Answer outline:** Model peak/headroom, replicas/backups, network/egress, managed premium, on-call expertise, security/compliance, data transfer/rebuild and exit cost; compare cost per workload/SLO.<br>
+**Answer outline:** Tính peak/headroom, replica/backup, network/egress, phí managed service, năng lực on-call, security/compliance, data transfer/rebuild và exit cost; so chi phí theo workload/SLO.<br>
 **Required trade-offs:** Managed higher bill may lower staffing/risk.<br>
 **Follow-up ladder:** Reserved tiers? Data gravity?<br>
 **Red flags:** Open source tự host miễn phí.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-007 — `SENIOR`
 **Question:** Polyglot persistence trở thành liability khi nào?<br>
 **Target depth:** `D2-D3` · **Interview likelihood:** `MEDIUM` · **Question type:** `PROJECT_APPLICATION`<br>
 **Interviewer evaluates:** Duplicate systems without distinct justified workload.<br>
-**Answer outline:** Each store needs owner, contract, sync/rebuild, backup/security/monitoring and skill; reject new store if PostgreSQL/index/cache can meet measured SLO. Define exit/revisit criteria.<br>
+**Answer outline:** Mỗi store cần owner, contract, cơ chế sync/rebuild, backup/security/monitoring và kỹ năng vận hành. Từ chối store mới nếu PostgreSQL/index/cache hiện tại đáp ứng SLO đã đo. Định nghĩa tiêu chí rút lui và ngày xem lại.<br>
 **Required trade-offs:** One store simpler but may force poor workload/cost.<br>
 **Follow-up ladder:** Platform team threshold?<br>
 **Red flags:** Mỗi microservice chọn database riêng tùy thích.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-008 — `SENIOR`
@@ -107,29 +107,29 @@ First pass `DATA-STORE-001..006`; senior follow-up `007..008`; stretch `009..010
 **Required trade-offs:** Immediate deletion vs immutable backup/compliance.<br>
 **Follow-up ladder:** Right to erasure? Crypto-shredding?<br>
 **Red flags:** Xóa row source là toàn bộ dữ liệu biến mất.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-009 — `ARCHITECT`
 **Question:** Thiết kế near-real-time analytics từ Kafka với replay/backfill thế nào?<br>
 **Target depth:** `D3-D4` · **Interview likelihood:** `LOW` · **Question type:** `ARCHITECT_STRETCH`<br>
 **Interviewer evaluates:** Event log, stream processing, warehouse/columnar sink and correctness.<br>
-**Answer outline:** Versioned events/outbox, partitioning, idempotent transforms/checkpoints, columnar sink, lag SLO, late event/watermark, replay into shadow tables and reconcile before cutover.<br>
+**Answer outline:** Dùng event/outbox có version, partitioning, transform/checkpoint idempotent và columnar sink; đặt lag SLO, xử lý late event/watermark; replay vào shadow table và reconciliation trước cutover.<br>
 **Required trade-offs:** Freshness/complexity/cost vs OLTP isolation.<br>
 **Follow-up ladder:** Lambda vs Kappa? Schema registry?<br>
 **Red flags:** Consumer chạy được nghĩa analytics correct.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### DATA-STORE-010 — `EXPERT`
 **Question:** Primary store/vendor không còn phù hợp: migrate petabyte-scale online thế nào?<br>
 **Target depth:** `D4` · **Interview likelihood:** `LOW` · **Question type:** `EXPERT_DIAGNOSTIC`<br>
 **Interviewer evaluates:** Dual-read/write/CDC, validation and rollback.<br>
-**Answer outline:** Define authoritative phase, bulk snapshot+CDC catch-up, idempotent transform, checksums/shadow reads, cohort cutover, freeze/repair gaps and decommission after retention; model egress/time/cost.<br>
+**Answer outline:** Xác định source có thẩm quyền theo từng phase; bulk snapshot rồi CDC catch-up, transform idempotent, checksum/shadow read, cohort cutover, freeze/repair gap và decommission sau retention; tính egress, thời gian và cost.<br>
 **Required trade-offs:** Long dual system doubles cost and consistency risk.<br>
 **Follow-up ladder:** Clock/cursor cut? Contract change?<br>
 **Red flags:** Copy once rồi đổi endpoint.<br>
-**Evidence:** Theory `NOT CREATED`; case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [core](../theory/core/storage-selection-search-object-and-columnar.md) + [deep-dive](../theory/deep-dives/online-storage-migration-rebuild-and-deletion-lineage.md); case `DATA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

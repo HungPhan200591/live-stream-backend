@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`; later-LTS migration policy belongs to `JDK-02`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [Java language](../../../knowledge-depth-rubric.md#31-java-language-collections-algorithm-và-complexity--p0-target-d3), [Object-oriented design](../../../knowledge-depth-rubric.md#32-object-oriented-design-và-refactoring--p0-target-d3)<br>
-> Related theory: [Language, Object Semantics and Generics](../theory/core/language-object-semantics-and-generics.md), [equality/erasure deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/language-object-semantics-and-generics.md), [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview này không implement `JAVA-01`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi Senior Java backend, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
@@ -47,7 +47,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Mutable object cho phép side effect qua reference; immutable value làm data flow dễ reasoning hơn.<br>
 **Follow-up ladder:** Swap hai object? Primitive wrapper? Array? `final` parameter?<br>
 **Red flags:** Nói Java pass-by-reference vì object bị mutate.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-002 — `FOUNDATION`
@@ -60,7 +60,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Identity phù hợp singleton/sentinel hẹp; domain value phải dùng semantic equality rõ ràng.<br>
 **Follow-up ladder:** `Integer` cache? `BigDecimal.equals`? Enum comparison?<br>
 **Red flags:** Dùng `==` cho mọi `String` vì string pool.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-003 — `FOUNDATION`
@@ -73,7 +73,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Hash tốt giảm collision nhưng correctness contract quan trọng hơn micro-optimization.<br>
 **Follow-up ladder:** Collision? Inheritance symmetry? Mutable field? Lombok generation?<br>
 **Red flags:** Hash khác nhau vẫn có thể equal hoặc hash giống nhau nghĩa là equal.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-004 — `FOUNDATION`
@@ -86,7 +86,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Dễ reasoning và safe sharing đổi lấy allocation/copy ở workload mutation-heavy.<br>
 **Follow-up ladder:** `StringBuilder`? Reflection? char array? Secret trong String?<br>
 **Red flags:** Immutable chỉ vì class là `final`.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-005 — `FOUNDATION`
@@ -99,7 +99,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Final giảm extension/mutation surface nhưng có thể hạn chế framework/proxy/subclass design.<br>
 **Follow-up ladder:** Blank final? Safe publication? Defensive copy? Record fields?<br>
 **Red flags:** `final List` không thể add/remove phần tử.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-006 — `FOUNDATION`
@@ -112,7 +112,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Overload tiện API nhưng dễ ambiguous với null/autoboxing/varargs; explicit names đôi khi rõ hơn.<br>
 **Follow-up ladder:** Covariant return? Checked exception? Static method hiding? Default method conflict?<br>
 **Red flags:** Runtime luôn chọn overload “cụ thể nhất” theo actual object.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-007 — `FOUNDATION`
@@ -125,7 +125,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Inheritance tái sử dụng nhanh nhưng coupling mạnh; composition thêm delegation nhưng linh hoạt/testable hơn.<br>
 **Follow-up ladder:** Default methods? Marker interface? Template Method vs Strategy?<br>
 **Red flags:** Chọn abstract class chỉ vì muốn dùng lại vài dòng code.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-008 — `FOUNDATION`
@@ -138,7 +138,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Generic abstraction tăng reuse/type safety nhưng signature phức tạp có thể làm API khó đọc.<br>
 **Follow-up ladder:** `List<?>` khác raw `List`? Generic method? Primitive type argument?<br>
 **Red flags:** Generics chỉ là cú pháp giúp khỏi viết cast, không ảnh hưởng correctness.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-009 — `SENIOR`
@@ -151,7 +151,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Mutable domain entity tiện update nhưng không phù hợp làm hash key nếu identity fields thay đổi.<br>
 **Follow-up ladder:** Hash collision? Remove sau mutation? `HashSet`? Concurrent mutation?<br>
 **Red flags:** HashMap tự rehash entry khi key thay đổi.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-010 — `SENIOR`
@@ -164,7 +164,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Normalize scale làm equality đơn giản nhưng phải phù hợp currency/business rule; giữ original scale bảo toàn representation nhưng dễ mismatch.<br>
 **Follow-up ladder:** `equals` vs `compareTo` của `BigDecimal`? FX? Serialization? Database scale?<br>
 **Red flags:** `new BigDecimal(double)` hoặc rounding ngầm ở mọi operation.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-011 — `SENIOR`
@@ -177,7 +177,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Defensive copy tăng allocation nhưng bảo vệ invariant; persistent/immutable collections có cost/model khác.<br>
 **Follow-up ladder:** Array getter? Builder reuse? Serialization framework? Deep copy?<br>
 **Red flags:** Chỉ bọc `Collections.unmodifiableList` quanh list caller vẫn giữ reference.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-012 — `SENIOR`
@@ -190,7 +190,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Wildcard tăng flexibility cho caller nhưng có thể làm signature khó hiểu/capture phức tạp.<br>
 **Follow-up ladder:** Array covariance? `null` add? Wildcard capture? Return wildcard?<br>
 **Red flags:** `extends` nghĩa là collection chỉ đọc ở runtime.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-013 — `SENIOR`
@@ -203,7 +203,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Signature flexible hơn nhưng không nên thêm wildcard khi API không cần variance.<br>
 **Follow-up ladder:** `Collections.copy`? Comparator? Function input/output variance?<br>
 **Red flags:** Mọi generic parameter đều đổi thành wildcard theo PECS.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-014 — `SENIOR`
@@ -216,7 +216,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Erasure giữ compatibility/interoperability nhưng mất runtime type information; type token có thể truyền metadata tường minh.<br>
 **Follow-up ladder:** Reifiable type? Reflection thấy gì? `Class<T>`/`TypeReference`?<br>
 **Red flags:** JVM không biết gì về generic signature trong class file hoặc generics hoàn toàn runtime-enforced.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-015 — `SENIOR`
@@ -229,7 +229,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Varargs API tiện nhưng generic varargs cần implementation audit; collection parameter thường an toàn/rõ hơn.<br>
 **Follow-up ladder:** Array covariance? Warning suppression scope? Private/final/static restriction?<br>
 **Red flags:** Gắn `@SafeVarargs` để bỏ warning mà không kiểm body.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-016 — `SENIOR`
@@ -242,7 +242,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Ít boilerplate/exhaustiveness đổi lấy coupling vào closed variants và serialization/evolution considerations.<br>
 **Follow-up ladder:** Record có deep immutable không? Compact constructor? JPA entity? Adding permitted subtype?<br>
 **Red flags:** Chuyển mọi entity/DTO sang record vì “Java mới”.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-017 — `SENIOR`
@@ -255,7 +255,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Business-key equality ổn định nếu key truly immutable/unique; ID equality đơn giản sau persistence nhưng transient entities cần policy rõ.<br>
 **Follow-up ladder:** Hibernate proxy? Two transient entities? Natural key? Set membership?<br>
 **Red flags:** `@Data` luôn an toàn vì Lombok sinh đúng contract tự động.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-018 — `ARCHITECT`
@@ -268,7 +268,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Closed types tăng compiler exhaustiveness nhưng giảm independent evolution; explicit DTO/versioning thêm mapping nhưng bảo vệ boundary.<br>
 **Follow-up ladder:** Adding enum constant? Jackson unknown subtype? Rolling deploy? Public library SemVer?<br>
 **Red flags:** Compile thành công một module được coi là bằng chứng compatible toàn fleet.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JAVA-LANG-019 — `EXPERT`
@@ -281,7 +281,7 @@ Current JPA entities và nhiều DTO đang dùng Lombok `@Data`, vì vậy gener
 **Required trade-offs:** Hiểu bytecode hữu ích khi debug framework/library edge case nhưng không biện minh cho generic API quá phức tạp.<br>
 **Follow-up ladder:** Synthetic/bridge flags? Covariant returns? Reflection? Binary compatibility?<br>
 **Red flags:** Đổ lỗi JVM “mất type” mà không tìm unchecked boundary tạo object sai type.<br>
-**Evidence:** Theory `NOT CREATED`; case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/language-object-semantics-and-generics.md) · [Deep-dive](../theory/deep-dives/equality-erasure-variance-and-mutable-keys.md); case `JAVA-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

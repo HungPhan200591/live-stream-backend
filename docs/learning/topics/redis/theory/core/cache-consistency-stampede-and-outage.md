@@ -1,4 +1,4 @@
-# Redis Cache Consistency, Stampede và Outage
+# Tính nhất quán của Redis cache, cache stampede và sự cố ngừng hoạt động
 
 > Type: `CORE`<br>
 > Domain: `redis`<br>
@@ -31,7 +31,7 @@ Senior không bắt đầu bằng “TTL bao nhiêu?”. Họ bắt đầu bằn
 
 Cache không biến một database query xấu thành data model đúng, không làm DB+Redis atomic và không thay authorization source of truth. Nó là optimization/derived state có failure policy.
 
-## 2. Learning objectives
+## 2. Mục tiêu học
 
 Sau bài này, bạn có thể:
 
@@ -56,7 +56,7 @@ Sau bài này, bạn có thể:
 
 **Stale-while-revalidate (SWR)** cho phép phục vụ value cũ trong bounded window trong khi một worker refresh. SWR phù hợp title/public metadata hơn balance, revocation hoặc authorization decision.
 
-## 4. Mental model cốt lõi
+## 4. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -81,29 +81,29 @@ Flow không nói mọi miss đều được fallback. `Admission gate` bảo v�
 
 ## 5. Cơ chế từng bước
 
-### 5.1. Read path
+### 5.1. Luồng đọc
 
 Application tạo key từ namespace, version và stable identity, ví dụ `stream:v2:{streamId}:summary`. Typed cached DTO tách khỏi JPA entity để schema/serialization rõ. `GET` có deadline nhỏ hơn request budget. Hit phải validate format/version và, với state nhạy cảm, có thể cần durable version/revocation rule. Miss đi qua loader admission, đọc PostgreSQL, map DTO rồi populate với TTL/jitter. Empty result chỉ negative-cache khi identity space bị bound và stale-not-found có thể chấp nhận.
 
-### 5.2. Write và invalidation
+### 5.2. Luồng ghi và invalidation
 
 Mutation commit PostgreSQL trước. Invalidate trước commit tạo window rollback nhưng cache đã mất hoặc writer khác repopulate. Invalidate after commit tránh publish state chưa durable, nhưng không loại mọi race và có crash gap commit→invalidate. Nếu invalidation không được mất, ghi outbox/change event cùng DB transaction rồi consumer idempotent xóa/update cache; TTL vẫn là safety bound, không thay durable delivery.
 
 Update-cache thay delete có vẻ giảm miss nhưng writer có thể không biết toàn read-model fields, concurrent writers reorder và cache write có thể thành owner ngoài ý muốn. Delete-on-write + load-on-read đơn giản hơn, song cần chống stale repopulation và stampede.
 
-### 5.3. Stampede control
+### 5.3. Kiểm soát cache stampede
 
 TTL jitter phân tán expiry nhưng không gom requests cho cùng hot key. Single-flight gom loader nhưng cần deadline và cleanup khi loader fail. Distributed lease giảm loaders xuyên nodes, nhưng lock holder chết/expire và waiters cần fallback; cache correctness không nên phụ thuộc lease duy nhất. SWR giữ origin sống khi refresh chậm nhưng đòi value có soft-expiry/hard-expiry, chỉ một refresher và metric stale age.
 
 Prewarm chỉ dùng cho bounded hot set biết trước; full scan/warm tạo chính storm cần tránh. Admission control quyết định tối đa loaders vào PostgreSQL; khi đầy, reject/degrade thay vì queue vô hạn giữ connection/thread.
 
-### 5.4. Outage và recovery
+### 5.4. Khi Redis ngừng hoạt động và phục hồi
 
 Redis timeout phải nhanh; retry nhiều lần trong request thường khuếch đại outage. Circuit breaker ngừng gọi dependency đang fail nhưng không tự bảo vệ DB fallback. Cần bulkhead/semaphore/rate limit cho origin loads, load shedding theo priority, bounded stale/local cache nếu semantics cho phép và explicit response khi không thể bảo đảm invariant.
 
 Khi Redis trở lại, đóng circuit dần, tránh mọi process cùng warm. Ramp loader budget, ưu tiên hot keys theo traffic thật, giữ jitter, quan sát database pool/latency và cache error/eviction. Recovery kết thúc khi origin load, hit/miss và stale age ổn định, không chỉ khi `PING` thành công.
 
-## 6. Worked examples
+## 6. Ví dụ phân tích từng bước
 
 ### 6.1. Cache-aside tối thiểu
 
@@ -136,7 +136,7 @@ Sai: catch mọi Redis exception rồi query PostgreSQL không giới hạn. Khi
 
 Redis chứa session `ACTIVE`, PostgreSQL đã revoke. Nếu auth chỉ tin cache hit đến TTL thì revoked token còn dùng được. Đây không chỉ là stale UX mà là security violation. Có thể dùng short-lived positive cache gắn durable session version/revocation epoch, invalidation durable, hoặc kiểm tra PostgreSQL trên operation nhạy cảm. Khi Redis down, policy không được mặc định “cho qua để availability cao”.
 
-## 7. Invariants và boundaries
+## 7. Invariant và ranh giới
 
 1. Redis mất sạch vẫn không làm mất durable business state; rebuild source và procedure phải tồn tại.
 2. Mỗi key có namespace/version/type/TTL/cardinality/reader/writer/invalidation owner/outage policy.
@@ -153,7 +153,7 @@ TTL là lifecycle bound, không phải invalidation guarantee. Hit ratio cao kh�
 
 Distributed lock không phải stampede solution bắt buộc. Nó thêm lease/ownership/failover modes; đôi khi local single-flight + origin budget đủ. Nếu lock bảo vệ durable invariant, database constraint/version/fencing owner vẫn phải tồn tại.
 
-## 9. Failure modes theo causal chain
+## 9. Các kiểu hỏng theo chuỗi nguyên nhân
 
 **Expiry wave:** cùng TTL → hàng nghìn keys expire cùng giây → miss/loaders tăng → DB pool wait/latency tăng → request timeout/retry → thêm load. Chứng minh bằng expiry histogram, loader concurrency, DB QPS/pool và synchronized fixture. Xử lý bằng jitter, single-flight, loader budget, stale serve và controlled warmup.
 
@@ -161,11 +161,11 @@ Distributed lock không phải stampede solution bắt buộc. Nó thêm lease/o
 
 **Hot key:** celebrity livestream tập trung reads/writes vào một key/shard → CPU/network/event loop latency tăng → unrelated keys trên shard chậm. Đo per-command latency, key size/ops và shard metrics. Có thể local-cache safe reads, batch/sample updates, bucket/shard với merge trade-off hoặc redesign state; thêm cluster node không tự chia một key.
 
-## 10. Solution patterns và trade-offs
+## 10. Các mẫu giải pháp và đánh đổi
 
 TTL ngắn giảm stale horizon nhưng tăng miss/origin load. TTL dài giảm load nhưng tăng stale/migration window. Event invalidation giảm stale trung bình nhưng có lag/duplicate/missed-event recovery. Versioned value/key tránh old writer overwrite hoặc serializer conflict nhưng tạo memory overlap/cold cache. SWR tăng availability và origin survival nhưng chỉ hợp khi stale có business bound. Mọi option cần degraded-mode test.
 
-## 11. Áp dụng vào project
+## 11. Áp dụng vào dự án
 
 Khi `RED-01` active:
 
@@ -215,7 +215,7 @@ Bắt đầu bằng source of truth và read/write timeline. Kể race reader đ
 
 > **Bài viết của tôi — `LEARNER TODO`:** viết 12–18 câu theo scaffold. Lần hai đóng tài liệu và nói lại trong hai phút.
 
-## 15. Self-check có hướng dẫn
+## 15. Tự kiểm tra có hướng dẫn
 
 1. **Question:** TTL giải quyết gì và không giải quyết gì?<br>
    **Đọc lại nếu bí:** mục 3, 5.1 và 8.<br>
@@ -234,7 +234,7 @@ Bắt đầu bằng source of truth và read/write timeline. Kể race reader đ
    **Một câu trả lời tốt phải có:** synchronized expiry, representative concurrency, loader/origin metrics, before/after, failure path và không chỉ average latency.<br>
    **My answer:** `LEARNER TODO`
 
-## 16. Official references
+## 16. Nguồn chính thức
 
 - [Redis — Client-side caching introduction](https://redis.io/docs/latest/develop/clients/client-side-caching/)
 - [Redis — Key eviction](https://redis.io/docs/latest/develop/reference/eviction/)
@@ -243,7 +243,7 @@ Bắt đầu bằng source of truth và read/write timeline. Kể race reader đ
 
 Exact behavior/config phải được re-check theo runtime captured vì project hiện dùng floating image tag.
 
-## 17. Teach-back checklist
+## 17. Checklist trình bày lại
 
 - [ ] Tôi phát biểu source of truth và cache contract trước khi nói TTL.
 - [ ] Tôi vẽ được stale-repopulation timeline không nhìn notes.

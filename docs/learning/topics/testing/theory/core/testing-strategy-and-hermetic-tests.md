@@ -55,11 +55,11 @@ Nếu chưa quen Spring context, cần nhớ: Spring Test có thể cache `Appli
 
 ```mermaid
 flowchart TB
-    I["Invariant hoặc<br/>failure risk"] --> P["Execution path<br/>có thể phá claim"]
-    P --> B["Boundary nhỏ nhất<br/>chứa risk"]
-    B --> D["Real dependency hay<br/>test double phù hợp"]
-    D --> O["Observable oracle<br/>state, response, event"]
-    O --> E["Repeatable evidence"]
+    I["Invariant hoặc<br/>rủi ro failure"] --> P["Đường thực thi<br/>có thể phá kết luận"]
+    P --> B["Ranh giới nhỏ nhất<br/>chứa rủi ro"]
+    B --> D["Dependency thật hay<br/>test double phù hợp"]
+    D --> O["Kết quả quan sát được<br/>state, response, event"]
+    O --> E["Bằng chứng lặp lại được"]
 
     style I fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style P fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff

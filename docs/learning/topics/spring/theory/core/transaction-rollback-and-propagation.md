@@ -29,10 +29,10 @@ Logical transaction scope là lời hứa của từng method; physical transact
 
 ```mermaid
 flowchart TB
-    A["Outer REQUIRED<br/>begin physical tx"] --> B["Inner REQUIRED<br/>join same tx"]
-    B --> C["Inner failure<br/>mark rollback-only"]
-    C --> D["Outer catches và returns"]
-    D --> E["Commit attempt"]
+    A["REQUIRED bên ngoài<br/>mở transaction vật lý"] --> B["REQUIRED bên trong<br/>tham gia cùng transaction"]
+    B --> C["Luồng trong lỗi<br/>đánh dấu rollback-only"]
+    C --> D["Luồng ngoài bắt lỗi<br/>và trả kết quả"]
+    D --> E["Thử commit"]
     E --> F["Rollback +<br/>UnexpectedRollbackException"]
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
@@ -97,6 +97,14 @@ DB commit thành công rồi process crash trước publish RabbitMQ/Redis updat
 ## 8. Interview answer outline
 
 Phân biệt logical/physical, dựng sequence rollback-only, so propagation bằng connection/commit ownership. Nêu isolation không thay optimistic/pessimistic invariant design và chốt dual-write bằng outbox/idempotency/reconciliation cùng ambiguous client timeout.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — rollback-only:** inner `REQUIRED` ném runtime, outer catch nhưng physical transaction đã rollback-only; commit ném `UnexpectedRollbackException`. Failure taxonomy/owner phải rõ thay vì catch rộng.
+
+**Worked example gần project — `REQUIRES_NEW` pool:** outer giữ connection A, inner cần B; nhiều requests có thể giữ hết pool rồi cùng chờ. Test barrier/pool metrics; inner independent commit cũng không rollback theo outer.
+
+**Phản ví dụ:** gọi payment provider trong DB transaction để mong `@Transactional` rollback cả hai. External success/local rollback vẫn xảy ra; cần idempotency/state/reconciliation và transaction ngắn.
 
 ## 9. Tóm tắt và learner write-back
 

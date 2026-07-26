@@ -29,11 +29,11 @@ Executor là admission và scheduling policy cho task, không tạo thêm năng 
 
 ```mermaid
 flowchart TB
-    A["Request + deadline"] --> Q["Admission / bounded queue"]
+    A["Request + deadline"] --> Q["Nhận tải / queue hữu hạn"]
     Q --> W["Worker hoặc virtual thread"]
-    W --> D["DB / remote bounded resource"]
-    D --> C["Completion stage"]
-    A --> X["Cancel / timeout signal"]
+    W --> D["Tài nguyên hữu hạn<br/>DB / remote service"]
+    D --> C["Stage hoàn tất"]
+    A --> X["Tín hiệu hủy / timeout"]
     X --> W
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style Q fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff

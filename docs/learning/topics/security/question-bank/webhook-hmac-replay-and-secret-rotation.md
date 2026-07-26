@@ -1,4 +1,4 @@
-# Security Interview Question Bank — Webhook HMAC, Replay Protection and Secret Rotation
+# Ngân hàng câu hỏi phỏng vấn Security — webhook HMAC, chống replay và xoay secret
 
 > Status: `DRAFT`<br>
 > Domain owner: `security / HTTP API / event delivery`<br>
@@ -6,10 +6,10 @@
 > Related roadmap: [Stage 0](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Security](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [HTTP/API](../../../knowledge-depth-rubric.md#36-http-api-design-và-network-fundamentals--p0-target-d3), [Distributed systems](../../../knowledge-depth-rubric.md#312-distributed-systems-fundamentals--p0-target-d3)<br>
 > Related project guide: [RTMP Webhook Guide](../../../../engineering/rtmp-webhook-guide.md), [API contract](../../../../contracts/api-contract.md#rtmp-webhook)<br>
-> Related theory: [Core theory](../theory/core/webhook-authentication-replay-and-idempotency.md)<br>
+> Related theory: [Core theory](../theory/core/webhook-authentication-replay-and-idempotency.md); [Deep-dive](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md)<br>
 > Updated: `2026-07-26`
 
-Preview này không implement `SEC-05`, không active case và không tạo evidence. `Interview likelihood` là heuristic trong phạm vi backend/API security, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, test `NOT RUN`.
+Bản xem trước này không triển khai `SEC-05`, không kích hoạt case và không tạo bằng chứng. `Interview likelihood` chỉ là ước lượng trong phạm vi bảo mật backend/API, không phải tỷ lệ thị trường đã đo. Mọi câu giữ `UNANSWERED`, kiểm thử `NOT RUN`.
 
 ## Project anchor
 
@@ -43,7 +43,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Polling dễ kiểm soát nhịp nhưng tốn request/trễ; webhook nhanh hơn nhưng tăng security/reliability responsibility.<br>
 **Follow-up ladder:** Timeout? Retry? Ordering? Nếu receiver down?<br>
 **Red flags:** Webhook được coi là message delivery exactly-once.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-002 — `FOUNDATION`
@@ -56,7 +56,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Shared-secret HMAC đơn giản; mTLS/OAuth client credentials quản trị identity mạnh hơn nhưng vận hành phức tạp hơn.<br>
 **Follow-up ladder:** Nhiều provider? Tenant-specific key? IP allowlist có đủ không?<br>
 **Red flags:** Endpoint webhook public nên không cần authentication.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-003 — `FOUNDATION`
@@ -69,7 +69,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** HMAC đơn giản/nhanh nhưng hai bên cùng giữ secret; asymmetric signature giảm shared-secret blast radius nhưng tăng key/certificate complexity.<br>
 **Follow-up ladder:** HMAC khác hash? Có mã hóa payload không? Secret lộ thì sao?<br>
 **Red flags:** HMAC được mô tả như encryption hoặc thay thế TLS.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-004 — `FOUNDATION`
@@ -82,7 +82,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Window ngắn giảm replay nhưng nhạy clock/network delay; dedup store tăng state/cost.<br>
 **Follow-up ladder:** Nếu attacker replay trong window? Clock skew? Event ID retention?<br>
 **Red flags:** Đổi secret sau mỗi request hoặc chỉ kiểm timestamp là đủ.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-005 — `FOUNDATION`
@@ -95,7 +95,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Dedup chính xác cần durable state; operation tự nhiên idempotent đơn giản hơn nhưng vẫn phải xét side effects phụ.<br>
 **Follow-up ladder:** PUT có luôn idempotent? Email/event publish? Retry sau timeout?<br>
 **Red flags:** Trả `200` cho duplicate nhưng vẫn publish side effect lần hai.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-006 — `SENIOR`
@@ -108,7 +108,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Raw-body signing dễ tương thích nhưng middleware phải preserve bytes; canonicalization linh hoạt hơn nhưng specification/implementation phức tạp.<br>
 **Follow-up ladder:** Gzip? Charset? Proxy transform? Body stream chỉ đọc một lần?<br>
 **Red flags:** Dùng `object.toString()` hoặc map iteration order để ký.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-007 — `SENIOR`
@@ -121,7 +121,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Early cheap rejects giảm CPU nhưng response/timing không nên trở thành oracle; dedup claim cần recovery nếu processing fail.<br>
 **Follow-up ladder:** Unknown key ID? Malformed hex? Rate limit? Claim trước hay cùng transaction?<br>
 **Red flags:** Deserialize và thay đổi DB trước khi verify signature.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-008 — `SENIOR`
@@ -134,7 +134,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Window rộng tăng replay exposure; window hẹp tăng false reject khi clock/network bất ổn.<br>
 **Follow-up ladder:** NTP outage? Queue delayed event? Unix seconds vs milliseconds?<br>
 **Red flags:** Tin timestamp trong body nhưng không đưa nó vào signature.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-009 — `SENIOR`
@@ -147,7 +147,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** PostgreSQL bền/chính xác nhưng thêm write latency; Redis nhanh nhưng expiry/failover có thể phá dedup invariant nếu là authority duy nhất.<br>
 **Follow-up ladder:** Processing crash sau claim? TTL? Same ID khác payload? Poison event?<br>
 **Red flags:** Check-then-insert không unique constraint hoặc in-memory set trên nhiều instance.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-010 — `SENIOR`
@@ -160,7 +160,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Synchronous processing đơn giản nhưng dễ timeout; durable enqueue/inbox cho ack nhanh hơn nhưng thêm component và eventual consistency.<br>
 **Follow-up ladder:** `202` vs `200`? Timeout sau commit? `Retry-After`? DLQ ownership?<br>
 **Red flags:** Mọi exception đều trả `200` hoặc mọi `4xx/5xx` đều retry vô hạn.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-011 — `SENIOR`
@@ -173,7 +173,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Strict ordering có thể reject event hợp lệ đến trễ; reconciliation tăng complexity nhưng phục hồi được missing event.<br>
 **Follow-up ladder:** End trước start? Reconnect tạo session mới? Timestamp bằng nhau? Redis fail sau DB commit?<br>
 **Red flags:** Chỉ dựa vào thứ tự request đến controller.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-012 — `SENIOR`
@@ -186,7 +186,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Unit test crypto nhanh; MockMvc/integration test mới chứng minh filter/body caching/serialization/transaction behavior.<br>
 **Follow-up ladder:** Fixed clock? Real PostgreSQL? Log capture? Property/fuzz cases?<br>
 **Red flags:** Chỉ test helper trả true với một happy-path string.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-013 — `SENIOR`
@@ -199,7 +199,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Overlap giúp availability/rollback nhưng tăng attack surface; zero-overlap dễ gây outage.<br>
 **Follow-up ladder:** Key compromised? Multiple senders? Secret manager outage? Audit metadata?<br>
 **Red flags:** Thay secret đồng thời hai bên và “restart thật nhanh”.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-014 — `ARCHITECT`
@@ -212,7 +212,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Synchronous global uniqueness tăng latency/giảm availability; regional acceptance cần conflict/convergence policy.<br>
 **Follow-up ladder:** Region split brain? GDPR retention? Hot provider? Disaster recovery?<br>
 **Red flags:** Local-memory dedup hoặc Redis TTL được coi là exactly-once toàn cầu.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-015 — `ARCHITECT`
@@ -225,7 +225,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Central gateway giảm duplication nhưng tăng blast radius/coupling; app-level rõ domain hơn nhưng policy dễ phân tán.<br>
 **Follow-up ladder:** Service mesh/mTLS? Internal bypass path? Multiple providers? Body transformation?<br>
 **Red flags:** Gateway verify signature rồi app tin mọi request nội bộ không có authenticated hop.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### SEC-WEBHOOK-016 — `EXPERT`
@@ -238,7 +238,7 @@ Current RTMP webhook dùng `X-Webhook-Secret` tĩnh có default development valu
 **Required trade-offs:** Immediate shutdown reduces abuse but can lose legitimate events; bounded buffering/reconciliation preserves service with operational cost.<br>
 **Follow-up ladder:** Không có event ID lịch sử? Provider logs unavailable? Compensation unsafe? Customer impact?<br>
 **Red flags:** Chỉ rotate secret hoặc chỉ xóa duplicate rows mà không điều tra side effects.<br>
-**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/webhook-authentication-replay-and-idempotency.md); Deep-dive [Advanced](../theory/deep-dives/webhook-canonicalization-replay-and-rotation-failures.md); case `SEC-05 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

@@ -80,6 +80,7 @@ flowchart TB
     style V1 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style V2 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style V3 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style Tasks fill:#263238,stroke:#fff,stroke-width:2px,color:#fff
     style S fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
     style C fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style O fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff

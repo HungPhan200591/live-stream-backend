@@ -29,10 +29,10 @@ Exception chuyển control cùng thông tin nguyên nhân; time map giữa human
 
 ```mermaid
 flowchart TB
-    D["Domain meaning"] --> R["Representation<br/>exception, instant, amount, DTO"]
-    R --> B["Boundary<br/>layer, zone, process, storage"]
+    D["Ý nghĩa nghiệp vụ"] --> R["Cách biểu diễn<br/>exception, instant, amount, DTO"]
+    R --> B["Ranh giới<br/>layer, zone, process, storage"]
     B --> C["Consumer diễn giải"]
-    C --> I["Phải giữ invariant<br/>và compatibility"]
+    C --> I["Phải giữ invariant<br/>và tính tương thích"]
     style D fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style R fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff

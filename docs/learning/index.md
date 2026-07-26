@@ -28,7 +28,7 @@ Block này là con trỏ để session sau tiếp tục. `Current checkpoint` l�
 | Next action | Người học đọc [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) từ mục 0 đến 13; sau đó viết mục 14 và trả lời guided self-check mục 15, rồi yêu cầu Agent phản biện để quyết định có đạt `THEORY_CORE` gate hay chưa |
 | Required reading | `AGENTS.md`; [Senior Roadmap](../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md); active JDK-01 case; [Java 21 platform baseline](topics/java/theory/core/java21-platform-baseline.md) |
 | Write target | `docs/learning/topics/java/theory/core/java21-platform-baseline.md` — learner write-back tại mục 14 và guided self-check mục 15; không sửa code |
-| Latest evidence | Toàn bộ `55/55` theory/deep-dive hiện có là `TEACHABLE_DRAFT` (`18` Java, `10` Spring, `4` HTTP/API, `4` Resilience, `2` Testing, `10` PostgreSQL/JPA/SQL, `2` Redis, `5` Security), với `65` Mermaid diagrams. Security Stage 0 foundation đã nối `5/7` question-bank slices (`71/71` câu): token/session, authorization, revocation/cache, secret exposure và webhook HMAC; còn thiếu OAuth2/OIDC và abuse/supply-chain. Mọi batch chỉ là tài liệu chuẩn bị, không active case. Learner self-check, reproducer, test và runtime evidence vẫn `NOT RUN`, nên cursor/checkpoint/depth không đổi. Livestream use-case catalog vẫn có `41` scenario và owner mapping `43/43` |
+| Latest evidence | Corpus có đủ `115` theory/deep-dive và `58` question-bank slices, nhưng quality audit đang được mở lại sau learner feedback: nhiều prose còn hoàn toàn bằng tiếng Anh và một số deep-dive nén causal chain quá mức. Không dùng readiness cũ làm bằng chứng cho tới khi language/depth review và audit chéo hoàn tất. Learner/case/runtime evidence vẫn `NOT RUN`, nên cursor/checkpoint/depth không đổi |
 | Implementation gate | `LOCKED` cho tới khi theory, question rubric, compatibility audit, case review, baseline capture và design gate đạt |
 | Blocker | Learner write-back/self-check của core theory chưa hoàn tất; declared Java 17/runtime drift chưa được chụp evidence; virtual-thread workload chưa được thiết kế |
 | Updated | `2026-07-26` |
@@ -92,19 +92,19 @@ Level nằm trên từng câu hỏi, không chia folder theo level.
 
 | Knowledge domain | Roadmap coverage | Trạng thái knowledge hiện tại |
 | --- | --- | --- |
-| Java Core, JMM và concurrency | Stage 0/1 | `TEACHABLE_DRAFT` cho toàn bộ theory hiện có; JDK-01 đang `IN_PROGRESS`, compatibility evidence pending |
-| Build, dependency lifecycle và CI/runtime | Stage 0/8 | `IN_PROGRESS`: JDK-01 toolchain evidence pending; JDK-02 decision chưa chạy |
-| Spring internals và transactions | Stage 2 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
-| HTTP/API semantics và compatibility | Stage 2 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
-| PostgreSQL và data lifecycle | Stage 3, 9 | `10` core theory là `TEACHABLE_DRAFT` và đã nối `10/10` question-bank slices; chưa active/học, case và runtime evidence vẫn `NOT RUN` |
-| Redis và distributed state | Stage 4 | `2` core theory là `TEACHABLE_DRAFT`, nối `2/2` question-bank slices và `20/20` câu hỏi; chưa active/học, exact Redis runtime chưa pin và evidence vẫn `NOT RUN` |
-| RabbitMQ, Kafka và event workflow | Stage 5, 6 | `NOT_STARTED` |
-| Security, realtime và abuse resistance | Stage 0, 7 | `5/7` core theory là `TEACHABLE_DRAFT`, nối `71/71` câu tương ứng; Stage 0 trust boundaries `SEC-01/06/02/03/05` đã có theory, còn thiếu OAuth2/OIDC và abuse/supply-chain của Stage 7. Các case vẫn chưa active/học, evidence `NOT RUN` |
-| Testing, observability và performance | Stage 0, 8 | Testing core/Testcontainers deep-dive là `TEACHABLE_DRAFT`; TEST-01 vẫn đứng sau JDK-01, chưa active và evidence `NOT RUN` |
-| Resilience và distributed failure | Stage 2, 8, 10 | Toàn bộ theory hiện có là `TEACHABLE_DRAFT`; chưa active/học và evidence `NOT RUN` |
-| Modular monolith và microservices | Stage 10 | `NOT_STARTED` |
-| Solution architecture | Stage 11 | `NOT_STARTED` |
-| Technical leadership và delivery | Xuyên suốt/Stage 12 | `NOT_STARTED`: chỉ ghi từ review/ADR/incident/teach-back thật |
+| Java Core, JMM và concurrency | Stage 0/1 | `10` core + `11` deep-dive là `TEACHABLE_DRAFT`, nối `166/166` câu qua `11` slices; JDK-01 đang `IN_PROGRESS`, compatibility evidence pending |
+| Build, dependency lifecycle và CI/runtime | Stage 0/8 | CI/CD + Linux/JVM/container core/deep là `TEACHABLE_DRAFT`; JDK-01 toolchain evidence và delivery/runtime labs vẫn `NOT RUN` |
+| Spring internals và transactions | Stage 2 | `5` core + `5` deep-dive là `TEACHABLE_DRAFT`, nối `52/52` câu; chưa active/học và evidence `NOT RUN` |
+| HTTP/API semantics và compatibility | Stage 2 | `2` core + `2` deep-dive là `TEACHABLE_DRAFT`, nối `20/20` câu; chưa active/học và evidence `NOT RUN` |
+| PostgreSQL và data lifecycle | Stage 3, 9 | `10` core + `10` deep-dive là `TEACHABLE_DRAFT`, nối `106/106` câu qua `10/10` slices; chưa active/học, case và runtime evidence `NOT RUN` |
+| Redis và distributed state | Stage 4 | `2` core + `2` deep-dive là `TEACHABLE_DRAFT`, nối `20/20` câu; exact Redis runtime chưa pin và evidence `NOT RUN` |
+| RabbitMQ, Kafka và event workflow | Stage 5, 6 | `3/3` core + `3/3` deep-dive là `TEACHABLE_DRAFT`, nối `30/30` câu hỏi; RabbitMQ là stack project, Kafka chỉ là comparison/preview và chưa thêm dependency; case/lab evidence `NOT RUN` |
+| Security, realtime và abuse resistance | Stage 0, 7 | Security `7` pairs/`91` câu và Realtime `1` pair/`10` câu đều là `TEACHABLE_DRAFT` với per-question links đầy đủ; WebSocket/security labs và learner/case evidence `NOT RUN` |
+| Testing, observability và performance | Stage 0, 8 | Testing `2` pairs/`26` câu và Observability `1` pair/`10` câu đều `TEACHABLE_DRAFT` với per-question links đầy đủ; TEST-01 vẫn đứng sau JDK-01 và mọi lab evidence `NOT RUN` |
+| Resilience và distributed failure | Stage 2, 8, 10 | `3` core + `3` deep-dive là `TEACHABLE_DRAFT`, nối `30/30` câu; chưa active/học và evidence `NOT RUN` |
+| Modular monolith và microservices | Stage 10 | Core/deep coverage cho DDD/module, distributed consistency và microservice extraction là `TEACHABLE_DRAFT`; question links đầy đủ, case evidence `NOT RUN` |
+| Solution architecture | Stage 11 | Capacity/storage plus Cloud, Reactive và Platform option pairs là `TEACHABLE_DRAFT`; question links đầy đủ, capstone/load/fault/adoption evidence `NOT RUN` |
+| Technical leadership và delivery | Xuyên suốt/Stage 12 | Core/deep theory cho review, ADR, incident, mentoring và decision facilitation là `TEACHABLE_DRAFT`, nối `10/10` câu; behavioral/interview evidence chỉ được ghi từ work thật và hiện `NOT RUN` |
 
 Không tạo toàn bộ topic files từ bảng này. Chỉ tạo artifact của active checkpoint, rồi cập nhật status bằng evidence link.
 

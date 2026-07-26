@@ -29,8 +29,8 @@ Hash collection không “tìm toàn bộ map”. Nó tính hash hiện tại, c
 
 ```mermaid
 flowchart TB
-    A["put(key)<br/>hash = H1"] --> B["Entry lưu tại<br/>bucket H1"]
-    B --> C["Mutate field<br/>hash thành H2"]
+    A["put(key)<br/>hash = H1"] --> B["Phần tử lưu tại<br/>bucket H1"]
+    B --> C["Đổi field mutable<br/>hash thành H2"]
     C --> D["get(key)<br/>đi bucket H2"]
     D --> E["Không thấy entry<br/>vẫn nằm ở H1"]
 
@@ -45,10 +45,10 @@ Với generics, raw/unchecked boundary là nơi hàng rào bị thủng; compile
 
 ```mermaid
 flowchart TB
-    A["Typed List<String>"] --> B["Raw reference<br/>mất compile-time guard"]
-    B --> C["Add Integer<br/>runtime chưa cast"]
-    C --> D["Typed read<br/>compiler chèn cast String"]
-    D --> E["ClassCastException<br/>xa nguồn pollution"]
+    A["List<String> có kiểu"] --> B["Raw reference<br/>mất kiểm tra lúc compile"]
+    B --> C["Thêm Integer<br/>runtime chưa cast"]
+    C --> D["Đọc theo kiểu String<br/>compiler chèn cast"]
+    D --> E["ClassCastException<br/>xa nơi làm bẩn dữ liệu"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff

@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [JVM runtime](../../../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3)<br>
-> Related theory: [JVM Class Loading, Bytecode and Memory](../theory/core/jvm-class-loading-bytecode-and-memory.md), [classloader/memory deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md), [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong topic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -38,7 +38,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Full JDK dễ chẩn đoán nhưng image lớn hơn; trimmed runtime nhỏ nhưng cần giữ diagnostic capability.<br>
 **Follow-up ladder:** `javac` tạo gì? `java` làm gì? Container dùng JRE/JDK?<br>
 **Red flags:** JVM là compiler Java hoặc JRE/JDK luôn đồng nhất version.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-002 — `FOUNDATION`
@@ -51,7 +51,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Lazy resolution/startup giảm upfront work nhưng failure có thể xuất hiện muộn.<br>
 **Follow-up ladder:** Constant initialization? Class literal? `Class.forName`?<br>
 **Red flags:** Class được initialize ngay khi file `.class` được đọc.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-003 — `FOUNDATION`
@@ -64,7 +64,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Isolation hỗ trợ plugin/reload nhưng gây cast/linkage leak phức tạp.<br>
 **Follow-up ladder:** Bootstrap loader biểu diễn thế nào? SPI/context loader?<br>
 **Red flags:** Hai class cùng fully qualified name luôn cùng type.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-004 — `FOUNDATION`
@@ -77,7 +77,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Tăng heap không sửa native/thread/direct exhaustion và có thể tăng GC footprint.<br>
 **Follow-up ladder:** String pool? Code cache? StackOverflow vs OOM?<br>
 **Red flags:** Mọi Java memory đều nằm trong heap.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-005 — `SENIOR`
@@ -90,7 +90,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Heavy/static I/O startup đơn giản nhưng khó retry/test và tạo global failure.<br>
 **Follow-up ladder:** Compile-time constant? Interface init? Lazy holder idiom?<br>
 **Red flags:** Catch exception rồi JVM tự initialize lại class lần sau.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-006 — `SENIOR`
@@ -103,7 +103,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Cache/listener tăng performance/extensibility nhưng cần bound/lifecycle cleanup.<br>
 **Follow-up ladder:** Weak reference? ThreadLocal pool? Static collection?<br>
 **Red flags:** Java có GC nên không thể memory leak.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-007 — `SENIOR`
@@ -116,7 +116,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Hot reload/plugin isolation hữu ích nhưng tăng lifecycle ownership.<br>
 **Follow-up ladder:** ContextClassLoader? Metaspace growth? Devtools?<br>
 **Red flags:** Tăng MaxMetaspaceSize được coi là fix.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-008 — `SENIOR`
@@ -129,7 +129,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Giảm allocation có thể làm code phức tạp; chỉ giữ khi evidence đáng kể.<br>
 **Follow-up ladder:** TLAB? Escape analysis? Primitive stream? Pool object?<br>
 **Red flags:** Dùng object pool cho DTO ngắn sống mà không benchmark.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-009 — `ARCHITECT`
@@ -142,7 +142,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Heap lớn giảm allocation pressure risk nhưng ép native headroom và pause footprint.<br>
 **Follow-up ladder:** Virtual threads? Direct buffer? Sidecar? cgroup?<br>
 **Red flags:** Đặt Xmx bằng 100% memory limit.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-MEM-010 — `EXPERT`
@@ -155,7 +155,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic trong t
 **Required trade-offs:** Custom loader isolation đổi lấy diagnosability/compatibility cost.<br>
 **Follow-up ladder:** Deadlock detector thấy init lock? LinkageError? Module layer?<br>
 **Red flags:** Restart/tăng heap là root-cause fix.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-class-loading-memory-and-classloader-leaks.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

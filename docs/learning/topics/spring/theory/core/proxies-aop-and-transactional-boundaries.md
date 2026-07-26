@@ -29,11 +29,11 @@ Spring proxy là object đứng trước target. Caller gọi proxy; proxy chạ
 
 ```mermaid
 flowchart TB
-    C["External caller"] --> P["Spring proxy"]
-    P --> A1["Security / metrics advice"]
-    A1 --> A2["Transaction / retry advice"]
-    A2 --> T["Target method"]
-    T --> S["this.otherMethod<br/>bypass proxy"]
+    C["Caller bên ngoài"] --> P["Spring proxy"]
+    P --> A1["Advice security / metrics"]
+    A1 --> A2["Advice transaction / retry"]
+    A2 --> T["Method đích"]
+    T --> S["this.otherMethod<br/>đi vòng qua proxy"]
     style C fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style P fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style A1 fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -94,6 +94,14 @@ Retry ngoài transaction tạo physical transaction mới cho mỗi attempt; ret
 ## 8. Interview answer outline
 
 Vẽ caller→proxy→advice→target, giải thích self-invocation bằng dispatch. So JDK/class proxy ở mức contract cần thiết, rồi phân tích advice order và remote boundary. Đưa reproducer quan sát transaction active/attempt/commit.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — self invocation:** external caller qua proxy kích hoạt `@Transactional`; target gọi `this.inner()` bỏ qua proxy nên annotation inner không tạo boundary mới. Test assert physical commit/rollback outcome, không chỉ class name.
+
+**Worked example gần project — advice order:** retry outer + transaction inner cho mỗi attempt transaction mới; order ngược có thể retry trong rollback-only transaction. Inject failure attempt một và assert attempt/transaction/domain effects.
+
+**Phản ví dụ:** thêm annotation lên private/internal method rồi tin framework “thấy”. Invocation path/proxy mode/matching advisor và context handoff mới quyết định advice; proxy không atomic với broker/provider hoặc tự propagate transaction qua async thread.
 
 ## 9. Tóm tắt và learner write-back
 

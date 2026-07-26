@@ -6,7 +6,7 @@
 > Runtime baseline: `Java 21`<br>
 > Related roadmap: [Stage 1](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-1---java-core-state-và-concurrency)<br>
 > Related depth rubric: [JVM runtime](../../../knowledge-depth-rubric.md#33-jvm-runtime-và-diagnostics--p0-target-d3)<br>
-> Related theory: [JVM Class Loading, Bytecode and Memory](../theory/core/jvm-class-loading-bytecode-and-memory.md), [GC/JIT/JFR deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md) — `DRAFT`, evidence `NOT RUN`<br>
+> Related theory: [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md), [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md) — `TEACHABLE_DRAFT`, evidence `NOT RUN`<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -38,7 +38,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Throughput, pause, footprint và CPU không tối ưu đồng thời.<br>
 **Follow-up ladder:** Young/old? Promotion? Humongous object?<br>
 **Red flags:** GC định kỳ xóa mọi object cũ.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-002 — `FOUNDATION`
@@ -51,7 +51,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Low pause không đồng nghĩa throughput/cost tốt nhất.<br>
 **Follow-up ladder:** Default collector? Heap size? Allocation rate?<br>
 **Red flags:** ZGC luôn tốt hơn G1.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-003 — `FOUNDATION`
@@ -64,7 +64,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Frequent short pause và rare long pause có user impact khác cùng average.<br>
 **Follow-up ladder:** Concurrent marking? Evacuation failure? Allocation stall?<br>
 **Red flags:** Concurrent collector nghĩa là không bao giờ STW.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-004 — `FOUNDATION`
@@ -77,7 +77,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Aggressive compilation tăng peak performance nhưng dùng CPU/code cache/startup time.<br>
 **Follow-up ladder:** Inlining? OSR? Deoptimization?<br>
 **Red flags:** Javac tạo native code tối ưu cuối cùng.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-005 — `SENIOR`
@@ -90,7 +90,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Tuning GC không sửa safepoint delay do code/native path.<br>
 **Follow-up ladder:** Thread dump? Biased locking legacy? JNI?<br>
 **Red flags:** Mọi STW pause đều là GC.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-006 — `SENIOR`
@@ -103,7 +103,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Tăng heap giảm frequency nhưng có thể che leak/tăng footprint.<br>
 **Follow-up ladder:** OOM dump? Native OOM? Promotion failure?<br>
 **Red flags:** Thấy nhiều GC là kết luận memory leak.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-007 — `SENIOR`
@@ -116,7 +116,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Heap dump nặng/nhạy cảm; continuous low-overhead signals tốt hơn chờ incident rồi đoán.<br>
 **Follow-up ladder:** Multiple thread dumps? PII? Jcmd?<br>
 **Red flags:** Heap dump là công cụ đầu tiên cho mọi CPU spike.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-008 — `SENIOR`
@@ -125,11 +125,11 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Interview likelihood:** `MEDIUM` — incident scenario.<br>
 **Question type:** `COMMON_SCENARIO`<br>
 **Interviewer evaluates:** Timeline correlation, samples và no-premature-tuning.<br>
-**Answer outline:** Correlate host/container CPU, GC/JIT events, JFR method samples, allocation/lock and request load; reproduce/profile; identify dominant CPU owner before changing flags/code.<br>
+**Answer outline:** Căn timeline CPU của host/container với event GC/JIT, method sample của JFR, allocation/lock và tải request; tái hiện rồi profile; xác định code path hoặc runtime component chiếm CPU chính trước khi đổi flag hay code.<br>
 **Required trade-offs:** Sampling ít overhead nhưng statistical; instrumentation chi tiết hơn nhưng perturbation/cost.<br>
 **Follow-up ladder:** Warm-up spike? Compiler threads? Spin lock?<br>
 **Red flags:** Tăng thread pool để xử lý CPU spike.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-009 — `ARCHITECT`
@@ -142,7 +142,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Latency, throughput, footprint và team operability.<br>
 **Follow-up ladder:** Burst? Autoscaling? JDK upgrade?<br>
 **Red flags:** Collector choice chỉ theo heap size rule-of-thumb.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### JVM-DIAG-010 — `EXPERT`
@@ -155,7 +155,7 @@ Preview only; không active/implement `JVM-01`. Likelihood là heuristic. Mọi 
 **Required trade-offs:** Deep JVM tuning có maintenance/version cost; prefer code/workload fix when equivalent.<br>
 **Follow-up ladder:** Coordinated omission? Deopt storm? Humongous allocation?<br>
 **Red flags:** Dựa một flame graph không timestamp để kết luận.<br>
-**Evidence:** Theory `NOT CREATED`; case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** [Core theory](../theory/core/jvm-class-loading-bytecode-and-memory.md) · [Deep-dive](../theory/deep-dives/jvm-gc-jit-safepoints-and-diagnostics.md); case `JVM-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

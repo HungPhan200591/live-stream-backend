@@ -21,7 +21,7 @@ Một báo cáo “top livestream theo doanh thu” có thể trả số tiền 
 
 SQL diễn tả kết quả mong muốn. Optimizer được quyền chọn join order và physical operator khác cú pháp, miễn giữ semantics. Vì vậy logical processing dùng để reasoning correctness; execution plan dùng để reasoning cost. Hai việc này liên quan nhưng không thay thế nhau.
 
-## 2. Learning objectives và từ vựng
+## 2. Mục tiêu học và từ vựng
 
 Sau bài này, bạn có thể:
 
@@ -32,7 +32,7 @@ Sau bài này, bạn có thể:
 
 **Grain** là “mỗi dòng đại diện cho gì”. **Cardinality** là số dòng. **Fan-out** là một dòng phía trái ghép nhiều dòng phía phải. **Aggregate** co nhiều dòng thành một dòng mỗi group. **Window function** tính trên một cửa sổ nhưng giữ grain của input. **CTE** (`WITH`) đặt tên một query trung gian; nó chủ yếu là công cụ cấu trúc/semantics, không mặc định là nhanh hơn.
 
-## 3. Mental model cốt lõi
+## 3. Mô hình tư duy cốt lõi
 
 Hãy reasoning theo logical pipeline sau, dù optimizer có thể thực thi vật lý theo thứ tự khác:
 
@@ -78,7 +78,7 @@ Khi join nhiều one-to-many, aggregate từng nhánh về đúng grain trước
 
 CTE giúp tách stage, tái sử dụng result và diễn đạt recursive query. Trên PostgreSQL hiện đại, non-recursive side-effect-free CTE dùng một lần có thể được inline; `MATERIALIZED`/`NOT MATERIALIZED` ảnh hưởng optimization boundary. Đừng dựa vào folklore “CTE luôn materialize”; xem plan của đúng PostgreSQL version.
 
-## 5. Worked examples
+## 5. Ví dụ phân tích từng bước
 
 ### 5.1. Top 3 stream mỗi creator theo viewer peak
 
@@ -121,7 +121,7 @@ Mỗi CTE trả đúng một dòng/stream, nên join cuối không fan-out. `coa
 
 `LEFT JOIN gift g ... WHERE g.status = 'PAID'` loại stream không có gift. Nếu mục tiêu vẫn liệt kê stream rỗng, predicate phải nằm trong `ON` hoặc trong pre-aggregation. Symptom là tổng số stream giảm; evidence là so sánh row count và sample không có match.
 
-## 6. Invariants, failure modes và trade-offs
+## 6. Invariant, các kiểu hỏng và đánh đổi
 
 - Trước mỗi aggregate phải biết mỗi dòng đại diện cho gì; nếu không, phép tổng không có meaning đáng tin.
 - Query trả page phải có total order ổn định; `ORDER BY created_at` chưa đủ nếu timestamp trùng.
@@ -130,7 +130,7 @@ Mỗi CTE trả đúng một dòng/stream, nên join cuối không fan-out. `coa
 
 Failure phổ biến: statistics cũ hoặc predicate correlated làm optimizer ước lượng sai. Trigger là data distribution lệch; mechanism là chọn join/scan dựa trên estimated rows; symptom là actual rows lệch nhiều lần và I/O/loop tăng; chứng minh bằng `EXPLAIN (ANALYZE, BUFFERS)`; xử lý có thể là cập nhật statistics, viết predicate rõ hơn, index đúng hoặc đổi query shape. Không “fix” mặc định bằng hint vì PostgreSQL core không dùng hint như một số DB khác và workload sẽ đổi.
 
-## 7. Áp dụng vào project
+## 7. Áp dụng vào dự án
 
 Khi `SQL-01` active, chọn một query báo cáo livestream có ít nhất hai one-to-many relations. Ghi grain sau từng CTE/join, tạo dataset có zero/one/many và ties, rồi capture SQL + plan + result. Chỉ sau correctness mới so sánh index/query alternatives. Hiện chưa chọn query và chưa có plan thật.
 
@@ -156,7 +156,7 @@ Follow-up thường gặp: `WHERE` với `HAVING`; `rank` với `dense_rank`; ke
 
 > **Bài viết của tôi — `LEARNER TODO`:** dùng ví dụ revenue/viewer, viết 10–15 câu mô tả grain, pipeline, fan-out, cách sửa và cách kiểm chứng.
 
-## 11. Self-check có hướng dẫn
+## 11. Tự kiểm tra có hướng dẫn
 
 1. **Question:** Vì sao join gift và viewer session có thể làm sai `SUM(amount)`?<br>
    **Đọc lại nếu bí:** mục 4.2 và 5.2.<br>
@@ -171,7 +171,7 @@ Follow-up thường gặp: `WHERE` với `HAVING`; `rank` với `dense_rank`; ke
    **Một câu trả lời tốt phải có:** representative data, estimate/actual, loops, buffers, sort spill và repeatability.<br>
    **My answer:** `LEARNER TODO`
 
-## 12. Official references và teach-back
+## 12. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Queries](https://www.postgresql.org/docs/15/queries.html)
 - [PostgreSQL 15 — Window Functions](https://www.postgresql.org/docs/15/tutorial-window.html)
@@ -181,4 +181,3 @@ Follow-up thường gặp: `WHERE` với `HAVING`; `rank` với `dense_rank`; ke
 - [ ] Tôi giải thích được fan-out và outer-join predicate.
 - [ ] Tôi chọn đúng aggregate/window/CTE theo output grain.
 - [ ] Tôi không tuyên bố performance khi evidence vẫn `NOT RUN`.
-

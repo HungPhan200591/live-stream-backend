@@ -1,11 +1,11 @@
-# Security Interview Question Bank — Request and Method Authorization Boundaries
+# Ngân hàng câu hỏi phỏng vấn Security — ranh giới phân quyền ở request và method
 
 > Status: `DRAFT`<br>
 > Domain owner: `security / Spring Security / authorization`<br>
 > Active slice: `NONE`; preview target `SEC-06 — public/private matcher and method authorization boundary`<br>
 > Related roadmap: [Stage 0 and SEC-06](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-0---stabilize-the-laboratory)<br>
 > Related depth rubric: [Security and identity](../../../knowledge-depth-rubric.md#38-security-và-identity--p0-target-d3), [Spring Boot](../../../knowledge-depth-rubric.md#35-spring-framework-và-spring-boot--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/request-and-method-authorization.md)<br>
+> Related theory: [Core theory](../theory/core/request-and-method-authorization.md); [Deep-dive](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md)<br>
 > Version snapshot checked: `2026-07-25`<br>
 > Updated: `2026-07-26`
 
@@ -48,7 +48,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Đồng nhất `securityMatcher` với `permitAll`; giả định default chain luôn tồn tại.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -72,7 +72,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** “Authenticated thì được truy cập mọi resource”; controller tự tin vào user ID từ request.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -96,7 +96,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** “Auth controller thì phải public”; dựa duy nhất vào method annotation chưa bật.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -120,7 +120,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Chỉ test happy path; broad wildcard đặt trước admin rule.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -144,7 +144,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Chỉ annotate controller; tin annotation dù `@EnableMethodSecurity` chưa bật.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -168,7 +168,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Gắn annotation lên private helper rồi coi đã bảo vệ; không test direct bean call.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -192,7 +192,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Chỉ happy-path owner/admin; controller test bypass security filters.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -216,7 +216,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Spreadsheet không test; gateway là lớp authorization duy nhất.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -240,7 +240,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Không catch-all; order dựa vào tình cờ bean discovery.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -264,7 +264,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** Chỉ unit-test matcher với clean path; tin mọi forwarded header.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 
@@ -289,7 +289,7 @@ Question bank này chuẩn bị trước cho `SEC-06`; không sửa `SecurityCon
 
 **Red flags:** `findById` rồi `if owner` rồi update không concurrency control; tin method annotation giải quyết race.
 
-**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: `NOT CREATED`; Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
+**Evidence:** Theory: [Core](../theory/core/request-and-method-authorization.md); Deep-dive: [Policy/TOCTOU](../theory/deep-dives/authorization-policy-toctou-and-cross-protocol-boundaries.md); Learning case: `SEC-06 NOT CREATED`; Tests/experiment: `NOT RUN`; Interview note: `NOT CREATED`.
 
 **Self-assessment:** `UNANSWERED`
 

@@ -8,6 +8,8 @@
 
 Question bank chứa câu hỏi và evaluation rubric, không chứa bài luận hoàn chỉnh. Người học trả lời trước khi mở `Answer outline`. Link câu trả lời nền tảng tới theory và câu trả lời dựa trên trải nghiệm tới interview note; không dùng `EVIDENCE_BACKED` khi test/experiment/review chưa tồn tại.
 
+Toàn bộ câu hỏi, intent, dàn ý, trade-off, follow-up và red flag phải viết bằng tiếng Việt tự nhiên cho developer Việt. Giữ nguyên tên API/type/metric và IT English term cần thiết, nhưng giải nghĩa term chuyên biệt tại lần đầu; không dùng English noun phrase như `Interviewer evaluates: recovery objectives and spare capacity` thay cho một câu giải thích. Các field label canonical như `Answer outline`, `Evidence`, `Self-assessment` có thể giữ để Agent parse ổn định, nhưng nội dung bên dưới không được là prose thuần tiếng Anh.
+
 `Interview likelihood` là heuristic về khả năng gặp khi interviewer hỏi đúng topic/role, không phải số liệu thị trường. Ưu tiên câu phổ biến trước; câu riêng của project và câu pathological dùng để đào sâu sau.
 
 ## Level rubric

@@ -5,7 +5,7 @@
 > Active slice: `NONE`; preview target: `TX-01`<br>
 > Related roadmap: [Stage 2](../../../../001_SENIOR_JAVA_INTERVIEW_ROADMAP.md#stage-2---spring-internals-http-api-và-transaction-semantics)<br>
 > Related depth rubric: [Transaction](../../../knowledge-depth-rubric.md#37-transaction-và-data-consistency--p0-target-d3)<br>
-> Related theory: [Core theory](../theory/core/isolation-locking-and-after-commit-consistency.md)<br>
+> Related theory: [Core theory](../theory/core/isolation-locking-and-after-commit-consistency.md) · [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md)<br>
 > Updated: `2026-07-26`
 
 Preview only; không active/implement `TX-01`. Likelihood là heuristic. Mọi câu `UNANSWERED`, tests `NOT RUN`.
@@ -30,7 +30,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Isolation cao giảm anomaly nhưng tăng abort/wait.<br>
 **Follow-up ladder:** Write skew? Read skew?<br>
 **Red flags:** Repeatable Read giải quyết mọi race.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-002 — `FOUNDATION`
@@ -41,7 +41,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Read concurrency tốt đổi lấy storage/bloat/vacuum pressure.<br>
 **Follow-up ladder:** Long transaction ảnh hưởng vacuum?<br>
 **Red flags:** MVCC nghĩa không có lock.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-003 — `FOUNDATION`
@@ -52,7 +52,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Retry cost vs lock hold/throughput.<br>
 **Follow-up ladder:** `SELECT FOR UPDATE`? `SKIP LOCKED`?<br>
 **Red flags:** Pessimistic luôn an toàn và nhanh hơn.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-004 — `FOUNDATION`
@@ -63,7 +63,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Strong cross-resource coordination đắt; bounded staleness thường thực tế hơn.<br>
 **Follow-up ladder:** Transaction manager 2PC? TTL?<br>
 **Red flags:** `@Transactional` tự rollback Redis.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); case `TX-01 NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-005 — `SENIOR`
@@ -74,7 +74,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Atomic SQL mạnh nhưng domain diagnostics/readability cần mapping rõ.<br>
 **Follow-up ladder:** Concurrent transfer? Retry?<br>
 **Red flags:** Read-check-write trong Java không lock.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); reproducer `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-006 — `SENIOR`
@@ -85,7 +85,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Outbox bền hơn nhưng thêm table, relay lag, cleanup/observability.<br>
 **Follow-up ladder:** Duplicate publish? Ordering? CDC?<br>
 **Red flags:** After-commit callback bảo đảm delivery.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-007 — `SENIOR`
@@ -96,7 +96,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Retry phục hồi transient victim nhưng che thiết kế contention nếu không metric.<br>
 **Follow-up ladder:** Lock timeout khác deadlock?<br>
 **Red flags:** Catch exception và retry vô hạn từng statement.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-008 — `SENIOR`
@@ -107,7 +107,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Delete cache đơn giản hơn write-through nhưng tạo miss/stampede.<br>
 **Follow-up ladder:** Concurrent reader repopulates stale value?<br>
 **Red flags:** Redis được coi source of truth ngầm.<br>
-**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md); project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); project Redis guide `EXISTS`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-009 — `ARCHITECT`
@@ -118,7 +118,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Availability/latency vs freshness/coordination.<br>
 **Follow-up ladder:** Read-your-writes? Multi-region?<br>
 **Red flags:** “Eventually consistent” không có bound/monitor/recovery.<br>
-**Evidence:** Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); Design `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ### TX-ISO-010 — `EXPERT`
@@ -129,7 +129,7 @@ First pass `TX-ISO-001..006`; senior follow-up `007..008`; stretch `009..010`.
 **Required trade-offs:** Serializable an toàn hơn nhưng abort tăng khi contention.<br>
 **Follow-up ladder:** PostgreSQL SSI? Constraint materialization?<br>
 **Red flags:** Version column từng row chặn mọi write skew.<br>
-**Evidence:** Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
+**Evidence:** Theory [Core](../theory/core/isolation-locking-and-after-commit-consistency.md) + [Deep-dive](../theory/deep-dives/isolation-anomalies-deadlocks-and-after-commit-crash-gaps.md); Reproducer `NOT CREATED`; experiment `NOT CREATED`; tests `NOT RUN`; note `NOT CREATED`.<br>
 **Self-assessment:** `UNANSWERED`
 
 ## Deferred normalization

@@ -1,4 +1,4 @@
-# Transaction Isolation, Locking và After-Commit Consistency
+# Isolation của transaction, locking và tính nhất quán sau commit
 
 > Type: `CORE`<br>
 > Domain: `database`<br>
@@ -15,13 +15,13 @@
 
 `@Transactional` không làm mọi race biến mất. Nó xác định một DB transaction; isolation và statement shape mới quyết định concurrent histories nào được phép. Sau commit, cache/broker/WebSocket nằm ngoài atomic boundary nên cần delivery/repair strategy riêng. Bài này dùng PostgreSQL 15 semantics và không tuyên bố project đã có reproducer.
 
-## 1. Learning objectives và từ vựng
+## 1. Mục tiêu học và từ vựng
 
 **Lost update** là hai writer đọc cùng state rồi một kết quả ghi đè kết quả kia. **Write skew** xảy ra khi mỗi transaction ghi dòng khác nhưng cùng phá invariant đọc từ nhiều dòng. **Pessimistic locking** giữ lock trước khi sửa; **optimistic locking** dùng version/conditional update để phát hiện state đã đổi. **Deadlock** là chu trình chờ; DB hủy một transaction để phá chu trình. **After-commit action** chỉ được phát sau commit thành công, nhưng “sau commit” không tự bảo đảm sẽ phát nếu process chết.
 
 Mục tiêu: phân biệt anomaly, chọn atomic SQL/version/lock/serializable theo invariant; dự đoán lock ordering/deadlock; thiết kế cache/event không đi trước commit và có đường hồi phục khi crash.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -51,9 +51,9 @@ Nếu thay đổi diễn đạt được bằng một statement atomic, ưu tiê
 
 Lock nhiều resources phải theo global order. Deadlock vẫn có thể xảy ra do index/foreign key/trigger, nên transaction cần ngắn và error retry có budget/jitter. Không giữ DB transaction qua network call.
 
-## 4. Worked examples
+## 4. Ví dụ phân tích từng bước
 
-### 4.1. Lost update counter
+### 4.1. Counter bị lost update
 
 T1 và T2 cùng đọc `viewer_count=10`, mỗi bên ghi 11; kết quả mất một increment. `UPDATE ... SET viewer_count=viewer_count+1` để DB thực hiện read-modify-write trên locked row tránh pattern này. Với high-contention exact counter, row vẫn thành hotspot; sharding/aggregation là trade-off khác.
 
@@ -65,7 +65,7 @@ Sai: ghi cache `muted=true`, rồi DB transaction fail; authorization đọc Red
 
 Hai moderator cùng kiểm tra “còn ít nhất một moderator on-call”; mỗi người tắt một dòng khác. Row locks riêng lẻ không xung đột nhưng invariant tập hợp bị phá. Có thể serialize bằng một aggregate/guard row, stronger isolation + retry, hoặc model constraint khác. Chọn dựa trên contention và invariant, không chỉ thêm `FOR UPDATE` ngẫu nhiên.
 
-## 5. Failure modes và trade-offs
+## 5. Các kiểu hỏng và đánh đổi
 
 - Publish trước commit: rollback nhưng event đã ra ngoài, downstream thấy phantom state.
 - Publish trực tiếp sau commit: process crash giữa commit và publish, durable state có nhưng event mất. Outbox đóng khoảng trống này bằng durable intent, đổi lại có relay, duplicate và lag.
@@ -80,7 +80,15 @@ Khi `TX-01` active, tạo barrier cho hai transaction, ghi exact interleaving, f
 
 **30 giây:** “Tôi bắt đầu từ invariant và anomaly. Nếu được, dùng conditional atomic SQL/constraint; conflict hiếm dùng optimistic version, critical section ngắn dùng lock, invariant đa dòng có thể cần guard row hoặc serializable + retry. Side effect chỉ đi sau commit; nếu không được mất thì dùng transactional outbox và idempotent consumer.”
 
-## 7. Tóm tắt, bài tập và self-check
+## 6.1. Hai ví dụ phân tích và một phản ví dụ
+
+**Worked example tối thiểu — write skew:** hai transactions cùng thấy hai moderators đang trực rồi mỗi bên tắt một row khác. Row version không conflict nhưng invariant “ít nhất một người trực” bị phá. Guard row/lock, constraint phù hợp hoặc serializable + whole-transaction retry là các options cần test bằng barrier.
+
+**Worked example gần project — after-commit publish:** gift commit rồi process chết trước publish RabbitMQ; listener `AFTER_COMMIT` không durable. Domain change + outbox row cùng transaction, relay retry và inbox/business identity ở consumer đóng recovery path.
+
+**Phản ví dụ:** tăng isolation level rồi gọi external provider bên trong transaction để “atomic hơn”. Network effect không rollback theo DB, transaction giữ lock/pool lâu và unknown outcome vẫn tồn tại.
+
+## 7. Tóm tắt, bài tập và tự kiểm tra
 
 - `@Transactional` không tự ngăn lost update/write skew.
 - Isolation là tập histories được phép; failure/retry là phần của contract.
@@ -104,7 +112,7 @@ Khi `TX-01` active, tạo barrier cho hai transaction, ghi exact interleaving, f
    **Một câu trả lời tốt phải có:** initial invariant, synchronized interleaving, isolation, commits/aborts và final state.<br>
    **My answer:** `LEARNER TODO`
 
-## 8. Official references và teach-back
+## 8. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Transaction Isolation](https://www.postgresql.org/docs/15/transaction-iso.html)
 - [PostgreSQL 15 — Explicit Locking](https://www.postgresql.org/docs/15/explicit-locking.html)

@@ -1,8 +1,8 @@
-# API Pagination, Versioning and Network Boundaries
+# Phân trang API, tiến hóa phiên bản và ranh giới mạng
 
 > Type: `CORE`<br>
 > Domain: `architecture`<br>
-> Target depth: `D3 — thiết kế pagination/evolution contract và kiểm chứng behavior qua proxy, retry và concurrent writes`<br>
+> Target depth: `D3 — thiết kế hợp đồng phân trang/tiến hóa và kiểm chứng hành vi qua proxy, retry và thao tác ghi đồng thời`<br>
 > Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
@@ -17,23 +17,23 @@ Source canonical cho [API boundary question bank](../../question-bank/api-pagina
 
 Mô phỏng insert/delete giữa từng page và kiểm tra skip/duplicate. Với evolution, chạy old/new client-server matrix. Với network, test qua gateway thật hoặc cấu hình tương đương vì buffering/limits/retry không xuất hiện trong controller unit test.
 
-## 1. Learning objectives
+## 1. Mục tiêu học
 
-1. Chọn offset/cursor/keyset theo ordering, mutation và navigation requirement.
-2. Tiến hóa request/response có compatibility, deprecation và migration plan.
-3. Xử lý proxy/gateway limits, rate quota, timeout và partial/streaming response boundary.
+1. Chọn `offset`, `cursor` hoặc `keyset pagination` theo cách sắp xếp, mức độ dữ liệu thay đổi và nhu cầu chuyển trang.
+2. Tiến hóa request/response mà vẫn giữ tương thích, có lộ trình ngừng hỗ trợ và kế hoạch chuyển đổi.
+3. Xử lý giới hạn của proxy/gateway, quota, timeout và ranh giới của response từng phần hoặc streaming.
 
 ## 2. Mental model do người dạy cung cấp
 
-Pagination là traversal trên một ordered snapshot/stream kỳ vọng, không chỉ `LIMIT`. Cursor phải mang vị trí theo **total order** và query tiếp bằng quan hệ “sau tuple cuối”. API evolution là compatibility giữa reader/writer versions; gateway là một participant có limits và behavior riêng.
+Pagination (phân trang) là quá trình duyệt một tập dữ liệu có thứ tự kỳ vọng, chứ không chỉ là thêm `LIMIT` vào SQL. Cursor phải mô tả vị trí theo một **total order** — thứ tự mà mọi bản ghi đều phân biệt được — rồi truy vấn trang tiếp theo bằng quan hệ “đứng sau bộ khóa cuối”. API evolution là việc thay đổi hợp đồng mà client cũ và server mới vẫn có thể cùng hoạt động trong một khoảng chuyển tiếp. Gateway cũng là một thành phần của hợp đồng vì nó có giới hạn và hành vi riêng.
 
 ```mermaid
 flowchart TB
-    O["Stable order<br/>(createdAt, id)"] --> P1["Page 1"]
-    P1 --> C["Opaque cursor<br/>last tuple + filters"]
-    C --> Q["WHERE tuple < last tuple"]
-    Q --> P2["Page 2"]
-    C --> V["Version + integrity<br/>tenant bound"]
+    O["Thứ tự ổn định<br/>(createdAt, id)"] --> P1["Trang đầu"]
+    P1 --> C["Cursor không trong suốt<br/>khóa cuối + bộ lọc"]
+    C --> Q["Truy vấn bản ghi<br/>sau khóa cuối"]
+    Q --> P2["Trang kế tiếp"]
+    C --> V["Phiên bản + chữ ký<br/>gắn với tenant"]
     style O fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style P1 fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
     style C fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
@@ -44,11 +44,11 @@ flowchart TB
 
 ## 3. Cơ chế cốt lõi
 
-Offset pagination dễ random access nhưng cost tăng theo offset và dễ skip/duplicate khi dataset thay đổi. Keyset/cursor dùng stable total order cùng last-seen key; cursor cần encode opaque state, direction/filter context và integrity/version. Sort key không unique phải có tie-breaker.
+`Offset pagination` dễ nhảy tới trang bất kỳ, nhưng database vẫn phải đi qua số lượng bản ghi ngày càng lớn trước khi lấy kết quả. Khi có insert/delete giữa hai lần gọi, vị trí số học bị dịch nên client có thể bỏ sót hoặc đọc lặp. `Keyset pagination` dùng khóa cuối đã nhìn thấy trong một thứ tự ổn định; cursor đóng gói khóa này cùng chiều duyệt, bộ lọc và phiên bản. Nếu khóa sắp xếp không duy nhất thì phải thêm `tie-breaker` (khóa phân xử), thường là `id`.
 
-Compatibility không chỉ là JSON field: status/header/default/order/nullability/error code, pagination và authorization đều là contract. Additive change thường an toàn hơn nhưng client strict parser/schema vẫn có thể vỡ. Breaking change cần version boundary, coexistence, telemetry, deprecation và removal gate.
+Tính tương thích không chỉ nằm ở tên trường JSON. HTTP status, header, giá trị mặc định, thứ tự, khả năng nhận `null`, error code, quy tắc phân trang và authorization đều là một phần của hợp đồng. Thay đổi chỉ thêm trường thường ít rủi ro hơn, nhưng client dùng parser/schema nghiêm ngặt vẫn có thể hỏng. Một thay đổi phá vỡ tương thích cần ranh giới phiên bản, khoảng thời gian hai phiên bản cùng tồn tại, telemetry về mức sử dụng, thông báo ngừng hỗ trợ và điều kiện rõ ràng trước khi xóa phiên bản cũ.
 
-Network intermediary có request/header/body/time limits, buffering, compression, retry và connection behavior riêng. API design phải xác định max page/body, timeout budget, backpressure/rate quota và correlation; không dựa vào in-process assumption.
+Thành phần trung gian trên mạng có giới hạn riêng cho request, header, body và thời gian; nó còn có thể buffer, nén, retry hoặc đóng kết nối. Vì vậy thiết kế API phải chốt kích thước trang/body tối đa, ngân sách timeout, cơ chế giới hạn tải và correlation ID. Một unit test gọi thẳng controller không chứng minh request sẽ hoạt động khi đi qua gateway thật.
 
 ### Worked example — timestamp tie
 
@@ -77,7 +77,7 @@ Thêm response field có thể vỡ strict schema parser, chữ ký canonical pa
 | Proxy buffering/limit | Large response/upload | Latency, `413`/`502`/timeout |
 | Retry non-idempotent call | Gateway/client retry | Duplicate side effect |
 
-## 6. Trade-off matrix
+## 6. Bảng đánh đổi
 
 | Option | Strength | Cost/limit |
 | --- | --- | --- |
@@ -93,9 +93,17 @@ Thêm response field có thể vỡ strict schema parser, chữ ký canonical pa
 - `FEED-UC-01`: stable feed pagination under writes.
 - `API-UC-01`: compatibility, gateway and consumer migration.
 
-## 8. Interview answer outline
+## 8. Dàn ý trả lời phỏng vấn
 
 So offset/keyset bằng mutation/order/navigation; thiết kế opaque signed/versioned cursor; nêu compatibility matrix/deprecation telemetry; kết thúc bằng gateway timeout/body/header/buffering/retry tests.
+
+## 8.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — page có ties:** ba rows có cùng `created_at`; order chỉ theo timestamp làm boundary không deterministic. Thêm `id` làm tie-breaker, cursor giữ `(created_at,id)` và predicate/index cùng tuple thì page kế không bỏ/lặp peers trong fixture cố định.
+
+**Worked example gần project — proxy timeout:** gateway timeout 1 giây nhưng command tạo stream commit ở 1,2 giây. Client thấy `504`, retry và có thể tạo duplicate. Align deadline chưa đủ; command cần idempotency identity/status recovery và contract test đi qua proxy.
+
+**Phản ví dụ:** version API chỉ bằng đổi URL `/v2` nhưng cùng lúc đổi default sort, error code và authorization filtering mà không old/new consumer matrix. Shape mới có version nhưng semantic compatibility/rollback vẫn không được bảo vệ.
 
 ## 9. Tóm tắt và learner write-back
 
@@ -112,7 +120,7 @@ So offset/keyset bằng mutation/order/navigation; thiết kế opaque signed/ve
 2. **Question:** Additive field khi nào breaking?<br>**Đọc lại nếu bí:** evolution example, mục 3–5.<br>**Rubric:** strict parser/schema/signature/size/exhaustive client and telemetry.<br>**My answer:** `LEARNER TODO`
 3. **Question:** Test gateway thế nào?<br>**Đọc lại nếu bí:** mục 3–6.<br>**Rubric:** aligned timeouts, size/header/buffering/compression/retry/correlation via integration boundary.<br>**My answer:** `LEARNER TODO`
 
-## 11. Official references
+## 11. Nguồn chính thức
 
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [Spring MVC — HTTP Message Conversion](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/message-converters.html)

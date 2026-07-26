@@ -73,6 +73,7 @@ Quy tắc quyết định:
 | Bài toán Livestream concrete nào dùng để thực hành trước? | `docs/learning/use-case-catalog.md` — scenario, `UC-P0..P3`, difficulty và coverage | roadmap owner item và active learning case |
 | Tiếp tục phiên học từ đâu? | `docs/learning/index.md` session cursor | active case và linked artifacts |
 | Kiến thức dùng lại nằm ở đâu? | `docs/learning/topics/<domain>/*` | question bank và learning cases link tới theory |
+| Theory/deep-dive đã đủ tự học và links còn đúng chưa? | `docs/learning/theory-quality-audit.md` | `docs/templates/theory-note-template.md` |
 | Code capability nào đang tồn tại? | `docs/implementation/current-implementation-map.md` | source code + tests |
 | Knowledge/case coverage nào còn thiếu? | `docs/001_SENIOR_JAVA_INTERVIEW_ROADMAP.md` và `docs/learning/knowledge-depth-rubric.md` | current-state assessment |
 | Vì sao chọn solution? | `docs/architecture/adr/*` | experiment report |
@@ -118,6 +119,7 @@ docs/
 ### Quy tắc placement
 
 - `learning/index.md`: active case, checkpoint, next action, required reading, write target và latest evidence.
+- `learning/theory-quality-audit.md`: readiness/content/link-integrity của toàn knowledge corpus; không sở hữu learner depth hoặc runtime completion.
 - `learning/use-case-catalog.md`: tên/scenario, use-case priority/difficulty và owner coverage; không sở hữu execution order hoặc active status.
 - `learning/topics/<domain>/theory/core`: mental model, mechanism, invariant và boundary dùng lại cho nhiều case.
 - `learning/topics/<domain>/theory/deep-dives`: internals, failure mode, edge case, scale/security và cross-layer interaction.
@@ -149,6 +151,8 @@ Dùng `$run-senior-java-learning` làm skill điều phối khi request có mụ
 10. Interview note/teach-back: trả lời lại architect/expert bằng evidence, bản 2 phút và 15 phút.
 
 Mỗi session chỉ xử lý checkpoint được yêu cầu hoặc checkpoint gần nhất. Theory là source of truth dùng lại; case chỉ kết nối knowledge với project. Question bank được revisit sau evidence, không dùng answer outline ban đầu thay cho trải nghiệm thực tế. Nếu người dùng yêu cầu preview pack để duyệt format, Agent có thể tạo core/deep-dive/question bank cùng lúc ở trạng thái `DRAFT`, nhưng cursor vẫn đứng tại checkpoint sớm nhất chưa đạt và interview note vẫn bị khóa tới khi có evidence.
+
+Khi task yêu cầu hoàn thiện/audit toàn corpus, Agent dùng `docs/templates/theory-note-template.md` làm content gate và cập nhật `docs/learning/theory-quality-audit.md` bằng số liệu tính lại từ filesystem. Phải kiểm per-question core/deep links, relative targets/anchors, Mermaid readability/style, vị trí learner write-back và status/evidence truthfulness; không tuyên bố pass chỉ vì đủ file hoặc vượt word count. Ngoài các kiểm tra máy, bắt buộc có một lượt đọc language/depth riêng: phần reasoning viết bằng tiếng Việt tự nhiên, English term được giải nghĩa tại chỗ, và ít nhất hai failure của mỗi deep-dive được kể liền mạch từ trigger tới residual risk. Learner feedback “khó hiểu” mở lại gate và vô hiệu claim pass cũ cho tới khi audit chéo hoàn tất.
 
 ### Workflow A - Chọn learning case
 

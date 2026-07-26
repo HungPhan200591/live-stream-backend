@@ -11,7 +11,7 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
-Source canonical cho [retry question bank](../../question-bank/retry-backoff-jitter-and-retry-storms.md).
+Đây là tài liệu nguồn canonical cho [retry question bank](../../question-bank/retry-backoff-jitter-and-retry-storms.md).
 
 ## 0. Cách học file này
 

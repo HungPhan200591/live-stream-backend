@@ -4,6 +4,8 @@
 > Cập nhật: 2026-07-26<br>
 > Hiện trạng chi tiết: [002_CURRENT_STATE_AND_GAP_ANALYSIS.md](002_CURRENT_STATE_AND_GAP_ANALYSIS.md)<br>
 > Bài toán Livestream cụ thể: [Livestream Domain Use-case Catalog](learning/use-case-catalog.md)<br>
+> Điểm vào học/checkpoint: [Senior Java Learning System](learning/index.md)<br>
+> Readiness và reference integrity của knowledge corpus: [Theory/Deep-dive Quality Audit](learning/theory-quality-audit.md)<br>
 > Hệ thống làm việc với Codex: [003_AI_AGENT_ENGINEERING_SYSTEM.md](003_AI_AGENT_ENGINEERING_SYSTEM.md)
 
 ## 1. North star
@@ -586,6 +588,12 @@ P0 owner mapping: Java `JDK-01/JAVA-01`; OOD `SPR-01/CON-01/DDD-01`; JVM `JDK-01
 P1 owner mapping: Redis `RED-01`; event workflow `MQ-01/KFK-01/EVT-01`; domain/modular design `DDD-01`; build/runtime/delivery `JDK-01/TEST-01/JDK-02/CFG-01/OPS-01`; data operations `MIG-01/DB-04/DB-02/DB-03/DR-01`; microservice architecture `DDD-01/DS-01/MS-01`; realtime `RT-01`. P2 extensions là `DATA-01/CLOUD-01/REACT-01`; P3 chỉ tạo item khi target role chứng minh cần.
 
 Một owner ID chỉ chứng minh coverage khi artifact đạt depth/evidence gate. Roadmap sở hữu coverage, Stage order, kind và priority; active case/checkpoint/next action luôn lấy từ [Learning System](learning/index.md).
+
+### 6.3. Knowledge-reference coverage của roadmap
+
+Mọi capability lane ở mục 4 và mọi owner item trong mục 6.2 được route qua [Learning System — Coverage map](learning/index.md#6-coverage-map-và-depth-self-assessment). Knowledge corpus hiện có `115` core/deep-dive files và `58` question-bank slices; audit xác nhận `671/671` question sections có direct core + deep-dive link. [Theory/Deep-dive Quality Audit](learning/theory-quality-audit.md#51-quality-audit-cuối-corpus) sở hữu con số/readiness/link-integrity; roadmap không sao chép file inventory để tránh drift.
+
+Coverage artifact không phải completion evidence. Java/Spring/security/data/architecture knowledge được chuẩn bị trước ở trạng thái `TEACHABLE_DRAFT`, nhưng Stage/case chỉ tiến khi learner write-back, reproducer, implementation/experiment và teach-back đạt gate. P2/P3 knowledge tồn tại để tra cứu/đánh giá trade-off; nó không tự thêm stack hoặc trở thành prerequisite của baseline Senior.
 
 ## 7. Definition of Done cho một learning case
 

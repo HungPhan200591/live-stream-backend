@@ -11,7 +11,7 @@
 > Owner: `Project learner; Codex assists`<br>
 > Updated: `2026-07-26`
 
-Source canonical cho [circuit/bulkhead question bank](../../question-bank/circuit-breaker-bulkhead-and-load-shedding.md).
+Đây là tài liệu nguồn canonical cho [circuit/bulkhead question bank](../../question-bank/circuit-breaker-bulkhead-and-load-shedding.md).
 
 ## 0. Cách học file này
 
@@ -92,6 +92,14 @@ Dependency vừa hồi, hàng nghìn requests cùng probe có thể làm nó ng�
 - `CHAT-UC-01`: isolate fan-out/moderation/chat hot path.
 - `RATE-UC-01`: fair admission and abuse traffic.
 - `CACHE-UC-01`: stale fallback/fail-open/fail-closed decision.
+
+## 7.1. Hai worked examples và phản ví dụ
+
+**Worked example tối thiểu — circuit:** rolling window đủ samples thấy dependency failures vượt threshold, circuit open fail-fast; half-open chỉ vài probes. Nó giảm futile calls nhưng không hủy work đã commit và không tự retry/reconcile.
+
+**Worked example gần project — bulkhead DB fallback:** Redis down làm cache misses fallback PostgreSQL. Bounded fallback concurrency và load shed public metadata bảo vệ DB writes/security paths; fallback toàn traffic không giới hạn biến cache outage thành database outage.
+
+**Phản ví dụ:** đặt circuit/bulkhead riêng ở mọi layer với default khác nhau. Gateway/app/SDK retry/circuit feedback, partitioned capacity idle hoặc collapse; policy phải có một capacity owner, metrics và recovery orchestration.
 
 ## 8. Interview outline, recap và learner write-back
 

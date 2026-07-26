@@ -1,4 +1,4 @@
-# Versioned Schema Migration với Flyway
+# Quản lý phiên bản schema bằng Flyway
 
 > Type: `CORE`<br>
 > Domain: `database`<br>
@@ -15,13 +15,13 @@
 
 Schema phải tái tạo được từ version control trên database rỗng và nâng cấp được từ mọi supported state. `ddl-auto=update` hoặc database cá nhân chạy được không chứng minh điều đó. Flyway duy trì schema history và áp migrations theo thứ tự, nhưng tool không tự biến script phá hoại thành an toàn. Project chưa pin/validate Flyway path trong batch này; mọi execution evidence `NOT RUN`.
 
-## 1. Learning objectives và từ vựng
+## 1. Mục tiêu học và từ vựng
 
 **Versioned migration** chạy một lần theo version và checksum. **Repeatable migration** chạy lại khi checksum đổi, thường dùng view/function/reference artifact phù hợp. **Schema history** ghi installed rank, version, checksum, state. **Baseline** đánh dấu một database hiện hữu bắt đầu được quản lý từ version nào; nó không chạy/kiểm chứng toàn bộ lịch sử trước đó. **Repair** sửa metadata history cho tình huống đã điều tra; không tự sửa schema. **Clean** xóa objects trong configured schemas và là destructive operation, thường phải disabled ngoài disposable local/test.
 
 Sau bài này, bạn thiết kế clean bootstrap, upgrade path, checksum policy và startup gate; biết khi nào baseline là adoption decision chứ không phải chữa migration fail.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -41,23 +41,23 @@ flowchart TB
 
 Câu cần nhớ: **history cho biết Flyway đã ghi nhận gì; schema assertion và clean/upgrade rehearsal mới chứng minh database đúng**.
 
-## 3. Cơ chế và worked examples
+## 3. Cơ chế và ví dụ phân tích từng bước
 
 Khi migrate, Flyway scan configured locations, so history với files, validate checksum/order và chạy pending migrations. Sau khi một versioned migration đã chia sẻ, không sửa file để “làm đẹp”; tạo migration mới. Sửa checksum bằng repair mà không hiểu production state làm các môi trường mang cùng version nhưng schema khác nhau.
 
-### 3.1. Clean bootstrap
+### 3.1. Khởi tạo database rỗng
 
 Tạo PostgreSQL 15 hoàn toàn mới, không schema residue; chạy migrations; validate constraints/indexes/extensions/reference data cần thiết; start application với Hibernate validation, rồi chạy smoke query. Đây bắt được dependency vào hand-written SQL hoặc local `ddl-auto`. Database “empty tables” nhưng còn types/extensions/schemas không phải clean bootstrap.
 
-### 3.2. Existing database adoption
+### 3.2. Tiếp quản database đang tồn tại
 
 Database legacy đã có schema tương đương V10. Baseline at 10 chỉ ghi marker để V11+ chạy; phải audit schema legacy thực sự khớp expected V10. Nếu hai môi trường legacy khác nhau, cùng baseline tạo false confidence. Có thể cần reconciliation migration/validation trước adoption.
 
-### 3.3. Failure giữa migration
+### 3.3. Lỗi giữa lúc migration
 
 PostgreSQL hỗ trợ transactional DDL cho nhiều lệnh nhưng không phải mọi operation/migration pattern có cùng behavior. Script fail cần đọc history state và actual schema trước retry. Không chạy `repair`/xóa row history theo phản xạ. Migration lớn nên tách DDL/data, idempotent-resumable backfill và expand-contract.
 
-## 4. Invariants, failure modes và trade-offs
+## 4. Invariant, các kiểu hỏng và đánh đổi
 
 - Version control là source của intended schema; manual hotfix phải được đưa trở lại migration/reconciliation.
 - CI phải test cả empty bootstrap và upgrade từ supported previous version.
@@ -72,7 +72,15 @@ Khi `MIG-01` active, pin Flyway version tương thích Spring Boot, inventory sc
 
 **30 giây:** “Flyway biến migration files thành ordered, checksummed history. Tôi không sửa versioned migration đã phát hành; baseline chỉ adopt existing schema sau audit, repair chỉ sửa metadata sau điều tra, clean là destructive. CI phải chứng minh cả clean bootstrap và upgrade, còn production dùng migration ownership/gate rõ.”
 
-## 6. Tóm tắt, bài tập và self-check
+## 5.1. Hai ví dụ phân tích và một phản ví dụ
+
+**Worked example tối thiểu — additive column:** add nullable column, deploy code đọc old/new và ghi compatible, backfill bounded/idempotent, validate rồi mới set constraint/drop old sau rollback horizon. Mỗi phase có exit evidence và owner.
+
+**Worked example gần project — legacy Flyway baseline:** baseline chỉ ghi history starting point; trước đó phải inventory/verify schema, backup và test empty + previous + legacy paths. Applied migration immutable; checksum mismatch được điều tra, không repair để pipeline xanh.
+
+**Phản ví dụ:** đổi tên/drop column trong cùng release rồi rollback binary khi lỗi. Old binary không còn schema contract và data transform có thể irreversible; “down migration” mù không phải recovery plan.
+
+## 6. Tóm tắt, bài tập và tự kiểm tra
 
 - Migration history không thay schema validation.
 - Baseline đánh dấu điểm bắt đầu, không dựng lịch sử cũ.
@@ -96,7 +104,7 @@ Khi `MIG-01` active, pin Flyway version tương thích Spring Boot, inventory sc
    **Một câu trả lời tốt phải có:** inspect history/schema, transactional boundary, root cause, retry/reconciliation và approval.<br>
    **My answer:** `LEARNER TODO`
 
-## 7. Official references và teach-back
+## 7. Nguồn chính thức và trình bày lại
 
 - [Spring Boot — Database Initialization](https://docs.spring.io/spring-boot/how-to/data-initialization.html)
 - [Flyway documentation](https://documentation.red-gate.com/fd)
@@ -105,4 +113,3 @@ Khi `MIG-01` active, pin Flyway version tương thích Spring Boot, inventory sc
 - [ ] Tôi thiết kế cả bootstrap và upgrade tests.
 - [ ] Tôi biết migration ownership trong multi-instance deployment.
 - [ ] Tôi không dùng destructive command ngoài disposable environment.
-

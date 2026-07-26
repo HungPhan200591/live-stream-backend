@@ -27,10 +27,10 @@ Dùng ba phép thử: chuyển đổi qua DST, chia một số tiền không chi
 
 ```mermaid
 flowchart TB
-    W1["Old writer"] --> P1["Old payload"]
-    W2["New writer"] --> P2["New payload"]
-    P1 --> R1["Old reader"]
-    P1 --> R2["New reader"]
+    W1["Writer phiên bản cũ"] --> P1["Payload cũ"]
+    W2["Writer phiên bản mới"] --> P2["Payload mới"]
+    P1 --> R1["Reader phiên bản cũ"]
+    P1 --> R2["Reader phiên bản mới"]
     P2 --> R1
     P2 --> R2
     style W1 fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
@@ -80,10 +80,10 @@ Ma trận phải được chạy bằng serializer/config thật. “JSON thư�
 
 ## 7. Experiment implication
 
-1. Inject fixed/mutable `Clock`; test before/at/after expiry and DST gap/overlap zone.
+1. Inject `Clock` cố định hoặc điều khiển được; test trước, đúng và sau thời điểm hết hạn, cùng DST gap/overlap của timezone cụ thể.
 2. Property test Money allocation: sum(parts) equals original, no forbidden scale/currency mix.
 3. Golden payload compatibility: old/new reader/writer plus rollback and replay.
-4. Evidence remains `NOT RUN`; sample payload is not proof until actual serializer/config is used.
+4. Evidence vẫn `NOT RUN`; payload mẫu không phải bằng chứng cho tới khi chạy đúng serializer và config thực tế.
 
 ## 8. Trade-off matrix
 
@@ -104,11 +104,33 @@ Ma trận phải được chạy bằng serializer/config thật. “JSON thư�
 | `PAYOUT-UC-01` | Adjustment/reconciliation | Settlement dataset |
 | `SESSION-UC-01` | Expiry/skew/cache DTO | Clock/serializer tests |
 
-## 10. Interview answer outline
+### 9.1. Pathology — lịch 02:30 rơi vào DST gap hoặc overlap
+
+Một lịch được lưu là “02:30 theo múi giờ của streamer”. Ngày chuyển DST có thể không tồn tại 02:30, hoặc local time xuất hiện hai lần khi đồng hồ lùi. Nếu code đổi `LocalDateTime` sang instant bằng timezone mặc định của máy, hai pod ở zone khác nhau còn tạo kết quả khác. Triệu chứng là job không chạy, chạy hai lần hoặc audit hiển thị sai dù timestamp database hợp lệ.
+
+Thiết kế phải giữ ý định lịch dưới dạng local date/time + `ZoneId` và quy tắc giải quyết gap/overlap: dời tới thời điểm hợp lệ kế tiếp, chọn offset sớm/muộn hoặc yêu cầu người dùng xác nhận. Event đã xảy ra lưu `Instant`; cách hiển thị mới dùng zone. Test dùng zone có transition thật và `Clock` cố định, không đổi timezone toàn JVM. Evidence phải pin tzdata/JDK vì rule timezone có thể được cập nhật.
+
+### 9.2. Pathology — chia tiền làm mất hoặc tạo thêm đơn vị nhỏ nhất
+
+Gift 100 đơn vị nhỏ nhất chia cho ba bên không thể mỗi bên nhận chính xác 33,333... Nếu mỗi service tự round độc lập, tổng có thể thành 99 hoặc 102 tùy scale/mode. Dùng `double` còn thêm sai số nhị phân. Invariant đúng là tổng các phần sau phân bổ bằng amount gốc, cùng currency/scale; phần dư phải có owner theo policy, ví dụ cộng lần lượt cho các phần có remainder lớn nhất.
+
+`Money` value object nên chuẩn hóa currency, scale và rounding boundary, không gọi `setScale` rải rác. Property test sinh nhiều amount/tỷ lệ và assert tổng được bảo toàn, không có phần âm và kết quả ổn định. Serialization nên dùng decimal string hoặc minor units kèm currency, không gửi floating point rồi hy vọng consumer round giống nhau.
+
+### 9.3. Pathology — rolling deploy làm cache DTO không đọc được
+
+Pod mới ghi DTO có enum/field mới vào cùng Redis key; pod cũ đọc bằng mapper nghiêm ngặt và fail. Cache miss storm chuyển tải xuống database, retry làm incident nặng hơn. Rollback code không giúp nếu dữ liệu cache mới vẫn còn. Evidence cần ma trận writer cũ/mới × reader cũ/mới trên đúng serializer config, key version và payload đã lưu; thêm metric decode failure/fallback.
+
+Mitigation có thể là tolerant reader cho thay đổi additive, versioned cache key/DTO, rollout reader-before-writer, TTL có tính toán và đường xóa/rebuild có kiểm soát. Với event có retention/replay, cửa sổ tương thích dài hơn rollout vì consumer mới còn phải đọc dữ liệu lịch sử. Signed payload cần version canonicalization; đổi format byte có thể làm chữ ký sai dù JSON mang cùng ý nghĩa.
+
+### 9.4. Phân biệt clock đo thời điểm và clock đo duration
+
+Wall clock có thể nhảy do NTP hoặc quản trị viên đổi giờ; dùng nó để đo elapsed timeout có thể cho duration âm hoặc dài bất thường. Deadline nghiệp vụ cần `Instant` từ `Clock` có thể inject để test; đo thời lượng trong một process nên dùng nguồn monotonic như `System.nanoTime`. Không lưu `nanoTime` ra database vì mốc chỉ có ý nghĩa trong process hiện tại. Khi debug session expiry, ghi clock source, skew giả định và boundary trước/đúng/sau expiry thay vì sleep.
+
+## 10. Dàn ý trả lời phỏng vấn
 
 Nêu canonical model, ambiguity và test: instant/zone/DST + injected Clock; amount/currency/rounding + conservation property; old/new writer-reader + replay/rollback fixture. Senior answer phải chỉ ra policy owner, không nói “dùng thư viện là xong”.
 
-## 11. Tóm tắt và learner write-back
+## 11. Tóm tắt và phần người học viết lại
 
 - Wall-clock label không tự xác định một instant.
 - Timestamp không thay causal ordering trong distributed system.

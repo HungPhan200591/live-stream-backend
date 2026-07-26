@@ -15,7 +15,7 @@
 
 Đọc index và MVCC như một hệ thống: query tạo access pattern; index đổi đường tìm; update tạo tuple version; vacuum thu hồi khả năng tái sử dụng; transaction dài giữ version cũ sống lâu. “Thêm index” có thể tăng write amplification và bloat, còn “VACUUM chạy rồi” không có nghĩa file nhỏ lại. Baseline là PostgreSQL 15 trong project; metric/runtime evidence chưa chạy.
 
-## 1. Learning objectives và từ vựng
+## 1. Mục tiêu học và từ vựng
 
 **B-tree** là index mặc định phù hợp equality/range/order trên nhiều kiểu. **Composite index** có nhiều key columns; thứ tự cột quyết định access pattern. **Covering index** dùng `INCLUDE` để mang thêm payload cho khả năng index-only scan mà không biến payload thành search key. **Partial index** chỉ chứa rows thỏa predicate. **Selectivity** mô tả khả năng predicate thu hẹp rows.
 
@@ -23,7 +23,7 @@
 
 Sau bài này, bạn chọn được index từ predicate/order/output, đọc scan/rows/loops/buffers và nối long transaction tới dead tuples, vacuum lag và transaction-ID risk.
 
-## 2. Mental model cốt lõi
+## 2. Mô hình tư duy cốt lõi
 
 ```mermaid
 flowchart TB
@@ -43,7 +43,7 @@ flowchart TB
 
 Câu cần nhớ: **index tối ưu một access pattern nhưng tạo chi phí cho mọi write; MVCC trì hoãn cleanup, nên transaction lifetime là một phần của storage health**.
 
-## 3. Cơ chế indexing
+## 3. Cơ chế đánh index
 
 Với index `(stream_id, created_at DESC, id DESC)`, query equality `stream_id = ?` rồi order/range theo `created_at,id` phù hợp prefix. Query chỉ filter `created_at` thường không tận dụng phần sau hiệu quả như một index bắt đầu bằng `created_at`. Quy tắc “cột selectivity cao trước” không đủ; phải xét equality, range, sort, join và workload.
 
@@ -59,13 +59,13 @@ Mỗi statement/transaction đọc theo snapshot tùy isolation. Update tạo ve
 
 Regular `VACUUM` làm space reusable trong table và cập nhật visibility/freeze metadata, thường không khóa exclusive lâu như `VACUUM FULL`. `VACUUM FULL` rewrite table, trả space cho OS nhưng cần lock mạnh và extra disk; dùng khi evidence/chấp nhận downtime phù hợp, không như maintenance định kỳ mặc định. Freeze ngăn transaction ID wraparound; đây là correctness concern, không chỉ performance.
 
-## 5. Worked examples
+## 5. Ví dụ phân tích từng bước
 
 ### 5.1. Feed event theo stream
 
 Query: `WHERE stream_id=? AND created_at < ? ORDER BY created_at DESC,id DESC LIMIT 50`. Index `(stream_id, created_at DESC, id DESC)` hỗ trợ equality + keyset range + order. Index chỉ `(status)` có selectivity thấp và không giúp ordering. Verify bằng plan, actual rows, buffers và page-depth latency.
 
-### 5.2. Live streams partial index
+### 5.2. Partial index cho livestream đang phát
 
 Nếu phần rất nhỏ rows ở trạng thái LIVE và hot query luôn `WHERE status='LIVE' ORDER BY started_at DESC`, partial index trên `(started_at DESC,id DESC) WHERE status='LIVE'` có thể nhỏ hơn full index. Nhưng query lấy mọi status không dùng được; state transition tạo index maintenance; uniqueness toàn bảng không thể được bảo vệ bởi partial index đó.
 
@@ -73,7 +73,7 @@ Nếu phần rất nhỏ rows ở trạng thái LIVE và hot query luôn `WHERE 
 
 Một admin export mở transaction hàng giờ. Trong lúc đó workers update viewer counters liên tục. Old versions không được cleanup vì snapshot cũ; dead tuples và indexes phình, autovacuum chạy nhưng horizon bị giữ. Symptom: table/index size và I/O tăng, query latency xấu. Evidence: active transaction age, vacuum stats, dead tuple estimates, plan/buffers. Fix root cause là transaction scope/export design; tăng vacuum frequency một mình không vượt được horizon.
 
-## 6. Invariants, failure modes và trade-offs
+## 6. Invariant, các kiểu hỏng và đánh đổi
 
 - Mỗi index phải có owner query/invariant và removal criterion.
 - Unique business invariant phải nằm ở database boundary khi concurrent writers có thể đua.
@@ -82,7 +82,7 @@ Một admin export mở transaction hàng giờ. Trong lúc đó workers update 
 
 Over-indexing: mỗi insert/update ghi nhiều structures, tăng WAL, lock/contention và cache footprint. Stale statistics: distribution đổi nhưng estimate cũ, planner chọn nested loop/scan sai; `ANALYZE` hoặc extended statistics có thể cần, song query/data design vẫn phải xem. Bloat diagnosis không thể chỉ nhìn một tỷ lệ: table size, live/dead tuple estimates, free space, workload churn và expected growth đều cần context.
 
-## 7. Áp dụng vào project và experiment
+## 7. Áp dụng vào dự án và thí nghiệm
 
 Khi `DB-01` active, chọn query list/event thật; tạo fixture distribution có hot/cold stream, capture `EXPLAIN (ANALYZE, BUFFERS)` trước/sau candidate index. Đồng thời chạy update churn với/không long transaction, ghi table/index size, dead tuple/vacuum stats và latency. Không chạy trên production và không dùng `VACUUM FULL` trong task học nếu chưa xác minh lock/disk. Hiện evidence `NOT RUN`.
 
@@ -102,7 +102,7 @@ Khi `DB-01` active, chọn query list/event thật; tạo fixture distribution c
 - `VACUUM FULL` rewrite/lock mạnh và cần kế hoạch.
 - Index tăng read speed có thể đánh đổi write/WAL/cache.
 
-## 10. Bài tập và self-check
+## 10. Bài tập và tự kiểm tra
 
 > **Bài viết của tôi — `LEARNER TODO`:** thiết kế index cho feed stream, rồi kể causal chain long transaction → dead tuples → vacuum horizon → bloat/latency.
 
@@ -119,7 +119,7 @@ Khi `DB-01` active, chọn query list/event thật; tạo fixture distribution c
    **Một câu trả lời tốt phải có:** owner queries, plan/buffers/latency, write/WAL/size cost và representative distribution.<br>
    **My answer:** `LEARNER TODO`
 
-## 11. Official references và teach-back
+## 11. Nguồn chính thức và trình bày lại
 
 - [PostgreSQL 15 — Indexes](https://www.postgresql.org/docs/15/indexes.html)
 - [PostgreSQL 15 — MVCC](https://www.postgresql.org/docs/15/mvcc.html)
@@ -129,4 +129,3 @@ Khi `DB-01` active, chọn query list/event thật; tạo fixture distribution c
 - [ ] Tôi giải thích được visibility và heap fetch.
 - [ ] Tôi nối long transaction tới vacuum/bloat.
 - [ ] Tôi biết evidence nào còn `NOT RUN`.
-

@@ -27,9 +27,9 @@ Mỗi defining loader tạo một namespace type. Loader giữ các `Class`; cla
 
 ```mermaid
 flowchart TB
-    R["GC root<br/>parent thread/listener"] --> O["Object của app cũ"]
+    R["GC root<br/>thread/listener của parent"] --> O["Object của app cũ"]
     O --> C["Class"]
-    C --> L["Defining classloader"]
+    C --> L["Classloader đã định nghĩa class"]
     L --> G["Toàn bộ class/static graph<br/>không unload"]
     style R fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style O fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
@@ -65,24 +65,24 @@ Application cũ đăng ký listener vào singleton thuộc parent loader rồi k
 
 ## 5. Diagnostic sequence
 
-1. Pin commit/JDK/container limits/workload/time window.
-2. Compare heap used-after-GC, allocation rate, class count/metaspace, thread count, direct/native/RSS.
-3. Heap dump dominator/retained path for heap retention; thread dump for thread/ThreadLocal owner; NMT/native tools if enabled for non-heap.
-4. Verify hypothesis by removing owner/bounding lifecycle and repeating same workload.
+1. Cố định commit, JDK, giới hạn container, workload và cửa sổ đo.
+2. So sánh heap còn sống sau GC, allocation rate, số class/metaspace, số thread, direct/native memory và RSS.
+3. Dùng dominator/retained path trong heap dump cho heap retention; thread dump để tìm thread hoặc owner của `ThreadLocal`; dùng NMT/native tool nếu đã bật để điều tra vùng ngoài heap.
+4. Kiểm chứng giả thuyết bằng cách loại owner hoặc giới hạn lifecycle, rồi chạy lại đúng workload.
 5. Không tăng heap như final fix nếu retained graph vẫn tăng.
 
 ## 6. Cross-layer interaction
 
-- Spring devtools/reload/container classloaders make type identity/lifecycle visible; project runtime choice must be measured, not assumed.
-- Executor/scheduler/application listener must shutdown/unregister on context close.
-- JDBC driver, logging and serialization caches can bridge loader lifetimes.
-- Kubernetes/container memory metric and JVM heap metric must be correlated.
+- Spring devtools, reload và classloader của container làm lộ vấn đề type identity/lifecycle; phải đo trên runtime project dùng thật, không suy diễn.
+- Executor, scheduler và application listener phải shutdown hoặc unregister khi context đóng.
+- JDBC driver, logging cache và serialization cache có thể giữ tham chiếu bắc cầu qua hai đời classloader.
+- Metric memory của Kubernetes/container phải được đối chiếu với heap và native memory của JVM.
 
 ## 7. Experiment implication
 
-1. Repeatedly load/unload isolated classloader with static/listener/thread leak, record class count/metaspace.
-2. Allocate direct buffer/thread count under known container/process budget.
-3. Capture heap/thread/JFR evidence before and after cleanup. Current evidence `NOT RUN`.
+1. Lặp việc load/unload một classloader cô lập có static/listener/thread cố tình bị giữ, rồi ghi số class và metaspace.
+2. Cấp phát direct buffer hoặc tạo thread dưới một ngân sách container/process đã biết.
+3. Thu heap dump, thread dump và JFR trước/sau cleanup. Evidence hiện vẫn `NOT RUN`.
 
 ## 8. Trade-off matrix
 
@@ -102,6 +102,12 @@ Giải thích identity `(name, defining loader)`, đường root→object→Clas
 - Cùng binary name nhưng khác defining loader là type khác.
 - Unload cần toàn bộ loader graph unreachable.
 - ThreadLocal/listener/thread/global cache thường bắc cầu qua lifecycle.
+
+### Hai pathology và cách phân biệt vùng nhớ
+
+**Heap ổn nhưng pod vẫn bị OOMKill:** Xmx được đặt 512 MB trong container 768 MB, ứng dụng còn dùng direct buffer, metaspace, code cache và stack của hàng nghìn thread. Heap dashboard chỉ khoảng 350 MB nên đội vận hành tăng Xmx lên 650 MB; native headroom càng ít và pod chết sớm hơn. Evidence cần RSS/cgroup limit, NMT nếu bật, thread count, direct buffer pool và heap used-after-GC. Mitigation là lập ngân sách toàn process, giới hạn buffer/thread và chỉ chỉnh Xmx sau khi biết thành phần nào chiếm memory.
+
+**Metaspace tăng sau mỗi lần reload:** parent-owned scheduler giữ callback được tạo bởi child classloader. Dù application context cũ đóng, đường tham chiếu `parent thread -> task/listener -> class -> child loader` giữ toàn bộ class của lần deploy. Full GC không giải phóng metaspace. Evidence là số loaded class tăng theo mỗi chu kỳ, heap dump cho retained path tới classloader và thread dump chỉ scheduler còn sống. Mitigation là unregister listener, cancel task, shutdown executor và kiểm tra class count trở về baseline sau cùng workload.
 - Container budget phải chừa headroom ngoài Xmx.
 
 `LEARNER TODO — vẽ một retained path và memory budget giả định 1 GiB.`
