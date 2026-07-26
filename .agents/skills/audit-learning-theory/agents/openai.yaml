@@ -1,0 +1,4 @@
+interface:
+  display_name: "Đánh giá tài liệu học"
+  short_description: "Đánh giá theory core và deep-dive theo teaching gate"
+  default_prompt: "Dùng $audit-learning-theory để đánh giá file theory được nêu: kiểm tra teaching quality, mức độ trả lời self-check và chỉ rõ gap, không tự sửa file."
