@@ -1,7 +1,7 @@
 # Codex Skill Catalog
 
 > Trạng thái: `CANONICAL SKILL INVENTORY`<br>
-> Snapshot: 2026-07-26<br>
+> Snapshot: 2026-07-27<br>
 > Đối tượng: Human, Codex và AI Agent khác
 
 File này là mục lục canonical cho các Codex skill được cài hoặc được project sử dụng. Dùng catalog để biết skill làm gì, khi nào nên trigger và scope của skill; dùng chính `SKILL.md` làm source of truth cho workflow chi tiết sau khi skill đã trigger.
@@ -12,10 +12,10 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 
 | Scope | Vị trí | Số lượng | Ý nghĩa |
 | --- | --- | ---: | --- |
-| Project | `.agents/skills/` | 8 | Workflow riêng của `live-stream-backend` |
+| Project | `.agents/skills/` | 9 | Workflow riêng của `live-stream-backend` |
 | User global | `$CODEX_HOME/skills/` | 2 | Skill dùng được giữa nhiều repository |
 | Codex system | `$CODEX_HOME/skills/.system/` | 6 | Skill do môi trường Codex cung cấp |
-| **Tổng cài đặt** |  | **16** | 15 skill được expose trong session hiện tại; `review-agent` chỉ được cài trên filesystem |
+| **Tổng cài đặt** |  | **17** | 15 skill được expose trong session hiện tại; skill mới cần session discovery để xuất hiện; `review-agent` chỉ được cài trên filesystem |
 
 ## 2. Project skills
 
@@ -27,6 +27,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | [`refine-engineering-prompt`](../../.agents/skills/refine-engineering-prompt/SKILL.md) | Chuyển yêu cầu kỹ thuật thô thành prompt có scope, context, constraints, Acceptance Criteria và verification. | Cần làm rõ, viết lại hoặc cấu trúc yêu cầu trước khi thực thi. | Yêu cầu đã đủ rõ và người dùng muốn triển khai ngay. |
 | [`manage-local-port`](../../.agents/skills/manage-local-port/SKILL.md) | Tìm process sở hữu TCP port trên Windows và giải phóng port an toàn. | Port local bị chiếm, cần xác định hoặc dừng đúng process. | Debug network/application không liên quan ownership của local port. |
 | [`run-senior-java-learning`](../../.agents/skills/run-senior-java-learning/SKILL.md) | Điều phối knowledge-to-evidence domain-first, chọn scenario concrete theo owner/use-case priority/difficulty mà không nhảy Stage, và áp content/reference gate từ theory template + quality audit. | Bắt đầu/tiếp tục topic hoặc case, chọn bài toán Livestream để thực hành, tạo/audit learning pack hoặc luyện từ foundation tới Senior/Architect/Expert dựa trên project evidence. | Bug fix, feature implementation hoặc review độc lập không có learning objective. |
+| [`start-learning`](../../.agents/skills/start-learning/SKILL.md) | Khôi phục learning cursor và luôn trả link trực tiếp tới tài liệu cần mở trước khi dạy. | Người dùng nói bắt đầu/tiếp tục session học hoặc gọi `$start-learning`. | Bug fix, implementation hoặc review không có mục tiêu học. |
 | [`audit-learning-theory`](../../.agents/skills/audit-learning-theory/SKILL.md) | Audit read-only theory `CORE`/`DEEP_DIVE` theo teaching gate, self-check coverage và language/depth review. | Hỏi tài liệu đã đủ để tự học/trả lời câu hỏi chưa, cần verdict readiness hoặc gap cụ thể. | Muốn triển khai case/code, tạo runtime evidence hoặc tự điền learner write-back. |
 | [`distill-learning-knowledge`](../../.agents/skills/distill-learning-knowledge/SKILL.md) | Phân loại và cô đọng kiến thức vừa làm rõ vào đúng theory/case/question/evidence artifact. | Muốn lưu khái niệm, misconception, failure chain hoặc trade-off mà không tạo duplicate hay evidence giả. | Chỉ cần giải thích thoáng qua, triển khai code hoặc tự điền learner write-back. |
 
@@ -57,6 +58,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Làm rõ prompt kỹ thuật | `refine-engineering-prompt` |
 | Tìm process chiếm port | `manage-local-port` |
 | Bắt đầu/tiếp tục case hoặc tạo learning pack Senior Java | `run-senior-java-learning` |
+| Bắt đầu/khôi phục session và cần link tài liệu phải mở | `start-learning` -> `run-senior-java-learning` |
 | Đánh giá theory core/deep-dive có đủ để tự học/trả lời self-check | `audit-learning-theory` |
 | Cô đọng kiến thức vừa làm rõ vào đúng learning artifact | `distill-learning-knowledge` |
 | Hiểu codebase/architecture/file relationships | `rg` + source/docs trực tiếp; không dùng skill mặc định |

@@ -112,6 +112,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Dùng `$refine-engineering-prompt` khi cần làm rõ yêu cầu kỹ thuật thô trước khi triển khai.
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
 - Dùng `$run-senior-java-learning` để bắt đầu/tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back hoặc tạo preview learning pack chuẩn mà không vượt checkpoint/evidence gate.
+- Dùng `$start-learning` khi người dùng bắt đầu/khôi phục session học; phải trả về link trực tiếp tới cursor, active case, roadmap section, required reading và write target trước nội dung giảng dạy.
 - Dùng `$audit-learning-theory` để đánh giá read-only teaching readiness, coverage self-check và gap language/depth của theory core hoặc deep-dive.
 - Dùng `$distill-learning-knowledge` để phân loại và cô đọng kiến thức vừa làm rõ vào đúng theory, case, question hoặc evidence artifact mà không tạo duplicate/evidence giả.
 - Khi tạo, cài, rename, move, xóa hoặc đổi trigger/scope của skill, bắt buộc cập nhật `docs/ai/skill-catalog.md` trong cùng change. Skill change chưa hoàn thành nếu catalog chưa đồng bộ.

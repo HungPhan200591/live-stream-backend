@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bắt đầu phiên học"
+  short_description: "Khôi phục cursor và trả về link tài liệu cần mở"
+  default_prompt: "Dùng $start-learning để bắt đầu session từ current learning cursor và cho tôi link các file cần đọc."
