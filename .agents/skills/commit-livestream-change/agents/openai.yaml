@@ -1,4 +1,4 @@
 interface:
-  display_name: "Fast Commit Livestream Change"
-  short_description: "Commit with a low-cost model and minimal context"
-  default_prompt: "Use $commit-livestream-change to commit all current local changes quickly without pushing."
+  display_name: "Fast Local Commit"
+  short_description: "Fast low-cost local commit without push"
+  default_prompt: "Use $commit-livestream-change to commit all local changes quickly without pushing."
