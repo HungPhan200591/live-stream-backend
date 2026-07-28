@@ -1,7 +1,7 @@
 # Codex Skill Catalog
 
 > Trạng thái: `CANONICAL SKILL INVENTORY`<br>
-> Snapshot: 2026-07-27<br>
+> Snapshot: 2026-07-28<br>
 > Đối tượng: Human, Codex và AI Agent khác
 
 File này là mục lục canonical cho các Codex skill được cài hoặc được project sử dụng. Dùng catalog để biết skill làm gì, khi nào nên trigger và scope của skill; dùng chính `SKILL.md` làm source of truth cho workflow chi tiết sau khi skill đã trigger.
@@ -12,10 +12,10 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 
 | Scope | Vị trí | Số lượng | Ý nghĩa |
 | --- | --- | ---: | --- |
-| Project | `.agents/skills/` | 9 | Workflow riêng của `live-stream-backend` |
+| Project | `.agents/skills/` | 10 | Workflow riêng của `live-stream-backend` |
 | User global | `$CODEX_HOME/skills/` | 2 | Skill dùng được giữa nhiều repository |
 | Codex system | `$CODEX_HOME/skills/.system/` | 6 | Skill do môi trường Codex cung cấp |
-| **Tổng cài đặt** |  | **17** | 15 skill được expose trong session hiện tại; skill mới cần session discovery để xuất hiện; `review-agent` chỉ được cài trên filesystem |
+| **Tổng cài đặt** |  | **18** | 15 skill được expose trong session hiện tại; skill mới cần session discovery để xuất hiện; `review-agent` chỉ được cài trên filesystem |
 
 ## 2. Project skills
 
@@ -24,6 +24,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | [`implement-livestream-feature`](../../.agents/skills/implement-livestream-feature/SKILL.md) | Triển khai vertical slice Spring Boot gồm API, service, persistence, cache/messaging/realtime khi liên quan, authorization, test và API artifacts. | Thêm, thay đổi hoặc hoàn thiện feature/backend learning case đầu-cuối. | Chỉ cần tư vấn, chẩn đoán hoặc review read-only. |
 | [`diagnose-livestream-backend`](../../.agents/skills/diagnose-livestream-backend/SKILL.md) | Điều tra build/test/runtime failure và lỗi JWT, PostgreSQL/JPA, Redis, RabbitMQ, WebSocket, webhook, Docker. | Cần tái hiện, tìm nguyên nhân, giải thích hoặc khắc phục lỗi backend. | Yêu cầu chỉ là feature mới chưa có failure cần chẩn đoán. |
 | [`review-livestream-change`](../../.agents/skills/review-livestream-change/SKILL.md) | Review defect-first cho diff/commit/PR, bao gồm security, transaction/concurrency, query/cache/event reliability, test và docs drift. | Code review, risk assessment, regression hoặc pre-merge validation. | Người dùng yêu cầu trực tiếp triển khai feature thay vì review. |
+| [`commit-livestream-change`](../../.agents/skills/commit-livestream-change/SKILL.md) | Kiểm tra phạm vi, staged diff, secret và validation evidence rồi tạo Git commit cục bộ; không push. | Người dùng yêu cầu commit, local commit hoặc commit các file/change cụ thể. | Chỉ cần sinh commit message, review read-only hoặc chưa cho phép thay đổi Git history. |
 | [`refine-engineering-prompt`](../../.agents/skills/refine-engineering-prompt/SKILL.md) | Chuyển yêu cầu kỹ thuật thô thành prompt có scope, context, constraints, Acceptance Criteria và verification. | Cần làm rõ, viết lại hoặc cấu trúc yêu cầu trước khi thực thi. | Yêu cầu đã đủ rõ và người dùng muốn triển khai ngay. |
 | [`manage-local-port`](../../.agents/skills/manage-local-port/SKILL.md) | Tìm process sở hữu TCP port trên Windows và giải phóng port an toàn. | Port local bị chiếm, cần xác định hoặc dừng đúng process. | Debug network/application không liên quan ownership của local port. |
 | [`run-senior-java-learning`](../../.agents/skills/run-senior-java-learning/SKILL.md) | Điều phối knowledge-to-evidence domain-first, chọn scenario concrete theo owner/use-case priority/difficulty mà không nhảy Stage, và áp content/reference gate từ theory template + quality audit. | Bắt đầu/tiếp tục topic hoặc case, chọn bài toán Livestream để thực hành, tạo/audit learning pack hoặc luyện từ foundation tới Senior/Architect/Expert dựa trên project evidence. | Bug fix, feature implementation hoặc review độc lập không có learning objective. |
@@ -55,6 +56,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Implement backend feature | `implement-livestream-feature` |
 | Diagnose lỗi backend | `diagnose-livestream-backend` |
 | Review change | `review-livestream-change` |
+| Tạo Git commit local, không push | `commit-livestream-change` |
 | Làm rõ prompt kỹ thuật | `refine-engineering-prompt` |
 | Tìm process chiếm port | `manage-local-port` |
 | Bắt đầu/tiếp tục case hoặc tạo learning pack Senior Java | `run-senior-java-learning` |

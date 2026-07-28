@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Livestream Change"
+  short_description: "Create a checked local commit without pushing"
+  default_prompt: "Use $commit-livestream-change to review the scoped changes and create one local commit without pushing."
