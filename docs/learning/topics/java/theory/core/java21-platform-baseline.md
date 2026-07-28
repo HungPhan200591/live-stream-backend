@@ -6,40 +6,145 @@
 > Teaching readiness: `TEACHABLE_DRAFT`<br>
 > Status: `DRAFT`<br>
 > Evidence status: `NOT RUN`<br>
-> Prerequisites: Java compilation/runtime fundamentals, Maven lifecycle<br>
+> Prerequisites: Không yêu cầu biết trước Maven; mục 0.1 cung cấp nền tảng cần dùng<br>
 > Related cases: [JDK-01](../../../../cases/jdk-01-java21-platform-baseline.md)<br>
 > Owner: `Project learner; Codex prepares canonical draft`<br>
-> Updated: `2026-07-26`
+> Updated: `2026-07-28`
 
 Đây là bản giải thích canonical để đọc và phản biện, không phải bằng chứng người học đã hiểu. Agent cung cấp mental model ở đầu bài; phần “Bài tập diễn đạt lại” và “My answer” ở cuối bài mới là phần người học tự viết. Chi tiết riêng của repository chỉ nằm trong JDK-01.
 
 ## 0. Cách dùng tài liệu này
 
-Tài liệu dành cho developer đã biết build/chạy một ứng dụng Java nhưng chưa từng quản lý **platform baseline** một cách có hệ thống. Đọc lần đầu theo thứ tự từ mục 1 đến mục 11; đừng bắt đầu bằng self-check. Thời gian đọc dự kiến 45–60 phút.
+Tài liệu dành cho developer có thể chưa chắc về Maven, compiler và JDK. Đọc lần đầu theo thứ tự từ mục 0.1 đến mục 11; đừng bắt đầu bằng self-check. Thời gian đọc dự kiến 55–70 phút.
 
 Sau lần đọc đầu, dùng mục 13 để cô đọng, rồi viết mục 14 bằng lời của mình. Mục tiêu của core không phải nhớ mọi JEP trong Java 21. Mục tiêu là hiểu tại sao nâng Java là một thay đổi xuyên suốt từ máy build tới production runtime và biết evidence nào còn thiếu trước khi kết luận “đã migrate xong”.
+
+### 0.1. Nền tảng build tối thiểu — đọc phần này nếu Maven còn mơ hồ
+
+**Vấn đề:** ta thường gõ `./mvnw.cmd test` và thấy kết quả xanh, nhưng không biết lệnh đó thực sự làm gì. Khi nâng Java, thiếu mental model này rất dễ khiến ta nhầm “đã sửa một property trong POM” với “service đã chạy được trên Java mới”.
+
+Hãy coi một Java service như món ăn cần đóng gói trước khi giao cho khách:
+
+- Source code `.java` là nguyên liệu con người viết.
+- **Compiler** (`javac`) là công cụ biến source code thành `.class`, dạng mà JVM hiểu.
+- **JVM** là chương trình đọc và chạy các `.class` đó.
+- **JRE** (*Java Runtime Environment*) là môi trường cần để **chạy** Java application: JVM cùng Java standard libraries và các thành phần runtime cần thiết. JRE không có compiler `javac`.
+- **JDK** là bộ công cụ phát triển: gồm runtime để chạy application, compiler `javac` và các tool Java khác. Vì cần compiler nên máy build cần JDK.
+- **Maven** là người điều phối. Nó đọc `pom.xml`, tải dependencies, gọi compiler, chạy test và đóng gói artifact như `.jar`.
+- `pom.xml` là bản hướng dẫn Maven phải làm gì; nó không tự chạy lệnh và cũng không tự cài một JDK lên máy.
+
+Quan hệ dễ nhớ là: `JDK` dùng để **build và chạy**; `JRE` chỉ nói về phần dùng để **chạy**; `JVM` là bộ máy ở bên trong runtime thực sự thực thi bytecode. Theo cách đóng gói Java cũ, JDK từng chứa một thư mục JRE riêng. Với Java 21, không nên mong thấy “JRE” là một gói cài đặt độc lập như thời Java 8: JDK là một modular runtime image, còn production có thể chạy bằng JDK đầy đủ hoặc bằng custom runtime image do `jlink` tạo.
+
+Luồng tối giản của lệnh `./mvnw.cmd test` là:
+
+```text
+Maven Wrapper khởi động Maven
+  -> Maven đọc pom.xml
+  -> tải dependencies cần thiết
+  -> gọi compiler để biên dịch .java thành .class
+  -> chạy các test đã biên dịch bằng JVM
+  -> báo pass hoặc fail
+```
+
+Ví dụ trong project này, `pom.xml` ghi `<java.version>17</java.version>`. Vì project kế thừa `spring-boot-starter-parent`, property này được dùng làm compiler release: compiler phải tạo code tương thích Java 17. Đây là một chỉ dẫn **có hiệu lực** cho compiler, không phải dòng trang trí. Tuy nhiên, nó không quyết định JDK nào đang khởi động Maven trên laptop/CI, và cũng không quyết định JDK trong Docker image. Ba câu hỏi đó thuộc các tầng khác nhau.
+
+> **Câu cần nhớ trước khi đi tiếp:** Maven điều phối build; `pom.xml` mô tả cách build; JDK cung cấp compiler/JVM; còn `java.version` chỉ là một phần cấu hình được Maven/plugin sử dụng.
+
+### 0.2. Bản đồ build/run trong 5 phút
+
+Phần dưới đây không thay thế một khóa học Maven hay Docker. Mục tiêu là bạn biết từng thành phần đứng ở đâu trong một lần build và service chạy thật.
+
+```mermaid
+flowchart TB
+    A["Developer viết<br/>.java + pom.xml"] --> B["Maven Wrapper<br/>khởi động Maven"]
+    B --> C["Dependency resolution<br/>tải thư viện vào .m2"]
+    C --> D["Maven lifecycle<br/>compile → test → package → install"]
+    D --> E["Maven Compiler Plugin<br/>gọi javac của JDK đã chọn"]
+    E --> F["Artifact<br/>.class rồi .jar"]
+    F --> G["Docker image / server<br/>Java runtime: JRE concept + JVM chạy .jar"]
+    G --> H["Service đang chạy<br/>ở môi trường thực tế"]
+
+    I["Toolchains (nếu cấu hình)<br/>chọn JDK cho plugin hỗ trợ"] -.-> E
+
+    style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#FF9800,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#9C27B0,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#FF5722,stroke:#fff,stroke-width:2px,color:#fff
+    style H fill:#607D8B,stroke:#fff,stroke-width:2px,color:#fff
+    style I fill:#795548,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+#### Maven lifecycle: Maven làm gì theo từng chặng?
+
+**Lifecycle** là thứ tự công việc Maven tuân theo. Bạn không cần nhớ toàn bộ ngay; với service này, bốn chặng quan trọng nhất là:
+
+1. `compile`: Maven gọi compiler để biến source `.java` thành `.class`.
+2. `test`: Maven compile test source, rồi dùng JVM để chạy test.
+3. `package`: Maven đóng các `.class`, dependencies cần thiết và metadata thành artifact, thường là `.jar` có thể chạy.
+4. `install`: Maven copy artifact vừa tạo vào **local repository** trên chính máy đang build, thường là `.m2/repository`. Project Maven khác trên cùng máy mới có thể dùng artifact này như một dependency.
+
+Khác biệt cần nhớ là: `package` tạo file `.jar` trong thư mục `target/` của **chính project hiện tại**; `install` lấy file đó và đặt thêm vào `.m2/repository` để **project khác trên cùng máy** có thể tìm thấy. Vì service này không phải module thư viện để project local khác phụ thuộc, ta thường chỉ cần đến `package` để chạy/đóng gói; `install` chỉ cần khi muốn chia sẻ artifact local hoặc làm việc trong một multi-module build.
+
+```text
+package  → tạo file .jar trong target/ của project hiện tại
+install  → copy .jar đó thêm vào .m2/repository trên máy local
+```
+
+Ví dụ, khi gõ `./mvnw.cmd test`, Maven đi đến chặng `test`; vì `test` đứng sau `compile`, Maven cũng làm `compile` trước. Khi gõ `./mvnw.cmd package`, Maven làm cả `compile`, `test`, rồi mới `package`. Khi gõ `./mvnw.cmd install`, Maven chạy tiếp `package` rồi mới copy artifact vào local repository. Vì thế một lệnh ở chặng sau kéo theo các chặng trước, chứ không phải bốn lệnh hoàn toàn tách rời.
+
+#### Dependency resolution: Maven tìm thư viện ra sao?
+
+Trong `pom.xml`, dependency được khai báo bằng tọa độ như `groupId`, `artifactId` và đôi khi là `version`. Maven sẽ:
+
+1. đọc dependency trực tiếp, ví dụ `spring-boot-starter-web`;
+2. đọc tiếp các dependency mà thư viện đó cần, gọi là **transitive dependencies**;
+3. tải các file `.jar` về local repository, thường là thư mục `.m2` trên máy;
+4. chọn một version cụ thể khi có nhiều dependency cùng cần một thư viện.
+
+Vì vậy build không chỉ phụ thuộc source code. Một version dependency hoặc Maven plugin không tương thích JDK mới cũng có thể làm test/startup fail, dù code `.java` không đổi.
+
+#### Toolchains: ai chọn JDK cho compiler?
+
+Thông thường, Maven Compiler Plugin dùng `javac` của JDK đang khởi động Maven. **Maven Toolchains** là cấu hình bổ sung để Maven có thể chọn một JDK đã cài riêng cho plugin hỗ trợ Toolchains. Nó hữu ích khi laptop/CI có nhiều JDK.
+
+Ví dụ, Maven có thể đang chạy bằng JDK 25, nhưng Toolchains bảo compiler dùng JDK 21. Điều này làm lựa chọn JDK rõ ràng hơn, nhưng không thay thế test và không tự thay Docker runtime. Plugin phải hỗ trợ Toolchains thì cấu hình này mới có tác dụng.
+
+#### Docker: build xong chưa có nghĩa là production chạy đúng JDK
+
+Docker image là gói chứa application cùng môi trường chạy của nó. Sau khi Maven tạo `.jar`, Dockerfile hoặc pipeline sẽ đặt `.jar` vào image có sẵn Java runtime rồi chạy nó. Runtime này làm vai trò của JRE: nó có JVM và libraries cần để chạy, nhưng không nhất thiết phải mang toàn bộ tool phát triển của JDK.
+
+Điểm quan trọng là build JDK và Docker runtime có thể khác nhau. Một laptop có thể build bằng JDK 21, nhưng image vẫn chứa Java 17. Khi artifact cần Java 21, container Java 17 có thể fail ngay khi load class. Vì vậy Java upgrade phải kiểm tra cả lệnh Maven lẫn base image/runtime của container.
+
+> **Bản đồ cần nhớ:** Maven quản lý *quy trình build*; dependency resolution quản lý *thư viện cần có*; Toolchains (nếu dùng) quản lý *JDK nào plugin dùng*; Docker/server quản lý *JVM nào chạy artifact sau khi build*.
 
 ## 1. Learning objectives
 
 Sau topic này, tôi có thể:
 
 1. Phân biệt JDK chạy build, language/API target, bytecode target và JRE/JDK thực sự chạy application.
-2. Giải thích vì sao “Maven build pass trên máy tôi” chưa chứng minh platform baseline tái lập.
+2. Giải thích vì sao “Maven build pass trên máy tôi” chưa chứng minh platform baseline nhất quán giữa các môi trường.
 3. Phân loại feature Java 21 thành final, preview hoặc incubator trước khi dùng.
 4. Lập migration gate Java 17 -> 21 có compatibility, regression và rollback evidence.
 5. Giải thích Java 21 tạo điều kiện cho virtual threads nhưng không tự chứng minh nên bật chúng.
 
 ## 2. Mental model cốt lõi — phần Agent dạy
 
-Hãy hình dung source code phải đi qua một **đường ống có nhiều cửa kiểm soát** trước khi trở thành service đang chạy. Số `21` trong `pom.xml` chỉ mô tả ý định ở một cửa; nó không tự điều khiển các cửa còn lại.
+Đừng xem Java version là một con số nằm trong `pom.xml`. Hãy xem nó như một **cam kết từ lúc build đến lúc service chạy thật**.
+
+Ví dụ, bạn ghi `<java.version>21</java.version>`. Điều đó mới nói rằng *project muốn hướng tới Java 21*. Nó chưa trả lời được các câu hỏi quan trọng hơn: Maven hiện được khởi động bằng JDK nào, compiler có chặn việc dùng API mới hơn Java 21 không, test có thật sự chạy trên Java 21 không, và container production đang có Java bao nhiêu.
+
+Vì vậy, hãy hình dung một request đi qua nhiều tầng trước khi tới database. Java platform của service cũng có nhiều tầng phải khớp với nhau trước khi ta được phép nói “service này chạy trên Java 21”.
 
 ```mermaid
 flowchart TB
-    A["Máy build<br/>JDK thực thi Maven"] --> B["Hợp đồng compiler<br/>language + API + bytecode"]
-    B --> C["Hệ sinh thái build<br/>plugin + processor + agent"]
-    C --> D["Test và khởi động<br/>trên runtime đã pin"]
-    D --> E["Container / production<br/>bản phân phối + patch JDK"]
-    E --> F["Bằng chứng<br/>version + test + rollback"]
+    A["1. Build JDK<br/>JDK nào đang chạy Maven?"] --> B["2. Compiler contract<br/>Cho phép syntax, API và bytecode nào?"]
+    B --> C["3. Build ecosystem<br/>Plugin, processor, agent có tương thích không?"]
+    C --> D["4. Test và startup<br/>Có chạy trên runtime ta sẽ support không?"]
+    D --> E["5. Production runtime<br/>Container dùng đúng JDK vendor + patch chưa?"]
+    E --> F["6. Evidence<br/>Version, test, startup và rollback chứng minh điều gì?"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
@@ -49,24 +154,24 @@ flowchart TB
     style F fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
-Đi từ trên xuống:
+Đọc sơ đồ theo thứ tự này:
 
-1. Một JDK cụ thể khởi động Maven và chạy plugins.
-2. Compiler quyết định source syntax, Java SE API được phép dùng và class-file version sinh ra.
-3. Annotation processor, test engine, bytecode agent và framework phải hiểu JDK/class file mới.
-4. Test và application startup phải chạy trên runtime mà ta định support.
-5. Container/production phải thật sự dùng distribution và patch đã chọn.
-6. Cuối cùng, version output, tests, startup log và rollback rehearsal mới tạo thành evidence.
+1. **Build JDK** là JDK thực tế chạy tiến trình Maven. Nó có thể là Java 17, 21 hoặc 25, độc lập với con số trong POM.
+2. **Compiler contract** xác định code được viết bằng cú pháp nào, được gọi Java SE API nào và class file được tạo cho runtime nào. `--release 21` bảo vệ tầng này.
+3. **Build ecosystem** gồm Maven plugins, annotation processor, test engine và bytecode agent. Code của bạn có thể hợp lệ, nhưng một plugin cũ vẫn có thể không hiểu class-file hoặc hành vi runtime mới.
+4. **Test và startup** kiểm tra rằng service thực sự khởi động được trên runtime ta cam kết hỗ trợ. Compile pass chỉ mới nói compiler chấp nhận source code; nó chưa nói Spring context, serialization hay agent đều hoạt động.
+5. **Production runtime** là JDK trong container hoặc máy deploy: vendor, major version và patch đều cần rõ ràng. Đây mới là nơi user dùng service.
+6. **Evidence** là output `java -version`, Maven version, kết quả test, startup log và kế hoạch rollback. Không có chúng, “đã nâng Java” chỉ là một nhận định chưa kiểm chứng.
 
-Nếu bất kỳ hai tầng nào lệch nhau, ta có **platform drift**. Ví dụ, CI compile class file Java 21 nhưng production image vẫn chạy Java 17. Build có thể xanh, nhưng application sẽ không load được class ở production.
+Khi hai tầng không khớp, ta có **platform drift**. Ví dụ: CI build class file cho Java 21 nhưng Docker image production chỉ có Java 17. CI vẫn xanh vì nó chưa chạy container đó; đến production, JVM 17 có thể không nạp được class file và service chết ngay lúc startup.
 
-> **Câu cần nhớ:** Platform baseline không phải “một version property”; nó là một contract xuyên suốt build -> compile -> test -> runtime -> operations, được chứng minh bằng evidence.
+> **Câu cần nhớ:** Platform baseline không phải một `version property`. Nó là contract xuyên suốt từ build, compiler, test đến runtime production; evidence chứng minh các tầng đó đang cùng nói về một Java target.
 
 ## 3. Cơ chế hoạt động
 
 ### 3.1. Platform baseline là một chuỗi, không phải một con số trong POM
 
-Một service chỉ có baseline tái lập khi các lớp trên được khai báo và kiểm chứng. `<java.version>21</java.version>` có thể cấu hình compiler target qua Spring Boot parent, nhưng không bắt host hoặc CI phải chạy Maven bằng JDK 21. Ngược lại, Maven chạy bằng JDK mới hơn cũng không tự giới hạn code vào API Java 21 nếu compiler release không được khóa.
+Một service chỉ có baseline **nhất quán giữa các môi trường** khi các lớp trên được khai báo và kiểm chứng. Nói đơn giản: máy dev, CI và production đều biết chính xác JDK nào phải dùng, và ta có thể chạy lại cùng quy trình để nhận kết quả tương đương. `<java.version>21</java.version>` có thể cấu hình compiler target qua Spring Boot parent, nhưng không bắt host hoặc CI phải chạy Maven bằng JDK 21. Ngược lại, Maven chạy bằng JDK mới hơn cũng không tự giới hạn code vào API Java 21 nếu compiler release không được khóa.
 
 | Lớp | Câu hỏi cần trả lời | Failure nếu bỏ qua |
 | --- | --- | --- |
@@ -74,7 +179,7 @@ Một service chỉ có baseline tái lập khi các lớp trên được khai b
 | Compiler release | Source, bytecode và public Java SE API target nào? | Compile nhầm API chỉ có ở JDK mới hơn target |
 | Dependency/plugin | Framework, annotation processor, agent và plugin có hỗ trợ JDK không? | Compile pass nhưng test/startup/instrumentation fail |
 | Runtime image | Artifact thực sự chạy bằng distribution/patch nào? | Build và production khác behavior hoặc support policy |
-| CI/deployment | Matrix, logs và rollback artifact có tái lập không? | Không chứng minh được regression thuộc code hay môi trường |
+| CI/deployment | Matrix, logs và rollback artifact có cho cùng kết quả khi chạy lại không? | Không chứng minh được regression thuộc code hay môi trường |
 
 `javac --release 21` kết hợp language rules, class-file target và Java SE API surface của release 21. Nó mạnh hơn chỉ đặt `-source`/`-target`, nhưng vẫn không chọn JDK executable chạy Maven, không khóa vendor/patch và không kiểm chứng third-party library hay runtime image. Maven Toolchains giải quyết việc chọn JDK cho plugin hỗ trợ toolchain; CI/container vẫn phải pin và xuất version evidence.
 
@@ -227,7 +332,7 @@ Không có một flag duy nhất bảo vệ toàn bộ baseline. Wrapper/BOM là
 
 | Pattern | Bảo vệ điều gì | Giới hạn | Khi nên dùng |
 | --- | --- | --- | --- |
-| Maven Wrapper + pinned plugin/BOM | Build graph tái lập hơn | Không pin JDK host | Mọi CI build |
+| Maven Wrapper + pinned plugin/BOM | Build graph ổn định hơn khi chạy lại | Không pin JDK host | Mọi CI build |
 | Compiler `--release` | Language/API/class-file contract | Không chọn runtime/toolchain | Khi target một Java SE release rõ ràng |
 | Maven Toolchains/CI JDK setup | Chọn đúng JDK cho build | Plugin phải toolchain-aware; runtime vẫn cần pin | Multi-JDK host hoặc CI matrix |
 | Compatibility matrix | Dependency/plugin/agent/container risk | Không thay tests thực tế | Trước platform upgrade |
@@ -340,6 +445,8 @@ Viết 8–15 câu theo scaffold sau:
 - [JEPs integrated từ JDK 17 đến JDK 21](https://openjdk.org/projects/jdk/21/jeps-since-jdk-17)
 - [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
 - [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)
+- [Oracle JDK migration guide: thay đổi JDK/JRE runtime image](https://docs.oracle.com/en/java/javase/21/migrate/jdk-migration-guide.pdf)
+- [Oracle `jlink`: tạo custom runtime image](https://docs.oracle.com/en/java/javase/11/tools/jlink.html)
 - [Apache Maven Compiler Plugin: dùng `--release`](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html)
 - [Apache Maven: Guide to Using Toolchains](https://maven.apache.org/guides/mini/guide-using-toolchains)
 - [Spring Boot 3.4 System Requirements](https://docs.spring.io/spring-boot/3.4/system-requirements.html)
