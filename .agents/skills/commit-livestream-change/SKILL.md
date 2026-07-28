@@ -1,18 +1,19 @@
 ---
 name: commit-livestream-change
-description: Tạo Git commit cục bộ an toàn cho live-stream-backend sau khi kiểm tra phạm vi, staged diff, secret, validation evidence và commit message. Dùng khi người dùng yêu cầu commit, tạo local commit, commit các file/change cụ thể, hoặc tổ chức thay đổi thành commit; mặc định tạo một commit và tuyệt đối không push. Không dùng khi người dùng chỉ hỏi cách viết commit message, chỉ yêu cầu review, hoặc chưa cho phép thay đổi Git history.
+description: Tạo Git commit cục bộ an toàn cho live-stream-backend sau khi kiểm tra phạm vi, staged diff, secret, validation evidence và commit message. Gọi trực tiếp `$commit-livestream-change` mà không ghi thêm nội dung được xem là yêu cầu stage và commit toàn bộ thay đổi hiện tại thành một commit; yêu cầu có scope thì chỉ commit scope đó. Tuyệt đối không push. Không dùng khi người dùng chỉ hỏi cách viết commit message hoặc chỉ yêu cầu review.
 ---
 
 # Commit Livestream Change
 
 ## Nguyên tắc
 
-- Chỉ commit khi người dùng yêu cầu rõ trong turn hiện tại.
+- Xem việc người dùng gọi trực tiếp `$commit-livestream-change` là quyền tạo commit trong turn hiện tại, kể cả khi không có nội dung nào khác.
+- Khi skill được gọi trực tiếp mà không có scope, mặc định stage và commit toàn bộ thay đổi tracked, untracked và staged hiện tại trong repository thành một commit.
 - Không `push`, `pull`, `fetch`, `rebase`, tạo PR hoặc gọi remote API.
 - Không `amend`, reset, force, bỏ qua hook, tạo empty commit hay sửa author trừ khi người dùng yêu cầu rõ.
 - Không tự sửa code để làm diff đẹp hơn. Nếu phát hiện vấn đề, dừng và báo trước khi commit.
-- Giữ nguyên thay đổi ngoài phạm vi. Không stage toàn repository bằng `git add .`, `git add -A` hoặc wildcard rộng.
-- Mặc định tạo một commit. Chỉ tạo nhiều commit khi người dùng yêu cầu tách hoặc đã chấp thuận grouping cụ thể.
+- Khi người dùng chỉ định scope, giữ nguyên thay đổi ngoài scope. Dù scope mặc định là toàn repository, không dùng `git add .`, `git add -A` hoặc wildcard rộng; stage danh sách path tường minh lấy từ `git status`.
+- Mặc định tạo một commit, kể cả khi thay đổi thuộc nhiều concern. Chỉ tạo nhiều commit khi người dùng yêu cầu tách.
 
 ## Workflow
 
@@ -30,10 +31,11 @@ git diff --cached --name-status
 
 Xác định target từ yêu cầu người dùng:
 
+- Nếu skill được gọi trực tiếp mà không kèm nội dung, target là tất cả thay đổi hiện tại trong working tree và index.
 - Nếu người dùng chỉ rõ file hoặc change, chỉ stage target đó.
-- Nếu working tree chỉ chứa thay đổi rõ ràng thuộc task hiện tại, có thể coi toàn bộ chúng là target.
-- Nếu có thay đổi không liên quan, ownership không rõ hoặc staged content có sẵn từ trước, không tự gộp; hỏi người dùng chọn phạm vi.
-- Không bỏ staged content có sẵn khỏi index. Nếu nó không thuộc target commit, dừng và yêu cầu hướng xử lý.
+- Với target mặc định, staged content có sẵn và các thay đổi độc lập đều thuộc cùng commit; không hỏi lại phạm vi.
+- Với target do người dùng giới hạn, không bỏ staged content có sẵn khỏi index. Nếu staged content nằm ngoài target, dừng và yêu cầu hướng xử lý.
+- Nếu không có thay đổi để commit, báo working tree sạch và không tạo empty commit.
 
 ### 2. Kiểm tra trước khi stage
 
@@ -44,11 +46,11 @@ Xác định target từ yêu cầu người dùng:
 - conflict marker, debug code hoặc thay đổi ngoài scope;
 - validation evidence đã có trong session cho hành vi thay đổi.
 
-Tái sử dụng test/evidence còn phù hợp trong cùng session. Không chạy lại chỉ để lặp evidence. Nếu code thay đổi nhưng chưa có kiểm chứng cần thiết, báo rõ và chạy kiểm chứng nhỏ nhất khi nó an toàn, local và nằm trong phạm vi; nếu không thể chạy, vẫn chỉ commit khi người dùng chấp nhận trạng thái chưa kiểm chứng.
+Tái sử dụng test/evidence còn phù hợp trong cùng session. Không chạy lại chỉ để lặp evidence. Nếu code thay đổi nhưng chưa có kiểm chứng cần thiết, chạy kiểm chứng nhỏ nhất khi nó an toàn, local và nằm trong phạm vi. Nếu không thể chạy, không hỏi lại chỉ vì skill được gọi không kèm nội dung; commit và báo rõ kiểm chứng nào chưa chạy, trừ khi `AGENTS.md` hoặc hook đặt verification thành gate bắt buộc.
 
 ### 3. Stage chính xác
 
-Dùng pathspec tường minh:
+Dùng pathspec tường minh. Với target mặc định, lấy toàn bộ path từ `git status --short` rồi truyền từng path cho `git add --`:
 
 ```powershell
 git add -- <path-1> <path-2>
@@ -115,8 +117,7 @@ Không tuyên bố working tree sạch nếu `git status --short` còn output.
 
 Dừng trước commit và hỏi người dùng khi:
 
-- staged content có sẵn không thuộc target;
-- cần quyết định gộp hay tách các thay đổi độc lập;
+- staged content có sẵn không thuộc target do người dùng giới hạn;
 - phát hiện secret hoặc file nhạy cảm;
 - commit hook fail;
 - HEAD/branch thay đổi bất ngờ trong lúc chuẩn bị;
