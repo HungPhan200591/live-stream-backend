@@ -208,14 +208,20 @@ JDK-01 chỉ sở hữu platform/toolchain/Java 21/virtual-thread slice. Java la
 
 ### 3.4. Migration gate an toàn
 
+Ở đây, **gate** không phải một công nghệ. Nó là một điểm dừng để trả lời một câu hỏi trước khi sang bước kế tiếp. Nếu chưa trả lời được, ta dừng lại và sửa/thu thập thông tin; không đoán rằng upgrade sẽ ổn.
+
+Mục đích của các gate là tránh đổi quá nhiều thứ cùng lúc. Với JDK-01, ta muốn biết riêng việc đổi Java 17 sang Java 21 có làm project hỏng không. Vì thế chưa nâng Spring Boot và chưa bật virtual threads trong lúc migration baseline.
+
+Trong mục này, **pin Java 21** nghĩa là ghi và chọn rõ Java 21 ở từng nơi cần dùng, để kết quả không phụ thuộc vào JDK tình cờ có trên máy. Ví dụ: CI chọn JDK 21 để chạy Maven; compiler được cấu hình target/release 21; Docker runtime image cũng dùng Java 21. “Pin” không có nghĩa là khóa vĩnh viễn không được đổi; nó chỉ có nghĩa là version đang kỳ vọng phải tường minh và kiểm tra được.
+
 ```mermaid
 flowchart TB
-    A["1. Kiểm kê<br/>JDK + hệ sinh thái build"] --> B["2. Baseline Java 17<br/>version + test + khởi động"]
-    B --> C["3. Pin Java 21<br/>build + release + runtime"]
-    C --> D["4. Gate tương thích<br/>compile + test + khởi động"]
-    D --> E["5. Rủi ro runtime<br/>agent + reflection + serializer"]
-    E --> F["6. Gate rollback<br/>artifact + runtime image"]
-    F --> G["7. Thí nghiệm riêng<br/>virtual thread"]
+    A["1. Biết hiện tại đang dùng gì<br/>JDK, plugin, dependency, image, CI"] --> B["2. Chụp trạng thái Java 17<br/>version, build, test, startup"]
+    B --> C["3. Đổi đúng một thứ<br/>cố định rõ Java 21 cho build và runtime"]
+    C --> D["4. Kiểm tra có bị hỏng không<br/>compile, test, startup"]
+    D --> E["5. Soát điểm dễ lỗi lúc chạy<br/>agent, reflection, serializer"]
+    E --> F["6. Bảo đảm quay lui được<br/>artifact và runtime image cũ"]
+    F --> G["7. Sau đó mới thử riêng<br/>virtual threads với workload"]
 
     style A fill:#4CAF50,stroke:#fff,stroke-width:2px,color:#fff
     style B fill:#009688,stroke:#fff,stroke-width:2px,color:#fff
@@ -226,12 +232,17 @@ flowchart TB
     style G fill:#2196F3,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
-1. **Inventory:** JDK distribution/patch, Maven Wrapper, plugins, dependencies, annotation processors, agents, container base image và CI runner.
-2. **Characterize:** lưu version output, clean compile, relevant tests, startup và observable behavior trước thay đổi.
-3. **Change one platform boundary:** đưa build/release/runtime về Java 21; không trộn Spring Boot major upgrade vào cùng hypothesis.
-4. **Verify:** compile/test/startup chưa đủ cho full business confidence nhưng phải phát hiện binary/reflection/plugin/agent/config regression trong scope hiện có.
-5. **Rollback:** artifact/config/runtime image cũ phải quay lại được; migration schema/API không thuộc JDK-01.
-6. **Experiment:** chỉ sau baseline mới đánh giá virtual threads bằng workload blocking I/O và diagnostic.
+Đi từng gate theo ngôn ngữ đơn giản:
+
+1. **Biết trạng thái hiện tại.** Trước khi đổi, ghi lại Maven đang chạy bằng JDK nào, version/patch nào, Maven Wrapper, plugin, dependency, CI runner và Docker base image (nếu có). Câu hỏi cần trả lời là: *hôm nay project thực sự build và chạy bằng gì?*
+2. **Chụp baseline Java 17.** Chạy và lưu `java -version`, Maven version, compile, test liên quan và startup. Đây là ảnh “trước khi sửa” để sau đó ta biết lỗi mới xuất hiện vì upgrade hay đã tồn tại sẵn.
+3. **Chỉ đổi Java baseline.** Cố định rõ compiler target/release, JDK chạy build và runtime target là Java 21 theo phạm vi đã chốt. Không nâng Spring Boot major version trong cùng change, vì nếu test đỏ ta cần biết lỗi do Java hay do framework.
+4. **Kiểm tra đường chính.** Compile, test và startup trên Java 21. Pass ở đây chỉ cho biết các đường đã kiểm tra chưa bị hỏng; nó chưa chứng minh toàn bộ business behavior hay performance production đều an toàn.
+5. **Soát các điểm dễ vỡ khi chạy.** Đặc biệt để ý bytecode agent, reflection, serialization, annotation processor và Maven plugin. Những thành phần này có thể fail ở test/startup dù source code compile bình thường.
+6. **Bảo đảm có đường quay lui.** Giữ artifact, cấu hình và runtime image Java 17 còn dùng được cho tới khi Java 21 có evidence đủ. Rollback của JDK-01 không liên quan database schema hay API, vì các thay đổi đó không nằm trong scope case này.
+7. **Tách virtual threads thành thí nghiệm riêng.** Chỉ sau khi Java 21 baseline ổn mới thiết kế workload blocking I/O, đo metric và xem diagnostic/JFR. Java 21 cho phép dùng virtual threads; nó không tự chứng minh service sẽ nhanh hơn.
+
+> **Câu cần nhớ:** migration Java an toàn là “biết trạng thái cũ → chỉ đổi Java → kiểm tra đúng chỗ → còn đường quay lui”. Mỗi gate giúp cô lập nguyên nhân khi có lỗi.
 
 ### 3.5. Worked example 1 — build JDK 25 nhưng target Java 21
 
