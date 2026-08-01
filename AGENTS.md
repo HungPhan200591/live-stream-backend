@@ -109,6 +109,7 @@ Business flow là target business intent. API specification chỉ liệt kê cur
 - Dùng `$implement-livestream-feature` để triển khai feature backend đầu-cuối.
 - Dùng `$diagnose-livestream-backend` để chẩn đoán lỗi, regression và môi trường chạy.
 - Dùng `$review-livestream-change` để review diff, commit hoặc pull request.
+- Dùng `$commit-livestream-change` cho fast local commit: gọi đứng một mình commit tất cả, spawn một `gpt-5.6-terra` subagent reasoning `low`, không đọc docs/test và không push.
 - Dùng `$refine-engineering-prompt` khi cần làm rõ yêu cầu kỹ thuật thô trước khi triển khai.
 - Dùng `$manage-local-port` để kiểm tra hoặc giải phóng port phát triển cục bộ an toàn.
 - Dùng `$run-senior-java-learning` để bắt đầu/tiếp tục chu trình theory -> deep-dive -> question bank -> case -> implementation/evidence -> teach-back hoặc tạo preview learning pack chuẩn mà không vượt checkpoint/evidence gate.
