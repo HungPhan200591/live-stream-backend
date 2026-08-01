@@ -1,6 +1,6 @@
 ---
 name: commit-livestream-change
-description: Fast local Git commit for live-stream-backend. Direct `$commit-livestream-change` commits all current changes with one fast low-cost subagent and never pushes. Use for commit requests; not for review or message-only requests.
+description: Fast local Git commit for live-stream-backend. Direct `$commit-livestream-change` commits current changes through one minimal local fast path, without subagents, tests, or push. Use for commit requests; not for review or message-only requests.
 ---
 
 # Fast Commit
@@ -11,16 +11,20 @@ Speed first. Do not read `AGENTS.md`, project docs, tests, history, or full diff
 - Scoped request: commit only that scope.
 - Never push, pull, fetch, rebase, amend, reset, force, use `--no-verify`, or create an empty commit.
 
-## Primary agent
+## Workflow
 
-Spawn exactly one subagent with `gpt-5.6-terra`, reasoning `low`, and no forked turns. Do not run Git commands or inspect files before spawning. Ask it:
+Do not spawn or delegate to subagents. Do not run another Git inspection first. Run exactly:
 
-```text
-Fast local commit only. Do not read AGENTS.md, docs, tests, history, or SKILL.md. Do not delegate. Run .agents/skills/commit-livestream-change/scripts/prepare-commit.ps1 with -MaxDiffLines 40 [and explicit -Scope only when provided].
-If CLEAN or BLOCKED, return that result. If PREPARED, use only FILES/STAT/short DIFF to write one short Conventional Commit subject, run git commit, then git show --stat --oneline --summary HEAD and git status --short --branch. Never push. Return only SHA, subject, file count, status, and `tests: not run`.
+```powershell
+.agents/skills/commit-livestream-change/scripts/prepare-commit.ps1 -MaxDiffLines 40
 ```
 
-Wait and relay the result. Do not repeat any check. Only use the same flow locally if subagents are unavailable.
+For a scoped request, append the explicit `-Scope` value. If the result is `CLEAN` or `BLOCKED`, report it and stop. If it is `PREPARED`:
+
+1. Use only `FILES`, `STAT` and the short `DIFF` to create one short Conventional Commit subject. Do not inspect more files or reason about implementation details. If unclear, use `chore: update project files`.
+2. Run `git commit -m "<subject>"`.
+3. Run exactly `git show --stat --oneline --summary HEAD` and `git status --short --branch`.
+4. Return only SHA, subject, file count, status and `tests: not run`.
 
 ## Stop only when
 
