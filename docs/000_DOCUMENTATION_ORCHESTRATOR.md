@@ -2,7 +2,7 @@
 
 > Trạng thái: `CANONICAL ENTRY POINT`<br>
 > Dành cho: Human, Codex và AI Agent khác<br>
-> Cập nhật: 2026-07-26
+> Cập nhật: 2026-08-01
 
 File này trả lời ba câu hỏi:
 
@@ -46,9 +46,10 @@ flowchart TB
 | RTMP webhook | [RTMP Webhook Guide](engineering/rtmp-webhook-guide.md) | Security flow, business flow | Signature/idempotency/state tests |
 | Architecture/system design | [System Context](architecture/system-context.md), roadmap stage liên quan | ADR/experiment khi đã tồn tại | ADR, capacity model hoặc extraction scorecard |
 | Debug local PostgreSQL | [Codex PostgreSQL MCP](tools/codex-postgres-mcp.md) | P6Spy guide | Reproducer và evidence; không sửa contract âm thầm |
+| Debug local Redis | [Codex Redis MCP](tools/codex-redis-mcp.md), [Redis Guide](engineering/redis-guide.md) | Authorization/cache flow liên quan | Key/TTL/serialization evidence; không write/delete mặc định |
 | Quan sát SQL | [P6Spy Guide](tools/p6spy-sql-logging.md) | PostgreSQL learning case | Query count/plan/experiment |
 | Seed local data | [Data Initialization](tools/data-initialization.md) | Current API contract | Chỉ local fixture; không thành production behavior |
-| Làm việc với AI Agent | [AI Agent System](003_AI_AGENT_ENGINEERING_SYSTEM.md), [Skill Catalog](ai/skill-catalog.md) | `PLANS.md`, skill đã trigger | Plan, verification và docs sync |
+| Làm việc với AI Agent | [AI Agent System](003_AI_AGENT_ENGINEERING_SYSTEM.md), [Agent Optimization](ai/agent-optimization/index.md), [Skill Catalog](ai/skill-catalog.md) | `PLANS.md`, skill đã trigger | Plan, verification và docs sync |
 | Tìm lịch sử cũ | [Archive Index](archive/index.md) | File archive cụ thể | Không dùng archive làm current contract |
 
 ## 3. Protocol cho AI Agent
@@ -136,6 +137,8 @@ docs/
 ├── 002_CURRENT_STATE_AND_GAP_ANALYSIS.md
 ├── 003_AI_AGENT_ENGINEERING_SYSTEM.md
 ├── ai/
+│   ├── agent-optimization/
+│   │   └── index.md
 │   └── skill-catalog.md
 ├── architecture/
 │   └── system-context.md

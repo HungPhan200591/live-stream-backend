@@ -1,4 +1,4 @@
-# Cấu hình MCP dùng chung cho repository demo này.
+# Cấu hình MCP dùng chung cho repository demo cục bộ này.
 
 [mcp_servers.livestream_postgres]
 command = "npx"
@@ -7,12 +7,36 @@ args = [
   "@modelcontextprotocol/server-postgres",
   "postgresql://admin:password@localhost:15432/livestream",
 ]
+enabled_tools = ["query"]
 startup_timeout_sec = 30
 tool_timeout_sec = 60
 
-[mcp_servers.livestream_postgres.env]
-PGHOST = "localhost"
-PGPORT = "15432"
-PGDATABASE = "livestream"
-PGUSER = "admin"
-PGPASSWORD = "password"
+[mcp_servers.livestream_redis]
+command = "uvx"
+args = [
+  "--with",
+  "mcp[cli]>=1.0.0,<2.0.0",
+  "--from",
+  "redis-mcp-server==0.5.0",
+  "redis-mcp-server",
+  "--url",
+  "redis://localhost:16379/0",
+]
+enabled_tools = [
+  "get",
+  "hget",
+  "hgetall",
+  "hexists",
+  "json_get",
+  "lrange",
+  "llen",
+  "smembers",
+  "zrange",
+  "xrange",
+  "type",
+  "scan_keys",
+  "dbsize",
+  "info",
+]
+startup_timeout_sec = 60
+tool_timeout_sec = 60

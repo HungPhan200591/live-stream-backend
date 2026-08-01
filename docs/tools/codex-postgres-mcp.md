@@ -1,6 +1,6 @@
 # MCP PostgreSQL cho Codex
 
-Repository này cấu hình sẵn PostgreSQL MCP server cho Codex tại `.codex/config.toml`.
+Repository cấu hình PostgreSQL MCP server cho Codex tại `.codex/config.toml`.
 
 ## Thông tin kết nối
 
@@ -10,14 +10,17 @@ Repository này cấu hình sẵn PostgreSQL MCP server cho Codex tại `.codex/
 - Username: `admin`
 - Password: `password`
 - MCP server: `@modelcontextprotocol/server-postgres`
+- Tool allowlist: `query`
 
 Đây là credential của môi trường demo cục bộ và được commit cùng repository theo quy ước dự án.
 
 ## Khởi động hạ tầng
 
 ```powershell
-docker-compose up -d postgres
+docker compose up -d postgres
 ```
+
+Không cần khởi động lại nếu `docker compose ps postgres` đã báo container đang chạy.
 
 ## Sử dụng trong Codex
 
@@ -37,8 +40,20 @@ Kiểm tra các role hiện có trong database.
 
 ## Xử lý sự cố
 
-1. Kiểm tra PostgreSQL container đang chạy: `docker-compose ps postgres`.
-2. Kiểm tra Node.js/NPM: `node --version` và `npm --version`.
-3. Xem danh sách server: `codex mcp list`.
-4. Restart Codex sau khi thay đổi `.codex/config.toml`.
+1. Render cấu hình Compose: `docker compose config`.
+2. Kiểm tra PostgreSQL container đang chạy: `docker compose ps postgres`.
+3. Kiểm tra database sẵn sàng: `docker compose exec -T postgres pg_isready -U admin -d livestream`.
+4. Kiểm tra Node.js/NPM: `node --version` và `npm --version`.
+5. Xem danh sách server: `codex mcp list`.
+6. Restart Codex/IDE extension sau khi thay đổi `.codex/config.toml`.
 
+## Trạng thái compatibility
+
+Smoke test ngày 2026-08-01 xác nhận MCP kết nối qua host port `15432`, expose tool `query` và trả về đúng database `livestream`, user `admin`.
+
+Package `@modelcontextprotocol/server-postgres@0.6.2` đồng thời phát cảnh báo deprecated/no longer supported. Cấu hình hiện vẫn hoạt động cho local read-only diagnostics, nhưng không nên xem đây là dependency dài hạn. Khi thay server, phải giữ các điều kiện:
+
+- kết nối đúng Compose host port `15432`;
+- credential local tách khỏi production;
+- read-only hoặc allowlist query an toàn;
+- smoke test schema/query và cập nhật tài liệu trong cùng change.
