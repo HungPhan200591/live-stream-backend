@@ -1,7 +1,7 @@
 # Codex Skill Catalog
 
 > Trạng thái: `CANONICAL SKILL INVENTORY`<br>
-> Snapshot: 2026-07-27<br>
+> Snapshot: 2026-08-01<br>
 > Đối tượng: Human, Codex và AI Agent khác
 
 File này là mục lục canonical cho các Codex skill được cài hoặc được project sử dụng. Dùng catalog để biết skill làm gì, khi nào nên trigger và scope của skill; dùng chính `SKILL.md` làm source of truth cho workflow chi tiết sau khi skill đã trigger.
@@ -13,9 +13,9 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Scope | Vị trí | Số lượng | Ý nghĩa |
 | --- | --- | ---: | --- |
 | Project | `.agents/skills/` | 9 | Workflow riêng của `live-stream-backend` |
-| User global | `$CODEX_HOME/skills/` | 2 | Skill dùng được giữa nhiều repository |
+| User global | `$CODEX_HOME/skills/` và user skill path | 3 | Skill dùng được giữa nhiều repository |
 | Codex system | `$CODEX_HOME/skills/.system/` | 6 | Skill do môi trường Codex cung cấp |
-| **Tổng cài đặt** |  | **17** | 15 skill được expose trong session hiện tại; skill mới cần session discovery để xuất hiện; `review-agent` chỉ được cài trên filesystem |
+| **Tổng cài đặt** |  | **18** | 16 skill được expose trong session hiện tại; skill mới cần session discovery để xuất hiện; `review-agent` chỉ được cài trên filesystem |
 
 ## 2. Project skills
 
@@ -36,6 +36,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Skill | Mô tả ngắn | Khi dùng | Ghi chú |
 | --- | --- | --- | --- |
 | `mermaid-styling` | Tạo hoặc sửa Mermaid dễ đọc với layout an toàn chiều rộng và palette tương phản cao. | Bất kỳ task nào tạo hoặc chỉnh Mermaid. | Phải giữ syntax tương thích renderer mục tiêu. |
+| `find-docs` | Tra cứu tài liệu, API reference và ví dụ mã nguồn hiện hành bằng Context7. | Câu hỏi về library, framework, SDK, API, CLI hoặc cloud service; bao gồm cú pháp, cấu hình, migration, setup và lỗi phụ thuộc thư viện. | Tra cứu codebase/logic nghiệp vụ thuần túy không cần tài liệu công nghệ bên ngoài. Luôn resolve library trước rồi mới truy vấn docs. |
 
 ## 4. Codex system skills
 
@@ -63,6 +64,7 @@ Runtime vẫn là authority cuối cùng về skill nào được expose trong m
 | Cô đọng kiến thức vừa làm rõ vào đúng learning artifact | `distill-learning-knowledge` |
 | Hiểu codebase/architecture/file relationships | `rg` + source/docs trực tiếp; không dùng skill mặc định |
 | Tạo hoặc sửa Mermaid | `mermaid-styling` |
+| Tra cứu tài liệu library/framework/SDK/API/CLI/cloud service hiện hành | `find-docs` |
 | Tạo hoặc sửa skill | `skill-creator` |
 | Cài skill | `skill-installer` |
 | Tạo plugin | `plugin-creator` |
